@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ModernWMS.props" />
+</Project>
