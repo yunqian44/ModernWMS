@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using ModernWMS.Core;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ModernWMS.Core.DBContext
 {
@@ -40,12 +41,37 @@ namespace ModernWMS.Core.DBContext
 
         #region overwrite
         /// <summary>
+        /// Auto Mapping Entity
+        /// </summary>
+        /// <param name="modelBuilder">ModelBuilder</param>
+        private void MappingEntityTypes(ModelBuilder modelBuilder)
+        {
+            var baseType = typeof(Models.BaseModel);
+            var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
+            var referencedAssemblies = System.IO.Directory.GetFiles(path, $"ModernWMS*.dll").Select(Assembly.LoadFrom).ToArray();
+            var list = referencedAssemblies
+                .SelectMany(a => a.DefinedTypes)
+                .Select(type => type.AsType())
+                .Where(x => x != baseType && baseType.IsAssignableFrom(x)).ToList();
+            if (list != null && list.Any())
+            {
+                list.ForEach(t =>
+                {
+                    var entityType = modelBuilder.Model.FindEntityType(t);
+                    if (entityType == null)
+                    {
+                        modelBuilder.Model.AddEntityType(t);
+                    }
+                });
+            }
+        }
+        /// <summary>
         /// overwrite OnModelCreating
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ModernWMS.Core.Models.userEntity>();
+            MappingEntityTypes(modelBuilder);
 /*            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(Models.IHasTenant).IsAssignableFrom(entityType.ClrType))

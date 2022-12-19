@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using ModernWMS.Core.Middleware;
 using Microsoft.Extensions.DependencyModel;
 using ModernWMS.Core.DI;
+using Microsoft.Extensions.Localization;
 
 namespace ModernWMS.Core.Extentions
 {
@@ -35,7 +36,12 @@ namespace ModernWMS.Core.Extentions
         public static void AddExtensionsService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddLocalization();
-                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IStringLocalizer>((sp) =>
+            {
+                var sharedLocalizer = sp.GetRequiredService<IStringLocalizer<MultiLanguage>>();
+                return sharedLocalizer;
+            });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<CacheManager>();
             services.AddSingleton<IMemoryCache>(factory =>
             {
@@ -56,6 +62,7 @@ namespace ModernWMS.Core.Extentions
             services.RegisterAssembly();
             services.AddControllers(c =>
             {
+                c.Filters.Add(typeof(ViewModelActionFiter));
                 c.MaxModelValidationErrors = 99999;
             }).ConfigureApiBehaviorOptions(o =>
             {
@@ -87,7 +94,7 @@ namespace ModernWMS.Core.Extentions
             app.UseTokenGeneratorConfigure();
             app.UseAuthorization();
             app.UseMiddleware<GlobalExceptionMiddleware>();
-            var support_languages = new[] {  "en", "zh" };
+            var support_languages = new[] {  "zh-cn", "en-us" };
             var localization_options = new RequestLocalizationOptions()
                 .SetDefaultCulture(support_languages[0])
                 .AddSupportedCultures(support_languages)
