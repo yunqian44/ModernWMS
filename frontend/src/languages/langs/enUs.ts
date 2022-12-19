@@ -6,12 +6,25 @@ export default {
         defaultConfirm: 'Agree',
         defaultTitle: 'Tips'
       }
+    },
+    checkText: {
+      mustInput: 'Please fill in the '
+    }
+  },
+  router: {
+    sideBar: {
+      baseModule: 'Basic Settings',
+      ownerOfCargo: 'Owner Information',
+      menuBasicSettings: 'Menu',
+      userManagement: 'User Management',
+      commodityCategorySetting: 'Commodity Category',
+      commodityManagement: 'Commodity Management',
+      userRoleSetting: 'User Role',
+      companySetting: 'Company Information'
     }
   },
   login: {
     welcomeTitle: 'Welcome to ModernWMS!👋🏻',
-    userNameMustInput: 'Please fill in the userName!',
-    passwordMustInput: 'Please fill in the password!',
     mainButtonLabel: 'Login',
     rememberTips: 'Remember me',
     userName: 'UserName',

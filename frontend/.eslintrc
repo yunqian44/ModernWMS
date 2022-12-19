@@ -4,16 +4,13 @@
     "defineEmits": "readonly",
     "defineProps": "readonly"
   },
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:vue/vue3-recommended",
-    "airbnb-base"
-  ],
+  "extends": ["plugin:@typescript-eslint/recommended", "plugin:vue/vue3-recommended", "airbnb-base"],
   "parserOptions": {
     "parser": "@typescript-eslint/parser",
     "ecmaVersion": 2020
   },
   "rules": {
+    "camelcase": "off",
     "no-bitwise": "off", // 禁用按位运算符
     "no-tabs": "off", // 禁用 tab
     "array-element-newline": ["error", "consistent"], // 强制数组元素间出现换行

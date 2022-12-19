@@ -48,8 +48,12 @@ const data = reactive({
   userName: '',
   password: '',
   remember: false,
-  userNameVaildRules: [(v: string) => !!v || i18n.global.t('login.userNameMustInput')],
-  passwordVaildRules: [(v: string) => !!v || i18n.global.t('login.passwordMustInput')]
+  userNameVaildRules: [
+    (v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.userName') }!`
+  ],
+  passwordVaildRules: [
+    (v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.password') }!`
+  ]
 })
 
 const method = reactive({
@@ -62,23 +66,78 @@ const method = reactive({
       return
     }
     const { data: loginRes } = await login({
-      userName: data.userName,
+      user_name: data.userName,
       password: Md5.hashStr(data.password)
     })
 
     if (loginRes.isSuccess) {
       funComponentList.$message({
         type: 'success',
-        content: '登陆成功!'
+        content: '登陆成功!' // todo
       })
       // TODO 把用户权限信息加进来
       // let expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
       const expiredTime = new Date().getTime() + 1 * 60 * 1000
 
-      store.commit('user/setToken', loginRes.data.accessToken)
-      store.commit('user/setRefreshToken', loginRes.data.refreshToken)
+      store.commit('user/setToken', loginRes.data.access_token)
+      store.commit('user/setRefreshToken', loginRes.data.refresh_token)
       store.commit('user/setExpirationTime', expiredTime)
       store.commit('user/setEffectiveMinutes', loginRes.data.expire)
+
+      // test menus
+      const testMenus = [
+        {
+          menu_name: '货主信息',
+          module: 'baseModule',
+          vue_path: 'ownerOfCargo',
+          vue_path_detail: '',
+          vue_directory: 'base/ownerOfCargo'
+        },
+        {
+          menu_name: '菜单基础设置',
+          module: 'baseModule',
+          vue_path: 'menuBasicSettings',
+          vue_path_detail: '',
+          vue_directory: 'base/menuBasicSettings'
+        },
+        {
+          menu_name: '用户管理',
+          module: 'baseModule',
+          vue_path: 'userManagement',
+          vue_path_detail: '',
+          vue_directory: 'base/userManagement'
+        },
+        {
+          menu_name: '商品类别设置',
+          module: 'baseModule',
+          vue_path: 'commodityCategorySetting',
+          vue_path_detail: '',
+          vue_directory: 'base/commodityCategorySetting'
+        },
+        {
+          menu_name: '商品管理',
+          module: 'baseModule',
+          vue_path: 'commodityManagement',
+          vue_path_detail: '',
+          vue_directory: 'base/commodityManagement'
+        },
+        {
+          menu_name: '用户角色设置',
+          module: 'baseModule',
+          vue_path: 'userRoleSetting',
+          vue_path_detail: '',
+          vue_directory: 'base/userRoleSetting'
+        },
+        {
+          menu_name: '公司信息',
+          module: 'baseModule',
+          vue_path: '公司信息',
+          vue_path_detail: 'CompanySetting',
+          vue_directory: 'base/CompanySetting'
+        }
+      ]
+      store.commit('user/setUserMenuList', testMenus)
+
       // Remember user login info
       if (data.remember) {
         const rememberJSON = JSON.stringify({
