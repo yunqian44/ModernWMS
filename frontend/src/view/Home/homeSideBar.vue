@@ -1,0 +1,186 @@
+<template>
+  <div>
+    <div class="homeSidebar">
+      <div class="sideBarTitle">
+        <Logo :height="50" :top="15" :left="5" />
+      </div>
+      <!-- 测试数据 -->
+      <div class="sideBarMenus">
+        <div v-for="(item, index) in data.menuList" :key="index">
+          <div class="menuItems" :class="method.getItemClass(item)" @click="method.openMenu(item)">
+            <div style="display: flex; align-items: center; height: 100%">
+              <div class="menuIcon">
+                <v-icon
+                  :icon="item.icon ? 'mdi-' + item.icon : 'mdi-checkbox-blank-circle-outline'"
+                  :size="18"
+                  :color="data.activeMenu === item.lable ? '#fff' : '#524e59'"
+                ></v-icon>
+              </div>
+              <div class="menuLabel">{{ item.lable }}</div>
+            </div>
+            <div v-if="item.children && item.children.length > 0" :class="item.showDetail && 'rotate90'">
+              <v-icon icon="mdi-chevron-right" color="#524e59" :size="22"></v-icon>
+            </div>
+          </div>
+          <Transition name="menu">
+            <div v-show="item.showDetail">
+              <div
+                v-for="(detailItem, detailIndex) in item.children"
+                :key="detailIndex"
+                class="menuItems"
+                :class="method.getItemClass(detailItem)"
+                @click="method.openMenu(detailItem)"
+              >
+                <div style="display: flex; align-items: center; height: 100%">
+                  <div class="menuIcon">
+                    <v-icon
+                      :icon="'mdi-checkbox-blank-circle-outline'"
+                      :size="12"
+                      :color="data.activeMenu === detailItem.lable ? '#fff' : '#524e59'"
+                    ></v-icon>
+                  </div>
+                  <div class="menuLabel">{{ detailItem.lable }}</div>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { reactive, onMounted } from 'vue'
+import Logo from '@/components/system/logo.vue'
+import { sideBarMenu, sideBarDataProps } from '@/types/home'
+import { menusToSideBar } from '@/utils/router'
+
+const data: sideBarDataProps = reactive({
+  menuList: [],
+  activeMenu: ''
+})
+
+const method = reactive({
+  // Open menu
+  openMenu: (item: sideBarMenu) => {
+    if (item.children && item.children.length > 0) {
+      item.showDetail = !item.showDetail
+    } else {
+      data.activeMenu = item.lable
+    }
+    // if (menuName === 'login') {
+    //   store.commit('system/clearOpenedMenu', menuName)
+    // } else {
+    //   store.commit('system/addOpenedMenu', menuName)
+    // }
+    // router.push(menuName)
+  },
+  // Get item class
+  getItemClass: (item: sideBarMenu) => {
+    if (item.children && item.children.length > 0 && item.showDetail) {
+      return 'openedMenuItems'
+    }
+    if (data.activeMenu === item.lable) {
+      return 'activeMenuItems'
+    }
+    return ''
+  }
+})
+
+onMounted(() => {
+  data.menuList = menusToSideBar()
+})
+</script>
+
+<style scoped lang="less">
+@headerHeight: 60px;
+@sideBarWidth: 300px;
+@sideBarTitleHeight: 80px;
+.homeSidebar {
+  width: @sideBarWidth;
+  box-shadow: 5px 5px 5px #dbdce2;
+  height: 100%;
+  .sideBarTitle {
+    height: @sideBarTitleHeight;
+    position: relative;
+  }
+  .sideBarMenus {
+    height: calc(100% - @sideBarTitleHeight);
+    overflow: auto;
+    .menuItems {
+      height: 42px;
+      width: calc(100% - 20px);
+      box-sizing: border-box;
+      padding-left: 22px;
+      padding-right: 8px;
+      border-radius: 0 50px 50px 0;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #696671;
+      cursor: pointer;
+      .menuIcon {
+        height: 100%;
+        width: 20px;
+        margin-right: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .v-icon {
+          width: 10px;
+          height: 10px;
+        }
+      }
+      &:hover {
+        background-color: #edeef3;
+      }
+    }
+    .openedMenuItems {
+      background-color: #e8e9ed;
+    }
+    .activeMenuItems {
+      background: linear-gradient(to right, #af85fc, #9155fd);
+      color: #fff;
+      &:hover {
+        background: linear-gradient(to right, #af85fc, #9155fd);
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 20px;
+      background-color: #e5e5e9;
+    }
+  }
+}
+
+/* 1.过渡动画 */
+@keyframes axisY {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+
+/* 2. 过渡类名 */
+/* 开始 */
+.menu-enter-active {
+  animation: axisY 0.1s;
+}
+/* 结束 */
+.menu-leave-active {
+  animation: axisY 0.1s reverse;
+  overflow: hidden;
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}
+</style>

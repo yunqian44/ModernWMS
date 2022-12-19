@@ -2,6 +2,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { store } from '@/store'
 import { CustomerRouterProps } from '@/types/system/router'
+import { menusToRouter } from '@/utils/router'
 
 // array => dynamic router
 let dynamicRouter: CustomerRouterProps[] = []
@@ -43,7 +44,7 @@ const modules = import.meta.glob('../view/*/*/*.vue')
 
 // load router function
 function loadRouter() {
-  dynamicRouter = store.getters['user/menulist']
+  dynamicRouter = menusToRouter(store.getters['user/menulist'])
   dynamicRouter.push({
     name: 'homepage',
     path: '/homepage',

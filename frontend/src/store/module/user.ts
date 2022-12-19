@@ -1,4 +1,4 @@
-// interface UserInfo {}
+import { userStateProps, menuItem } from '@/types/system/store'
 
 export const user = {
   namespaced: true,
@@ -25,55 +25,58 @@ export const user = {
     ]
   },
   mutations: {
-    setUserInfo(state: any, userInfo: any) {
+    setUserInfo(state: userStateProps, userInfo: any) {
       // 这里的 `state` 对象是模块的局部状态
       state.userInfo = userInfo
     },
-    resetUserInfo(state: any, userInfo = {}) {
+    resetUserInfo(state: userStateProps, userInfo = {}) {
       state.userInfo = { ...state.userInfo, ...userInfo }
     },
-    setToken(state: any, token: string) {
+    setToken(state: userStateProps, token: string) {
       // 这里的 `state` 对象是模块的局部状态
       state.token = token
     },
-    setExpirationTime(state: any, expirationTime: number) {
+    setExpirationTime(state: userStateProps, expirationTime: number) {
       // 这里的 `state` 对象是模块的局部状态
       state.expirationTime = expirationTime
     },
-    setIsRefreshingToken(state: any, isRefreshingToken: boolean) {
+    setIsRefreshingToken(state: userStateProps, isRefreshingToken: boolean) {
       // 这里的 `state` 对象是模块的局部状态
       state.isRefreshingToken = isRefreshingToken
     },
-    setRefreshToken(state: any, refreshToken: string) {
+    setRefreshToken(state: userStateProps, refreshToken: string) {
       // 这里的 `state` 对象是模块的局部状态
       state.refreshToken = refreshToken
     },
-    setEffectiveMinutes(state: any, effectiveMinutes: number) {
+    setEffectiveMinutes(state: userStateProps, effectiveMinutes: number) {
       // 这里的 `state` 对象是模块的局部状态
       state.effectiveMinutes = effectiveMinutes
+    },
+    setUserMenuList(state: userStateProps, menulist: menuItem[]) {
+      state.menulist = menulist
     }
   },
   actions: {},
   getters: {
-    userInfo(state: any) {
+    userInfo(state: userStateProps) {
       return state.userInfo
     },
-    token(state: any) {
+    token(state: userStateProps) {
       return state.token
     },
-    expirationTime(state: any) {
+    expirationTime(state: userStateProps) {
       return state.expirationTime
     },
-    isRefreshingToken(state: any) {
+    isRefreshingToken(state: userStateProps) {
       return state.isRefreshingToken
     },
-    refreshToken(state: any) {
+    refreshToken(state: userStateProps) {
       return state.refreshToken
     },
-    effectiveMinutes(state: any) {
+    effectiveMinutes(state: userStateProps) {
       return state.effectiveMinutes
     },
-    menulist(state: any) {
+    menulist(state: userStateProps) {
       return state.menulist
     }
   }
