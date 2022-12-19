@@ -7,19 +7,19 @@ using ModernWMS.WMS.IServices;
 namespace ModernWMS.WMS.Controllers
 {
     /// <summary>
-    /// company controller
+    /// goodsowner controller
     /// </summary>
-    [Route("company")]
+    [Route("goodsowner")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "Base")]
-    public class CompanyController: BaseController
+    public class GoodsownerController : BaseController
     {
         #region Args
 
         /// <summary>
-        /// company Service
+        /// goodsowner Service
         /// </summary>
-        private readonly ICompanyService _companyService;
+        private readonly IGoodsownerService _goodsownerService;
 
         #endregion
 
@@ -27,12 +27,12 @@ namespace ModernWMS.WMS.Controllers
         /// <summary>
         /// constructor
         /// </summary>
-        /// <param name="companyService">company Service</param>
-        public CompanyController(
-            ICompanyService companyService
+        /// <param name="goodsownerService">goodsowner Service</param>
+        public GoodsownerController(
+            IGoodsownerService goodsownerService
             )
         {
-            this._companyService = companyService;
+            this._goodsownerService = goodsownerService;
         }
         #endregion
 
@@ -42,16 +42,16 @@ namespace ModernWMS.WMS.Controllers
         /// </summary>
         /// <returns>args</returns>
         [HttpGet]
-        public async Task<ResultModel<List<CompanyViewModel>>> GetAllAsync()
+        public async Task<ResultModel<List<GoodsownerViewModel>>> GetAllAsync()
         {
-            var data = await _companyService.GetAllAsync();
+            var data = await _goodsownerService.GetAllAsync();
             if (data.Any())
             {
-                return ResultModel<List<CompanyViewModel>>.Success(data);
+                return ResultModel<List<GoodsownerViewModel>>.Success(data);
             }
             else
             {
-                return ResultModel<List<CompanyViewModel>>.Success(new List<CompanyViewModel>());
+                return ResultModel<List<GoodsownerViewModel>>.Success(new List<GoodsownerViewModel>());
             }
         }
 
@@ -61,9 +61,10 @@ namespace ModernWMS.WMS.Controllers
         /// <param name="viewModel">args</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultModel<int>> AddAsync(CompanyViewModel viewModel)
+        public async Task<ResultModel<int>> AddAsync(GoodsownerViewModel viewModel)
         {
-            var (id, msg) = await _companyService.AddAsync(viewModel);
+            viewModel.creater = CurrentUser.user_name;
+            var (id, msg) = await _goodsownerService.AddAsync(viewModel);
             if (id > 0)
             {
                 return ResultModel<int>.Success(id);
@@ -80,9 +81,9 @@ namespace ModernWMS.WMS.Controllers
         /// <param name="viewModel">args</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<ResultModel<bool>> UpdateAsync(CompanyViewModel viewModel)
+        public async Task<ResultModel<bool>> UpdateAsync(GoodsownerViewModel viewModel)
         {
-            var (flag, msg) = await _companyService.UpdateAsync(viewModel);
+            var (flag, msg) = await _goodsownerService.UpdateAsync(viewModel);
             if (flag)
             {
                 return ResultModel<bool>.Success(flag);
@@ -101,7 +102,7 @@ namespace ModernWMS.WMS.Controllers
         [HttpDelete]
         public async Task<ResultModel<string>> DeleteAsync(int id)
         {
-            var (flag, msg) = await _companyService.DeleteAsync(id);
+            var (flag, msg) = await _goodsownerService.DeleteAsync(id);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);

@@ -3,15 +3,15 @@
 namespace ModernWMS.WMS.Entities.ViewModels
 {
     /// <summary>
-    /// Company
+    /// goods owner view model
     /// </summary>
-    public class CompanyViewModel
+    public class GoodsownerViewModel
     {
         #region constructor
         /// <summary>
         /// constructor
         /// </summary>
-        public CompanyViewModel()
+        public GoodsownerViewModel()
         {
 
         }
@@ -25,12 +25,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int id { get; set; } = 0;
 
         /// <summary>
-        /// company's Name
+        /// goods owner's name
         /// </summary>
-        [Display(Name = "company_name")]
+        [Display(Name = "goods_owner_name")]
         [Required(ErrorMessage = "Required")]
-        [MaxLength(256,ErrorMessage = "MaxLength")]
-        public string company_name { get; set; } = string.Empty;
+        [MaxLength(256, ErrorMessage = "MaxLength")]
+        public string goods_owner_name { get; set; } = string.Empty;
 
         /// <summary>
         /// city
@@ -63,6 +63,13 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string contact_tel { get; set; } = string.Empty;
 
         /// <summary>
+        /// creater
+        /// </summary>
+        [Display(Name = "creater")]
+        [MaxLength(64, ErrorMessage = "MaxLength")]
+        public string creater { get; set; } = string.Empty;
+
+        /// <summary>
         /// create time
         /// </summary>
         [Display(Name = "create_time")]
@@ -75,6 +82,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [Display(Name = "last_update_time")]
         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
         public DateTime last_update_time { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// valid
+        /// </summary>
+        [Display(Name = "is_valid")]
+        public bool is_valid { get; set; } = true;
         #endregion
     }
 }

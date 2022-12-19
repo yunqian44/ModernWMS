@@ -4,15 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ModernWMS.WMS.Entities.Models
 {
     /// <summary>
-    /// company entity
+    /// goods owner entity
     /// </summary>
-    [Table("company")]
-    public class CompanyEntity: BaseModel
-    { 
+    [Table("goodsowner")]
+    public class GoodsownerEntity : BaseModel
+    {
+        #region Property
         /// <summary>
-        /// company's Name
+        /// goods owner name
         /// </summary>
-        public string company_name { get; set; } = string.Empty;
+        public string goods_owner_name { get; set; } = string.Empty;
 
         /// <summary>
         /// city
@@ -35,6 +36,11 @@ namespace ModernWMS.WMS.Entities.Models
         public string contact_tel { get; set; } = string.Empty;
 
         /// <summary>
+        /// creater
+        /// </summary>
+        public string creater { get; set; } = string.Empty;
+
+        /// <summary>
         /// create time
         /// </summary>
         public DateTime create_time { get; set; } = DateTime.Now;
@@ -45,8 +51,14 @@ namespace ModernWMS.WMS.Entities.Models
         public DateTime last_update_time { get; set; } = DateTime.Now;
 
         /// <summary>
+        /// valid
+        /// </summary>
+        public bool is_valid { get; set; } = true;
+
+        /// <summary>
         /// the tenant id
         /// </summary>
         public byte tenant_id { get; set; } = 1;
+        #endregion
     }
 }

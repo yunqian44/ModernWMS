@@ -117,18 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="hello word" xml:space="preserve">
-    <value>你好世界!</value>
-    <comment>hello word</comment>
+  <data name="company_name" xml:space="preserve">
+    <value>company name</value>
   </data>
-  <data name="isrequired" xml:space="preserve">
-    <value>此为必填项</value>
-    <comment>required</comment>
+  <data name="goods_owner_name" xml:space="preserve">
+    <value>goods owner name</value>
   </data>
-  <data name="maxlen" xml:space="preserve">
-    <value>最长长度</value>
+  <data name="MaxLength" xml:space="preserve">
+    <value>{0} input length must less than or equal {1}</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>{0} is Required</value>
   </data>
   <data name="username" xml:space="preserve">
-    <value>用户名</value>
+    <value>user name</value>
   </data>
 </root>

@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Models\MultiLanguage.zh.resx">
+    <EmbeddedResource Update="Models\MultiLanguage.zh-cn.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
