@@ -71,10 +71,11 @@ const method = reactive({
     })
 
     if (loginRes.isSuccess) {
-      funComponentList.$message({
-        type: 'success',
-        content: '登陆成功!' // todo
-      })
+      console.log(funComponentList)
+      // funComponentList.$message({
+      //   type: 'success',
+      //   content: '登陆成功!' // todo
+      // })
       // TODO 把用户权限信息加进来
       // let expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
       const expiredTime = new Date().getTime() + 1 * 60 * 1000
