@@ -8,13 +8,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ModernWMS.Core.Models
 {
     /// <summary>
-    /// 人员档案 实体
+    /// user entity
     /// </summary>
     [Table("user")]
     public class userEntity : BaseModel
     {
 
-        #region 属性
+        #region property
 
         /// <summary>
         /// user's number
