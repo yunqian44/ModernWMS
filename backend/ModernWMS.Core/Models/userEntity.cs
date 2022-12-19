@@ -49,7 +49,7 @@ namespace ModernWMS.Core.Models
         /// <summary>
         /// password
         /// </summary>
-        public string cipher { get; set; } = string.Empty;
+        public string auth_string { get; set; } = string.Empty;
 
         /// <summary>
         /// creator

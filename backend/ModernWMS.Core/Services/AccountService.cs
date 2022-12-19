@@ -43,7 +43,7 @@ namespace ModernWMS.Core.Services
                                                     user_num = user.user_num,
                                                     user_name = user.user_name,
                                                     user_role = user.user_role,
-                                                    cipher = user.cipher
+                                                    cipher = user.auth_string
                                                 }
                                                ).ToListAsync();
             string md5_password = Core.Utility.Md5Helper.Md5Encrypt32(loginInput.password);
