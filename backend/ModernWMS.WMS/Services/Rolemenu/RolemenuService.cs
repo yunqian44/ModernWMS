@@ -120,6 +120,28 @@ namespace ModernWMS.WMS.Services
             }
         }
         /// <summary>
+        /// Get all menus
+        /// </summary>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<List<MenuViewModel>> GetAllMenusAsync(CurrentUser currentUser)
+        {
+            var Menus = _dBContext.GetDbSet<MenuEntity>();
+            var data = await Menus.AsNoTracking()
+                .Where(t => t.tenant_id == currentUser.tenant_id)
+                .Select(m => new MenuViewModel
+                {
+                    id = m.id,
+                    menu_name = m.menu_name,
+                    module = m.module,
+                    vue_path = m.vue_path,
+                    vue_path_detail = m.vue_path_detail,
+                    vue_directory = m.vue_directory,
+                    sort = m.sort
+                }).ToListAsync();
+            return data;
+        }
+        /// <summary>
         /// Get menu's authority by user role id
         /// </summary>
         /// <param name="userrole_id">user role id</param>
