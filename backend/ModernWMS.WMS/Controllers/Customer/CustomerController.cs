@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using ModernWMS.Core.Controller;
 using ModernWMS.Core.Models;
 using ModernWMS.WMS.Entities.ViewModels;
@@ -20,6 +21,10 @@ namespace ModernWMS.WMS.Controllers
         /// customer Service
         /// </summary>
         private readonly ICustomerService _customerService;
+        /// <summary>
+        /// Localizer Service
+        /// </summary>
+        private readonly IStringLocalizer<ModernWMS.Core.MultiLanguage> _stringLocalizer;
 
         #endregion
 
@@ -28,11 +33,14 @@ namespace ModernWMS.WMS.Controllers
         /// constructor
         /// </summary>
         /// <param name="customerService">customer Service</param>
+        /// <param name="stringLocalizer">Localizer</param>
         public CustomerController(
             ICustomerService customerService
+          , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
             )
         {
             this._customerService = customerService;
+            this._stringLocalizer = stringLocalizer;
         }
         #endregion
 
@@ -41,7 +49,7 @@ namespace ModernWMS.WMS.Controllers
         /// Get all records
         /// </summary>
         /// <returns>args</returns>
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ResultModel<List<CustomerViewModel>>> GetAllAsync()
         {
             var data = await _customerService.GetAllAsync();
@@ -56,6 +64,23 @@ namespace ModernWMS.WMS.Controllers
         }
 
         /// <summary>
+        /// get a record by id
+        /// </summary>
+        /// <returns>args</returns>
+        [HttpGet]
+        public async Task<ResultModel<CustomerViewModel>> GetAsync(int id)
+        {
+            var data = await _customerService.GetAsync(id);
+            if (data != null && data.id > 0)
+            {
+                return ResultModel<CustomerViewModel>.Success(data);
+            }
+            else
+            {
+                return ResultModel<CustomerViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+            }
+        }
+        /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">args</param>
@@ -64,7 +89,7 @@ namespace ModernWMS.WMS.Controllers
         public async Task<ResultModel<int>> AddAsync(CustomerViewModel viewModel)
         {
             viewModel.creater = CurrentUser.user_name;
-            var (id, msg) = await _customerService.AddAsync(viewModel);
+            var (id, msg) = await _customerService.AddAsync(viewModel, CurrentUser);
             if (id > 0)
             {
                 return ResultModel<int>.Success(id);

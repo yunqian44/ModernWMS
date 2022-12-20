@@ -81,7 +81,7 @@
              }
              else
              {
-                 return ResultModel<UserViewModel>.Error(_stringLocalizer["not exists entity"]);
+                 return ResultModel<UserViewModel>.Error(_stringLocalizer["not_exists_entity"]);
              }
          }
          /// <summary>
@@ -103,13 +103,31 @@
                  return ResultModel<int>.Error(msg);
              }
          }
- 
-         /// <summary>
-         /// update a record
-         /// </summary>
-         /// <param name="viewModel">args</param>
-         /// <returns></returns>
-         [HttpPut]
+        /// <summary>
+        /// import users by excel
+        /// </summary>
+        /// <param name="excel_datas">excel datas</param>
+        /// <returns></returns>
+        [HttpPost("excel")]
+        public async Task<ResultModel<string>> ExcelAsync(List<UserExcelImportViewModel>excel_datas)
+        {
+            excel_datas.ForEach(t=>t.creator = CurrentUser.user_name);
+            var (flag, msg) = await _userService.ExcelAsync(excel_datas);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        /// update a record
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPut]
          public async Task<ResultModel<bool>> UpdateAsync(UserViewModel viewModel)
          {
              var (flag, msg) = await _userService.UpdateAsync(viewModel);
@@ -141,8 +159,44 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-         #endregion
- 
-     }
+        /// <summary>
+        /// reset password
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <returns></returns>
+        [HttpPost("reset-pwd")]
+        public async Task<ResultModel<string>> ResetPwd(BatchOperationViewModel viewModel)
+        {
+            var (flag, msg) = await _userService.ResetPwd(viewModel);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }       
+        /// <summary>
+        /// change password
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <returns></returns>
+        [HttpPost("change-pwd")]
+        public async Task<ResultModel<string>> ChangePwd(UserChangePwdViewModel viewModel)
+        {
+            var (flag, msg) = await _userService.ChangePwd(viewModel);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
+
+    }
  }
  

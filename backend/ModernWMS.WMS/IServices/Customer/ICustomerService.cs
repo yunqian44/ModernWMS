@@ -1,4 +1,5 @@
-﻿using ModernWMS.Core.Services;
+﻿using ModernWMS.Core.JWT;
+using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 
@@ -16,11 +17,18 @@ namespace ModernWMS.WMS.IServices
         /// <returns></returns>
         Task<List<CustomerViewModel>> GetAllAsync();
         /// <summary>
+        /// Get a record by id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<CustomerViewModel> GetAsync(int id);
+        /// <summary>
         /// add a new record
         /// </summary>
-        /// <param name="viewModel"></param>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<(int id, string msg)> AddAsync(CustomerViewModel viewModel);
+        Task<(int id, string msg)> AddAsync(CustomerViewModel viewModel, CurrentUser currentUser);
         /// <summary>
         /// update a record
         /// </summary>

@@ -6,42 +6,53 @@ using ModernWMS.WMS.Entities.ViewModels;
 namespace ModernWMS.WMS.IServices
 {
     /// <summary>
-    /// Interface of GoodsownerService
+    /// Interface of RolemenuService
     /// </summary>
-    public interface IGoodsownerService : IBaseService<GoodsownerEntity>
+    public interface IRolemenuService : IBaseService<RolemenuEntity>
     {
         #region Api
         /// <summary>
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        Task<List<GoodsownerViewModel>> GetAllAsync();
+        Task<List<RolemenuListViewModel>> GetAllAsync();
+
         /// <summary>
         /// Get a record by id
         /// </summary>
-        /// <param name="id">id</param>
+        /// <param name="userrole_id">userrole id</param>
         /// <returns></returns>
-        Task<GoodsownerViewModel> GetAsync(int id);
+        Task<RolemenuBothViewModel> GetAsync(int userrole_id);
+
         /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<(int id, string msg)> AddAsync(GoodsownerViewModel viewModel, CurrentUser currentUser);
+        Task<(int id, string msg)> AddAsync(RolemenuBothViewModel viewModel, CurrentUser currentUser);
+
+        /// <summary>
+        /// Get menu's authority by user role id
+        /// </summary>
+        /// <param name="userrole_id">user role id</param>
+        /// <returns></returns>
+        Task<List<MenuViewModel>> GetMenusByRoleId(int userrole_id);
+
         /// <summary>
         /// update a record
         /// </summary>
         /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> UpdateAsync(GoodsownerViewModel viewModel);
+        Task<(bool flag, string msg)> UpdateAsync(RolemenuBothViewModel viewModel, CurrentUser currentUser);
 
         /// <summary>
         /// delete a record
         /// </summary>
-        /// <param name="id">id</param>
+        /// <param name="userrole_id">userrole id</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> DeleteAsync(int id);
+        Task<(bool flag, string msg)> DeleteAsync(int userrole_id);
         #endregion
     }
 }
