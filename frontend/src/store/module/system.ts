@@ -1,11 +1,4 @@
-interface stateProps {
-  language: string
-  currentRouterPath: string
-  openedMenus: string[]
-  clientWidth: number
-  clientHeight: number
-  refreshFlag: boolean
-}
+import { StateProps } from '@/types/System/Store'
 
 export const system = {
   namespaced: true,
@@ -19,54 +12,54 @@ export const system = {
     refreshFlag: false
   },
   mutations: {
-    setCurrentRouterPath(state: stateProps, path: string) {
+    setCurrentRouterPath(state: StateProps, path: string) {
       state.currentRouterPath = path
     },
-    setRefreshFlag(state: stateProps, flag: boolean) {
+    setRefreshFlag(state: StateProps, flag: boolean) {
       state.refreshFlag = flag
     },
-    setLanguage(state: stateProps, lang: string) {
+    setLanguage(state: StateProps, lang: string) {
       state.language = lang
     },
-    addOpenedMenu(state: stateProps, menuName: string) {
+    addOpenedMenu(state: StateProps, menuName: string) {
       if (!state.openedMenus.includes(menuName)) {
         state.openedMenus.push(menuName)
       }
     },
-    delOpenedMenu(state: stateProps, menuName: string) {
+    delOpenedMenu(state: StateProps, menuName: string) {
       const menuIndex = state.openedMenus.findIndex((item) => item === menuName)
       if (menuIndex > -1) {
         state.openedMenus.splice(menuIndex, 1)
       }
     },
-    clearOpenedMenu(state: stateProps) {
+    clearOpenedMenu(state: StateProps) {
       state.openedMenus = []
     },
-    setClientWidth(state: stateProps, clientWidth: number) {
+    setClientWidth(state: StateProps, clientWidth: number) {
       state.clientWidth = clientWidth
     },
-    setClientHeight(state: stateProps, clientHeight: number) {
+    setClientHeight(state: StateProps, clientHeight: number) {
       state.clientHeight = clientHeight
     }
   },
   actions: {},
   getters: {
-    currentRouterPath(state: stateProps) {
+    currentRouterPath(state: StateProps) {
       return state.currentRouterPath
     },
-    language(state: stateProps) {
+    language(state: StateProps) {
       return state.language
     },
-    openedMenus(state: stateProps) {
+    openedMenus(state: StateProps) {
       return state.openedMenus
     },
-    clientWidth(state: stateProps) {
+    clientWidth(state: StateProps) {
       return state.clientWidth
     },
-    clientHeight(state: stateProps) {
+    clientHeight(state: StateProps) {
       return state.clientHeight
     },
-    refreshFlag(state: stateProps) {
+    refreshFlag(state: StateProps) {
       return state.refreshFlag
     }
   }

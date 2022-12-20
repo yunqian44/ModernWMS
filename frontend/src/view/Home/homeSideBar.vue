@@ -55,18 +55,18 @@
 <script lang="ts" setup>
 import { reactive, onMounted, computed } from 'vue'
 import Logo from '@/components/system/logo.vue'
-import { sideBarMenu, sideBarDataProps } from '@/types/home'
+import { SideBarMenu, SideBarDataProps } from '@/types/Home/Home'
 import { menusToSideBar } from '@/utils/router'
 import { store } from '@/store'
 import { router } from '@/router'
 
-const data: sideBarDataProps = reactive({
+const data: SideBarDataProps = reactive({
   menuList: []
 })
 
 const method = reactive({
   // Open menu
-  openMenu: (item: sideBarMenu) => {
+  openMenu: (item: SideBarMenu) => {
     if (item.children && item.children.length > 0) {
       item.showDetail = !item.showDetail
     } else if (item.routerPath && currentRouterPath.value !== item.routerPath) {
@@ -83,7 +83,7 @@ const method = reactive({
     // router.push(menuName)
   },
   // Get item class
-  getItemClass: (item: sideBarMenu) => {
+  getItemClass: (item: SideBarMenu) => {
     if (item.children && item.children.length > 0 && item.showDetail) {
       return 'openedMenuItems'
     }

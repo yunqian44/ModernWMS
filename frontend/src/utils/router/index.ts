@@ -1,11 +1,11 @@
-import { menuItem } from '@/types/system/store'
-import { CustomerRouterProps } from '@/types/system/router'
-import { sideBarMenu } from '@/types/home'
+import { MenuItem } from '@/types/System/Store'
+import { CustomerRouterProps } from '@/types/System/Router'
+import { SideBarMenu } from '@/types/Home/Home'
 import { store } from '@/store'
 import i18n from '@/languages/i18n'
 
 // Convert menu permissions to data required for dynamic routing
-export function menusToRouter(menuList: menuItem[]): CustomerRouterProps[] {
+export function menusToRouter(menuList: MenuItem[]): CustomerRouterProps[] {
   const result: CustomerRouterProps[] = []
   for (const menu of menuList) {
     result.push({
@@ -20,9 +20,9 @@ export function menusToRouter(menuList: menuItem[]): CustomerRouterProps[] {
 }
 
 // Convert the menu permission returned from the back end to the sidebar
-export function menusToSideBar(): sideBarMenu[] {
-  const result: sideBarMenu[] = []
-  const menuList: menuItem[] = store.getters['user/menulist']
+export function menusToSideBar(): SideBarMenu[] {
+  const result: SideBarMenu[] = []
+  const menuList: MenuItem[] = store.getters['user/menulist']
   for (const menu of menuList) {
     // Get the module index and check whether this group exists
     const moduleIndex = result.findIndex((item) => item.lable === i18n.global.t(`router.sideBar.${ menu.module }`))
