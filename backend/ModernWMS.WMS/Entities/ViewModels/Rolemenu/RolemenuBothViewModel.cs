@@ -28,7 +28,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         [Display(Name = "userrole_id")]
         [Required(ErrorMessage = "Required")]
-        [MaxLength(10, ErrorMessage = "MaxLength")]
         public int userrole_id { get; set; } = 0;
 
         /// <summary>

@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import MessageComponent from './message.vue'
-import { MessageOptions } from '@/types/system/hookComponent'
+import { MessageOptions } from '@/types/System/HookComponent'
 // Use vuetify
 import { vuetify } from '@/plugins/vuetify/index'
 

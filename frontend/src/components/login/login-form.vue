@@ -164,6 +164,7 @@ const method = reactive({
 })
 
 onMounted(() => {
+  // Get remember username and password
   const rememberJSON = localStorage.getItem('userLoginInfo')
   if (rememberJSON) {
     const obj = JSON.parse(rememberJSON)

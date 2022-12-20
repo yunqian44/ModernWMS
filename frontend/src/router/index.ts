@@ -1,7 +1,7 @@
 // index.ts
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { store } from '@/store'
-import { CustomerRouterProps } from '@/types/system/router'
+import { CustomerRouterProps } from '@/types/System/Router'
 import { menusToRouter } from '@/utils/router'
 
 // array => dynamic router

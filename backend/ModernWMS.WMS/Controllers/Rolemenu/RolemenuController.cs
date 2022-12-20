@@ -84,7 +84,23 @@
                 return ResultModel<List<RolemenuListViewModel>>.Success(new List<RolemenuListViewModel>());
             }
         }
-
+        /// <summary>
+        /// Get all menus
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("menus")]
+        public async Task<ResultModel<List<MenuViewModel>>> GetAllMenusAsync()
+        {
+            var data = await _rolemenuService.GetAllMenusAsync(CurrentUser);
+            if (data.Any())
+            {
+                return ResultModel<List<MenuViewModel>>.Success(data);
+            }
+            else
+            {
+                return ResultModel<List<MenuViewModel>>.Success(new List<MenuViewModel>());
+            }
+        }
         /// <summary>
         /// get a record by id
         /// </summary>

@@ -33,6 +33,13 @@ namespace ModernWMS.WMS.IServices
         Task<(int id, string msg)> AddAsync(RolemenuBothViewModel viewModel, CurrentUser currentUser);
 
         /// <summary>
+        /// Get all menus
+        /// </summary>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<List<MenuViewModel>> GetAllMenusAsync(CurrentUser currentUser);
+
+        /// <summary>
         /// Get menu's authority by user role id
         /// </summary>
         /// <param name="userrole_id">user role id</param>

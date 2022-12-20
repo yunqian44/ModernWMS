@@ -28,14 +28,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// id
         /// </summary>
         [Display(Name = "id")]
-        [MaxLength(10, ErrorMessage = "MaxLength")]
         public int id { get; set; } = 0;
          
         /// <summary>
         /// menu_id
         /// </summary>
         [Display(Name = "menu_id")]
-        [MaxLength(10, ErrorMessage = "MaxLength")]
         public int menu_id { get; set; } = 0;
 
         /// <summary>
@@ -50,7 +48,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// authority
         /// </summary>
         [Display(Name = "authority")]
-        [MaxLength(3, ErrorMessage = "MaxLength")]
         public byte authority { get; set; } = 0;
 
         #endregion
