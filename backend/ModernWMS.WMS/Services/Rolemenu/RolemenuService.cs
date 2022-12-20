@@ -116,7 +116,7 @@ namespace ModernWMS.WMS.Services
             }
             else
             {
-                return null;
+                return new RolemenuBothViewModel();
             }
         }
         /// <summary>

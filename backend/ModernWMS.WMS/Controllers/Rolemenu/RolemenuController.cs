@@ -93,7 +93,7 @@
         public async Task<ResultModel<RolemenuBothViewModel>> GetAsync(int userrole_id)
         {
             var data = await _rolemenuService.GetAsync(userrole_id);
-            if (data != null)
+            if (data != null && data.userrole_id > 0)
             {
                 return ResultModel<RolemenuBothViewModel>.Success(data);
             }

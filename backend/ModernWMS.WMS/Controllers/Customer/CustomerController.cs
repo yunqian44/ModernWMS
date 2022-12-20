@@ -46,6 +46,22 @@ namespace ModernWMS.WMS.Controllers
 
         #region Api
         /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("list")]
+        public async Task<ResultModel<PageData<CustomerViewModel>>> PageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _customerService.PageAsync(pageSearch, CurrentUser);
+             
+            return ResultModel<PageData<CustomerViewModel>>.Success(new PageData<CustomerViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
+        /// <summary>
         /// Get all records
         /// </summary>
         /// <returns>args</returns>

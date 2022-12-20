@@ -2,11 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DBContext;
+using ModernWMS.Core.DynamicSearch;
 using ModernWMS.Core.JWT;
+using ModernWMS.Core.Models;
 using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
+using System.Linq;
 
 namespace ModernWMS.WMS.Services
 {
@@ -44,6 +47,33 @@ namespace ModernWMS.WMS.Services
         #endregion
 
         #region Api
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(List<CustomerViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+            var DbSet = _dBContext.GetDbSet<CustomerEntity>();
+            var query = DbSet.AsNoTracking()
+                .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
+                .Where(queries.AsExpression<CustomerEntity>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderByDescending(t => t.create_time)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list.Adapt<List<CustomerViewModel>>(), totals);
+        }
         /// <summary>
         /// Get all records
         /// </summary>
