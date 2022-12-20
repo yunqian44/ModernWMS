@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DBContext;
 using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
@@ -18,6 +19,11 @@ namespace ModernWMS.WMS.Services
         /// The DBContext
         /// </summary>
         private readonly SqlDBContext _dBContext;
+
+        /// <summary>
+        /// Localization
+        /// </summary>
+        private readonly IStringLocalizer<Core.MultiLanguage> _stringLocalizer;
         #endregion
 
         #region constructor
@@ -25,11 +31,14 @@ namespace ModernWMS.WMS.Services
         /// company service constructor
         /// </summary>
         /// <param name="dBContext">The DBContext</param>
+        /// <param name="stringLocalizer">Localization</param>
         public CompanyService(
             SqlDBContext dBContext
+          , IStringLocalizer<Core.MultiLanguage> stringLocalizer
             )
         {
             this._dBContext = dBContext;
+            this._stringLocalizer = stringLocalizer;
         }
         #endregion
 
@@ -55,8 +64,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<CompanyEntity>();
             if (await DbSet.AnyAsync(t => t.company_name.Equals(viewModel.company_name)))
             {
-                //国际化
-                return (0, "exists company_name");
+                return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["company_name"], viewModel.company_name));
             }
             var entity = viewModel.Adapt<CompanyEntity>();
             entity.id = 0;
@@ -66,11 +74,11 @@ namespace ModernWMS.WMS.Services
             await _dBContext.SaveChangesAsync();
             if (entity.id > 0)
             {
-                return (entity.id, "add_success");
+                return (entity.id, _stringLocalizer["save_success"]);
             }
             else
             {
-                return (0, "add_failed");
+                return (0, _stringLocalizer["save_failed"]);
             }
         }
         /// <summary>
@@ -84,12 +92,12 @@ namespace ModernWMS.WMS.Services
             if (await DbSet.AnyAsync(t => !t.id.Equals(viewModel.id) && t.company_name.Equals(viewModel.company_name)))
             {
                 //国际化
-                return (false, "exists company_name");
+                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["company_name"], viewModel.company_name));
             }
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
             if (entity == null)
             {
-                return (false, "not exists entity");
+                return (false, _stringLocalizer["not_exists_entity"]);
             }
             entity.company_name = viewModel.company_name;
             entity.city = viewModel.city;
@@ -100,11 +108,11 @@ namespace ModernWMS.WMS.Services
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
-                return (true, "update_success");
+                return (true, _stringLocalizer["save_success"]);
             }
             else
             {
-                return (false, "update_failed");
+                return (false, _stringLocalizer["save_failed"]);
             }
         }
         /// <summary>
@@ -117,11 +125,11 @@ namespace ModernWMS.WMS.Services
             var qty = await _dBContext.GetDbSet<CompanyEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
             if (qty > 0)
             {
-                return (true, "delete_success");
+                return (true, _stringLocalizer["delete_success"]);
             }
             else
             {
-                return (false, "delete_failed");
+                return (false, _stringLocalizer["delete_failed"]);
             }
         }
         #endregion

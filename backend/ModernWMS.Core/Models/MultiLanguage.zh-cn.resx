@@ -120,6 +120,18 @@
   <data name="company_name" xml:space="preserve">
     <value>公司名称</value>
   </data>
+  <data name="customer_name" xml:space="preserve">
+    <value>客户名称</value>
+  </data>
+  <data name="delete_failed" xml:space="preserve">
+    <value>删除失败</value>
+  </data>
+  <data name="delete_success" xml:space="preserve">
+    <value>删除成功</value>
+  </data>
+  <data name="exists_entity" xml:space="preserve">
+    <value>{0}:{1} 已经存在</value>
+  </data>
   <data name="goods_owner_name" xml:space="preserve">
     <value>货主名称</value>
   </data>
@@ -130,9 +142,18 @@
   <data name="MaxLength" xml:space="preserve">
     <value>{0}输入字符长度不能大于{1}个字符</value>
   </data>
+  <data name="not_exists_entity" xml:space="preserve">
+    <value>数据不存在或已被删除</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>{0}必填</value>
     <comment>required</comment>
+  </data>
+  <data name="save_failed" xml:space="preserve">
+    <value>保存失败</value>
+  </data>
+  <data name="save_success" xml:space="preserve">
+    <value>保存成功</value>
   </data>
   <data name="username" xml:space="preserve">
     <value>用户名</value>

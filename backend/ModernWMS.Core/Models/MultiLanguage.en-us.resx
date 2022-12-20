@@ -118,16 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="company_name" xml:space="preserve">
-    <value>company name</value>
+    <value>company's name</value>
+  </data>
+  <data name="customer_name" xml:space="preserve">
+    <value>customer's name</value>
+  </data>
+  <data name="delete_failed" xml:space="preserve">
+    <value>Delete failed</value>
+  </data>
+  <data name="delete_success" xml:space="preserve">
+    <value>Delete success</value>
+  </data>
+  <data name="exists_entity" xml:space="preserve">
+    <value>The {0}:{1} is exists</value>
   </data>
   <data name="goods_owner_name" xml:space="preserve">
-    <value>goods owner name</value>
+    <value>goods owner's name</value>
   </data>
   <data name="MaxLength" xml:space="preserve">
     <value>{0} input length must less than or equal {1}</value>
   </data>
+  <data name="not_exists_entity" xml:space="preserve">
+    <value>The data does not exist or has been deleted</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>{0} is Required</value>
+  </data>
+  <data name="save_failed" xml:space="preserve">
+    <value>Save failed</value>
+  </data>
+  <data name="save_success" xml:space="preserve">
+    <value>Save success</value>
   </data>
   <data name="username" xml:space="preserve">
     <value>user name</value>
