@@ -13,7 +13,7 @@
                 <v-icon
                   :icon="item.icon ? 'mdi-' + item.icon : 'mdi-checkbox-blank-circle-outline'"
                   :size="18"
-                  :color="data.activeMenu === item.lable ? '#fff' : '#524e59'"
+                  :color="currentRouterPath === item.routerPath ? '#fff' : '#524e59'"
                 ></v-icon>
               </div>
               <div class="menuLabel">{{ item.lable }}</div>
@@ -22,7 +22,8 @@
               <v-icon icon="mdi-chevron-right" color="#524e59" :size="22"></v-icon>
             </div>
           </div>
-          <Transition name="menu">
+          <!-- <Transition name="menu"> -->
+          <v-expand-transition>
             <div v-show="item.showDetail">
               <div
                 v-for="(detailItem, detailIndex) in item.children"
@@ -36,14 +37,15 @@
                     <v-icon
                       :icon="'mdi-checkbox-blank-circle-outline'"
                       :size="12"
-                      :color="data.activeMenu === detailItem.lable ? '#fff' : '#524e59'"
+                      :color="currentRouterPath === detailItem.routerPath ? '#fff' : '#524e59'"
                     ></v-icon>
                   </div>
                   <div class="menuLabel">{{ detailItem.lable }}</div>
                 </div>
               </div>
             </div>
-          </Transition>
+          </v-expand-transition>
+          <!-- </Transition> -->
         </div>
       </div>
     </div>
@@ -51,14 +53,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
 import Logo from '@/components/system/logo.vue'
 import { sideBarMenu, sideBarDataProps } from '@/types/home'
 import { menusToSideBar } from '@/utils/router'
+import { store } from '@/store'
+import { router } from '@/router'
 
 const data: sideBarDataProps = reactive({
-  menuList: [],
-  activeMenu: ''
+  menuList: []
 })
 
 const method = reactive({
@@ -66,8 +69,10 @@ const method = reactive({
   openMenu: (item: sideBarMenu) => {
     if (item.children && item.children.length > 0) {
       item.showDetail = !item.showDetail
-    } else {
-      data.activeMenu = item.lable
+    } else if (item.routerPath && currentRouterPath.value !== item.routerPath) {
+      // If the selected menu is skipped, no action will be taken
+      store.commit('system/setCurrentRouterPath', item.routerPath)
+      router.push(item.routerPath)
     }
     // if (menuName === 'login') {
     //   store.commit('system/clearOpenedMenu', menuName)
@@ -81,12 +86,15 @@ const method = reactive({
     if (item.children && item.children.length > 0 && item.showDetail) {
       return 'openedMenuItems'
     }
-    if (data.activeMenu === item.lable) {
+    if (currentRouterPath.value === item.routerPath) {
       return 'activeMenuItems'
     }
     return ''
   }
 })
+
+// Currently selected menu
+const currentRouterPath = computed(() => store.getters['system/currentRouterPath'])
 
 onMounted(() => {
   data.menuList = menusToSideBar()
@@ -96,7 +104,7 @@ onMounted(() => {
 <style scoped lang="less">
 @headerHeight: 60px;
 @sideBarWidth: 300px;
-@sideBarTitleHeight: 80px;
+@sideBarTitleHeight: 70px;
 .homeSidebar {
   width: @sideBarWidth;
   box-shadow: 5px 5px 5px #dbdce2;
@@ -116,7 +124,7 @@ onMounted(() => {
       padding-left: 22px;
       padding-right: 8px;
       border-radius: 0 50px 50px 0;
-      margin-bottom: 6px;
+      margin-top: 7px;
       display: flex;
       justify-content: space-between;
       align-items: center;

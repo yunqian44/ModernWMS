@@ -7,12 +7,21 @@ export default {
         defaultTitle: 'Tips'
       }
     },
+    page: {
+      add: 'Add',
+      refresh: 'Refresh',
+      export: 'Export'
+    },
     checkText: {
       mustInput: 'Please fill in the '
+    },
+    homeHeader: {
+      logout: 'Logout'
     }
   },
   router: {
     sideBar: {
+      homepage: 'Home Page',
       baseModule: 'Basic Settings',
       ownerOfCargo: 'Owner Information',
       menuBasicSettings: 'Menu',

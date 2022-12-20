@@ -9,5 +9,4 @@ export interface sideBarMenu {
 
 export interface sideBarDataProps {
   menuList: sideBarMenu[]
-  activeMenu: string
 }

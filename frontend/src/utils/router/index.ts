@@ -4,6 +4,7 @@ import { sideBarMenu } from '@/types/home'
 import { store } from '@/store'
 import i18n from '@/languages/i18n'
 
+// Convert menu permissions to data required for dynamic routing
 export function menusToRouter(menuList: menuItem[]): CustomerRouterProps[] {
   const result: CustomerRouterProps[] = []
   for (const menu of menuList) {
@@ -27,6 +28,16 @@ export function menusToSideBar(): sideBarMenu[] {
     const moduleIndex = result.findIndex((item) => item.lable === i18n.global.t(`router.sideBar.${ menu.module }`))
     const item = GetMenuNameAndModule(menu.vue_path)
     if (item.lable) {
+      // Primary menu
+      if (!menu.module) {
+        result.push({
+          ...item,
+          icon: GetModuleAndIcon(menu.vue_path),
+          routerPath: menu.vue_path
+        })
+        continue
+      }
+      // Secondary menu
       if (moduleIndex > -1) {
         result[moduleIndex].children?.push({
           ...item,
@@ -36,6 +47,7 @@ export function menusToSideBar(): sideBarMenu[] {
         result.push({
           lable: i18n.global.t(`router.sideBar.${ menu.module }`),
           icon: GetModuleAndIcon(menu.module),
+          showDetail: true,
           children: [
             {
               ...item,
@@ -52,6 +64,8 @@ export function menusToSideBar(): sideBarMenu[] {
 // Get the menu name, module and icon
 function GetMenuNameAndModule(path: string): sideBarMenu {
   switch (path) {
+    case 'homepage':
+      return { lable: i18n.global.t('router.sideBar.homepage') }
     case 'ownerOfCargo':
       return { lable: i18n.global.t('router.sideBar.ownerOfCargo') }
     case 'menuBasicSettings':
@@ -74,6 +88,8 @@ function GetModuleAndIcon(name: string) {
   switch (name) {
     case 'baseModule':
       return 'cog'
+    case 'homepage':
+      return 'home'
     default:
       return ''
   }

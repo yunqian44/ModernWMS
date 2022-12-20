@@ -40,10 +40,15 @@ const data = reactive({
 
 const method = reactive({
   changeLanguage: (lang: string) => {
+    if (store.getters['system/language'] === lang) {
+      return
+    }
     localStorage.setItem('language', lang)
     store.commit('system/setLanguage', lang) // set store
     locale.value = getSelcectedLang(lang) // global
     current.value = getSelcectedLangForVuetify(lang) // vuetify
+
+    store.commit('system/setRefreshFlag', true)
   }
 })
 </script>

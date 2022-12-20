@@ -16,7 +16,7 @@ let subscribesArr: Array<any> = []
 // The count of current request
 let acitveAxios = 0
 
-function pushSubscribeInterface(cb: Function) {
+function pushSubscribeInterface(cb: any) {
   subscribesArr.push(cb)
 }
 
