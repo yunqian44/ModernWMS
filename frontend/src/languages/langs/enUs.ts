@@ -28,6 +28,7 @@ export default {
     mainButtonLabel: 'Login',
     rememberTips: 'Remember me',
     userName: 'UserName',
-    password: 'Password'
+    password: 'Password',
+    loginSuccess: 'Login succeeded!'
   }
 }

@@ -5,28 +5,35 @@ import { MessageOptions } from '@/types/system/hookComponent'
 import { vuetify } from '@/plugins/vuetify/index'
 
 // Use the createApp of vue3 and the mount and unmount methods to create a mounted instance
-export default function message(options: MessageOptions) {
-  const mountNode = document.createElement('div')
-  mountNode.className = 'messageItems'
-  mountNode.style.top = `${ getNewMsgTop() }px`
-  document.body.appendChild(mountNode)
-  const app = createApp(MessageComponent, {
-    ...options,
-    removeComponent: () => {
-      setTimeout(() => {
-        mountNode.style.opacity = '0'
-        setTimeout(() => {
-          app.unmount()
-          document.body.removeChild(mountNode)
-          resetMsgTop()
-        }, 200)
-      }, options.shutDelay ? options.shutDelay - 200 : 1300)
-    }
-  }).use(vuetify)
-  return app.mount(mountNode)
+export default {
+  name: 'message',
+  message: (options: MessageOptions) => {
+    const mountNode = document.createElement('div')
+    mountNode.className = 'messageItems'
+    mountNode.style.top = `${ getNewMsgTop() }px`
+    document.body.appendChild(mountNode)
+    const app = createApp(MessageComponent, {
+      ...options,
+      removeComponent: () => {
+        setTimeout(
+          () => {
+            mountNode.style.opacity = '0'
+            setTimeout(() => {
+              app.unmount()
+              document.body.removeChild(mountNode)
+              resetMsgTop()
+            }, 200)
+          },
+          options.shutDelay ? options.shutDelay - 200 : 1300
+        )
+      }
+    }).use(vuetify)
+    return app.mount(mountNode)
+  }
 }
 
 // Reset message top
+
 function resetMsgTop() {
   const messageDomList: any = document.body.getElementsByClassName('messageItems')
   for (let i = 0; i < messageDomList.length; i++) {

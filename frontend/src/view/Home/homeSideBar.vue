@@ -109,9 +109,10 @@ onMounted(() => {
     height: calc(100% - @sideBarTitleHeight);
     overflow: auto;
     .menuItems {
-      height: 42px;
+      // height: 42px;
       width: calc(100% - 20px);
       box-sizing: border-box;
+      padding: 10px 0;
       padding-left: 22px;
       padding-right: 8px;
       border-radius: 0 50px 50px 0;

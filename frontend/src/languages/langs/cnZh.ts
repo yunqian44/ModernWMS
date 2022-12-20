@@ -28,6 +28,7 @@ export default {
     mainButtonLabel: '登录',
     rememberTips: '记住账号密码',
     userName: '用户名',
-    password: '密码'
+    password: '密码',
+    loginSuccess: '登录成功'
   }
 }

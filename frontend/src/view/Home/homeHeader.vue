@@ -35,12 +35,12 @@ const method = reactive({})
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  padding: 0 5px;
   box-sizing: border-box;
-  padding: 0 20px;
   border-radius: 0 0 10px 10px;
   transition: all 0.5s;
   &:hover {
+    padding: 0 20px;
     box-shadow: 0 3px 3px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
       0 3px 4px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
       0 1px 8px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
