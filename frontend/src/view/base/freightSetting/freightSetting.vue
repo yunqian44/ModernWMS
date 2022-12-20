@@ -1,14 +1,7 @@
+<!-- Freight Setting -->
 <template>
   <div class="container">
     <div>
-      <!-- According to your own need to decide whether to the tab, if you don't need that you can delete <v-tabs> -->
-      <v-tabs v-model="data.activeTab" stacked>
-        <v-tab v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
-          <v-icon>{{ item.icon }}</v-icon>
-          <p class="tabItemTitle">{{ item.tabName }}</p>
-        </v-tab>
-      </v-tabs>
-
       <!-- Main Content -->
       <v-card class="mt-5">
         <v-card-text>
@@ -24,52 +17,23 @@
                       icon="mdi-export-variant"
                       :tooltip-text="$t('system.page.export')"
                       @click="exportTable"
-                    ></tooltip-btn>
+                    >
+                    </tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
                   <v-col cols="12" sm="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
-                      <!-- 
-                        Don't delete v-col whether you don't need.
-                        If you only need one query, you should write: 
-
-                        <v-col cols="12" sm="4"></v-col>
-                        <v-col cols="12" sm="4"></v-col>
-                        <v-col cols="12" sm="4">Some Thing</v-col>
-                       -->
+                      <v-col cols="12" sm="4"></v-col>
+                      <v-col cols="12" sm="4"></v-col>
                       <v-col cols="12" sm="4">
                         <v-text-field
-                          v-model="data.searchForm.userName"
+                          v-model="data.searchForm.transportationSupplier"
                           clearable
                           hide-details
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
-                          :label="$t('login.userName')"
-                          variant="solo"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="4">
-                        <v-text-field
-                          v-model="data.searchForm.userName1"
-                          clearable
-                          hide-details
-                          density="comfortable"
-                          class="searchInput ml-5 mt-1"
-                          :label="$t('login.userName')"
-                          variant="solo"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="4">
-                        <v-text-field
-                          v-model="data.searchForm.userName2"
-                          clearable
-                          hide-details
-                          density="comfortable"
-                          class="searchInput ml-5 mt-1"
-                          :label="$t('login.userName')"
+                          :label="$t('base.freightSetting.transportationSupplier')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -86,7 +50,7 @@
                   height: tableHeight
                 }"
               >
-                <vxe-grid v-bind="data.gridOptions">
+                <vxe-grid v-bind="data.gridOptions" ref="xTable">
                   <template #pager>
                     <vxe-pager
                       v-model:current-page="data.tablePage.currentPage"
@@ -121,18 +85,10 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import { VxeGridProps, VxePagerEvents, VxeButtonEvents } from 'vxe-table'
 import { computedTableHeight } from '@/utils/globalStyle'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import i18n from '@/languages/i18n'
+import { FreightVO } from '@/types/settings/freight'
 
 const xTable = ref()
-
-// Table Model
-interface UserVO {
-  id: number
-  name: string
-  role: string
-  sex: string
-  age: number
-  address: string
-}
 
 const tabsConfig = [
   {
@@ -153,19 +109,11 @@ const tabsConfig = [
 ]
 
 const data = reactive({
-  // TODO Adjust the search prop what you want
   searchForm: {
-    userName: '',
-    userName1: '',
-    userName2: ''
+    transportationSupplier: ''
   },
   activeTab: null,
-  tableData: ref<UserVO[]>([
-    { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
-    { id: 10002, name: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
-    { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
-    { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
-  ]),
+  tableData: ref<FreightVO[]>([]),
   tablePage: reactive({
     total: 0,
     currentPage: 1,
@@ -182,9 +130,12 @@ const data = reactive({
     columns: [
       { type: 'seq', width: 60 },
       { type: 'checkbox', width: 50 },
-      { field: 'name', title: 'Name' },
-      { field: 'role', title: 'Role' },
-      { field: 'address', title: 'Address', showOverflow: true }
+      { field: 'transportation_supplier', title: i18n.global.t('base.freightSetting.transportationSupplier') },
+      { field: 'send_city', title: i18n.global.t('base.freightSetting.sendCity') },
+      { field: 'receiver_city', title: i18n.global.t('base.freightSetting.receiverCity') },
+      { field: 'weight_fee', title: i18n.global.t('base.freightSetting.weightFee') },
+      { field: 'volume_fee', title: i18n.global.t('base.freightSetting.volumeFee') },
+      { field: 'min_payment', title: i18n.global.t('base.freightSetting.minPayment') }
     ]
   })
 })
@@ -192,17 +143,42 @@ const data = reactive({
 const method = reactive({
   sureSearch: () => {
     console.log(data.searchForm)
+  },
+  getData() {
+    // TODO get data
+    data.tableData.push(
+      {
+        id: 10001,
+        transportation_supplier: '1',
+        send_city: '1',
+        receiver_city: '1',
+        weight_fee: 1,
+        volume_fee: 1,
+        min_payment: 1
+      },
+      {
+        id: 10002,
+        transportation_supplier: '2',
+        send_city: '2',
+        receiver_city: '2',
+        weight_fee: 2,
+        volume_fee: 2,
+        min_payment: 3
+      }
+    )
+    data.gridOptions.data = data.tableData
   }
 })
 
 onMounted(() => {
-  data.gridOptions.data = data.tableData
+  method.getData()
 })
 
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
   data.tablePage.currentPage = currentPage
   data.tablePage.pageSize = pageSize
-  // TODO Get datas what you want
+
+  method.getData()
 }
 
 const exportTable: VxeButtonEvents.Click = () => {
@@ -219,12 +195,7 @@ const exportTable: VxeButtonEvents.Click = () => {
   }
 }
 
-/**
- * computedTableHeight({ hasTab, hasOperate }) 
- * Must enter the params if you don't need tab or operate area
- * Defaultly, the 'hasTab' and 'hasOperate' are true
- */
-const tableHeight = computed(() => computedTableHeight({}))
+const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
 </script>
 
 <style scoped lang="less">
