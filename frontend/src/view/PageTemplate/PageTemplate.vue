@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div>
+      <!-- According to your own need to decide whether to the tab, if you don't need that you can delete <v-tabs> -->
       <v-tabs v-model="data.activeTab" stacked>
         <v-tab v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
           <v-icon>{{ item.icon }}</v-icon>
@@ -19,12 +20,24 @@
                   <v-col cols="12" sm="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
-                    <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')"></tooltip-btn>
+                    <tooltip-btn
+                      icon="mdi-export-variant"
+                      :tooltip-text="$t('system.page.export')"
+                      @click="exportTable"
+                    ></tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
                   <v-col cols="12" sm="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
+                      <!-- 
+                        Don't delete v-col whether you don't need.
+                        If you only need one query, you should write: 
+
+                        <v-col cols="12" sm="4"></v-col>
+                        <v-col cols="12" sm="4"></v-col>
+                        <v-col cols="12" sm="4">Some Thing</v-col>
+                       -->
                       <v-col cols="12" sm="4">
                         <v-text-field
                           v-model="data.searchForm.userName"
@@ -68,7 +81,7 @@
 
               <!-- Table -->
               <div
-                class="mt-5 tableContainer"
+                class="mt-5"
                 :style="{
                   height: tableHeight
                 }"
@@ -105,9 +118,11 @@
 
 <script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
-import { VxeGridProps, VxePagerEvents } from 'vxe-table'
+import { VxeGridProps, VxePagerEvents, VxeButtonEvents } from 'vxe-table'
 import { computedTableHeight } from '@/utils/globalStyle'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+
+const xTable = ref()
 
 // Table Model
 interface UserVO {
@@ -138,6 +153,7 @@ const tabsConfig = [
 ]
 
 const data = reactive({
+  // TODO Adjust the search prop what you want
   searchForm: {
     userName: '',
     userName1: '',
@@ -158,6 +174,7 @@ const data = reactive({
   gridOptions: reactive<VxeGridProps>({
     height: 'auto',
     loading: false,
+    align: 'center',
     columnConfig: {
       resizable: true
     },
@@ -185,9 +202,28 @@ onMounted(() => {
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
   data.tablePage.currentPage = currentPage
   data.tablePage.pageSize = pageSize
-  // TODO 重新获取数据
+  // TODO Get datas what you want
 }
 
+const exportTable: VxeButtonEvents.Click = () => {
+  const $table = xTable.value
+  try {
+    $table[0].exportData({
+      type: 'csv',
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type)
+      }
+    })
+  } catch (error) {
+    console.error('导出时发生未知错误', error)
+  }
+}
+
+/**
+ * computedTableHeight({ hasTab, hasOperate }) 
+ * Must enter the params if you don't need tab or operate area
+ * Defaultly, the 'hasTab' and 'hasOperate' are true
+ */
 const tableHeight = computed(() => computedTableHeight({}))
 </script>
 
@@ -204,9 +240,5 @@ const tableHeight = computed(() => computedTableHeight({}))
 .col {
   display: flex;
   align-items: center;
-}
-
-.tableContainer {
-  height: 500px;
 }
 </style>
