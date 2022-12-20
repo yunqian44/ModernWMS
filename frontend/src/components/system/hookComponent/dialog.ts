@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import DialogComponent from './dialog.vue'
-import { DialogOptions } from '@/types/system/hookComponent'
+import { DialogOptions } from '@/types/System/HookComponent'
 // Use vuetify
 import { vuetify } from '@/plugins/vuetify/index'
 

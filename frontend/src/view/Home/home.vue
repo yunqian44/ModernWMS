@@ -5,7 +5,7 @@
       <HomeHeader />
       <div class="homeRouterContainer pt-2">
         <RouterView v-slot="{ Component }">
-          <keep-alive :include="openedMenus.value">
+          <keep-alive :include="openedMenus">
             <component :is="Component"></component>
           </keep-alive>
         </RouterView>
@@ -45,6 +45,7 @@ watch(
     }
   }
 )
+
 </script>
 
 <style scoped lang="less">

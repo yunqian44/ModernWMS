@@ -1,5 +1,5 @@
 // user
-export interface menuItem {
+export interface MenuItem {
   menu_name: string
   module: string
   vue_path: string
@@ -7,12 +7,21 @@ export interface menuItem {
   vue_directory: string
 }
 
-export interface userStateProps {
+export interface UserStateProps {
   userInfo: any
   token: string
   refreshToken: string
   expirationTime: number
   effectiveMinutes: number
   isRefreshingToken: boolean
-  menulist: menuItem[]
+  menulist: MenuItem[]
+}
+
+export interface StateProps {
+  language: string
+  currentRouterPath: string
+  openedMenus: string[]
+  clientWidth: number
+  clientHeight: number
+  refreshFlag: boolean
 }
