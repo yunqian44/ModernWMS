@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DBContext;
+using ModernWMS.Core.JWT;
 using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
@@ -55,11 +56,29 @@ namespace ModernWMS.WMS.Services
         }
 
         /// <summary>
+        /// Get a record by id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<CompanyViewModel> GetAsync(int id)
+        {
+            var entity = await _dBContext.GetDbSet<CompanyEntity>().AsNoTracking().FirstOrDefaultAsync(t => t.id.Equals(id));
+            if (entity != null)
+            {
+                return entity.Adapt<CompanyViewModel>();
+            }
+            else
+            {
+                return new CompanyViewModel();
+            }
+        }
+        /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(int id, string msg)> AddAsync(CompanyViewModel viewModel)
+        public async Task<(int id, string msg)> AddAsync(CompanyViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CompanyEntity>();
             if (await DbSet.AnyAsync(t => t.company_name.Equals(viewModel.company_name)))
@@ -70,6 +89,7 @@ namespace ModernWMS.WMS.Services
             entity.id = 0;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
+            entity.tenant_id = currentUser.tenant_id;
             DbSet.Add(entity);
             await _dBContext.SaveChangesAsync();
             if (entity.id > 0)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using ModernWMS.Core.Controller;
 using ModernWMS.Core.Models;
 using ModernWMS.WMS.Entities.ViewModels;
@@ -20,6 +21,10 @@ namespace ModernWMS.WMS.Controllers
         /// company Service
         /// </summary>
         private readonly ICompanyService _companyService;
+        /// <summary>
+        /// Localizer Service
+        /// </summary>
+        private readonly IStringLocalizer<ModernWMS.Core.MultiLanguage> _stringLocalizer;
 
         #endregion
 
@@ -28,11 +33,14 @@ namespace ModernWMS.WMS.Controllers
         /// constructor
         /// </summary>
         /// <param name="companyService">company Service</param>
+        /// <param name="stringLocalizer">Localizer</param>
         public CompanyController(
             ICompanyService companyService
+          , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
             )
         {
             this._companyService = companyService;
+            this._stringLocalizer = stringLocalizer;
         }
         #endregion
 
@@ -41,7 +49,7 @@ namespace ModernWMS.WMS.Controllers
         /// Get all records
         /// </summary>
         /// <returns>args</returns>
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ResultModel<List<CompanyViewModel>>> GetAllAsync()
         {
             var data = await _companyService.GetAllAsync();
@@ -56,6 +64,23 @@ namespace ModernWMS.WMS.Controllers
         }
 
         /// <summary>
+        /// get a record by id
+        /// </summary>
+        /// <returns>args</returns>
+        [HttpGet]
+        public async Task<ResultModel<CompanyViewModel>> GetAsync(int id)
+        {
+            var data = await _companyService.GetAsync(id);
+            if (data != null && data.id > 0)
+            {
+                return ResultModel<CompanyViewModel>.Success(data);
+            }
+            else
+            {
+                return ResultModel<CompanyViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+            }
+        }
+        /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">args</param>
@@ -63,7 +88,7 @@ namespace ModernWMS.WMS.Controllers
         [HttpPost]
         public async Task<ResultModel<int>> AddAsync(CompanyViewModel viewModel)
         {
-            var (id, msg) = await _companyService.AddAsync(viewModel);
+            var (id, msg) = await _companyService.AddAsync(viewModel, CurrentUser);
             if (id > 0)
             {
                 return ResultModel<int>.Success(id);

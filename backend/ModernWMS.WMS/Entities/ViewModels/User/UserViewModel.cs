@@ -107,7 +107,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [MaxLength(3, ErrorMessage = "MaxLength")]
         public byte tenant_id { get; set; } = 0;
 
-
         #endregion
     }
 }
