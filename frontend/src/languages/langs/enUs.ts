@@ -49,6 +49,14 @@ export default {
       weightFee: 'Weight Fee',
       volumeFee: 'Volume Fee',
       minPayment: 'Min Payment',
+    },
+    userManagement: {
+      user_num: 'User Num',
+      user_name: 'User Name',
+      user_role: 'Role',
+      contact_tel: 'Contact Information',
+      sex: 'Sex',
+      is_valid: 'Is Valid'
     }
   }
 }

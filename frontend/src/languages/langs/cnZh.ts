@@ -49,6 +49,14 @@ export default {
       weightFee: '单公斤运费',
       volumeFee: '单立方米运费',
       minPayment: '最小运费',
+    },
+    userManagement: {
+      user_num: '员工编号',
+      user_name: '员工名称',
+      user_role: '角色',
+      contact_tel: '联系方式',
+      sex: '性别',
+      is_valid: '是否有效'
     }
   }
 }
