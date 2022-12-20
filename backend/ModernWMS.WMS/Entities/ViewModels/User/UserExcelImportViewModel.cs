@@ -1,32 +1,22 @@
-﻿using ModernWMS.Core.Utility;
+﻿/*
+ * date：2022-12-20
+ * developer：NoNo
+ */
+using ModernWMS.Core.Utility;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModernWMS.WMS.Entities.ViewModels
 {
-    public class UserViewModel
+    /// <summary>
+    /// user import by excel cols viewmodel
+    /// </summary>
+    public class UserExcelImportViewModel
     {
-        #region constructor
-        public UserViewModel()
-        {
-
-        }
-        #endregion
-        #region property
-
-        /// <summary>
-        /// primary key
-        /// </summary>
-        public int id { get; set; } = 0;
-
         /// <summary>
         /// user's number
         /// </summary>
-        [Display(Name ="user_num")]
+        [Display(Name = "user_num")]
         [Required(ErrorMessage = "Required")]
         [MaxLength(128, ErrorMessage = "MaxLength")]
 
@@ -70,14 +60,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public bool is_valid { get; set; } = false;
 
         /// <summary>
-        /// password
-        /// </summary>
-        [Required(ErrorMessage = "Required")]
-        [Display(Name = "password")]
-        [MaxLength(64, ErrorMessage = "MaxLength")]
-        public string auth_string { get; set; } = string.Empty;
-
-        /// <summary>
         /// creator
         /// </summary>
         [Display(Name = "creator")]
@@ -85,28 +67,10 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string creator { get; set; } = string.Empty;
 
         /// <summary>
-        /// createtime
-        /// </summary>
-        [Display(Name = "create_time")]
-        [MaxLength(23, ErrorMessage = "MaxLength")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime create_time { get; set; } = UtilConvert.MinDate;
-
-        /// <summary>   
-        /// last update time
-        /// </summary>
-        [Display(Name = "last_update_time")]
-        [MaxLength(23, ErrorMessage = "MaxLength")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime last_update_time { get; set; } = UtilConvert.MinDate;
-
-        /// <summary>
         /// tenant
         /// </summary>
         [Display(Name = "tenant")]
         [MaxLength(3, ErrorMessage = "MaxLength")]
         public byte tenant_id { get; set; } = 0;
-
-        #endregion
     }
 }

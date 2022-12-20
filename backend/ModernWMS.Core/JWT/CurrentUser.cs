@@ -1,4 +1,7 @@
-﻿namespace ModernWMS.Core.JWT
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+
+namespace ModernWMS.Core.JWT
 {
     /// <summary>
     /// CurrentUser
@@ -22,5 +25,10 @@
         /// user_role
         /// </summary>
         public string user_role { get; set; } = "admin";
+
+        /// <summary>
+        /// tenant
+        /// </summary>
+        public byte tenant_id { get; set; } = 0;
     }
 }
