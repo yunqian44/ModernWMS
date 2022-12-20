@@ -39,5 +39,15 @@ export default {
     userName: '用户名',
     password: '密码',
     loginSuccess: '登录成功'
+  },
+  base: {
+    userManagement: {
+      user_num: '员工编号',
+      user_name: '员工名称',
+      user_role: '角色',
+      contact_tel: '联系方式',
+      sex: '性别',
+      is_valid: '是否有效'
+    }
   }
 }
