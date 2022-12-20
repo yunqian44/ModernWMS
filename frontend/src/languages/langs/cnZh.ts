@@ -7,12 +7,21 @@ export default {
         defaultTitle: '提示'
       }
     },
+    page: {
+      add: '新增',
+      refresh: '刷新',
+      export: '导出'
+    },
     checkText: {
       mustInput: '请填写'
+    },
+    homeHeader: {
+      logout: '注销'
     }
   },
   router: {
     sideBar: {
+      homepage: '首页',
       baseModule: '基础设置',
       ownerOfCargo: '货主信息',
       menuBasicSettings: '菜单基础设置',

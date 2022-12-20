@@ -13,8 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { emitter } from './utils/bus'
+import { store } from './store'
 
 const loadingFlag = ref(false)
 
@@ -27,6 +28,14 @@ onMounted(() => {
     // console.log('closeLoading')
     loadingFlag.value = false
   })
+
+  // 监听浏览器大小
+  window.onresize = function () {
+    const clientHeight = document.documentElement.clientHeight
+    const clientWidth = document.documentElement.clientWidth
+    store.commit('system/setClientHeight', clientHeight)
+    store.commit('system/setClientWidth', clientWidth)
+  }
 })
 </script>
 

@@ -32,8 +32,6 @@ export default {
   }
 }
 
-// Reset message top
-
 function resetMsgTop() {
   const messageDomList: any = document.body.getElementsByClassName('messageItems')
   for (let i = 0; i < messageDomList.length; i++) {

@@ -4,7 +4,7 @@
       <h5>{{ $t('login.welcomeTitle') }}</h5>
     </div>
     <div class="formContainer">
-      <v-form ref="VFormRef" v-model="data.valid" lazy-validation>
+      <v-form ref="VFormRef" v-model="data.valid" lazy-validation @keydown.enter.prevent="method.login()">
         <v-text-field
           v-model="data.userName"
           required
@@ -86,19 +86,20 @@ const method = reactive({
 
       // test menus
       const testMenus = [
+        // static
+        {
+          menu_name: '首页',
+          module: '',
+          vue_path: 'homepage',
+          vue_path_detail: '',
+          vue_directory: 'home/homepage'
+        },
         {
           menu_name: '货主信息',
           module: 'baseModule',
           vue_path: 'ownerOfCargo',
           vue_path_detail: '',
           vue_directory: 'base/ownerOfCargo'
-        },
-        {
-          menu_name: '菜单基础设置',
-          module: 'baseModule',
-          vue_path: 'menuBasicSettings',
-          vue_path_detail: '',
-          vue_directory: 'base/menuBasicSettings'
         },
         {
           menu_name: '用户管理',
@@ -131,9 +132,9 @@ const method = reactive({
         {
           menu_name: '公司信息',
           module: 'baseModule',
-          vue_path: '公司信息',
-          vue_path_detail: 'CompanySetting',
-          vue_directory: 'base/CompanySetting'
+          vue_path: 'companySetting',
+          vue_path_detail: '',
+          vue_directory: 'base/companySetting'
         }
       ]
       store.commit('user/setUserMenuList', testMenus)

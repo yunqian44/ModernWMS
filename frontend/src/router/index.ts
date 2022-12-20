@@ -17,13 +17,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/view/Login/login.vue')
+    component: () => import('@/view/login/login.vue')
   },
   {
     name: 'home',
     path: '/home',
     redirect: 'homepage',
-    component: () => import('@/view/Home/home.vue'),
+    component: () => import('@/view/home/home.vue'),
     children: []
   }
 ]
@@ -48,7 +48,7 @@ function loadRouter() {
   dynamicRouter.push({
     name: 'homepage',
     path: '/homepage',
-    directory: 'Home/homepage',
+    directory: 'home/homepage',
     redirect: '',
     component: null
   })
@@ -86,8 +86,9 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-// disable back or forward
+// Route interceptor, after jump
 router.afterEach(() => {
+  // disable back or forward
   window.history.pushState(null, '', window.location.href)
 })
 
