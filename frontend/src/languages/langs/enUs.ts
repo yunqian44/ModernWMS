@@ -29,7 +29,8 @@ export default {
       commodityCategorySetting: 'Commodity Category',
       commodityManagement: 'Commodity Management',
       userRoleSetting: 'User Role',
-      companySetting: 'Company Information'
+      companySetting: 'Company Information',
+      freightSetting: 'Freight Setting'
     }
   },
   login: {
@@ -39,5 +40,15 @@ export default {
     userName: 'UserName',
     password: 'Password',
     loginSuccess: 'Login succeeded!'
+  },
+  base: {
+    freightSetting: {
+      transportationSupplier: 'Transportation Supplier',
+      sendCity: 'Send City',
+      receiverCity: 'Receiver City',
+      weightFee: 'Weight Fee',
+      volumeFee: 'Volume Fee',
+      minPayment: 'Min Payment',
+    }
   }
 }

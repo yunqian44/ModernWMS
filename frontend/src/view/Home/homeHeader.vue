@@ -35,12 +35,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import LanguagesSwitch from '@/components/system/languages.vue'
 import { lightGrey } from '@/utils/globalStyle'
 import i18n from '@/languages/i18n'
 import { router } from '@/router'
 import { store } from '@/store'
+
+const routerInfo = useRouter()
 
 const data = reactive({
   breadcrumbItems: [
@@ -62,6 +65,15 @@ const data = reactive({
     }
   ]
 })
+
+watch(
+  () => routerInfo,
+  (newValue) => {
+    // Do something when the routes changed
+    console.log(newValue.currentRoute.value)
+  },
+  { immediate: true, deep: true }
+)
 
 const method = reactive({
   // User operation method

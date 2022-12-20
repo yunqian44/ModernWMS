@@ -29,7 +29,8 @@ export default {
       commodityCategorySetting: '商品类别设置',
       commodityManagement: '商品管理',
       userRoleSetting: '用户角色设置',
-      companySetting: '公司信息'
+      companySetting: '公司信息',
+      freightSetting: '运费设置'
     }
   },
   login: {
@@ -39,5 +40,15 @@ export default {
     userName: '用户名',
     password: '密码',
     loginSuccess: '登录成功'
+  },
+  base: {
+    freightSetting: {
+      transportationSupplier: '承运商',
+      sendCity: '始发城市',
+      receiverCity: '到货城市',
+      weightFee: '单公斤运费',
+      volumeFee: '单立方米运费',
+      minPayment: '最小运费',
+    }
   }
 }

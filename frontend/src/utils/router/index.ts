@@ -80,6 +80,8 @@ function GetMenuNameAndModule(path: string): sideBarMenu {
       return { lable: i18n.global.t('router.sideBar.userRoleSetting') }
     case 'CompanySetting':
       return { lable: i18n.global.t('router.sideBar.companySetting') }
+      case 'freightSetting':
+      return { lable: i18n.global.t('router.sideBar.freightSetting') }
     default:
       return { lable: '' }
   }
