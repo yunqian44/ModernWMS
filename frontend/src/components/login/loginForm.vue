@@ -150,6 +150,7 @@ const method = reactive({
         localStorage.setItem('userLoginInfo', '')
       }
       // Jump home
+      store.commit('system/setCurrentRouterPath', 'homepage')
       router.push('home')
     }
   }
