@@ -42,21 +42,12 @@ import { lightGrey } from '@/utils/globalStyle'
 import i18n from '@/languages/i18n'
 import { router } from '@/router'
 import { store } from '@/store'
+import { DataProps } from '@/types/home/HomeHeader'
 
 const routerInfo = useRouter()
 
-const data = reactive({
-  breadcrumbItems: [
-    {
-      title: '基础设置',
-      disabled: true
-    },
-    {
-      title: '运费设置',
-      disabled: true,
-      href: 'breadcrumbs_link_1'
-    }
-  ],
+const data: DataProps = reactive({
+  breadcrumbItems: [],
   // User Action List
   userOperationMenu: [
     {
@@ -66,11 +57,26 @@ const data = reactive({
   ]
 })
 
+// Get current page route info
 watch(
   () => routerInfo,
   (newValue) => {
-    // Do something when the routes changed
-    console.log(newValue.currentRoute.value)
+    const MODULE = i18n.global.t(`router.sideBar.${ newValue.currentRoute.value.meta.menuModule }`)
+    const PATH = i18n.global.t(`router.sideBar.${ newValue.currentRoute.value.meta.menuPath }`)
+
+    data.breadcrumbItems = [
+      {
+        title: PATH,
+        disabled: true
+      }
+    ]
+    
+    if (MODULE) {
+      data.breadcrumbItems.unshift({
+        title: MODULE,
+        disabled: true
+      })
+    }
   },
   { immediate: true, deep: true }
 )

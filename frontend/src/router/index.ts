@@ -60,6 +60,10 @@ function loadRouter() {
   // This works normally, but it doesn't seem right when getting router
   for (const item of dynamicRouter) {
     item.component = modules[`../view/${ item.directory }${ item.path }.vue`]
+    item.meta = {
+      menuModule: item.module,
+      menuPath: item.name
+    }
     router.addRoute('home', item)
     loadedRouter.push(item.name) // cache dynamic router
   }

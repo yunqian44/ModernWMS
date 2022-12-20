@@ -10,6 +10,7 @@ export function menusToRouter(menuList: MenuItem[]): CustomerRouterProps[] {
   for (const menu of menuList) {
     result.push({
       name: menu.vue_path,
+      module: menu.module,
       path: `/${ menu.vue_path }`,
       directory: menu.vue_directory,
       redirect: '',
