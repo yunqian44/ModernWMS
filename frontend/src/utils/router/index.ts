@@ -26,12 +26,12 @@ export function menusToSideBar(): sideBarMenu[] {
   for (const menu of menuList) {
     // Get the module index and check whether this group exists
     const moduleIndex = result.findIndex((item) => item.lable === i18n.global.t(`router.sideBar.${ menu.module }`))
-    const item = GetMenuNameAndModule(menu.vue_path)
-    if (item.lable) {
+    const lable = GetMenuNameAndModule(menu.vue_path)
+    if (lable) {
       // Primary menu
       if (!menu.module) {
         result.push({
-          ...item,
+          lable,
           icon: GetModuleAndIcon(menu.vue_path),
           routerPath: menu.vue_path
         })
@@ -40,7 +40,8 @@ export function menusToSideBar(): sideBarMenu[] {
       // Secondary menu
       if (moduleIndex > -1) {
         result[moduleIndex].children?.push({
-          ...item,
+          lable,
+          icon: GetModuleAndIcon(menu.vue_path),
           routerPath: menu.vue_path
         })
       } else {
@@ -50,7 +51,7 @@ export function menusToSideBar(): sideBarMenu[] {
           showDetail: true,
           children: [
             {
-              ...item,
+              lable,
               routerPath: menu.vue_path
             }
           ]
@@ -62,26 +63,26 @@ export function menusToSideBar(): sideBarMenu[] {
 }
 
 // Get the menu name, module and icon
-function GetMenuNameAndModule(path: string): sideBarMenu {
+function GetMenuNameAndModule(path: string): string {
   switch (path) {
     case 'homepage':
-      return { lable: i18n.global.t('router.sideBar.homepage') }
+      return i18n.global.t('router.sideBar.homepage')
     case 'ownerOfCargo':
-      return { lable: i18n.global.t('router.sideBar.ownerOfCargo') }
+      return i18n.global.t('router.sideBar.ownerOfCargo')
     case 'menuBasicSettings':
-      return { lable: i18n.global.t('router.sideBar.menuBasicSettings') }
+      return i18n.global.t('router.sideBar.menuBasicSettings')
     case 'userManagement':
-      return { lable: i18n.global.t('router.sideBar.userManagement') }
+      return i18n.global.t('router.sideBar.userManagement')
     case 'commodityCategorySetting':
-      return { lable: i18n.global.t('router.sideBar.commodityCategorySetting') }
+      return i18n.global.t('router.sideBar.commodityCategorySetting')
     case 'commodityManagement':
-      return { lable: i18n.global.t('router.sideBar.commodityManagement') }
+      return i18n.global.t('router.sideBar.commodityManagement')
     case 'userRoleSetting':
-      return { lable: i18n.global.t('router.sideBar.userRoleSetting') }
-    case 'CompanySetting':
-      return { lable: i18n.global.t('router.sideBar.companySetting') }
+      return i18n.global.t('router.sideBar.userRoleSetting')
+    case 'companySetting':
+      return i18n.global.t('router.sideBar.companySetting')
     default:
-      return { lable: '' }
+      return ''
   }
 }
 function GetModuleAndIcon(name: string) {
