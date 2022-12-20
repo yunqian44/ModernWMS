@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import LoginForm from '@/components/login/loginForm.vue'
+import LoginForm from '@/components/login/login-form.vue'
 import LanguagesSwitch from '@/components/system/languages.vue'
 import Logo from '@/components/system/logo.vue'
 </script>
