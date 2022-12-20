@@ -72,6 +72,7 @@ const method = reactive({
     } else if (item.routerPath && currentRouterPath.value !== item.routerPath) {
       // If the selected menu is skipped, no action will be taken
       store.commit('system/setCurrentRouterPath', item.routerPath)
+      store.commit('system/addOpenedMenu', item.routerPath)
       router.push(item.routerPath)
     }
     // if (menuName === 'login') {
