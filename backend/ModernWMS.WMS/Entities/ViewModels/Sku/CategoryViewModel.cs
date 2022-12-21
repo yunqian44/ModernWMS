@@ -63,7 +63,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// is_valid
         /// </summary>
         [Display(Name = "is_valid")]
-        public bool is_valid { get; set; } = false;
+        public bool is_valid { get; set; } = true;
 
         #endregion
 
