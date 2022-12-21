@@ -7,7 +7,7 @@ const SERVER_URL = `${ import.meta.env.VITE_BASE_PATH }:${ import.meta.env.VITE_
 axios.defaults.baseURL = SERVER_URL
 const http = axios.create({
   baseURL: SERVER_URL,
-  timeout: 20000
+  timeout: 10000
 })
 
 // The interface array request failed

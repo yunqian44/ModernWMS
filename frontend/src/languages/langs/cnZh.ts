@@ -9,17 +9,32 @@ export default {
     },
     page: {
       add: '新增',
+      update: '修改',
       refresh: '刷新',
       export: '导出',
       operate: '操作',
       edit: '编辑',
-      delete: '删除'
+      delete: '删除',
+      close: '关闭',
+      submit: '提交'
+    },
+    tips: {
+      success: '成功!',
+      fail: '失败!',
+      beforeDeleteMessage: '您确定要删除此条数据吗?'
     },
     checkText: {
+      checkFormFail: '操作失败, 请检查数据后重试!',
       mustInput: '请填写'
     },
     homeHeader: {
       logout: '注销'
+    },
+    combobox: {
+      sex: {
+        male: '男',
+        female: '女'
+      }
     }
   },
   router: {
@@ -62,11 +77,20 @@ export default {
       user_role: '角色',
       contact_tel: '联系方式',
       sex: '性别',
-      is_valid: '是否有效'
+      is_valid: '是否有效',
+      restPwd: '重置密码',
+      checkboxIsNull: '请选中数据!',
+      beforeResetPwd: '您确定要重置这些用户的密码吗?',
+      afterResetPwd: '重置密码成功!'
     },
     warehouseSetting: {
       warehouseSetting: '仓库设置',
-      reservoirSetting: '库区设置'
+      reservoirSetting: '库区设置',
+      warehouse_name: '仓库名称',
+      city: '所在城市',
+      address: '详细地址',
+      acontact_tel: '联系方式',
+      manager: '负责人'
     },
     customer: {
       customer_name: '客户名称',

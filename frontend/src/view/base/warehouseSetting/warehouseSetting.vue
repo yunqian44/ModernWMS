@@ -13,11 +13,12 @@
       <v-card class="mt-5">
         <v-card-text>
           <v-window v-model="data.activeTab">
-            <v-window-item v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
+            <!-- If you have more than one tab, you should write more <v-window-item> and give it 'value' -->
+            <v-window-item value="tabOne">
               <div class="operateArea">
                 <v-row no-gutters>
                   <!-- Operate Btn -->
-                  <v-col cols="12" sm="3" class="col">
+                  <v-col cols="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
                     <tooltip-btn
@@ -28,17 +29,17 @@
                   </v-col>
 
                   <!-- Search Input -->
-                  <v-col cols="12" sm="9">
+                  <v-col cols="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <!-- 
                         Don't delete v-col whether you don't need.
                         If you only need one query, you should write: 
 
-                        <v-col cols="12" sm="4"></v-col>
-                        <v-col cols="12" sm="4"></v-col>
-                        <v-col cols="12" sm="4">Some Thing</v-col>
+                        <v-col cols="4"></v-col>
+                        <v-col cols="4"></v-col>
+                        <v-col cols="4">Some Thing</v-col>
                        -->
-                      <v-col cols="12" sm="4">
+                      <v-col cols="4">
                         <v-text-field
                           v-model="data.searchForm.userName"
                           clearable
@@ -50,7 +51,7 @@
                         >
                         </v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="4">
+                      <v-col cols="4">
                         <v-text-field
                           v-model="data.searchForm.userName1"
                           clearable
@@ -62,7 +63,7 @@
                         >
                         </v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="4">
+                      <v-col cols="4">
                         <v-text-field
                           v-model="data.searchForm.userName2"
                           clearable
@@ -128,7 +129,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
-import { VxePagerEvents, VxeButtonEvents } from 'vxe-table'
+import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
@@ -148,19 +149,9 @@ interface UserVO {
 
 const tabsConfig = [
   {
-    value: 'one',
+    value: 'tabOne',
     icon: 'mdi-phone',
-    tabName: 'one'
-  },
-  {
-    value: 'two',
-    icon: 'mdi-phone',
-    tabName: 'two'
-  },
-  {
-    value: 'three',
-    icon: 'mdi-phone',
-    tabName: 'three'
+    tabName: 'tabOne'
   }
 ]
 
@@ -200,10 +191,10 @@ const method = reactive({
     data.tablePage.pageSize = pageSize
     // TODO Get datas what you want
   }),
-  exportTable: ref<VxeButtonEvents.Click>(() => {
+  exportTable: () => {
     const $table = xTable.value
     try {
-      $table[0].exportData({
+      $table.exportData({
         type: 'csv',
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type)
@@ -212,7 +203,7 @@ const method = reactive({
     } catch (error) {
       console.error('导出时发生未知错误', error)
     }
-  })
+  }
 })
 
 onMounted(() => {
