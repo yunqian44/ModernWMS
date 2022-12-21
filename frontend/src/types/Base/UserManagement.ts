@@ -1,5 +1,5 @@
 import { VxeGridProps } from 'vxe-table'
-import { UniformFileNaming } from '../System/Form'
+import { UniformFileNaming, TablePage } from '../System/Form'
 
 // Common request res
 export interface HttpModel {
@@ -18,12 +18,6 @@ export interface UserVO extends UniformFileNaming {
   sex?: string
   auth_string?: string
   is_valid: boolean
-}
-
-export interface TablePage {
-  total: number
-  pageIndex: number
-  pageSize: number
 }
 
 export interface DataProps {

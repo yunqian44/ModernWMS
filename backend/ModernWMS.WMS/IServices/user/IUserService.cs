@@ -17,6 +17,12 @@ namespace ModernWMS.WMS.IServices
      {
         #region Api
         /// <summary>
+        /// get select items
+        /// </summary>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<List<FormSelectItem>> GetSelectItemsAsnyc(CurrentUser currentUser);
+        /// <summary>
         /// page search
         /// </summary>
         /// <param name="pageSearch">args</param>
@@ -58,8 +64,9 @@ namespace ModernWMS.WMS.IServices
         /// import users by excel
         /// </summary>
         /// <param name="datas">excel datas</param>
+        /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> ExcelAsync(List<UserExcelImportViewModel> datas);
+        Task<(bool flag, string msg)> ExcelAsync(List<UserExcelImportViewModel> datas,CurrentUser currentUser);
 
         /// <summary>
         /// reset password
