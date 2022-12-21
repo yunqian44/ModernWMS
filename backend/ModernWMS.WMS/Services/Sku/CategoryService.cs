@@ -180,7 +180,7 @@ namespace ModernWMS.WMS.Services
             var Spus = _dBContext.GetDbSet<SpuEntity>();
             if (await Spus.AsNoTracking().AnyAsync(t => idList.Contains(t.category_id)))
             {
-                return (false, "The data has been referenced and cannot be deleted");
+                return (false, _stringLocalizer["delete_referenced"]);
             }
             var qty = await _dBContext.GetDbSet<CategoryEntity>().Where(t => idList.Contains(t.id)).ExecuteDeleteAsync();
             if (qty > 0)
