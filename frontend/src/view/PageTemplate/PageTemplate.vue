@@ -23,7 +23,7 @@
                     <tooltip-btn
                       icon="mdi-export-variant"
                       :tooltip-text="$t('system.page.export')"
-                      @click="exportTable"
+                      @click="method.exportTable"
                     ></tooltip-btn>
                   </v-col>
 
@@ -114,7 +114,7 @@
                   :total="data.tablePage.total"
                   :page-sizes="PAGE_SIZE"
                   :layouts="PAGE_LAYOUT"
-                  @page-change="handlePageChange"
+                  @page-change="method.handlePageChange"
                 >
                 </vxe-pager>
               </div>
@@ -194,46 +194,44 @@ const method = reactive({
   },
   sureSearch: () => {
     console.log(data.searchForm)
-  }
+  },
+  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
+    data.tablePage.pageIndex = currentPage
+    data.tablePage.pageSize = pageSize
+    // TODO Get datas what you want
+  }),
+  exportTable: ref<VxeButtonEvents.Click>(() => {
+    const $table = xTable.value
+    try {
+      $table[0].exportData({
+        type: 'csv',
+        columnFilterMethod({ column }: any) {
+          return !['checkbox'].includes(column?.type)
+        }
+      })
+    } catch (error) {
+      console.error('导出时发生未知错误', error)
+    }
+  })
 })
 
 onMounted(() => {
   // TODO Get datas what you want
 })
 
-const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
-  data.tablePage.pageIndex = currentPage
-  data.tablePage.pageSize = pageSize
-  // TODO Get datas what you want
-}
-
-const exportTable: VxeButtonEvents.Click = () => {
-  const $table = xTable.value
-  try {
-    $table[0].exportData({
-      type: 'csv',
-      columnFilterMethod({ column }: any) {
-        return !['checkbox'].includes(column?.type)
-      }
-    })
-  } catch (error) {
-    console.error('导出时发生未知错误', error)
-  }
-}
-
 /**
- * computedCardHeight({ hasTab, hasOperate }) 
+ * computedCardHeight({ hasTab, hasOperate })
  * Must enter the params if you don't need tab or operate area
  * Defaultly, the 'hasTab' and 'hasOperate' are true
  */
-const cardHeight = computed(() => computedCardHeight({ }))
+const cardHeight = computed(() => computedCardHeight({}))
 
 /**
- * computedTableHeight({ hasPager, hasTab, hasOperate }) 
+ * computedTableHeight({ hasPager, hasTab, hasOperate })
  * Must enter the params if you don't need pager or tab or operate area
  * Defaultly, the 'hasPager' and 'hasTab' and 'hasOperate' are true
  */
-const tableHeight = computed(() => computedTableHeight({ }))
+const tableHeight = computed(() => computedTableHeight({}))
 </script>
 
 <style scoped lang="less">

@@ -16,7 +16,7 @@
                     <tooltip-btn
                       icon="mdi-export-variant"
                       :tooltip-text="$t('system.page.export')"
-                      @click="exportTable"
+                      @click="method.exportTable"
                     >
                     </tooltip-btn>
                   </v-col>
@@ -87,7 +87,7 @@
                   :total="data.tablePage.total"
                   :page-sizes="PAGE_SIZE"
                   :layouts="PAGE_LAYOUT"
-                  @page-change="handlePageChange"
+                  @page-change="method.handlePageChange"
                 >
                 </vxe-pager>
               </div>
@@ -129,6 +129,25 @@ const method = reactive({
   deleteRow(row: any) {
     console.log(row)
   },
+  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
+    data.tablePage.pageIndex = currentPage
+    data.tablePage.pageSize = pageSize
+
+    method.getData()
+  }),
+  exportTable: ref<VxeButtonEvents.Click>(() => {
+    const $table = xTable.value
+    try {
+      $table[0].exportData({
+        type: 'csv',
+        columnFilterMethod({ column }: any) {
+          return !['checkbox'].includes(column?.type)
+        }
+      })
+    } catch (error) {
+      console.error('导出时发生未知错误', error)
+    }
+  }),
   sureSearch: () => {
     console.log(data.searchForm)
   },
@@ -160,27 +179,6 @@ const method = reactive({
 onMounted(() => {
   method.getData()
 })
-
-const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
-  data.tablePage.pageIndex = currentPage
-  data.tablePage.pageSize = pageSize
-
-  method.getData()
-}
-
-const exportTable: VxeButtonEvents.Click = () => {
-  const $table = xTable.value
-  try {
-    $table[0].exportData({
-      type: 'csv',
-      columnFilterMethod({ column }: any) {
-        return !['checkbox'].includes(column?.type)
-      }
-    })
-  } catch (error) {
-    console.error('导出时发生未知错误', error)
-  }
-}
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
