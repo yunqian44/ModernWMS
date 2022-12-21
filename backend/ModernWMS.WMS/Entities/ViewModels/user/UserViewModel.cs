@@ -71,6 +71,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// <summary>
         /// password
         /// </summary>
+        [Required(ErrorMessage = "Required")]
         [Display(Name = "password")]
         [MaxLength(64, ErrorMessage = "MaxLength")]
         public string auth_string { get; set; } = string.Empty;

@@ -66,7 +66,12 @@ export default {
     },
     warehouseSetting: {
       warehouseSetting: '仓库设置',
-      reservoirSetting: '库区设置'
+      reservoirSetting: '库区设置',
+      warehouse_name: '仓库名称',
+      city: '所在城市',
+      address: '详细地址',
+      acontact_tel: '联系方式',
+      manager: '负责人'
     },
     customer: {
       customer_name: '客户名称',

@@ -66,7 +66,12 @@ export default {
     },
     warehouseSetting: {
       warehouseSetting: 'Warehouse Setting',
-      reservoirSetting: 'Reservoir Setting'
+      reservoirSetting: 'Reservoir Setting',
+      warehouse_name: 'Warehouse Name',
+      city: 'City',
+      address: 'Address',
+      acontact_tel: 'Acontact Tel',
+      manager: 'Manager'
     },
     customer: {
       customer_name: 'Customer Name',
