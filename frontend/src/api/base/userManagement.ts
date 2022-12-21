@@ -1,10 +1,12 @@
 import http from '@/utils/http/request'
+import { PageConfigProps } from '@/types/System/Form'
 import { UserVO, ChangePwdAPIParams } from '@/types/Base/UserManagement'
 
-// Get all users
-export const userAll = () => http({
-    url: '/user/all',
-    method: 'get'
+// Find Data by Pagination
+export const getUserList = (data: PageConfigProps) => http({
+    url: '/user/list',
+    method: 'post',
+    data
   })
 
 // Add a new user
