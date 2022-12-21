@@ -66,7 +66,7 @@ export default {
     },
     warehouseSetting: {
       warehouseSetting: '仓库设置',
-      reservoirSetting: '库区设置',
+      reservoirSetting: '库区设置'
     },
     customer: {
       customer_name: '客户名称',
@@ -75,7 +75,19 @@ export default {
       manager: '负责人',
       email: 'Email',
       contact_tel: '联系方式',
-      creater: '创建人',
+      creator: '创建人',
+      create_time: '创建时间',
+      last_update_time: '最后更新时间',
+      is_valid: '是否有效'
+    },
+    supplier: {
+      supplier_name: '供应商名称',
+      city: '所在城市',
+      address: '详细地址',
+      email: 'Email',
+      manager: '负责人',
+      contact_tel: '联系方式',
+      creator: '创建人',
       create_time: '创建时间',
       last_update_time: '最后更新时间',
       is_valid: '是否有效'

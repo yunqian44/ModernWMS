@@ -1,4 +1,4 @@
-<!-- customer Setting -->
+<!-- supplier Setting -->
 <template>
   <div class="container">
     <div>
@@ -28,12 +28,12 @@
                       <v-col cols="12" sm="4"></v-col>
                       <v-col cols="12" sm="4">
                         <v-text-field
-                          v-model="data.searchForm.customer_name"
+                          v-model="data.searchForm.supplier_name"
                           clearable
                           hide-details
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
-                          :label="$t('base.customer.customer_name')"
+                          :label="$t('base.supplier.supplier_name')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -53,21 +53,21 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="customer_name" :title="$t('base.customer.customer_name')"></vxe-column>
-                  <vxe-column field="city" :title="$t('base.customer.city')"></vxe-column>
-                  <vxe-column field="address" :title="$t('base.customer.address')"></vxe-column>
-                  <vxe-column field="manager" :title="$t('base.customer.manager')"></vxe-column>
-                  <vxe-column field="email" :title="$t('base.customer.email')"></vxe-column>
-                  <vxe-column field="contact_tel" :title="$t('base.customer.contact_tel')"></vxe-column>
-                  <vxe-column field="creater" :title="$t('base.customer.creator')"></vxe-column>
+                  <vxe-column field="supplier_name" :title="$t('base.supplier.supplier_name')"></vxe-column>
+                  <vxe-column field="city" :title="$t('base.supplier.city')"></vxe-column>
+                  <vxe-column field="address" :title="$t('base.supplier.address')"></vxe-column>
+                  <vxe-column field="manager" :title="$t('base.supplier.manager')"></vxe-column>
+                  <vxe-column field="email" :title="$t('base.supplier.email')"></vxe-column>
+                  <vxe-column field="contact_tel" :title="$t('base.supplier.contact_tel')"></vxe-column>
+                  <vxe-column field="creater" :title="$t('base.supplier.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
-                    :title="$t('base.customer.create_time')"
+                    :title="$t('base.supplier.create_time')"
                     :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
                   ></vxe-column>
                   <vxe-column
                     field="last_update_time"
-                    :title="$t('base.customer.last_update_time')"
+                    :title="$t('base.supplier.last_update_time')"
                     :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
                   ></vxe-column>
                   <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
@@ -111,7 +111,7 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { CustomerVO } from '@/types/Settings/Customer'
+import { SupplierVO } from '@/types/Settings/Supplier'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
@@ -119,10 +119,10 @@ const xTable = ref()
 
 const data = reactive({
   searchForm: {
-    customer_name: ''
+    supplier_name: ''
   },
   activeTab: null,
-  tableData: ref<CustomerVO[]>([]),
+  tableData: ref<SupplierVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -163,7 +163,7 @@ const method = reactive({
     data.tableData.push(
       {
         id: 10001,
-        customer_name: 'Customer Name',
+        supplier_name: 'Supplier Name',
         city: 'City',
         address: 'Address',
         manager: 'Manager',
@@ -176,7 +176,7 @@ const method = reactive({
       },
       {
         id: 10002,
-        customer_name: 'Customer Name',
+        supplier_name: 'Supplier Name',
         city: 'City',
         address: 'Address',
         manager: 'Manager',

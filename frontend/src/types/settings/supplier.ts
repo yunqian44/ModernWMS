@@ -1,6 +1,6 @@
-export interface CustomerVO {
+export interface SupplierVO {
   id: number
-  customer_name: string
+  supplier_name: string
   city: string
   address: string
   manager: string

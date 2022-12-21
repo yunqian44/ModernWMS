@@ -66,7 +66,7 @@ export default {
     },
     warehouseSetting: {
       warehouseSetting: 'Warehouse Setting',
-      reservoirSetting: 'Reservoir Setting',
+      reservoirSetting: 'Reservoir Setting'
     },
     customer: {
       customer_name: 'Customer Name',
@@ -75,7 +75,19 @@ export default {
       manager: 'Manager',
       email: 'Email',
       contact_tel: 'Contact Tel',
-      creater: 'Creater',
+      creator: 'Creater',
+      create_time: 'Create Time',
+      last_update_time: 'Last Update Time',
+      is_valid: 'Valid'
+    },
+    supplier: {
+      supplier_name: 'Supplier Name',
+      city: 'City',
+      address: 'Address',
+      email: 'Email',
+      manager: 'Manager',
+      contact_tel: 'Contact Tel',
+      creator: 'Creator',
       create_time: 'Create Time',
       last_update_time: 'Last Update Time',
       is_valid: 'Valid'
