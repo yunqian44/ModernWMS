@@ -33,7 +33,10 @@ export default {
       commodityManagement: '商品管理',
       userRoleSetting: '用户角色设置',
       companySetting: '公司信息',
-      freightSetting: '运费设置'
+      freightSetting: '运费设置',
+      warehouseSetting: '仓库设置',
+      customer: '客户信息',
+      supplier: '供应商信息'
     }
   },
   login: {
@@ -51,7 +54,7 @@ export default {
       receiverCity: '到货城市',
       weightFee: '单公斤运费',
       volumeFee: '单立方米运费',
-      minPayment: '最小运费',
+      minPayment: '最小运费'
     },
     userManagement: {
       user_num: '员工编号',
@@ -59,6 +62,22 @@ export default {
       user_role: '角色',
       contact_tel: '联系方式',
       sex: '性别',
+      is_valid: '是否有效'
+    },
+    warehouseSetting: {
+      warehouseSetting: '仓库设置',
+      reservoirSetting: '库区设置',
+    },
+    customer: {
+      customer_name: '客户名称',
+      city: '所在城市',
+      address: '详细地址',
+      manager: '负责人',
+      email: 'Email',
+      contact_tel: '联系方式',
+      creater: '创建人',
+      create_time: '创建时间',
+      last_update_time: '最后更新时间',
       is_valid: '是否有效'
     }
   }

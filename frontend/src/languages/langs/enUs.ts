@@ -33,7 +33,10 @@ export default {
       commodityManagement: 'Commodity Management',
       userRoleSetting: 'User Role',
       companySetting: 'Company Information',
-      freightSetting: 'Freight Setting'
+      freightSetting: 'Freight Setting',
+      warehouseSetting: 'Warehouse Setting',
+      customer: 'Customer Info',
+      supplier: 'Supplier Info'
     }
   },
   login: {
@@ -51,7 +54,7 @@ export default {
       receiverCity: 'Receiver City',
       weightFee: 'Weight Fee',
       volumeFee: 'Volume Fee',
-      minPayment: 'Min Payment',
+      minPayment: 'Min Payment'
     },
     userManagement: {
       user_num: 'User Num',
@@ -60,6 +63,22 @@ export default {
       contact_tel: 'Contact Information',
       sex: 'Sex',
       is_valid: 'Is Valid'
+    },
+    warehouseSetting: {
+      warehouseSetting: 'Warehouse Setting',
+      reservoirSetting: 'Reservoir Setting',
+    },
+    customer: {
+      customer_name: 'Customer Name',
+      city: 'City',
+      address: 'Address',
+      manager: 'Manager',
+      email: 'Email',
+      contact_tel: 'Contact Tel',
+      creater: 'Creater',
+      create_time: 'Create Time',
+      last_update_time: 'Last Update Time',
+      is_valid: 'Valid'
     }
   }
 }

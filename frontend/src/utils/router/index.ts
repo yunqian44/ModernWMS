@@ -84,6 +84,12 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.companySetting')
     case 'freightSetting':
       return i18n.global.t('router.sideBar.freightSetting')
+    case 'warehouseSetting':
+      return i18n.global.t('router.sideBar.warehouseSetting')
+    case 'customer':
+      return i18n.global.t('router.sideBar.customer')
+    case 'supplier':
+      return i18n.global.t('router.sideBar.supplier')
     default:
       return ''
   }
