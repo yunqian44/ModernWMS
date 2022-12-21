@@ -6,6 +6,7 @@
  using ModernWMS.WMS.Entities.Models;
  using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.Core.Models;
+using ModernWMS.Core.JWT;
 
 namespace ModernWMS.WMS.IServices
 {
@@ -14,12 +15,19 @@ namespace ModernWMS.WMS.IServices
     /// </summary>
      public interface IUserService : IBaseService<userEntity>
      {
-         #region Api
-         /// <summary>
-         /// Get all datas
-         /// </summary>
-         /// <returns></returns>
-         Task<List<UserViewModel>> GetAllAsync();
+        #region Api
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(List<UserViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
+        /// <summary>
+        /// Get all datas
+        /// </summary>
+        /// <returns></returns>
+        Task<List<UserViewModel>> GetAllAsync(CurrentUser currentUser);
          /// <summary>
          /// Get a data by id
          /// </summary>
@@ -31,7 +39,7 @@ namespace ModernWMS.WMS.IServices
          /// </summary>
          /// <param name="viewModel">viewmodel</param>
          /// <returns></returns>
-         Task<(int id, string msg)> AddAsync(UserViewModel viewModel);
+         Task<(int id, string msg)> AddAsync(UserViewModel viewModel, CurrentUser currentUser);
          /// <summary>
          /// update a data
          /// </summary>

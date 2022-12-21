@@ -46,17 +46,34 @@
              this._userService = userService;
             this._stringLocalizer= stringLocalizer;
          }
-         #endregion
- 
-         #region Api
-         /// <summary>
-         /// Get all records
-         /// </summary>
-         /// <returns>args</returns>
+        #endregion
+
+        #region Api
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("list")]
+        public async Task<ResultModel<PageData<UserViewModel>>> PageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _userService.PageAsync(pageSearch, CurrentUser);
+
+            return ResultModel<PageData<UserViewModel>>.Success(new PageData<UserViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
+
+        /// <summary>
+        /// Get all records
+        /// </summary>
+        /// <returns>args</returns>
         [HttpGet("all")]
          public async Task<ResultModel<List<UserViewModel>>> GetAllAsync()
          {
-             var data = await _userService.GetAllAsync();
+             var data = await _userService.GetAllAsync(CurrentUser);
              if (data.Any())
              {
                  return ResultModel<List<UserViewModel>>.Success(data);
@@ -93,7 +110,7 @@
          public async Task<ResultModel<int>> AddAsync(UserViewModel viewModel)
          {
              viewModel.creator = CurrentUser.user_name;
-             var (id, msg) = await _userService.AddAsync(viewModel);
+             var (id, msg) = await _userService.AddAsync(viewModel,CurrentUser);
              if (id > 0)
              {
                  return ResultModel<int>.Success(id);

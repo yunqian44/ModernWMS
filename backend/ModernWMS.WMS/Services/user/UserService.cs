@@ -14,6 +14,7 @@ using Microsoft.Extensions.Localization;
 using ModernWMS.Core.Utility;
 using System.Text;
 using ModernWMS.Core.JWT;
+using ModernWMS.Core.DynamicSearch;
 
 namespace ModernWMS.WMS.Services
 {
@@ -52,13 +53,40 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(List<UserViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+            var DbSet = _dBContext.GetDbSet<userEntity>();
+            var query = DbSet.AsNoTracking()
+                .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
+                .Where(queries.AsExpression<userEntity>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderByDescending(t => t.create_time)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list.Adapt<List<UserViewModel>>(), totals);
+        }
+        /// <summary>
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserViewModel>> GetAllAsync()
+        public async Task<List<UserViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<userEntity>();
-            var data = await DbSet.AsNoTracking().ToListAsync();
+            var data = await DbSet.AsNoTracking().Where(t=>t.tenant_id == currentUser.tenant_id).ToListAsync();
             return data.Adapt<List<UserViewModel>>();
         }
 
@@ -80,8 +108,9 @@ namespace ModernWMS.WMS.Services
         /// add a new record
         /// </summary>
         /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<(int id, string msg)> AddAsync(UserViewModel viewModel)
+        public async Task<(int id, string msg)> AddAsync(UserViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<userEntity>();
             if (await DbSet.AnyAsync(t => t.user_num == viewModel.user_num))
@@ -93,6 +122,7 @@ namespace ModernWMS.WMS.Services
             entity.auth_string = Md5Helper.Md5Encrypt32("pwd123456");
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
+            entity.tenant_id = currentUser.tenant_id;
             await DbSet.AddAsync(entity);
             await _dBContext.SaveChangesAsync();
             if (entity.id > 0)

@@ -16,7 +16,7 @@
      /// </summary>
      [Route("userrole")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "Base")]
      public class UserroleController : BaseController
      {
          #region Args
@@ -46,9 +46,25 @@
              this._userroleService = userroleService;
             this._stringLocalizer= stringLocalizer;
          }
-         #endregion
- 
-         #region Api
+        #endregion
+
+        #region Api
+        /// <summary>
+        /// save all records
+        /// </summary>
+        /// <param name="viewModels">viewmodel</param>
+        /// <returns></returns>
+        [HttpPost("save")]
+        public async Task<ResultModel<string>> SaveAllAsync(List<UserroleViewModel> viewModels)
+        {
+            var (flag,msg) = await _userroleService.BulkSaveAsync(viewModels, CurrentUser);
+            if(flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            return ResultModel<string>.Error(msg);
+        }
+
          /// <summary>
          /// get all records
          /// </summary>
@@ -56,7 +72,7 @@
         [HttpGet("all")]
          public async Task<ResultModel<List<UserroleViewModel>>> GetAllAsync()
          {
-             var data = await _userroleService.GetAllAsync();
+             var data = await _userroleService.GetAllAsync(CurrentUser);
              if (data.Any())
              {
                  return ResultModel<List<UserroleViewModel>>.Success(data);
