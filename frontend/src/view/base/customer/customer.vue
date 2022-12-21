@@ -1,4 +1,4 @@
-<!-- Freight Setting -->
+<!-- customer Setting -->
 <template>
   <div class="container">
     <div>
@@ -28,12 +28,12 @@
                       <v-col cols="12" sm="4"></v-col>
                       <v-col cols="12" sm="4">
                         <v-text-field
-                          v-model="data.searchForm.transportationSupplier"
+                          v-model="data.searchForm.customer_name"
                           clearable
                           hide-details
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
-                          :label="$t('base.freightSetting.transportationSupplier')"
+                          :label="$t('base.customer.customer_name')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -53,15 +53,23 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
+                  <vxe-column field="customer_name" :title="$t('base.customer.customer_name')"></vxe-column>
+                  <vxe-column field="city" :title="$t('base.customer.city')"></vxe-column>
+                  <vxe-column field="address" :title="$t('base.customer.address')"></vxe-column>
+                  <vxe-column field="manager" :title="$t('base.customer.manager')"></vxe-column>
+                  <vxe-column field="email" :title="$t('base.customer.email')"></vxe-column>
+                  <vxe-column field="contact_tel" :title="$t('base.customer.contact_tel')"></vxe-column>
+                  <vxe-column field="creater" :title="$t('base.customer.creater')"></vxe-column>
                   <vxe-column
-                    field="transportation_supplier"
-                    :title="$t('base.freightSetting.transportationSupplier')"
+                    field="create_time"
+                    :title="$t('base.customer.create_time')"
+                    :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
                   ></vxe-column>
-                  <vxe-column field="send_city" :title="$t('base.freightSetting.sendCity')"></vxe-column>
-                  <vxe-column field="receiver_city" :title="$t('base.freightSetting.receiverCity')"></vxe-column>
-                  <vxe-column field="weight_fee" :title="$t('base.freightSetting.weightFee')"></vxe-column>
-                  <vxe-column field="volume_fee" :title="$t('base.freightSetting.volumeFee')"></vxe-column>
-                  <vxe-column field="min_payment" :title="$t('base.freightSetting.minPayment')"></vxe-column>
+                  <vxe-column
+                    field="last_update_time"
+                    :title="$t('base.customer.last_update_time')"
+                    :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
+                  ></vxe-column>
                   <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -103,7 +111,7 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents, VxeButtonEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { FreightVO } from '@/types/Settings/Freight'
+import { CustomerVO } from '@/types/Settings/Customer'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
@@ -111,10 +119,10 @@ const xTable = ref()
 
 const data = reactive({
   searchForm: {
-    transportationSupplier: ''
+    customer_name: ''
   },
   activeTab: null,
-  tableData: ref<FreightVO[]>([]),
+  tableData: ref<CustomerVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -132,7 +140,6 @@ const method = reactive({
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
-
     method.getData()
   }),
   exportTable: ref<VxeButtonEvents.Click>(() => {
@@ -156,21 +163,29 @@ const method = reactive({
     data.tableData.push(
       {
         id: 10001,
-        transportation_supplier: '1',
-        send_city: '1',
-        receiver_city: '1',
-        weight_fee: 1,
-        volume_fee: 1,
-        min_payment: 1
+        customer_name: 'Customer Name',
+        city: 'City',
+        address: 'Address',
+        manager: 'Manager',
+        email: 'Email',
+        contact_tel: 'Contact Tel',
+        creater: 'Creater',
+        create_time: new Date(),
+        last_update_time: new Date(),
+        is_valid: true
       },
       {
         id: 10002,
-        transportation_supplier: '2',
-        send_city: '2',
-        receiver_city: '2',
-        weight_fee: 2,
-        volume_fee: 2,
-        min_payment: 3
+        customer_name: 'Customer Name',
+        city: 'City',
+        address: 'Address',
+        manager: 'Manager',
+        email: 'Email',
+        contact_tel: 'Contact Tel',
+        creater: 'Creater',
+        create_time: new Date(),
+        last_update_time: new Date(),
+        is_valid: true
       }
     )
   }
