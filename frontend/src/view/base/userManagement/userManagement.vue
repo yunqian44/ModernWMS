@@ -79,7 +79,7 @@
               <vxe-column field="contact_tel" :title="$t('base.userManagement.contact_tel')"></vxe-column>
               <vxe-column field="is_valid" :title="$t('base.userManagement.is_valid')">
                 <template #default="{ row, column }">
-                  <span>{{ row[column.property] ? '是' : '否' }}</span>
+                  <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
                 </template>
               </vxe-column>
               <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>

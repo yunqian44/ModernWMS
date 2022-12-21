@@ -113,7 +113,6 @@
          {
              var DbSet = _dBContext.GetDbSet<GoodslocationEntity>();
              var entity = viewModel.Adapt<GoodslocationEntity>();
-
              entity.id = 0;
              entity.create_time = DateTime.Now;
              entity.last_update_time = DateTime.Now;
@@ -158,6 +157,7 @@
              entity.layer_number = viewModel.layer_number;
              entity.tag_number = viewModel.tag_number;
              entity.is_valid = viewModel.is_valid;
+             entity.warehouse_area_id = viewModel.warehouse_area_id;
              entity.last_update_time = DateTime.Now;
              var qty = await _dBContext.SaveChangesAsync();
              if (qty > 0)
