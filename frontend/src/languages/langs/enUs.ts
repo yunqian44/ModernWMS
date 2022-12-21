@@ -34,6 +34,10 @@ export default {
       sex: {
         male: 'Male',
         female: 'Female'
+      },
+      yesOrNo: {
+        yes: 'yes',
+        no: 'no'
       }
     }
   },
@@ -77,7 +81,7 @@ export default {
       user_role: 'Role',
       contact_tel: 'Contact Information',
       sex: 'Sex',
-      is_valid: 'Is Valid',
+      is_valid: 'Valid',
       restPwd: 'Reset password',
       checkboxIsNull: 'Please select data!',
       beforeResetPwd: 'Are you sure you want to reset the passwords of these users?',
@@ -114,6 +118,10 @@ export default {
       creator: 'Creator',
       create_time: 'Create Time',
       last_update_time: 'Last Update Time',
+      is_valid: 'Valid'
+    },
+    userRoleSetting: {
+      role_name: 'Role Name',
       is_valid: 'Valid'
     }
   }
