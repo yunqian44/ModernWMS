@@ -8,8 +8,12 @@
             <v-row no-gutters>
               <!-- Operate Btn -->
               <v-col cols="12" sm="3" class="col">
-                <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
-                <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
+                <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
+                <tooltip-btn
+                  icon="mdi-refresh"
+                  :tooltip-text="$t('system.page.refresh')"
+                  @click="method.refresh()"
+                ></tooltip-btn>
                 <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')"></tooltip-btn>
               </v-col>
 
@@ -67,7 +71,7 @@
             <vxe-grid v-bind="data.gridOptions">
               <template #pager>
                 <vxe-pager
-                  v-model:current-page="data.tablePage.currentPage"
+                  v-model:current-page="data.tablePage.pageIndex"
                   v-model:page-size="data.tablePage.pageSize"
                   :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
                   :total="data.tablePage.total"
@@ -80,29 +84,31 @@
         </v-card-text>
       </v-card>
     </div>
+    <!-- Add or modify data mode window -->
+    <addOrUpdateUserDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedTableHeight } from '@/utils/globalStyle'
+import { computedCardHeight } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { dataProps } from '@/types/Base/UserManagement'
+import { DataProps } from '@/types/Base/UserManagement'
 import i18n from '@/languages/i18n'
-import { userAll } from '@/api/base/userManagement'
+import { getUserList } from '@/api/base/userManagement'
 import { hookComponent } from '@/components/system'
+import addOrUpdateUserDialog from './add-or-update-user.vue'
 
-const data: dataProps = reactive({
+const data: DataProps = reactive({
   // searchForm: {
   //   userName: '',
   //   userName1: '',
   //   userName2: ''
   // },
-  tableData: [],
   tablePage: {
     total: 0,
-    currentPage: 1,
+    pageIndex: 1,
     pageSize: 10
   },
   gridOptions: {
@@ -120,8 +126,26 @@ const data: dataProps = reactive({
       { field: 'user_role', title: i18n.global.t('base.userManagement.user_role') },
       { field: 'sex', title: i18n.global.t('base.userManagement.sex') },
       { field: 'contact_tel', title: i18n.global.t('base.userManagement.contact_tel') },
-      { field: 'is_valid', title: i18n.global.t('base.userManagement.is_valid') }
+      {
+        field: 'is_valid',
+        title: i18n.global.t('base.userManagement.is_valid'),
+        slots: {
+          default: ({ row }) => [row.is_valid ? '是' : '否']
+        }
+      }
     ]
+  },
+  // Dialog info
+  showDialog: false,
+  dialogForm: {
+    id: 0,
+    user_num: '',
+    user_name: '',
+    contact_tel: '',
+    user_role: '',
+    sex: '',
+    auth_string: '',
+    is_valid: true
   }
 })
 
@@ -129,9 +153,9 @@ const method = reactive({
   sureSearch: () => {
     // console.log(data.searchForm)
   },
-  // Get all users
-  getAllUsers: async () => {
-    const { data: res } = await userAll()
+  // Find Data by Pagination
+  getUserList: async () => {
+    const { data: res } = await getUserList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -139,21 +163,34 @@ const method = reactive({
       })
       return
     }
-    console.log(res)
+    data.gridOptions.data = res.data.rows
+    data.tablePage.total = res.data.totals
+  },
+  // Add user
+  add: () => {
+    data.showDialog = true
+  },
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // Refresh data
+  refresh: () => {
+    method.getUserList()
   }
 })
 
 onMounted(async () => {
-  await method.getAllUsers()
+  await method.getUserList()
 })
 
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
-  data.tablePage.currentPage = currentPage
+  data.tablePage.pageIndex = currentPage
   data.tablePage.pageSize = pageSize
   // TODO 重新获取数据
 }
 
-const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+const tableHeight = computed(() => computedCardHeight({ hasTab: false }))
 </script>
 
 <style scoped lang="less">
