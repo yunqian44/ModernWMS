@@ -33,7 +33,8 @@ export default {
       commodityManagement: '商品管理',
       userRoleSetting: '用户角色设置',
       companySetting: '公司信息',
-      freightSetting: '运费设置'
+      freightSetting: '运费设置',
+      warehouseSetting: '仓库设置',
     }
   },
   login: {
@@ -60,6 +61,10 @@ export default {
       contact_tel: '联系方式',
       sex: '性别',
       is_valid: '是否有效'
+    },
+    warehouseSetting: {
+      warehouseSetting: '仓库设置',
+      reservoirSetting: '库区设置',
     }
   }
 }

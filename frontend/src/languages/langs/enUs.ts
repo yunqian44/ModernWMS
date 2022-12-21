@@ -33,7 +33,8 @@ export default {
       commodityManagement: 'Commodity Management',
       userRoleSetting: 'User Role',
       companySetting: 'Company Information',
-      freightSetting: 'Freight Setting'
+      freightSetting: 'Freight Setting',
+      warehouseSetting: 'Warehouse Setting'
     }
   },
   login: {
@@ -60,6 +61,10 @@ export default {
       contact_tel: 'Contact Information',
       sex: 'Sex',
       is_valid: 'Is Valid'
+    },
+    warehouseSetting: {
+      warehouseSetting: 'Warehouse Setting',
+      reservoirSetting: 'Reservoir Setting',
     }
   }
 }

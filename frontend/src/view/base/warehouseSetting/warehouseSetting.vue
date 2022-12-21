@@ -1,39 +1,75 @@
-<!-- Freight Setting -->
 <template>
   <div class="container">
     <div>
+      <!-- According to your own need to decide whether to the tab, if you don't need that you can delete <v-tabs> -->
+      <v-tabs v-model="data.activeTab" stacked>
+        <v-tab v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
+          <v-icon>{{ item.icon }}</v-icon>
+          <p class="tabItemTitle">{{ item.tabName }}</p>
+        </v-tab>
+      </v-tabs>
+
       <!-- Main Content -->
       <v-card class="mt-5">
         <v-card-text>
           <v-window v-model="data.activeTab">
-            <v-window-item>
+            <v-window-item v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
               <div class="operateArea">
                 <v-row no-gutters>
                   <!-- Operate Btn -->
-                  <v-col cols="3" class="col">
+                  <v-col cols="12" sm="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
                     <tooltip-btn
                       icon="mdi-export-variant"
                       :tooltip-text="$t('system.page.export')"
                       @click="method.exportTable"
-                    >
-                    </tooltip-btn>
+                    ></tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
-                  <v-col cols="9">
+                  <v-col cols="12" sm="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
-                      <v-col cols="4"></v-col>
-                      <v-col cols="4"></v-col>
-                      <v-col cols="4">
+                      <!-- 
+                        Don't delete v-col whether you don't need.
+                        If you only need one query, you should write: 
+
+                        <v-col cols="12" sm="4"></v-col>
+                        <v-col cols="12" sm="4"></v-col>
+                        <v-col cols="12" sm="4">Some Thing</v-col>
+                       -->
+                      <v-col cols="12" sm="4">
                         <v-text-field
-                          v-model="data.searchForm.transportationSupplier"
+                          v-model="data.searchForm.userName"
                           clearable
                           hide-details
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
-                          :label="$t('base.freightSetting.transportationSupplier')"
+                          :label="$t('login.userName')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="4">
+                        <v-text-field
+                          v-model="data.searchForm.userName1"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('login.userName')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="4">
+                        <v-text-field
+                          v-model="data.searchForm.userName2"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('login.userName')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -53,15 +89,6 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column
-                    field="transportation_supplier"
-                    :title="$t('base.freightSetting.transportationSupplier')"
-                  ></vxe-column>
-                  <vxe-column field="send_city" :title="$t('base.freightSetting.sendCity')"></vxe-column>
-                  <vxe-column field="receiver_city" :title="$t('base.freightSetting.receiverCity')"></vxe-column>
-                  <vxe-column field="weight_fee" :title="$t('base.freightSetting.weightFee')"></vxe-column>
-                  <vxe-column field="volume_fee" :title="$t('base.freightSetting.volumeFee')"></vxe-column>
-                  <vxe-column field="min_payment" :title="$t('base.freightSetting.minPayment')"></vxe-column>
                   <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -99,22 +126,58 @@
   </div>
 </template>
 
-<script lang="tsx" setup>
+<script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
-import { VxePagerEvents } from 'vxe-table'
+import { VxePagerEvents, VxeButtonEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { FreightVO } from '@/types/Settings/Freight'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
 const xTable = ref()
 
+// Table Model, this just a example
+// You should put it on the 'types' folder
+interface UserVO {
+  id: number
+  name: string
+  role: string
+  sex: string
+  age: number
+  address: string
+}
+
+const tabsConfig = [
+  {
+    value: 'one',
+    icon: 'mdi-phone',
+    tabName: 'one'
+  },
+  {
+    value: 'two',
+    icon: 'mdi-phone',
+    tabName: 'two'
+  },
+  {
+    value: 'three',
+    icon: 'mdi-phone',
+    tabName: 'three'
+  }
+]
+
 const data = reactive({
+  // TODO Adjust the search prop what you want
   searchForm: {
-    transportationSupplier: ''
+    userName: '',
+    userName1: '',
+    userName2: ''
   },
   activeTab: null,
-  tableData: ref<FreightVO[]>([]),
+  tableData: ref<UserVO[]>([
+    { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
+    { id: 10002, name: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
+    { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
+    { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
+  ]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -129,16 +192,18 @@ const method = reactive({
   deleteRow(row: any) {
     console.log(row)
   },
+  sureSearch: () => {
+    console.log(data.searchForm)
+  },
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
-
-    method.getData()
+    // TODO Get datas what you want
   }),
-  exportTable: () => {
+  exportTable: ref<VxeButtonEvents.Click>(() => {
     const $table = xTable.value
     try {
-      $table.exportData({
+      $table[0].exportData({
         type: 'csv',
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type)
@@ -147,41 +212,26 @@ const method = reactive({
     } catch (error) {
       console.error('导出时发生未知错误', error)
     }
-  },
-  sureSearch: () => {
-    console.log(data.searchForm)
-  },
-  getData() {
-    // TODO get data
-    data.tableData.push(
-      {
-        id: 10001,
-        transportation_supplier: '1',
-        send_city: '1',
-        receiver_city: '1',
-        weight_fee: 1,
-        volume_fee: 1,
-        min_payment: 1
-      },
-      {
-        id: 10002,
-        transportation_supplier: '2',
-        send_city: '2',
-        receiver_city: '2',
-        weight_fee: 2,
-        volume_fee: 2,
-        min_payment: 3
-      }
-    )
-  }
+  })
 })
 
 onMounted(() => {
-  method.getData()
+  // TODO Get datas what you want
 })
 
-const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
-const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+/**
+ * computedCardHeight({ hasTab, hasOperate })
+ * Must enter the params if you don't need tab or operate area
+ * Defaultly, the 'hasTab' and 'hasOperate' are true
+ */
+const cardHeight = computed(() => computedCardHeight({}))
+
+/**
+ * computedTableHeight({ hasPager, hasTab, hasOperate })
+ * Must enter the params if you don't need pager or tab or operate area
+ * Defaultly, the 'hasPager' and 'hasTab' and 'hasOperate' are true
+ */
+const tableHeight = computed(() => computedTableHeight({}))
 </script>
 
 <style scoped lang="less">
