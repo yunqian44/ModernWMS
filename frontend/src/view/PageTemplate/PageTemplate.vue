@@ -108,7 +108,7 @@
                   </vxe-column>
                 </vxe-table>
                 <vxe-pager
-                  :current-page="data.tablePage.currentPage"
+                  :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
                   :total="data.tablePage.total"
@@ -180,7 +180,7 @@ const data = reactive({
   ]),
   tablePage: reactive({
     total: 0,
-    currentPage: 1,
+    pageIndex: 1,
     pageSize: 10
   })
 })
@@ -202,7 +202,7 @@ onMounted(() => {
 })
 
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
-  data.tablePage.currentPage = currentPage
+  data.tablePage.pageIndex = currentPage
   data.tablePage.pageSize = pageSize
   // TODO Get datas what you want
 }
