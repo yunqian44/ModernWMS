@@ -110,6 +110,11 @@ namespace ModernWMS.WMS.Entities.Models
         /// </summary>
         public byte tenant_id { get; set; }  = 0;
 
+        /// <summary>
+        /// warehouse_area_id
+        /// </summary>
+        public int warehouse_area_id { get; set; }  = 0;
+
 
         #endregion
 

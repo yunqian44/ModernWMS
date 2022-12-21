@@ -269,7 +269,7 @@ namespace ModernWMS.WMS.Services
         {
             var DBSet = _dBContext.GetDbSet<userEntity>();
             var entities =await DBSet.Where(t => viewModel.id_list.Contains(t.id)).ToListAsync();
-            entities.ForEach(t => { t.auth_string = Md5Helper.Md5Encrypt32("pwd123456") ,t.last_update_time = DateTime.Now});
+            entities.ForEach(t => { t.auth_string = Md5Helper.Md5Encrypt32("pwd123456"); t.last_update_time = DateTime.Now; });
             var res = await  _dBContext.SaveChangesAsync();
             if (res > 0)
             {
