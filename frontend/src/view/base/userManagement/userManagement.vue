@@ -9,12 +9,9 @@
               <!-- Operate Btn -->
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
-                <tooltip-btn
-                  icon="mdi-refresh"
-                  :tooltip-text="$t('system.page.refresh')"
-                  @click="method.refresh()"
-                ></tooltip-btn>
-                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')"></tooltip-btn>
+                <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
+                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
+                <tooltip-btn icon="mdi-lock-reset" :tooltip-text="$t('base.userManagement.restPwd')" @click="method.restPwd"></tooltip-btn>
               </v-col>
 
               <!-- Search Input -->
@@ -63,12 +60,57 @@
 
           <!-- Table -->
           <div
-            class="mt-5 tableContainer"
+            class="mt-5"
             :style="{
-              height: tableHeight
+              height: cardHeight
             }"
           >
-            <vxe-grid v-bind="data.gridOptions">
+            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <vxe-column type="seq" width="60"></vxe-column>
+              <vxe-column type="checkbox" width="50"></vxe-column>
+              <vxe-column field="user_num" :title="$t('base.userManagement.user_num')"></vxe-column>
+              <vxe-column field="user_name" :title="$t('base.userManagement.user_name')"></vxe-column>
+              <vxe-column field="user_role" :title="$t('base.userManagement.user_role')"></vxe-column>
+              <vxe-column field="sex" :title="$t('base.userManagement.sex')">
+                <template #default="{ row }">
+                  <span>{{ $t(`system.combobox.sex.${row.sex}`) }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="contact_tel" :title="$t('base.userManagement.contact_tel')"></vxe-column>
+              <vxe-column field="is_valid" :title="$t('base.userManagement.is_valid')">
+                <template #default="{ row, column }">
+                  <span>{{ row[column.property] ? '是' : '否' }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                <template #default="{ row }">
+                  <tooltip-btn
+                    :flat="true"
+                    icon="mdi-pencil-outline"
+                    :tooltip-text="$t('system.page.edit')"
+                    @click="method.editRow(row)"
+                  ></tooltip-btn>
+                  <tooltip-btn
+                    :flat="true"
+                    icon="mdi-delete-outline"
+                    :tooltip-text="$t('system.page.delete')"
+                    :icon-color="errorColor"
+                    @click="method.deleteRow(row)"
+                  ></tooltip-btn>
+                </template>
+              </vxe-column>
+            </vxe-table>
+            <vxe-pager
+              :current-page="data.tablePage.pageIndex"
+              :page-size="data.tablePage.pageSize"
+              perfect
+              :total="data.tablePage.total"
+              :page-sizes="PAGE_SIZE"
+              :layouts="PAGE_LAYOUT"
+              @page-change="method.handlePageChange"
+            >
+            </vxe-pager>
+            <!-- <vxe-grid v-bind="data.gridOptions">
               <template #pager>
                 <vxe-pager
                   v-model:current-page="data.tablePage.pageIndex"
@@ -79,26 +121,29 @@
                 >
                 </vxe-pager>
               </template>
-            </vxe-grid>
+            </vxe-grid> -->
           </div>
         </v-card-text>
       </v-card>
     </div>
     <!-- Add or modify data mode window -->
-    <addOrUpdateUserDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" />
+    <addOrUpdateUserDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted } from 'vue'
+import { computed, reactive, onMounted, ref } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight } from '@/constant/style'
+import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { DataProps } from '@/types/Base/UserManagement'
-import i18n from '@/languages/i18n'
-import { getUserList } from '@/api/base/userManagement'
+import { DataProps, UserVO } from '@/types/Base/UserManagement'
+import { getUserList, deleteUser, resetPassword } from '@/api/base/userManagement'
 import { hookComponent } from '@/components/system'
 import addOrUpdateUserDialog from './add-or-update-user.vue'
+import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import i18n from '@/languages/i18n'
+
+const xTable = ref()
 
 const data: DataProps = reactive({
   // searchForm: {
@@ -106,34 +151,11 @@ const data: DataProps = reactive({
   //   userName1: '',
   //   userName2: ''
   // },
+  tableData: [],
   tablePage: {
     total: 0,
     pageIndex: 1,
     pageSize: 10
-  },
-  gridOptions: {
-    height: 'auto',
-    loading: false,
-    columnConfig: {
-      resizable: true
-    },
-    data: [],
-    columns: [
-      { type: 'seq', width: 60 },
-      { type: 'checkbox', width: 50 },
-      { field: 'user_num', title: i18n.global.t('base.userManagement.user_num') },
-      { field: 'user_name', title: i18n.global.t('base.userManagement.user_name') },
-      { field: 'user_role', title: i18n.global.t('base.userManagement.user_role') },
-      { field: 'sex', title: i18n.global.t('base.userManagement.sex') },
-      { field: 'contact_tel', title: i18n.global.t('base.userManagement.contact_tel') },
-      {
-        field: 'is_valid',
-        title: i18n.global.t('base.userManagement.is_valid'),
-        slots: {
-          default: ({ row }) => [row.is_valid ? '是' : '否']
-        }
-      }
-    ]
   },
   // Dialog info
   showDialog: false,
@@ -142,8 +164,6 @@ const data: DataProps = reactive({
     user_num: '',
     user_name: '',
     contact_tel: '',
-    user_role: '',
-    sex: '',
     auth_string: '',
     is_valid: true
   }
@@ -163,20 +183,111 @@ const method = reactive({
       })
       return
     }
-    data.gridOptions.data = res.data.rows
+    data.tableData = res.data.rows
     data.tablePage.total = res.data.totals
   },
   // Add user
   add: () => {
+    data.dialogForm = {
+      id: 0,
+      user_num: '',
+      user_name: '',
+      contact_tel: '',
+      auth_string: '',
+      is_valid: true
+    }
     data.showDialog = true
   },
   // Shut add or update dialog
   closeDialog: () => {
     data.showDialog = false
   },
+  // after Add or update success.
+  saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
   // Refresh data
   refresh: () => {
     method.getUserList()
+  },
+  editRow(row: UserVO) {
+    data.dialogForm = row
+    data.showDialog = true
+  },
+  deleteRow(row: UserVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteUser(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
+  // When change paging
+  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
+    data.tablePage.pageIndex = currentPage
+    data.tablePage.pageSize = pageSize
+    method.refresh()
+  }),
+  // Export table
+  exportTable: () => {
+    const $table = xTable.value
+    try {
+      $table.exportData({
+        type: 'csv',
+        columnFilterMethod({ column }: any) {
+          return !['checkbox'].includes(column?.type)
+        }
+      })
+    } catch (error) {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
+    }
+  },
+  // Reset password
+  restPwd: async () => {
+    const checkRecord: UserVO[] = xTable.value.getCheckboxRecords(true)
+    if (checkRecord.length > 0) {
+      hookComponent.$dialog({
+        content: i18n.global.t('base.userManagement.beforeResetPwd'),
+        handleConfirm: async () => {
+          const idList = checkRecord.map((item) => item.id)
+          const { data: res } = await resetPassword(idList)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: i18n.global.t('base.userManagement.afterResetPwd')
+          })
+        }
+      })
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('base.userManagement.checkboxIsNull')
+      })
+    }
   }
 })
 
@@ -184,13 +295,9 @@ onMounted(async () => {
   await method.getUserList()
 })
 
-const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
-  data.tablePage.pageIndex = currentPage
-  data.tablePage.pageSize = pageSize
-  // TODO 重新获取数据
-}
+const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 
-const tableHeight = computed(() => computedCardHeight({ hasTab: false }))
+const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
 </script>
 
 <style scoped lang="less">
@@ -206,9 +313,5 @@ const tableHeight = computed(() => computedCardHeight({ hasTab: false }))
 .col {
   display: flex;
   align-items: center;
-}
-
-.tableContainer {
-  height: 500px;
 }
 </style>

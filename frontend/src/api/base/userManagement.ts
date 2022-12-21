@@ -26,9 +26,9 @@ export const updateUser = (data: UserVO) => http({
 // Delete user
 export const deleteUser = (id: number) => http({
     url: '/user',
-    method: 'put',
-    data: {
-      data: id
+    method: 'delete',
+    params: {
+      id
     }
   })
 
