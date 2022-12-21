@@ -92,6 +92,7 @@ namespace ModernWMS.WMS.Services
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
+            entity.is_valid = viewModel.is_valid;
             await DbSet.AddAsync(entity);
             await _dBContext.SaveChangesAsync();
             if (entity.id > 0)

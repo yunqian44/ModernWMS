@@ -79,7 +79,7 @@
               <vxe-column field="contact_tel" :title="$t('base.userManagement.contact_tel')"></vxe-column>
               <vxe-column field="is_valid" :title="$t('base.userManagement.is_valid')">
                 <template #default="{ row, column }">
-                  <span>{{ row[column.property] ? '是' : '否' }}</span>
+                  <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
                 </template>
               </vxe-column>
               <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
@@ -127,7 +127,7 @@
       </v-card>
     </div>
     <!-- Add or modify data mode window -->
-    <addOrUpdateUserDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+    <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
   </div>
 </template>
 
@@ -139,7 +139,7 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import { DataProps, UserVO } from '@/types/Base/UserManagement'
 import { getUserList, deleteUser, resetPassword } from '@/api/base/userManagement'
 import { hookComponent } from '@/components/system'
-import addOrUpdateUserDialog from './add-or-update-user.vue'
+import addOrUpdateDialog from './add-or-update-user.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 
@@ -212,7 +212,7 @@ const method = reactive({
     method.getUserList()
   },
   editRow(row: UserVO) {
-    data.dialogForm = row
+    data.dialogForm = JSON.parse(JSON.stringify(row))
     data.showDialog = true
   },
   deleteRow(row: UserVO) {

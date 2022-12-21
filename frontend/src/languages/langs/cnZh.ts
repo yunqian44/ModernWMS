@@ -34,6 +34,10 @@ export default {
       sex: {
         male: '男',
         female: '女'
+      },
+      yesOrNo: {
+        yes: '是',
+        no: '否'
       }
     }
   },
@@ -115,6 +119,32 @@ export default {
       create_time: '创建时间',
       last_update_time: '最后更新时间',
       is_valid: '是否有效'
+    },
+    userRoleSetting: {
+      role_name: '用户角色',
+      is_valid: '是否有效'
+    },
+    companySetting: {
+      company_name: '公司名称',
+      city: '所在城市',
+      address: '详细地址',
+      manager: '负责人',
+      contact_tel: '联系方式'
+    },
+    ownerOfCargo: {
+      goods_owner_name: '货主名称',
+      city: '所在城市',
+      address: '详细地址',
+      manager: '负责人',
+      contact_tel: '联系方式',
+      creator: '创建人',
+      create_time: '创建时间'
+    },
+    commodityCategorySetting: {
+      category_name: '商品类别',
+      parent_name: '所属类别',
+      creator: '创建人',
+      create_time: '创建时间'
     }
   }
 }
