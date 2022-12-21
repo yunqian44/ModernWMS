@@ -90,6 +90,8 @@ import { computedCardHeight } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { dataProps } from '@/types/Base/UserManagement'
 import i18n from '@/languages/i18n'
+import { userAll } from '@/api/base/userManagement'
+import { hookComponent } from '@/components/system'
 
 const data: dataProps = reactive({
   // searchForm: {
@@ -126,11 +128,23 @@ const data: dataProps = reactive({
 const method = reactive({
   sureSearch: () => {
     // console.log(data.searchForm)
+  },
+  // Get all users
+  getAllUsers: async () => {
+    const { data: res } = await userAll()
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
+    }
+    console.log(res)
   }
 })
 
-onMounted(() => {
-  data.gridOptions.data = data.tableData
+onMounted(async () => {
+  await method.getAllUsers()
 })
 
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {

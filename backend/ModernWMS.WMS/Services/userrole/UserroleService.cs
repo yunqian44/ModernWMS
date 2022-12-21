@@ -10,8 +10,12 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Services
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using ModernWMS.Core.JWT;
+using System.Text;
+using System.Collections.Immutable;
+
+namespace ModernWMS.WMS.Services
  {
      /// <summary>
      ///  Userrole Service
@@ -47,14 +51,75 @@
          #endregion
  
          #region Api
-         /// <summary>
-         /// Get all records
-         /// </summary>
-         /// <returns></returns>
-         public async Task<List<UserroleViewModel>> GetAllAsync()
+        /// <summary>
+        /// bulk save records
+        /// </summary>
+        /// <param name="viewModels">viewmodel</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<(bool flag,string msg)> BulkSaveAsync(List<UserroleViewModel> viewModels,CurrentUser currentUser)
+        {
+            StringBuilder sb = new StringBuilder();
+            var DBSet = _dBContext.GetDbSet<UserroleEntity>();
+            var repaet_role_name_viewmodel =  viewModels.Where(t => t.id >= 0).GroupBy(t => t.role_name).Select(t =>new { role_name = t.Key, cnt = t.Count() }).Where(t=>t.cnt>1).ToList();
+            foreach (var repeat in repaet_role_name_viewmodel)
+            {
+                sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["role_name"], repeat));
+            }
+            if (repaet_role_name_viewmodel.Count() > 0)
+            {
+                return (false, sb.ToString());
+            }
+            var delete_viewmodels = viewModels.Where(t => t.id < 0).ToList();
+            var enties_check =await DBSet.AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id && !delete_viewmodels.Select(e =>-e.id).ToList().Contains(t.id)).ToListAsync();
+            var role_name_viewmodels = viewModels.Where(t => t.id >= 0).Select(t => t.role_name).ToList();
+            var repaet_role_name_exists = enties_check.Where(t=> role_name_viewmodels.Contains( t.role_name)).ToList();
+            foreach (var repeat in repaet_role_name_exists)
+            {
+                sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["role_name"], repeat.role_name));
+            }
+            if (repaet_role_name_exists.Count() > 0)
+            {
+                return (false, sb.ToString());
+            }
+            var add_entities = (from vm in viewModels
+                                where vm.id==0
+                                select new UserroleEntity
+                                {
+                                    id = 0,
+                                    create_time = DateTime.Now,
+                                    last_update_time = DateTime.Now,
+                                    is_valid = true,
+                                    role_name = vm.role_name,
+                                    tenant_id = currentUser.tenant_id,
+                                }).ToList();
+           await DBSet.AddRangeAsync(add_entities);
+            var update_viewmodel_id = viewModels.Where(t => t.id > 0).Select(t => t.id).ToList();
+            var update_entities =await DBSet.Where(t => update_viewmodel_id.Contains(t.id)).ToListAsync();
+            update_entities.ForEach(t =>
+            {
+                var update_vm = viewModels.FirstOrDefault(e=>e.id == t.id);
+                if(update_vm != null)
+                {
+                    t.last_update_time = DateTime.Now;
+                    t.is_valid = update_vm.is_valid;
+                    t.role_name = update_vm.role_name;
+                }
+            });
+            
+            var delete_entites = await DBSet.Where(t=> delete_viewmodels.Select(e=>-e.id).ToList().Contains (t.id)).ToListAsync();
+            DBSet.RemoveRange(delete_entites);
+           await _dBContext.SaveChangesAsync();
+            return (true, _stringLocalizer["save_success"]);
+        }
+        /// <summary>
+        /// Get all records
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserroleViewModel>> GetAllAsync(CurrentUser currentUser)
          {
              var DbSet = _dBContext.GetDbSet<UserroleEntity>();
-             var data = await DbSet.AsNoTracking().ToListAsync();
+             var data = await DbSet.AsNoTracking().Where(t=>t.tenant_id == currentUser.tenant_id).ToListAsync();
              return data.Adapt<List<UserroleViewModel>>();
          }
  
