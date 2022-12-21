@@ -13,6 +13,8 @@ using ModernWMS.Core.Models;
 using ModernWMS.Core.JWT;
 using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DynamicSearch;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.Net.WebSockets;
 
 namespace ModernWMS.WMS.Services
 {
@@ -67,18 +69,55 @@ namespace ModernWMS.WMS.Services
                 });
             }
             var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>();
-            var area_DBSet = _dBContext.GetDbSet<WarehouseEntity>();
+            var warehouse_DBSet = _dBContext.GetDbSet<WarehouseEntity>();
 
-             var query = DbSet.AsNoTracking()
-                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                 .Where(queries.AsExpression<WarehouseareaEntity>());
-
+            var query = from wa in DbSet.AsNoTracking()
+                        join w in warehouse_DBSet.AsNoTracking() on wa.warehouse_id equals w.id
+                        select new WarehouseareaViewModel
+                        {
+                            id = wa.id,
+                            warehouse_id = wa.warehouse_id,
+                            warehouse_name = w.warehouse_name,
+                            area_name = wa.area_name,
+                            parent_id = wa.parent_id,
+                            create_time = wa.create_time,
+                            last_update_time = wa.last_update_time,
+                            is_valid = wa.is_valid,
+                            tenant_id = wa.tenant_id,
+                            area_property = wa.area_property,
+                        };
+            if (pageSearch.sqlTitle == "select")
+            {
+                query = query.Where(t => t.is_valid == true);
+            }
+            query = query.Where(t => t.tenant_id.Equals(currentUser.tenant_id)).Where(queries.AsExpression<WarehouseareaViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
                        .Take(pageSearch.pageSize)
                        .ToListAsync();
-            return (list.Adapt<List<WarehouseareaViewModel>>(), totals);
+            return (list, totals);
+        }
+        /// <summary>
+        /// get warehouseareas of the warehouse by warehouse_id
+        /// </summary>
+        /// <param name="warehouse_id">warehouse's id</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<List<FormSelectItem>> GetWarehouseareaByWarehouse_id(int warehouse_id, CurrentUser currentUser)
+        {
+            var res = new List<FormSelectItem>();
+            var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>();
+            res = await (from wa in DbSet.AsNoTracking()
+                         where wa.is_valid == true && wa.tenant_id == currentUser.tenant_id && wa.warehouse_id == warehouse_id
+                         select new FormSelectItem
+                         {
+                             code = "warehousearea",
+                             comments = "warehouseareas of the warehouse",
+                             name = wa.area_name,
+                             value = wa.id.ToString(),
+                         }).ToListAsync();
+            return res;
         }
 
         /// <summary>
@@ -115,6 +154,10 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(WarehouseareaViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>();
+            if (await DbSet.AnyAsync(t => t.warehouse_id == viewModel.warehouse_id && t.area_name == viewModel.area_name))
+            {
+                return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["area_name"], viewModel.area_name));
+            }
             var entity = viewModel.Adapt<WarehouseareaEntity>();
             entity.id = 0;
             entity.create_time = DateTime.Now;
@@ -140,6 +183,10 @@ namespace ModernWMS.WMS.Services
         {
             var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>();
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
+            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_id == viewModel.warehouse_id && t.area_name == viewModel.area_name))
+            {
+                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["area_name"], viewModel.area_name));
+            }
             if (entity == null)
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
@@ -151,6 +198,14 @@ namespace ModernWMS.WMS.Services
             entity.is_valid = viewModel.is_valid;
             entity.area_property = viewModel.area_property;
             entity.last_update_time = DateTime.Now;
+            var goodslocation_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
+            var gldatas = await goodslocation_DBSet.Where(t => t.warehouse_area_id == entity.id).ToListAsync();
+            gldatas.ForEach(t =>
+            {
+                t.warehouse_area_name = entity.area_name;
+                t.warehouse_area_property = entity.area_property;
+                t.is_valid = entity.is_valid;
+            });
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {

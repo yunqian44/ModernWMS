@@ -54,6 +54,14 @@
          /// <param name="id">id</param>
          /// <returns></returns>
          Task<(bool flag, string msg)> DeleteAsync(int id);
+
+        /// <summary>
+        /// get warehouseareas of the warehouse by warehouse_id
+        /// </summary>
+        /// <param name="warehouse_id">warehouse's id</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<List<FormSelectItem>> GetWarehouseareaByWarehouse_id(int warehouse_id, CurrentUser currentUser);
          #endregion
      }
  }

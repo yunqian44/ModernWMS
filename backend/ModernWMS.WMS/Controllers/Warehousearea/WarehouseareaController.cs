@@ -8,12 +8,11 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// warehousearea controller
-     /// </summary>
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// warehousearea controller
+    /// </summary>
      [Route("warehousearea")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "wms")]
@@ -46,15 +45,26 @@
              this._warehouseareaService = warehouseareaService;
             this._stringLocalizer= stringLocalizer;
          }
-         #endregion
- 
-         #region Api
-         /// <summary>
-         /// page search
-         /// </summary>
-         /// <param name="pageSearch">args</param>
-         /// <returns></returns>
-         [HttpPost("list")]
+        #endregion
+
+        #region Api
+        /// <summary>
+        /// get select items
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("areas-by-warehouse_id")]
+        public async Task<ResultModel<List<FormSelectItem>>> GetSelectItemsAsnyc(int warehouse_id)
+        {
+            var datas = await _warehouseareaService.GetWarehouseareaByWarehouse_id(warehouse_id,CurrentUser);
+            return ResultModel<List<FormSelectItem>>.Success(datas);
+        }
+
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("list")]
          public async Task<ResultModel<PageData<WarehouseareaViewModel>>> PageAsync(PageSearch pageSearch)
          {
              var (data, totals) = await _warehouseareaService.PageAsync(pageSearch, CurrentUser);

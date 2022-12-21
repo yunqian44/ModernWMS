@@ -119,7 +119,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
             if (await DbSet.AnyAsync(t => t.warehouse_name == viewModel.warehouse_name))
             {
-                string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name);
+               return(0,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
             }
             var entity = viewModel.Adapt<WarehouseEntity>();
             entity.id = 0;
@@ -148,7 +148,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
             if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_name == viewModel.warehouse_name))
             {
-                string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name);
+               return(false,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
             }
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
             if (entity == null)
@@ -164,10 +164,19 @@ namespace ModernWMS.WMS.Services
             entity.contact_tel = viewModel.contact_tel;
             entity.is_valid = viewModel.is_valid;
             entity.last_update_time = DateTime.Now;
-
-            var goodlocation_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
-            var goodlocations =await goodlocation_DBSet.Where(t => t.warehouse_id == entity.id).ToListAsync();
-            goodlocations.ForEach(t=>t.warehouse_name=entity.warehouse_name);
+            var warehousearea_DBSet = _dBContext.GetDbSet<WarehouseareaEntity>();
+            var wadatas =await warehousearea_DBSet.Where(t => t.warehouse_id == entity.id).ToListAsync();
+            wadatas.ForEach(t =>
+            {
+                t.is_valid = entity.is_valid;
+            });
+            var goodslocation_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
+            var gldatas = await goodslocation_DBSet.Where(t => t.warehouse_area_id == entity.id).ToListAsync();
+            gldatas.ForEach(t =>
+            {
+                t.warehouse_name = entity.warehouse_name;
+                t.is_valid = entity.is_valid;
+            });
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {

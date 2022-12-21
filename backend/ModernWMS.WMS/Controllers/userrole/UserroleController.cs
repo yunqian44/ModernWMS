@@ -108,7 +108,7 @@
          [HttpPost]
          public async Task<ResultModel<int>> AddAsync(UserroleViewModel viewModel)
          {
-             var (id, msg) = await _userroleService.AddAsync(viewModel);
+             var (id, msg) = await _userroleService.AddAsync(viewModel,CurrentUser);
              if (id > 0)
              {
                  return ResultModel<int>.Success(id);

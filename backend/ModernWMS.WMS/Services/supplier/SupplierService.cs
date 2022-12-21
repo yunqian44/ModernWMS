@@ -120,7 +120,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<SupplierEntity>();
             if (await DbSet.AnyAsync(t => t.supplier_name == viewModel.supplier_name))
             {
-                string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name);
+                return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
             }
             var entity = viewModel.Adapt<SupplierEntity>();
              entity.id = 0;
@@ -149,7 +149,7 @@ namespace ModernWMS.WMS.Services
              var DbSet = _dBContext.GetDbSet<SupplierEntity>();
             if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.supplier_name == viewModel.supplier_name))
             {
-                string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name);
+               return(false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
             }
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
              if (entity == null)
