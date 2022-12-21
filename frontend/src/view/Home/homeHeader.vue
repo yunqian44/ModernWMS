@@ -71,7 +71,7 @@ watch(
       }
     ]
     
-    if (MODULE) {
+    if (newValue.currentRoute.value.meta.menuModule) {
       data.breadcrumbItems.unshift({
         title: MODULE,
         disabled: true
