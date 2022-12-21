@@ -83,30 +83,40 @@
               <div
                 class="mt-5"
                 :style="{
-                  height: tableHeight
+                  height: cardHeight
                 }"
               >
-                <vxe-grid v-bind="data.gridOptions">
-                  <template #pager>
-                    <vxe-pager
-                      v-model:current-page="data.tablePage.currentPage"
-                      v-model:page-size="data.tablePage.pageSize"
-                      :layouts="[
-                        'Sizes',
-                        'PrevJump',
-                        'PrevPage',
-                        'Number',
-                        'NextPage',
-                        'NextJump',
-                        'FullJump',
-                        'Total'
-                      ]"
-                      :total="data.tablePage.total"
-                      @page-change="handlePageChange"
-                    >
-                    </vxe-pager>
-                  </template>
-                </vxe-grid>
+                <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+                  <vxe-column type="seq" width="60"></vxe-column>
+                  <vxe-column type="checkbox" width="50"></vxe-column>
+                  <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                    <template #default="{ row }">
+                      <tooltip-btn
+                        :flat="true"
+                        icon="mdi-pencil-outline"
+                        :tooltip-text="$t('system.page.edit')"
+                        @click="method.editRow(row)"
+                      ></tooltip-btn>
+                      <tooltip-btn
+                        :flat="true"
+                        icon="mdi-delete-outline"
+                        :tooltip-text="$t('system.page.delete')"
+                        :icon-color="errorColor"
+                        @click="method.deleteRow(row)"
+                      ></tooltip-btn>
+                    </template>
+                  </vxe-column>
+                </vxe-table>
+                <vxe-pager
+                  :current-page="data.tablePage.currentPage"
+                  :page-size="data.tablePage.pageSize"
+                  perfect
+                  :total="data.tablePage.total"
+                  :page-sizes="PAGE_SIZE"
+                  :layouts="PAGE_LAYOUT"
+                  @page-change="handlePageChange"
+                >
+                </vxe-pager>
               </div>
             </v-window-item>
           </v-window>
@@ -118,13 +128,15 @@
 
 <script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
-import { VxeGridProps, VxePagerEvents, VxeButtonEvents } from 'vxe-table'
-import { computedTableHeight } from '@/utils/globalStyle'
+import { VxePagerEvents, VxeButtonEvents } from 'vxe-table'
+import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
+import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
 const xTable = ref()
 
-// Table Model
+// Table Model, this just a example
+// You should put it on the 'types' folder
 interface UserVO {
   id: number
   name: string
@@ -170,33 +182,23 @@ const data = reactive({
     total: 0,
     currentPage: 1,
     pageSize: 10
-  }),
-  gridOptions: reactive<VxeGridProps>({
-    height: 'auto',
-    loading: false,
-    align: 'center',
-    columnConfig: {
-      resizable: true
-    },
-    data: [],
-    columns: [
-      { type: 'seq', width: 60 },
-      { type: 'checkbox', width: 50 },
-      { field: 'name', title: 'Name' },
-      { field: 'role', title: 'Role' },
-      { field: 'address', title: 'Address', showOverflow: true }
-    ]
   })
 })
 
 const method = reactive({
+  editRow(row: any) {
+    console.log(row)
+  },
+  deleteRow(row: any) {
+    console.log(row)
+  },
   sureSearch: () => {
     console.log(data.searchForm)
   }
 })
 
 onMounted(() => {
-  data.gridOptions.data = data.tableData
+  // TODO Get datas what you want
 })
 
 const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) => {
@@ -220,11 +222,18 @@ const exportTable: VxeButtonEvents.Click = () => {
 }
 
 /**
- * computedTableHeight({ hasTab, hasOperate }) 
+ * computedCardHeight({ hasTab, hasOperate }) 
  * Must enter the params if you don't need tab or operate area
  * Defaultly, the 'hasTab' and 'hasOperate' are true
  */
-const tableHeight = computed(() => computedTableHeight({}))
+const cardHeight = computed(() => computedCardHeight({ }))
+
+/**
+ * computedTableHeight({ hasPager, hasTab, hasOperate }) 
+ * Must enter the params if you don't need pager or tab or operate area
+ * Defaultly, the 'hasPager' and 'hasTab' and 'hasOperate' are true
+ */
+const tableHeight = computed(() => computedTableHeight({ }))
 </script>
 
 <style scoped lang="less">

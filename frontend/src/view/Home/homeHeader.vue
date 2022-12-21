@@ -38,7 +38,7 @@
 import { reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import LanguagesSwitch from '@/components/system/languages.vue'
-import { lightGrey } from '@/utils/globalStyle'
+import { lightGrey } from '@/constant/style'
 import i18n from '@/languages/i18n'
 import { router } from '@/router'
 import { store } from '@/store'

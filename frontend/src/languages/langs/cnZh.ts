@@ -10,7 +10,10 @@ export default {
     page: {
       add: '新增',
       refresh: '刷新',
-      export: '导出'
+      export: '导出',
+      operate: '操作',
+      edit: '编辑',
+      delete: '删除'
     },
     checkText: {
       mustInput: '请填写'

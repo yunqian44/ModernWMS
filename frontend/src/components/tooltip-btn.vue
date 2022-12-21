@@ -1,8 +1,8 @@
 <template>
   <v-tooltip location="bottom">
     <template #activator="{ props }">
-      <v-btn class="mr-3" size="small" icon v-bind="props" @click="method.clickEvent">
-        <v-icon> {{ icon }} </v-icon>
+      <v-btn :flat="flat" class="mr-3" :size="size" icon v-bind="props" @click="method.clickEvent">
+        <v-icon :color="iconColor"> {{ icon }} </v-icon>
       </v-btn>
     </template>
     <span>{{ tooltipText }}</span>
@@ -19,6 +19,20 @@ defineProps({
     default: ''
   },
   tooltipText: {
+    type: String,
+    default: ''
+  },
+  size: {
+    type: String,
+    default: 'small'
+  },
+  // Whether show button shadow. 
+  // It's hasn't shadow when 'flat = true'.
+  flat: {
+    type: Boolean,
+    default: false
+  },
+  iconColor: {
     type: String,
     default: ''
   }

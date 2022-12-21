@@ -106,7 +106,7 @@
 <script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxeGridProps, VxePagerEvents } from 'vxe-table'
-import { computedTableHeight } from '@/utils/globalStyle'
+import { computedCardHeight } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
 // Table Model
@@ -188,7 +188,7 @@ const handlePageChange: VxePagerEvents.PageChange = ({ currentPage, pageSize }) 
   // TODO 重新获取数据
 }
 
-const tableHeight = computed(() => computedTableHeight({}))
+const tableHeight = computed(() => computedCardHeight({}))
 </script>
 
 <style scoped lang="less">
