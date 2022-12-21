@@ -122,7 +122,7 @@ namespace ModernWMS.WMS.Services
             entity.last_update_time = DateTime.Now;
             if (!viewModel.is_valid.Equals(entity.is_valid))
             {
-                var entities = await DbSet.Where(t => t.parent_id.Equals(entity.id)).ToListAsync();
+                var entities = await DbSet.Where(t => t.parent_id > 0).ToListAsync();
                 List<CategoryEntity> children = new List<CategoryEntity>();
                 GetChildren(entities, entity.id, ref children);
                 if (children.Any())
@@ -177,6 +177,11 @@ namespace ModernWMS.WMS.Services
                 idList.AddRange(children.Select(t => t.id).ToList());
             }
             // 判断是否引用
+            var Spus = _dBContext.GetDbSet<SpuEntity>();
+            if (await Spus.AsNoTracking().AnyAsync(t => idList.Contains(t.category_id)))
+            {
+                return (false, "The data has been referenced and cannot be deleted");
+            }
             var qty = await _dBContext.GetDbSet<CategoryEntity>().Where(t => idList.Contains(t.id)).ExecuteDeleteAsync();
             if (qty > 0)
             {
