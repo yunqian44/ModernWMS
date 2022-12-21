@@ -36,7 +36,7 @@ import { Md5 } from 'ts-md5'
 import i18n from '@/languages/i18n'
 import { login } from '@/api/sys/login'
 import { store } from '@/store'
-import { funComponentList } from '@/components/system'
+import { hookComponent } from '@/components/system'
 import { router } from '@/router/index'
 
 // Get v-form ref
@@ -71,7 +71,7 @@ const method = reactive({
     })
 
     if (loginRes.isSuccess) {
-      funComponentList.$message({
+      hookComponent.$message({
         type: 'success',
         content: i18n.global.t('login.loginSuccess')
       })
