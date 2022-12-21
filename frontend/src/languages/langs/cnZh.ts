@@ -34,7 +34,8 @@ export default {
       userRoleSetting: '用户角色设置',
       companySetting: '公司信息',
       freightSetting: '运费设置',
-      customer: '客户信息'
+      customer: '客户信息',
+      supplier: '供应商信息'
     }
   },
   login: {

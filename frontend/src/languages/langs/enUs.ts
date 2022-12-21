@@ -34,7 +34,8 @@ export default {
       userRoleSetting: 'User Role',
       companySetting: 'Company Information',
       freightSetting: 'Freight Setting',
-      customer: 'Customer Info'
+      customer: 'Customer Info',
+      supplier: 'Supplier Info'
     }
   },
   login: {
