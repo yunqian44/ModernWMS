@@ -1,4 +1,5 @@
 import '@/assets/css/hookComponent.css' // import hookComponent style
+import { Components } from '@/types/System/HookComponent'
 
 // Use import.meta.globEager to read the files in the components folder, distinguished by the suffix ts
 const componentsList: any = import.meta.globEager('./hookComponent/**')
@@ -18,4 +19,4 @@ export default function (app: any) {
 }
 
 // Export function components for import
-export const hookComponent = List
+export const hookComponent: Components = List
