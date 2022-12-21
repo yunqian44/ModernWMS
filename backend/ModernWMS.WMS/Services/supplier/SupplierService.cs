@@ -72,6 +72,10 @@ namespace ModernWMS.WMS.Services
              var query = DbSet.AsNoTracking()
                  .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                  .Where(queries.AsExpression<SupplierEntity>());
+            if(pageSearch.sqlTitle == "select")
+            {
+                query = query.Where(t => t.is_valid == true);
+            }
              int totals = await query.CountAsync();
              var list = await query.OrderByDescending(t => t.create_time)
                         .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
