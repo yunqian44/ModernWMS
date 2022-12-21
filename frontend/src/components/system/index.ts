@@ -18,4 +18,4 @@ export default function (app: any) {
 }
 
 // Export function components for import
-export const funComponentList = List
+export const hookComponent = List
