@@ -68,11 +68,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string contact_tel { get; set; } = string.Empty;
 
         /// <summary>
-        /// creater
+        /// creator
         /// </summary>
-        [Display(Name = "creater")]
+        [Display(Name = "creator")]
         [MaxLength(64, ErrorMessage = "MaxLength")]
-        public string creater { get; set; } = string.Empty;
+        public string creator { get; set; } = string.Empty;
 
         /// <summary>
         /// create time

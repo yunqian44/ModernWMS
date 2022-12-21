@@ -10,7 +10,10 @@ export default {
     page: {
       add: 'Add',
       refresh: 'Refresh',
-      export: 'Export'
+      export: 'Export',
+      operate: 'Operate',
+      edit: 'Edit',
+      delete: 'Delete'
     },
     checkText: {
       mustInput: 'Please fill in the '

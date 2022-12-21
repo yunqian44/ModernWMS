@@ -2,7 +2,8 @@
  * date：2022-12-20
  * developer：NoNo
  */
- using ModernWMS.Core.Services;
+using ModernWMS.Core.JWT;
+using ModernWMS.Core.Services;
  using ModernWMS.WMS.Entities.Models;
  using ModernWMS.WMS.Entities.ViewModels;
  
@@ -13,12 +14,19 @@
      /// </summary>
      public interface IUserroleService : IBaseService<UserroleEntity>
      {
-         #region Api
+        #region Api
+        /// <summary>
+        /// bulk save records
+        /// </summary>
+        /// <param name="viewModels">viewmodel</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> BulkSaveAsync(List<UserroleViewModel> viewModels, CurrentUser currentUser);
          /// <summary>
          /// Get all records
          /// </summary>
          /// <returns></returns>
-         Task<List<UserroleViewModel>> GetAllAsync();
+         Task<List<UserroleViewModel>> GetAllAsync(CurrentUser currentUser);
          /// <summary>
          /// Get a record by id
          /// </summary>

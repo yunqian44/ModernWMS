@@ -66,7 +66,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// is_valid
         /// </summary>
         [Display(Name = "is_valid")]
-        [MaxLength(1, ErrorMessage = "MaxLength")]
         public bool is_valid { get; set; } = false;
 
         /// <summary>
@@ -88,7 +87,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// createtime
         /// </summary>
         [Display(Name = "create_time")]
-        [MaxLength(23, ErrorMessage = "MaxLength")]
         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
         public DateTime create_time { get; set; } = UtilConvert.MinDate;
 
@@ -96,7 +94,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// last update time
         /// </summary>
         [Display(Name = "last_update_time")]
-        [MaxLength(23, ErrorMessage = "MaxLength")]
         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
         public DateTime last_update_time { get; set; } = UtilConvert.MinDate;
 
@@ -104,7 +101,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// tenant
         /// </summary>
         [Display(Name = "tenant")]
-        [MaxLength(3, ErrorMessage = "MaxLength")]
         public byte tenant_id { get; set; } = 0;
 
         #endregion

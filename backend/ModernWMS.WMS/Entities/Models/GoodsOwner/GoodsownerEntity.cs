@@ -36,9 +36,9 @@ namespace ModernWMS.WMS.Entities.Models
         public string contact_tel { get; set; } = string.Empty;
 
         /// <summary>
-        /// creater
+        /// creator
         /// </summary>
-        public string creater { get; set; } = string.Empty;
+        public string creator { get; set; } = string.Empty;
 
         /// <summary>
         /// create time

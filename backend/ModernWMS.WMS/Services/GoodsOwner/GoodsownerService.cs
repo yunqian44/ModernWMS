@@ -87,6 +87,7 @@ namespace ModernWMS.WMS.Services
             }
             var entity = viewModel.Adapt<GoodsownerEntity>();
             entity.id = 0;
+            entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;

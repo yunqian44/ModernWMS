@@ -56,7 +56,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// is_valid
         /// </summary>
         [Display(Name = "is_valid")]
-        [MaxLength(1, ErrorMessage = "MaxLength")]
         public bool is_valid { get; set; } = false;
 
         /// <summary>
@@ -70,7 +69,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// tenant
         /// </summary>
         [Display(Name = "tenant")]
-        [MaxLength(3, ErrorMessage = "MaxLength")]
         public byte tenant_id { get; set; } = 0;
     }
 }
