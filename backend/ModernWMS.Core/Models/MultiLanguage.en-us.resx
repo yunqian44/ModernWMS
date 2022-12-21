@@ -126,6 +126,10 @@
   <data name="delete_failed" xml:space="preserve">
     <value>Delete failed</value>
   </data>
+  <data name="delete_referenced" xml:space="preserve">
+    <value>The data has been referenced and cannot be deleted</value>
+    <comment>数据已被引用，不能删除</comment>
+  </data>
   <data name="delete_success" xml:space="preserve">
     <value>Delete success</value>
   </data>
