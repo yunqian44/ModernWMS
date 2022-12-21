@@ -40,7 +40,7 @@ namespace ModernWMS.WMS.Entities.Models
         /// <summary>
         /// is_valid
         /// </summary>
-        public bool is_valid { get; set; } = false;
+        public bool is_valid { get; set; } = true;
 
         /// <summary>
         /// tenant_id
