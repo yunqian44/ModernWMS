@@ -5,6 +5,14 @@ export interface UniformFileNaming {
   tenant_id?: number
 }
 
+// VxeTable Required paging parameters
+export interface TablePage {
+  total: number
+  pageIndex: number
+  pageSize: number
+}
+
+// API Required paging parameters
 export interface PageConfigProps {
   pageIndex: number
   pageSize: number
