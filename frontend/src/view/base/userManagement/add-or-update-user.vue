@@ -1,68 +1,52 @@
 <template>
-  <v-dialog v-model="isShow" :width="'70%'" transition="dialog-top-transition" :persistent="true">
+  <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
         <v-toolbar color="white" :title="`[${$t(`system.page.${dialogTitle}`)}] ${$t('router.sideBar.userManagement')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-row>
-              <v-col>
-                <v-text-field
-                  v-model="data.form.user_num"
-                  :label="$t('base.userManagement.user_num')"
-                  :rules="data.rules.user_num"
-                  variant="outlined"
-                ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-text-field
-                  v-model="data.form.user_name"
-                  :label="$t('base.userManagement.user_name')"
-                  :rules="data.rules.user_name"
-                  variant="outlined"
-                ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-select
-                  v-model="data.form.user_role"
-                  :items="data.combobox.user_role"
-                  :rules="data.rules.user_role"
-                  :label="$t('base.userManagement.user_role')"
-                  variant="outlined"
-                  clearable
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col :cols="5">
-                <v-select
-                  v-model="data.form.sex"
-                  :items="data.combobox.sex"
-                  item-title="label"
-                  item-value="value"
-                  :rules="data.rules.sex"
-                  :label="$t('base.userManagement.sex')"
-                  variant="outlined"
-                  clearable
-                ></v-select>
-              </v-col>
-              <v-col :cols="5">
-                <v-text-field
-                  v-model="data.form.contact_tel"
-                  :label="$t('base.userManagement.contact_tel')"
-                  :rules="data.rules.contact_tel"
-                  variant="outlined"
-                ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-switch
-                  v-model="data.form.is_valid"
-                  color="primary"
-                  :label="$t('base.userManagement.is_valid')"
-                  :rules="data.rules.is_valid"
-                ></v-switch>
-              </v-col>
-            </v-row>
+            <v-text-field
+              v-model="data.form.user_num"
+              :label="$t('base.userManagement.user_num')"
+              :rules="data.rules.user_num"
+              variant="outlined"
+            ></v-text-field>
+            <v-text-field
+              v-model="data.form.user_name"
+              :label="$t('base.userManagement.user_name')"
+              :rules="data.rules.user_name"
+              variant="outlined"
+            ></v-text-field>
+            <v-select
+              v-model="data.form.user_role"
+              :items="data.combobox.user_role"
+              :rules="data.rules.user_role"
+              :label="$t('base.userManagement.user_role')"
+              variant="outlined"
+              clearable
+            ></v-select>
+            <v-select
+              v-model="data.form.sex"
+              :items="data.combobox.sex"
+              item-title="label"
+              item-value="value"
+              :rules="data.rules.sex"
+              :label="$t('base.userManagement.sex')"
+              variant="outlined"
+              clearable
+            ></v-select>
+            <v-text-field
+              v-model="data.form.contact_tel"
+              :label="$t('base.userManagement.contact_tel')"
+              :rules="data.rules.contact_tel"
+              variant="outlined"
+            ></v-text-field>
+            <v-switch
+              v-model="data.form.is_valid"
+              color="primary"
+              :label="$t('base.userManagement.is_valid')"
+              :rules="data.rules.is_valid"
+            ></v-switch>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -177,4 +161,10 @@ watch(
 )
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.v-form {
+  div {
+    margin-bottom: 7px;
+  }
+}
+</style>
