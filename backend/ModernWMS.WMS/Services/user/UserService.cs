@@ -15,6 +15,7 @@ using ModernWMS.Core.Utility;
 using System.Text;
 using ModernWMS.Core.JWT;
 using ModernWMS.Core.DynamicSearch;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace ModernWMS.WMS.Services
 {
@@ -53,6 +54,27 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
+        /// get select items
+        /// </summary>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<List<FormSelectItem>> GetSelectItemsAsnyc(CurrentUser currentUser)
+        {
+            var res = new List<FormSelectItem>();
+            var userrole_DBSet = _dBContext.GetDbSet<UserroleEntity>();
+            res.AddRange(await (from ur in userrole_DBSet.AsNoTracking()
+                                where ur.is_valid == true && ur.tenant_id == currentUser.tenant_id
+                                select new FormSelectItem
+                                {
+                                    code = "user_role",
+                                    name = ur.role_name,
+                                    value = ur.role_name,
+                                    comments = "user's role",
+                                }).ToListAsync());
+            return res;
+        }
+
+        /// <summary>
         /// page search
         /// </summary>
         /// <param name="pageSearch">args</param>
@@ -72,6 +94,10 @@ namespace ModernWMS.WMS.Services
             var query = DbSet.AsNoTracking()
                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                 .Where(queries.AsExpression<userEntity>());
+            if (pageSearch.sqlTitle == "select")
+            {
+                query = query.Where(t => t.is_valid == true);
+            }
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
@@ -190,8 +216,9 @@ namespace ModernWMS.WMS.Services
         /// import users by excel
         /// </summary>
         /// <param name="datas">excel datas</param>
+        /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<(bool flag,string msg)>ExcelAsync(List<UserExcelImportViewModel> datas)
+        public async Task<(bool flag,string msg)>ExcelAsync(List<UserExcelImportViewModel> datas,CurrentUser currentUser)
         {
             StringBuilder sb = new StringBuilder();
             var DbSet = _dBContext.GetDbSet<userEntity>();
@@ -217,6 +244,8 @@ namespace ModernWMS.WMS.Services
 
             var entities = datas.Adapt<List<userEntity>>();
             entities.ForEach(t => {
+                t.creator = currentUser.user_name;
+                t.tenant_id= currentUser.tenant_id;
                 t.auth_string = Md5Helper.Md5Encrypt32("pwd123456");
                 t.create_time = DateTime.Now;
                 t.last_update_time= DateTime.Now;
