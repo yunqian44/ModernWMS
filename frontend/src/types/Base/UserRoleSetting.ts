@@ -1,4 +1,4 @@
-import { UniformFileNaming, TablePage } from '../System/Form'
+import { UniformFileNaming } from '../System/Form'
 
 export interface UserRoleVO extends UniformFileNaming {
   id: number
@@ -8,7 +8,6 @@ export interface UserRoleVO extends UniformFileNaming {
 
 export interface DataProps {
   tableData: UserRoleVO[]
-  tablePage: TablePage
   showDialog: boolean
   dialogForm: UserRoleVO
 }

@@ -111,6 +111,7 @@ const data = reactive({
 })
 
 const method = reactive({
+  // Get the options required by the drop-down box
   getCombobox: () => {
     const sexOptions = ['male', 'female']
     data.combobox.sex = []

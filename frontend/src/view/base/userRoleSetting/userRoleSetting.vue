@@ -67,7 +67,7 @@
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="role_name" :title="$t('base.userRoleSetting.role_name')"></vxe-column>
-              <vxe-column field="is_valid" :title="$t('base.userManagement.is_valid')">
+              <vxe-column field="is_valid" :title="$t('base.userRoleSetting.is_valid')">
                 <template #default="{ row, column }">
                   <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
                 </template>
@@ -95,7 +95,7 @@
       </v-card>
     </div>
     <!-- Add or modify data mode window -->
-    <addOrUpdateUserDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+    <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
   </div>
 </template>
 
@@ -104,9 +104,9 @@ import { computed, reactive, onMounted, ref } from 'vue'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { DataProps, UserRoleVO } from '@/types/Base/UserRoleSetting'
-import { getUserRoleAll, deleteUser } from '@/api/base/userRoleSetting'
+import { getUserRoleAll, deleteUserRole } from '@/api/base/userRoleSetting'
 import { hookComponent } from '@/components/system'
-import addOrUpdateUserDialog from './add-or-update-user-role.vue'
+import addOrUpdateDialog from './add-or-update-user-role.vue'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
@@ -118,11 +118,6 @@ const data: DataProps = reactive({
   //   userName2: ''
   // },
   tableData: [],
-  tablePage: {
-    total: 0,
-    pageIndex: 1,
-    pageSize: 10
-  },
   // Dialog info
   showDialog: false,
   dialogForm: {
@@ -171,7 +166,7 @@ const method = reactive({
     method.getUserRoleList()
   },
   editRow(row: UserRoleVO) {
-    data.dialogForm = row
+    data.dialogForm = JSON.parse(JSON.stringify(row))
     data.showDialog = true
   },
   deleteRow(row: UserRoleVO) {
@@ -179,7 +174,7 @@ const method = reactive({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
         if (row.id) {
-          const { data: res } = await deleteUser(row.id)
+          const { data: res } = await deleteUserRole(row.id)
           if (!res.isSuccess) {
             hookComponent.$message({
               type: 'error',

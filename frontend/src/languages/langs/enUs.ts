@@ -121,8 +121,30 @@ export default {
       is_valid: 'Valid'
     },
     userRoleSetting: {
-      role_name: 'Role Name',
+      role_name: 'User Role',
       is_valid: 'Valid'
+    },
+    companySetting: {
+      company_name: 'Corporate Name',
+      city: 'City',
+      address: 'Detailed Address',
+      manager: 'Person In Charge',
+      contact_tel: 'Contact Information'
+    },
+    ownerOfCargo: {
+      goods_owner_name: 'Owner Of Cargo',
+      city: 'City',
+      address: 'Detailed Address',
+      manager: 'Person In Charge',
+      contact_tel: 'Contact Information',
+      creator: 'Creater',
+      create_time: 'Creation Time'
+    },
+    commodityCategorySetting: {
+      category_name: 'Commodity category',
+      parent_name: 'Parent Category',
+      creator: 'Creater',
+      create_time: 'Creation Time'
     }
   }
 }

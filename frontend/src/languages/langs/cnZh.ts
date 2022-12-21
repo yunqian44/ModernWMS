@@ -121,8 +121,30 @@ export default {
       is_valid: '是否有效'
     },
     userRoleSetting: {
-      role_name: '角色名称',
+      role_name: '用户角色',
       is_valid: '是否有效'
+    },
+    companySetting: {
+      company_name: '公司名称',
+      city: '所在城市',
+      address: '详细地址',
+      manager: '负责人',
+      contact_tel: '联系方式'
+    },
+    ownerOfCargo: {
+      goods_owner_name: '货主名称',
+      city: '所在城市',
+      address: '详细地址',
+      manager: '负责人',
+      contact_tel: '联系方式',
+      creator: '创建人',
+      create_time: '创建时间'
+    },
+    commodityCategorySetting: {
+      category_name: '商品类别',
+      parent_name: '所属类别',
+      creator: '创建人',
+      create_time: '创建时间'
     }
   }
 }
