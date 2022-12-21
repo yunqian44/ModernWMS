@@ -143,6 +143,13 @@ const method = reactive({
           vue_path_detail: '',
           vue_directory: 'base/freightSetting'
         },
+        {
+          menu_name: '客户信息',
+          module: 'baseModule',
+          vue_path: 'customer',
+          vue_path_detail: '',
+          vue_directory: 'base/customer'
+        }
       ]
       store.commit('user/setUserMenuList', testMenus)
 
