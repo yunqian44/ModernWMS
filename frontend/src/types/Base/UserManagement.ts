@@ -1,28 +1,19 @@
-import { VxeGridProps } from 'vxe-table'
 import { UniformFileNaming, TablePage } from '../System/Form'
 
-// Common request res
-export interface HttpModel {
-  code: number
-  isSuccess: boolean
-  data: any
-  errorMessage: string
-}
-
 export interface UserVO extends UniformFileNaming {
-  id?: number
+  id: number
   user_num: string
   user_name: string
   contact_tel?: string
-  user_role: string
+  user_role?: string
   sex?: string
   auth_string?: string
   is_valid: boolean
 }
 
 export interface DataProps {
+  tableData: UserVO[]
   tablePage: TablePage
-  gridOptions: VxeGridProps
   showDialog: boolean
   dialogForm: UserVO
 }

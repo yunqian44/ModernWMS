@@ -5,7 +5,7 @@
       <v-card-text>{{ content }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green-darken-1" variant="text" @click="data.dialogVisible = false">
+        <v-btn variant="text" @click="data.dialogVisible = false">
           {{ cancleText }}
         </v-btn>
         <v-btn

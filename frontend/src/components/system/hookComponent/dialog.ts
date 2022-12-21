@@ -9,6 +9,7 @@ export default {
   name: 'dialog',
   dialog: (options: DialogOptions) => {
     const mountNode = document.createElement('div')
+    mountNode.style.zIndex = '9000'
     document.body.appendChild(mountNode)
     const app = createApp(DialogComponent, {
       ...options,

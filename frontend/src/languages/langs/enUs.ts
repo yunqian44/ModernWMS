@@ -9,17 +9,32 @@ export default {
     },
     page: {
       add: 'Add',
+      update: 'Update',
       refresh: 'Refresh',
       export: 'Export',
       operate: 'Operate',
       edit: 'Edit',
-      delete: 'Delete'
+      delete: 'Delete',
+      close: 'Colse',
+      submit: 'Submit'
+    },
+    tips: {
+      success: ' success!',
+      fail: ' fail!',
+      beforeDeleteMessage: 'Are you sure you want to delete this data?'
     },
     checkText: {
+      checkFormFail: 'Operation failed. Please check the data and try again!',
       mustInput: 'Please fill in the '
     },
     homeHeader: {
       logout: 'Logout'
+    },
+    combobox: {
+      sex: {
+        male: 'Male',
+        female: 'Female'
+      }
     }
   },
   router: {
@@ -62,7 +77,11 @@ export default {
       user_role: 'Role',
       contact_tel: 'Contact Information',
       sex: 'Sex',
-      is_valid: 'Is Valid'
+      is_valid: 'Is Valid',
+      restPwd: 'Reset password',
+      checkboxIsNull: 'Please select data!',
+      beforeResetPwd: 'Are you sure you want to reset the passwords of these users?',
+      afterResetPwd: 'Password reset succeeded!'
     },
     warehouseSetting: {
       warehouseSetting: 'Warehouse Setting',

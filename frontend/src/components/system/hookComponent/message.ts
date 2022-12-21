@@ -11,6 +11,7 @@ export default {
     const mountNode = document.createElement('div')
     mountNode.className = 'messageItems'
     mountNode.style.top = `${ getNewMsgTop() }px`
+    mountNode.style.zIndex = '9999'
     document.body.appendChild(mountNode)
     const app = createApp(MessageComponent, {
       ...options,

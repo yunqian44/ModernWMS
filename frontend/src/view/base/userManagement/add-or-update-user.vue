@@ -1,13 +1,73 @@
 <template>
-  <v-dialog v-model="isShow" :width="'50%'" transition="dialog-top-transition">
+  <v-dialog v-model="isShow" :width="'70%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="primary" :title="`${dialogTitle} User`"></v-toolbar>
+        <v-toolbar color="white" :title="`[${$t(`system.page.${dialogTitle}`)}] ${$t('router.sideBar.userManagement')}`"></v-toolbar>
         <v-card-text>
-          <!-- Hello world! -->
+          <v-form ref="formRef">
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="data.form.user_num"
+                  :label="$t('base.userManagement.user_num')"
+                  :rules="data.rules.user_num"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  v-model="data.form.user_name"
+                  :label="$t('base.userManagement.user_name')"
+                  :rules="data.rules.user_name"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="data.form.user_role"
+                  :items="data.combobox.user_role"
+                  :rules="data.rules.user_role"
+                  :label="$t('base.userManagement.user_role')"
+                  variant="outlined"
+                  clearable
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col :cols="5">
+                <v-select
+                  v-model="data.form.sex"
+                  :items="data.combobox.sex"
+                  item-title="label"
+                  item-value="value"
+                  :rules="data.rules.sex"
+                  :label="$t('base.userManagement.sex')"
+                  variant="outlined"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col :cols="5">
+                <v-text-field
+                  v-model="data.form.contact_tel"
+                  :label="$t('base.userManagement.contact_tel')"
+                  :rules="data.rules.contact_tel"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-switch
+                  v-model="data.form.is_valid"
+                  color="primary"
+                  :label="$t('base.userManagement.is_valid')"
+                  :rules="data.rules.is_valid"
+                ></v-switch>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn variant="text" @click="method.closeDialog">Close</v-btn>
+          <v-btn variant="text" @click="method.closeDialog">{{ $t('system.page.close') }}</v-btn>
+          <v-btn color="primary" variant="text" @click="method.submit">{{ $t('system.page.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -15,10 +75,14 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref, watch } from 'vue'
 import { UserVO } from '@/types/Base/UserManagement'
+import i18n from '@/languages/i18n'
+import { hookComponent } from '@/components/system/index'
+import { addUser, updateUser } from '@/api/base/userManagement'
 
-const emit = defineEmits(['close'])
+const formRef = ref()
+const emit = defineEmits(['close', 'saveSuccess'])
 
 const props = defineProps<{
   showDialog: boolean
@@ -29,18 +93,88 @@ const isShow = computed(() => props.showDialog)
 
 const dialogTitle = computed(() => {
   if (props.form.id && props.form.id > 0) {
-    return 'Update'
+    return 'update'
   }
-  return 'Add'
+  return 'add'
 })
 
-// const data = reactive({})
+const data = reactive({
+  form: ref<UserVO>({
+    id: 0,
+    user_num: '',
+    user_name: '',
+    contact_tel: '',
+    is_valid: true
+  }),
+  rules: {
+    user_num: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_num') }!`],
+    user_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_name') }!`],
+    user_role: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_role') }!`],
+    sex: [],
+    contact_tel: [],
+    is_valid: []
+  },
+  combobox: ref<{
+    sex: {
+      label: string
+      value: string
+    }[]
+    user_role: string[]
+  }>({
+    sex: [],
+    user_role: []
+  })
+})
 
 const method = reactive({
+  getCombobox: () => {
+    const sexOptions = ['male', 'female']
+    data.combobox.sex = []
+    data.combobox.user_role = ['假装有']
+    for (const sex of sexOptions) {
+      data.combobox.sex.push({
+        label: i18n.global.t(`system.combobox.sex.${ sex }`),
+        value: sex
+      })
+    }
+  },
   closeDialog: () => {
     emit('close')
+  },
+  submit: async () => {
+    const { valid } = await formRef.value.validate()
+    if (valid) {
+      const { data: res } = dialogTitle.value === 'add' ? await addUser(data.form) : await updateUser(data.form)
+      if (!res.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: res.errorMessage
+        })
+        return
+      }
+      hookComponent.$message({
+        type: 'success',
+        content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+      })
+      emit('saveSuccess')
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.checkText.checkFormFail')
+      })
+    }
   }
 })
+
+watch(
+  () => isShow.value,
+  (val) => {
+    if (val) {
+      method.getCombobox()
+      data.form = props.form
+    }
+  }
+)
 </script>
 
 <style scoped lang="less"></style>
