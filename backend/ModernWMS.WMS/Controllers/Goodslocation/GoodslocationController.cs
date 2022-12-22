@@ -53,9 +53,9 @@ namespace ModernWMS.WMS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("location-by-warehouseare_id")]
-        public async Task<ResultModel<List<FormSelectItem>>> GetSelectItemsAsnyc(int warehouse_id)
+        public async Task<ResultModel<List<FormSelectItem>>> GetSelectItemsAsnyc(int warehousearea_id)
         {
-            var datas = await _goodslocationService.GetGoodslocationByWarehouse_area_id(warehouse_id, CurrentUser);
+            var datas = await _goodslocationService.GetGoodslocationByWarehouse_area_id(warehousearea_id, CurrentUser);
             return ResultModel<List<FormSelectItem>>.Success(datas);
         }
 

@@ -19,10 +19,10 @@
         /// <summary>
         /// get goodslocation of the warehousearea by warehouse_id and warehousearea_id
         /// </summary>
-        /// <param name="warehouse_id">warehouse's id</param>
+        /// <param name="warehousearea_id">warehousearea's id</param>
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        Task<List<FormSelectItem>> GetGoodslocationByWarehouse_area_id(int warehouse_id, CurrentUser currentUser);
+        Task<List<FormSelectItem>> GetGoodslocationByWarehouse_area_id(int warehousearea_id, CurrentUser currentUser);
 
         /// <summary>
         /// page search
