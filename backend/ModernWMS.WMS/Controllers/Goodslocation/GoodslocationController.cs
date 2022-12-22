@@ -16,7 +16,7 @@
      /// </summary>
      [Route("goodslocation")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "Base")]
      public class GoodslocationController : BaseController
      {
          #region Args
