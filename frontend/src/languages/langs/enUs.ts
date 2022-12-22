@@ -55,7 +55,8 @@ export default {
       freightSetting: 'Freight Setting',
       warehouseSetting: 'Warehouse Setting',
       customer: 'Customer Info',
-      supplier: 'Supplier Info'
+      supplier: 'Supplier Info',
+      roleMenu: 'Role Menu Settings'
     }
   },
   login: {
@@ -145,6 +146,11 @@ export default {
       parent_name: 'Parent Category',
       creator: 'Creater',
       create_time: 'Creation Time'
+    },
+    roleMenu: {
+      role_name: 'Role Name',
+      menu_name: 'Menu Name',
+      beforeUpdateOrDel: 'Please select the data to be processed first!'
     }
   }
 }

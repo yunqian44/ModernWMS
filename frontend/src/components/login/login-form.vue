@@ -163,6 +163,13 @@ const method = reactive({
           vue_path: 'supplier',
           vue_path_detail: '',
           vue_directory: 'base/supplier'
+        },
+        {
+          menu_name: '角色菜单设置',
+          module: 'baseModule',
+          vue_path: 'roleMenu',
+          vue_path_detail: '',
+          vue_directory: 'base/roleMenu'
         }
       ]
       store.commit('user/setUserMenuList', testMenus)
