@@ -165,7 +165,7 @@ namespace ModernWMS.WMS.Services
                             is_valid = m.is_valid
                         };
             var data = await query.FirstOrDefaultAsync(t => t.id.Equals(id));
-            return data == null ? new AsnViewModel() : data;
+            return data ?? new AsnViewModel();
         }
         /// <summary>
         /// add a new record

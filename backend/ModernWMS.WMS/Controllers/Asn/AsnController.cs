@@ -74,7 +74,7 @@ namespace ModernWMS.WMS.Controllers
         public async Task<ResultModel<AsnViewModel>> GetAsync(int id)
         {
             var data = await _asnService.GetAsync(id);
-            if (data != null)
+            if (data != null && data.id > 0)
             {
                 return ResultModel<AsnViewModel>.Success(data);
             }
