@@ -146,7 +146,6 @@ const method = reactive({
     emit('close')
   },
   submit: async () => {
-    console.log(data.form)
     const { valid } = await formRef.value.validate()
     // if (valid) {
     //   const { data: res } = dialogTitle.value === 'add' ? await addRoleMenu(data.form) : await updateRoleMenu(data.form)
