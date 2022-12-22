@@ -1,5 +1,5 @@
 /*
- * date：2022-12-21
+ * date：2022-12-22
  * developer：NoNo
  */
 using Mapster;
@@ -18,9 +18,9 @@ using System.Text;
 namespace ModernWMS.WMS.Services
 {
     /// <summary>
-    ///  Warehouse Service
+    ///  Freightfee Service
     /// </summary>
-    public class WarehouseService : BaseService<WarehouseEntity>, IWarehouseService
+    public class FreightfeeService : BaseService<FreightfeeEntity>, IFreightfeeService
     {
         #region Args
         /// <summary>
@@ -36,11 +36,11 @@ namespace ModernWMS.WMS.Services
 
         #region constructor
         /// <summary>
-        ///Warehouse  constructor
+        ///Freightfee  constructor
         /// </summary>
         /// <param name="dBContext">The DBContext</param>
         /// <param name="stringLocalizer">Localizer</param>
-        public WarehouseService(
+        public FreightfeeService(
             SqlDBContext dBContext
           , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
             )
@@ -57,7 +57,7 @@ namespace ModernWMS.WMS.Services
         /// <param name="pageSearch">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(List<WarehouseViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        public async Task<(List<FreightfeeViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
         {
             QueryCollection queries = new QueryCollection();
             if (pageSearch.searchObjects.Any())
@@ -67,46 +67,42 @@ namespace ModernWMS.WMS.Services
                     queries.Add(s);
                 });
             }
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
             var query = DbSet.AsNoTracking()
                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                .Where(queries.AsExpression<WarehouseEntity>());
-            if (pageSearch.sqlTitle == "select")
-            {
-                query = query.Where(t => t.is_valid == true);
-            }
+                .Where(queries.AsExpression<FreightfeeEntity>());
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
                        .Take(pageSearch.pageSize)
                        .ToListAsync();
-            return (list.Adapt<List<WarehouseViewModel>>(), totals);
+            return (list.Adapt<List<FreightfeeViewModel>>(), totals);
         }
 
         /// <summary>
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<WarehouseViewModel>> GetAllAsync(CurrentUser currentUser)
+        public async Task<List<FreightfeeViewModel>> GetAllAsync(CurrentUser currentUser)
         {
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
             var data = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).ToListAsync();
-            return data.Adapt<List<WarehouseViewModel>>();
+            return data.Adapt<List<FreightfeeViewModel>>();
         }
 
         /// <summary>
         /// Get a record by id
         /// </summary>
         /// <returns></returns>
-        public async Task<WarehouseViewModel> GetAsync(int id)
+        public async Task<FreightfeeViewModel> GetAsync(int id)
         {
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
             var entity = await DbSet.AsNoTracking().FirstOrDefaultAsync(t => t.id.Equals(id));
             if (entity == null)
             {
                 return null;
             }
-            return entity.Adapt<WarehouseViewModel>();
+            return entity.Adapt<FreightfeeViewModel>();
         }
         /// <summary>
         /// add a new record
@@ -114,14 +110,10 @@ namespace ModernWMS.WMS.Services
         /// <param name="viewModel">viewmodel</param>
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<(int id, string msg)> AddAsync(WarehouseViewModel viewModel, CurrentUser currentUser)
+        public async Task<(int id, string msg)> AddAsync(FreightfeeViewModel viewModel, CurrentUser currentUser)
         {
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            if (await DbSet.AnyAsync(t => t.warehouse_name == viewModel.warehouse_name))
-            {
-               return(0,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
-            }
-            var entity = viewModel.Adapt<WarehouseEntity>();
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
+            var entity = viewModel.Adapt<FreightfeeEntity>();
             entity.id = 0;
             entity.create_time = DateTime.Now;
             entity.creator = currentUser.user_name;
@@ -143,40 +135,23 @@ namespace ModernWMS.WMS.Services
         /// </summary>
         /// <param name="viewModel">args</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> UpdateAsync(WarehouseViewModel viewModel)
+        public async Task<(bool flag, string msg)> UpdateAsync(FreightfeeViewModel viewModel)
         {
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_name == viewModel.warehouse_name))
-            {
-               return(false,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
-            }
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
             if (entity == null)
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
             entity.id = viewModel.id;
-            entity.warehouse_name = viewModel.warehouse_name;
-            entity.city = viewModel.city;
-            entity.address = viewModel.address;
-            entity.email = viewModel.email;
-            entity.manager = viewModel.manager;
-            entity.contact_tel = viewModel.contact_tel;
+            entity.carrier = viewModel.carrier;
+            entity.departure_city = viewModel.departure_city;
+            entity.arrival_city = viewModel.arrival_city;
+            entity.price_per_weight = viewModel.price_per_weight;
+            entity.price_per_volume = viewModel.price_per_volume;
+            entity.min_payment = viewModel.min_payment;
             entity.is_valid = viewModel.is_valid;
             entity.last_update_time = DateTime.Now;
-            var warehousearea_DBSet = _dBContext.GetDbSet<WarehouseareaEntity>();
-            var wadatas =await warehousearea_DBSet.Where(t => t.warehouse_id == entity.id).ToListAsync();
-            wadatas.ForEach(t =>
-            {
-                t.is_valid = entity.is_valid;
-            });
-            var goodslocation_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
-            var gldatas = await goodslocation_DBSet.Where(t => t.warehouse_area_id == entity.id).ToListAsync();
-            gldatas.ForEach(t =>
-            {
-                t.warehouse_name = entity.warehouse_name;
-                t.is_valid = entity.is_valid;
-            });
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
@@ -194,7 +169,7 @@ namespace ModernWMS.WMS.Services
         /// <returns></returns>
         public async Task<(bool flag, string msg)> DeleteAsync(int id)
         {
-            var qty = await _dBContext.GetDbSet<WarehouseEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
+            var qty = await _dBContext.GetDbSet<FreightfeeEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
             if (qty > 0)
             {
                 return (true, _stringLocalizer["delete_success"]);
@@ -211,31 +186,31 @@ namespace ModernWMS.WMS.Services
         /// <param name="datas">excel datas</param>
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> ExcelAsync(List<WarehouseExcelImportViewModel> datas, CurrentUser currentUser)
+        public async Task<(bool flag, string msg)> ExcelAsync(List<FreightfeeExcelmportViewModel> datas, CurrentUser currentUser)
         {
             StringBuilder sb = new StringBuilder();
-            var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            var user_num_repeat_excel = datas.GroupBy(t => t.warehouse_name).Select(t => new { warehouse_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
-            foreach (var repeat in user_num_repeat_excel)
-            {
-                sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat.warehouse_name));
-            }
-            if (user_num_repeat_excel.Count > 1)
-            {
-                return (false, sb.ToString());
-            }
+            var DbSet = _dBContext.GetDbSet<FreightfeeEntity>();
+            /*        var user_num_repeat_excel = datas.GroupBy(t => t.warehouse_name).Select(t => new { warehouse_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
+                    foreach (var repeat in user_num_repeat_excel)
+                    {
+                        sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat.warehouse_name));
+                    }
+                    if (user_num_repeat_excel.Count > 1)
+                    {
+                        return (false, sb.ToString());
+                    }
 
-            var user_num_repeat_exists = await DbSet.Where(t => datas.Select(t => t.warehouse_name).ToList().Contains(t.warehouse_name)).Select(t => t.warehouse_name).ToListAsync();
-            foreach (var repeat in user_num_repeat_exists)
-            {
-                sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat));
-            }
-            if (user_num_repeat_exists.Count > 1)
-            {
-                return (false, sb.ToString());
-            }
+                    var user_num_repeat_exists = await DbSet.Where(t => datas.Select(t => t.warehouse_name).ToList().Contains(t.warehouse_name)).Select(t => t.warehouse_name).ToListAsync();
+                    foreach (var repeat in user_num_repeat_exists)
+                    {
+                        sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat));
+                    }
+                    if (user_num_repeat_exists.Count > 1)
+                    {
+                        return (false, sb.ToString());
+                    }*/
 
-            var entities = datas.Adapt<List<WarehouseEntity>>();
+            var entities = datas.Adapt<List<FreightfeeEntity>>();
             entities.ForEach(t =>
             {
                 t.creator = currentUser.user_name;
