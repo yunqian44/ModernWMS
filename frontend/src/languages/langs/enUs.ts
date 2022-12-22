@@ -21,7 +21,8 @@ export default {
     tips: {
       success: ' success!',
       fail: ' fail!',
-      beforeDeleteMessage: 'Are you sure you want to delete this data?'
+      beforeDeleteMessage: 'Are you sure you want to delete this data?',
+      beforeDeleteDetailMessage: 'Are you sure you want to delete this row?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
@@ -55,7 +56,8 @@ export default {
       freightSetting: 'Freight Setting',
       warehouseSetting: 'Warehouse Setting',
       customer: 'Customer Info',
-      supplier: 'Supplier Info'
+      supplier: 'Supplier Info',
+      roleMenu: 'Role Menu Settings'
     }
   },
   login: {
@@ -160,6 +162,11 @@ export default {
       parent_name: 'Parent Category',
       creator: 'Creater',
       create_time: 'Creation Time'
+    },
+    roleMenu: {
+      role_name: 'Role Name',
+      menu_name: 'Menu Name',
+      beforeUpdateOrDel: 'Please select the data to be processed first!'
     }
   }
 }

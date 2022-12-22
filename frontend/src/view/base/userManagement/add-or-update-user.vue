@@ -2,7 +2,7 @@
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`[${$t(`system.page.${dialogTitle}`)}] ${$t('router.sideBar.userManagement')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.userManagement')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field

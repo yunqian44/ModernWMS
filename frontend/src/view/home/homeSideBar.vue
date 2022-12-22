@@ -169,27 +169,6 @@ onMounted(() => {
   }
 }
 
-/* 1.过渡动画 */
-@keyframes axisY {
-  from {
-    transform: translateY(-10px);
-  }
-  to {
-    transform: translateY(0px);
-  }
-}
-
-/* 2. 过渡类名 */
-/* 开始 */
-.menu-enter-active {
-  animation: axisY 0.1s;
-}
-/* 结束 */
-.menu-leave-active {
-  animation: axisY 0.1s reverse;
-  overflow: hidden;
-}
-
 .rotate90 {
   transform: rotate(90deg);
 }

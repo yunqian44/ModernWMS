@@ -2,25 +2,34 @@
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.commodityCategorySetting')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.customer')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
-              v-model="data.form.category_name"
-              :label="$t('base.commodityCategorySetting.category_name')"
-              :rules="data.rules.category_name"
+              v-model="data.form.customer_name"
+              :label="$t('base.customer.customer_name')"
+              :rules="data.rules.customer_name"
               variant="outlined"
             ></v-text-field>
-            <v-select
-              v-model="data.form.parent_id"
-              :items="data.combobox.parent"
-              item-title="label"
-              item-value="value"
-              :rules="data.rules.parent_id"
-              :label="$t('base.commodityCategorySetting.parent_name')"
+            <v-text-field v-model="data.form.city" :label="$t('base.customer.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
+            <v-text-field
+              v-model="data.form.address"
+              :label="$t('base.customer.address')"
+              :rules="data.rules.address"
               variant="outlined"
-              clearable
-            ></v-select>
+            ></v-text-field>
+            <v-text-field
+              v-model="data.form.manager"
+              :label="$t('base.customer.manager')"
+              :rules="data.rules.manager"
+              variant="outlined"
+            ></v-text-field>
+            <v-text-field
+              v-model="data.form.contact_tel"
+              :label="$t('base.customer.contact_tel')"
+              :rules="data.rules.contact_tel"
+              variant="outlined"
+            ></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -34,17 +43,17 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { CategoryVO } from '@/types/Base/CommodityCategorySetting'
+import { CustomerVO } from '@/types/Base/Customer'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addCategory, updateCategory, getCategoryAll } from '@/api/base/commodityCategorySetting'
+import { addCustomer, updateCustomer } from '@/api/base/customer'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 
 const props = defineProps<{
   showDialog: boolean
-  form: CategoryVO
+  form: CustomerVO
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -57,49 +66,35 @@ const dialogTitle = computed(() => {
 })
 
 const data = reactive({
-  form: ref<CategoryVO>({
+  form: ref<CustomerVO>({
     id: 0,
-    category_name: ''
+    customer_name: '',
+    city: '',
+    address: '',
+    manager: '',
+    email: '',
+    contact_tel: '',
+    is_valid: true
   }),
   rules: {
-    category_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityCategorySetting.category_name') }!`
-    ],
-    parent_id: [],
+    customer_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.customer.customer_name') }!`],
+    city: [],
+    address: [],
+    manager: [],
+    email: [],
+    contact_tel: [],
     is_valid: []
-  },
-  combobox: ref<{
-    parent: {
-      label: string
-      value: number
-    }[]
-  }>({
-    parent: []
-  })
+  }
 })
 
 const method = reactive({
-  // Get the options required by the drop-down box
-  getCombobox: async () => {
-    data.combobox.parent = []
-    const { data: res } = await getCategoryAll()
-    if (!res.isSuccess) {
-      return
-    }
-    for (const item of res.data) {
-      data.combobox.parent.push({
-        label: item.category_name,
-        value: item.id
-      })
-    }
-  },
   closeDialog: () => {
     emit('close')
   },
   submit: async () => {
     const { valid } = await formRef.value.validate()
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add' ? await addCategory(data.form) : await updateCategory(data.form)
+      const { data: res } = dialogTitle.value === 'add' ? await addCustomer(data.form) : await updateCustomer(data.form)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
@@ -125,7 +120,6 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      method.getCombobox()
       data.form = props.form
     }
   }
