@@ -55,7 +55,8 @@ export default {
       freightSetting: '运费设置',
       warehouseSetting: '仓库设置',
       customer: '客户信息',
-      supplier: '供应商信息'
+      supplier: '供应商信息',
+      roleMenu: '角色菜单设置'
     }
   },
   login: {
@@ -146,6 +147,11 @@ export default {
       parent_name: '所属类别',
       creator: '创建人',
       create_time: '创建时间'
+    },
+    roleMenu: {
+      role_name: '角色名称',
+      menu_name: '菜单名称',
+      beforeUpdateOrDel: '请先选择需要处理的数据!'
     }
   }
 }

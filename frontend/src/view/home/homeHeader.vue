@@ -20,12 +20,7 @@
           </div>
         </template>
         <v-list>
-          <v-list-item
-            v-for="(item, index) in data.userOperationMenu"
-            :key="index"
-            :value="index"
-            @click="method.operation(item.value)"
-          >
+          <v-list-item v-for="(item, index) in data.userOperationMenu" :key="index" :value="index" @click="method.operation(item.value)">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -70,7 +65,7 @@ watch(
         disabled: true
       }
     ]
-    
+
     if (newValue.currentRoute.value.meta.menuModule) {
       data.breadcrumbItems.unshift({
         title: MODULE,
@@ -87,6 +82,7 @@ const method = reactive({
     if (value === 'logout') {
       store.commit('system/clearOpenedMenu')
       store.commit('system/setCurrentRouterPath', '')
+      store.commit('system/setRefreshFlag', false)
 
       router.push('/login')
     }
@@ -110,8 +106,7 @@ const method = reactive({
   transition: all 0.5s;
 
   box-shadow: 0 3px 3px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
-    0 3px 4px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
-    0 1px 8px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+    0 3px 4px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)), 0 1px 8px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   background-color: rgba(255, 255, 255, 0.5);
 
   .menuTitle {

@@ -8,16 +8,41 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <router-view></router-view>
+    <router-view v-if="data.isShow"></router-view>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { reactive, nextTick, onMounted, ref, computed, watch } from 'vue'
 import { emitter } from './utils/bus'
 import { store } from './store'
 
 const loadingFlag = ref(false)
+
+const data = reactive({
+  isShow: true // Used to refresh the interface when switching languages
+})
+
+const method = reactive({
+  refreshSystem: () => {
+    data.isShow = false
+    nextTick(() => {
+      data.isShow = true
+      store.commit('system/setRefreshFlag', false)
+    })
+  }
+})
+
+const refreshFlag = computed(() => store.getters['system/refreshFlag'])
+
+watch(
+  () => refreshFlag.value,
+  (flag) => {
+    if (flag) {
+      method.refreshSystem()
+    }
+  }
+)
 
 onMounted(() => {
   emitter.on('showLoading', () => {

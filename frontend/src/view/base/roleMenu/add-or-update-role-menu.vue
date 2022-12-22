@@ -2,25 +2,15 @@
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.commodityCategorySetting')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.roleMenu')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
-              v-model="data.form.category_name"
-              :label="$t('base.commodityCategorySetting.category_name')"
-              :rules="data.rules.category_name"
+              v-model="data.form.role_name"
+              :label="$t('base.roleMenu.role_name')"
+              :rules="data.rules.role_name"
               variant="outlined"
             ></v-text-field>
-            <v-select
-              v-model="data.form.parent_id"
-              :items="data.combobox.parent"
-              item-title="label"
-              item-value="value"
-              :rules="data.rules.parent_id"
-              :label="$t('base.commodityCategorySetting.parent_name')"
-              variant="outlined"
-              clearable
-            ></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -34,72 +24,47 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { CategoryVO } from '@/types/Base/CommodityCategorySetting'
+import { RoleMenuVO } from '@/types/Base/RoleMenu'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addCategory, updateCategory, getCategoryAll } from '@/api/base/commodityCategorySetting'
+import { addRoleMenu, updateRoleMenu } from '@/api/base/roleMenu'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 
 const props = defineProps<{
   showDialog: boolean
-  form: CategoryVO
+  form: RoleMenuVO
 }>()
 
 const isShow = computed(() => props.showDialog)
 
 const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
+  if (props.form.userrole_id && props.form.userrole_id > 0) {
     return 'update'
   }
   return 'add'
 })
 
 const data = reactive({
-  form: ref<CategoryVO>({
-    id: 0,
-    category_name: ''
+  form: ref<RoleMenuVO>({
+    userrole_id: 0,
+    role_name: '',
+    detailList: []
   }),
   rules: {
-    category_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityCategorySetting.category_name') }!`
-    ],
-    parent_id: [],
-    is_valid: []
-  },
-  combobox: ref<{
-    parent: {
-      label: string
-      value: number
-    }[]
-  }>({
-    parent: []
-  })
+    role_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.roleMenu.role_name') }!`]
+  }
 })
 
 const method = reactive({
-  // Get the options required by the drop-down box
-  getCombobox: async () => {
-    data.combobox.parent = []
-    const { data: res } = await getCategoryAll()
-    if (!res.isSuccess) {
-      return
-    }
-    for (const item of res.data) {
-      data.combobox.parent.push({
-        label: item.category_name,
-        value: item.id
-      })
-    }
-  },
   closeDialog: () => {
     emit('close')
   },
   submit: async () => {
     const { valid } = await formRef.value.validate()
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add' ? await addCategory(data.form) : await updateCategory(data.form)
+      const { data: res } = dialogTitle.value === 'add' ? await addRoleMenu(data.form) : await updateRoleMenu(data.form)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
@@ -125,7 +90,6 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      method.getCombobox()
       data.form = props.form
     }
   }

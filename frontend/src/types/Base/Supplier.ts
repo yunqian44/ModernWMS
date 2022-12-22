@@ -1,4 +1,6 @@
-export interface SupplierVO {
+import { UniformFileNaming, TablePage } from '../System/Form'
+
+export interface SupplierVO extends UniformFileNaming {
   id: number
   supplier_name: string
   city: string
@@ -6,14 +8,12 @@ export interface SupplierVO {
   manager: string
   email: string
   contact_tel: string
-  creator: string
-  create_time: Date
-  last_update_time: Date
   is_valid: boolean
 }
 
 export interface DataProps {
   tableData: SupplierVO[]
+  tablePage: TablePage
   showDialog: boolean
   dialogForm: SupplierVO
 }
