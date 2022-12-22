@@ -8,12 +8,11 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// goodslocation controller
-     /// </summary>
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// goodslocation controller
+    /// </summary>
      [Route("goodslocation")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "Base")]
@@ -46,15 +45,26 @@
              this._goodslocationService = goodslocationService;
             this._stringLocalizer= stringLocalizer;
          }
-         #endregion
- 
-         #region Api
-         /// <summary>
-         /// page search
-         /// </summary>
-         /// <param name="pageSearch">args</param>
-         /// <returns></returns>
-         [HttpPost("list")]
+        #endregion
+
+        #region Api
+        /// <summary>
+        /// get select items
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("location-by-warehouseare_id")]
+        public async Task<ResultModel<List<FormSelectItem>>> GetSelectItemsAsnyc(int warehouse_id)
+        {
+            var datas = await _goodslocationService.GetGoodslocationByWarehouse_area_id(warehouse_id, CurrentUser);
+            return ResultModel<List<FormSelectItem>>.Success(datas);
+        }
+
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("list")]
          public async Task<ResultModel<PageData<GoodslocationViewModel>>> PageAsync(PageSearch pageSearch)
          {
              var (data, totals) = await _goodslocationService.PageAsync(pageSearch, CurrentUser);

@@ -53,16 +53,15 @@
         /// <summary>
         /// get goodslocation of the warehousearea by warehouse_id and warehousearea_id
         /// </summary>
-        /// <param name="warehouse_id">warehouse's id</param>
         /// <param name="warehouse_area_id">warehousearea's id</param>
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<List<FormSelectItem>> GetGoodslocationByWarehouse_area_id(int warehouse_id, int warehouse_area_id, CurrentUser currentUser)
+        public async Task<List<FormSelectItem>> GetGoodslocationByWarehouse_area_id( int warehouse_area_id, CurrentUser currentUser)
         {
             var res = new List<FormSelectItem>();
             var DbSet = _dBContext.GetDbSet<GoodslocationEntity>();
             res = await (from g in DbSet.AsNoTracking()
-                         where g.is_valid == true && g.tenant_id == currentUser.tenant_id && g.warehouse_id == warehouse_id && g.warehouse_area_id== warehouse_area_id
+                         where g.is_valid == true && g.tenant_id == currentUser.tenant_id  && g.warehouse_area_id== warehouse_area_id
                          select new FormSelectItem
                          {
                              code = "goodslocation",
