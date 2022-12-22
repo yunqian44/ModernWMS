@@ -15,14 +15,22 @@
      /// </summary>
      public interface IGoodslocationService : IBaseService<GoodslocationEntity>
      {
-         #region Api
-         /// <summary>
-         /// page search
-         /// </summary>
-         /// <param name="pageSearch">args</param>
-         /// <param name="currentUser">current user</param>
-         /// <returns></returns>
-         Task<(List<GoodslocationViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
+        #region Api
+        /// <summary>
+        /// get goodslocation of the warehousearea by warehouse_id and warehousearea_id
+        /// </summary>
+        /// <param name="warehouse_id">warehouse's id</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<List<FormSelectItem>> GetGoodslocationByWarehouse_area_id(int warehouse_id, CurrentUser currentUser);
+
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(List<GoodslocationViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
          /// <summary>
          /// Get all records
          /// </summary>
@@ -54,6 +62,7 @@
          /// <param name="id">id</param>
          /// <returns></returns>
          Task<(bool flag, string msg)> DeleteAsync(int id);
+
          #endregion
      }
  }

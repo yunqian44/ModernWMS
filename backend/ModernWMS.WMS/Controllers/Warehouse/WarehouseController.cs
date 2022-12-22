@@ -8,6 +8,8 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
+using ModernWMS.WMS.Services;
+
 namespace ModernWMS.WMS.Controllers
 {
     /// <summary>
@@ -45,15 +47,26 @@ namespace ModernWMS.WMS.Controllers
              this._warehouseService = warehouseService;
             this._stringLocalizer= stringLocalizer;
          }
-         #endregion
- 
-         #region Api
-         /// <summary>
-         /// page search
-         /// </summary>
-         /// <param name="pageSearch">args</param>
-         /// <returns></returns>
-         [HttpPost("list")]
+        #endregion
+
+        #region Api
+        /// <summary>
+        /// get select items
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("select-item")]
+        public async Task<ResultModel<List<FormSelectItem>>> GetSelectItemsAsnyc()
+        {
+            var datas = await _warehouseService.GetSelectItemsAsnyc(CurrentUser);
+            return ResultModel<List<FormSelectItem>>.Success(datas);
+        }
+
+        /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("list")]
          public async Task<ResultModel<PageData<WarehouseViewModel>>> PageAsync(PageSearch pageSearch)
          {
              var (data, totals) = await _warehouseService.PageAsync(pageSearch, CurrentUser);
