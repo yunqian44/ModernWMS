@@ -237,7 +237,7 @@ namespace ModernWMS.WMS.Services
             {
                 return (true, _stringLocalizer["save_success"]);
             }
-            return (false, _stringLocalizer["delete_failed"]);
+            return (false, _stringLocalizer["save_failed"]);
         }
         #endregion
     }
