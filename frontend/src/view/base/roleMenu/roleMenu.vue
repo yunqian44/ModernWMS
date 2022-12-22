@@ -85,7 +85,7 @@
                 </v-card>
               </v-col>
               <v-col :cols="9">
-                <vxe-table ref="xTable" :data="data.dialogForm.detailList" :height="tableHeight" align="center">
+                <vxe-table ref="xTable" :data="data.activeRoleMenuForm.detailList" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="menu_name" :title="$t('base.roleMenu.menu_name')">
                     <template #default="{ row }">
@@ -118,7 +118,11 @@ const xTable = ref()
 
 const data: DataProps = reactive({
   // Activation id
-  activeRoleMenuId: 0,
+  activeRoleMenuForm: {
+    userrole_id: 0,
+    role_name: '',
+    detailList: []
+  },
   // searchForm: {
   //   userName: '',
   //   userName1: '',
@@ -129,7 +133,6 @@ const data: DataProps = reactive({
   showDialog: false,
   dialogForm: {
     userrole_id: 0,
-    role_name: '',
     detailList: []
   }
 })
@@ -142,7 +145,11 @@ const method = reactive({
   getCompanyList: async () => {
     // Clear detailed data before refreshing
     method.clearDialogForm()
-    data.activeRoleMenuId = 0
+    data.activeRoleMenuForm = {
+      userrole_id: 0,
+      role_name: '',
+      detailList: []
+    }
     const { data: res } = await getRoleMenuAll()
     if (!res.isSuccess) {
       hookComponent.$message({
@@ -172,24 +179,25 @@ const method = reactive({
     method.getCompanyList()
   },
   editForm() {
-    if (data.dialogForm.userrole_id <= 0) {
+    if (data.activeRoleMenuForm.userrole_id <= 0) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')
       })
       return
     }
+    data.dialogForm = data.activeRoleMenuForm
     data.showDialog = true
   },
   deleteForm() {
-    if (data.dialogForm.userrole_id <= 0) {
+    if (data.activeRoleMenuForm.userrole_id <= 0) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')
       })
       return
     }
-    const row = data.dialogForm
+    const row = data.activeRoleMenuForm
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
@@ -235,7 +243,7 @@ const method = reactive({
       backgroundColor: '',
       color: ''
     }
-    if (data.activeRoleMenuId === row.userrole_id) {
+    if (data.activeRoleMenuForm.userrole_id === row.userrole_id) {
       styles.backgroundColor = '#9256fd'
       styles.color = '#ffffff'
     }
@@ -243,15 +251,14 @@ const method = reactive({
   },
   // Click role name filter menus
   roleMenuListCellClick: ({ row }: xTableProperty) => {
-    if (data.activeRoleMenuId === row.userrole_id) {
+    if (data.activeRoleMenuForm.userrole_id === row.userrole_id) {
       return
     }
-    data.activeRoleMenuId = row.userrole_id
-    method.getRoleMenus()
+    method.getRoleMenus(row.userrole_id)
   },
   // Get detailed data
-  getRoleMenus: async () => {
-    const { data: res } = await getRoleMenuById(data.activeRoleMenuId)
+  getRoleMenus: async (userrole_id: number) => {
+    const { data: res } = await getRoleMenuById(userrole_id)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -259,13 +266,12 @@ const method = reactive({
       })
       return
     }
-    data.dialogForm = res.data
+    data.activeRoleMenuForm = res.data
   },
   // Refresh dialog data
   clearDialogForm: () => {
     data.dialogForm = {
       userrole_id: 0,
-      role_name: '',
       detailList: []
     }
   }

@@ -2,13 +2,14 @@ import { UniformFileNaming } from '../System/Form'
 
 export interface RoleMenuVO extends UniformFileNaming {
   userrole_id: number
-  role_name: string
+  role_name?: string
   detailList: RoleMenuDetailVo[]
 }
 
 export interface RoleMenuDetailVo {
   id: number
-  menu_name: string
+  menu_id?: number
+  menu_name?: string
 }
 
 // Attributes required for the table click method
@@ -17,7 +18,7 @@ export interface xTableProperty {
 }
 
 export interface DataProps {
-  activeRoleMenuId: number
+  activeRoleMenuForm: RoleMenuVO
   roleList: RoleMenuVO[]
   showDialog: boolean
   dialogForm: RoleMenuVO

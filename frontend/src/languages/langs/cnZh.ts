@@ -21,7 +21,8 @@ export default {
     tips: {
       success: '成功!',
       fail: '失败!',
-      beforeDeleteMessage: '您确定要删除此条数据吗?'
+      beforeDeleteMessage: '您确定要删除此条数据吗?',
+      beforeDeleteDetailMessage: '您确定要删除此行吗?'
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',

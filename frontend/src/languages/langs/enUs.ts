@@ -21,7 +21,8 @@ export default {
     tips: {
       success: ' success!',
       fail: ' fail!',
-      beforeDeleteMessage: 'Are you sure you want to delete this data?'
+      beforeDeleteMessage: 'Are you sure you want to delete this data?',
+      beforeDeleteDetailMessage: 'Are you sure you want to delete this row?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',

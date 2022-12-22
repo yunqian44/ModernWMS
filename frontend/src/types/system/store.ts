@@ -1,5 +1,6 @@
 // user
 export interface MenuItem {
+  id: number
   menu_name: string
   module: string
   vue_path: string
