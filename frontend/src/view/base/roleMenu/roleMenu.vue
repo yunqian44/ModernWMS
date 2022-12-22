@@ -243,6 +243,9 @@ const method = reactive({
   },
   // Click role name filter menus
   roleMenuListCellClick: ({ row }: xTableProperty) => {
+    if (data.activeRoleMenuId === row.userrole_id) {
+      return
+    }
     data.activeRoleMenuId = row.userrole_id
     method.getRoleMenus()
   },
