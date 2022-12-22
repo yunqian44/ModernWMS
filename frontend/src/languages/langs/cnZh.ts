@@ -91,11 +91,26 @@ export default {
     warehouseSetting: {
       warehouseSetting: '仓库设置',
       reservoirSetting: '库区设置',
+      locationSetting: '库位设置',
+      email: 'Email',
       warehouse_name: '仓库名称',
       city: '所在城市',
       address: '详细地址',
-      acontact_tel: '联系方式',
-      manager: '负责人'
+      contact_tel: '联系方式',
+      manager: '负责人',
+      is_valid: '是否有效',
+      area_name: '库区名称',
+      area_property: '库区类型',
+      location_name: '库位编码',
+      location_length: '库位长(m)',
+      location_width: '库位宽(m)',
+      location_heigth: '库位高(m)',
+      location_volume: '库位容积（m³）',
+      location_load: '库位承重（kg）',
+      roadway_number: '巷道号',
+      shelf_number: '货架号',
+      layer_number: '层号',
+      tag_number: '位号'
     },
     customer: {
       customer_name: '客户名称',
