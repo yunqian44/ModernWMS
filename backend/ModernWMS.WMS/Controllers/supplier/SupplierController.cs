@@ -16,7 +16,7 @@ namespace ModernWMS.WMS.Controllers
     /// </summary>
      [Route("supplier")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "Base")]
      public class SupplierController : BaseController
      {
          #region Args

@@ -11,14 +11,9 @@
                 <v-row no-gutters>
                   <!-- Operate Btn -->
                   <v-col cols="3" class="col">
-                    <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
-                    <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
-                    <tooltip-btn
-                      icon="mdi-export-variant"
-                      :tooltip-text="$t('system.page.export')"
-                      @click="method.exportTable"
-                    >
-                    </tooltip-btn>
+                    <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add"></tooltip-btn>
+                    <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
+                    <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
@@ -28,12 +23,12 @@
                       <v-col cols="4"></v-col>
                       <v-col cols="4">
                         <v-text-field
-                          v-model="data.searchForm.transportationSupplier"
+                          v-model="data.searchForm.carrier"
                           clearable
                           hide-details
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
-                          :label="$t('base.freightSetting.transportationSupplier')"
+                          :label="$t('base.freightSetting.carrier')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -53,15 +48,18 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column
-                    field="transportation_supplier"
-                    :title="$t('base.freightSetting.transportationSupplier')"
-                  ></vxe-column>
-                  <vxe-column field="send_city" :title="$t('base.freightSetting.sendCity')"></vxe-column>
-                  <vxe-column field="receiver_city" :title="$t('base.freightSetting.receiverCity')"></vxe-column>
-                  <vxe-column field="weight_fee" :title="$t('base.freightSetting.weightFee')"></vxe-column>
-                  <vxe-column field="volume_fee" :title="$t('base.freightSetting.volumeFee')"></vxe-column>
-                  <vxe-column field="min_payment" :title="$t('base.freightSetting.minPayment')"></vxe-column>
+                  <vxe-column field="carrier" :title="$t('base.freightSetting.carrier')"></vxe-column>
+                  <vxe-column field="departure_city" :title="$t('base.freightSetting.departure_city')"></vxe-column>
+                  <vxe-column field="arrival_city" :title="$t('base.freightSetting.arrival_city')"></vxe-column>
+                  <vxe-column field="price_per_weight" :title="$t('base.freightSetting.price_per_weight')"></vxe-column>
+                  <vxe-column field="price_per_volume" :title="$t('base.freightSetting.price_per_volume')"></vxe-column>
+                  <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
+                  <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
+                  <vxe-column field="is_valid" :title="$t('base.freightSetting.is_valid')">
+                    <template #default="{ row, column }">
+                      <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
+                    </template>
+                  </vxe-column>
                   <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -95,6 +93,7 @@
           </v-window>
         </v-card-text>
       </v-card>
+      <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
     </div>
   </div>
 </template>
@@ -103,15 +102,30 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { FreightVO } from '@/types/Settings/Freight'
+import { FreightVO } from '@/types/Base/Freight'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { hookComponent } from '@/components/system'
+import { deleteFreight, getFreightList, addFreight, updateFreight } from '@/api/base/freightSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import addOrUpdateDialog from './add-or-update-freight.vue'
+import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
 const data = reactive({
+  showDialog: false,
+  dialogForm: {
+    id: 0,
+    carrier: '',
+    departure_city: '',
+    arrival_city: '',
+    price_per_weight: 0,
+    price_per_volume: 0,
+    min_payment: 0,
+    is_valid: true
+  },
   searchForm: {
-    transportationSupplier: ''
+    carrier: ''
   },
   activeTab: null,
   tableData: ref<FreightVO[]>([]),
@@ -123,17 +137,76 @@ const data = reactive({
 })
 
 const method = reactive({
-  editRow(row: any) {
-    console.log(row)
+  // Open a dialog to add
+  add: () => {
+    data.dialogForm = {
+      id: 0,
+      carrier: '',
+      departure_city: '',
+      arrival_city: '',
+      price_per_weight: 0,
+      price_per_volume: 0,
+      min_payment: 0,
+      is_valid: true
+    }
+    data.showDialog = true
   },
-  deleteRow(row: any) {
-    console.log(row)
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // After add or update success.
+  saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
+  // Refresh data
+  refresh: () => {
+    method.getFreightList()
+  },
+  getFreightList: async () => {
+    const { data: res } = await getFreightList(data.tablePage)
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
+    }
+    data.tableData = res.data.rows
+    data.tablePage.total = res.data.totals
+  },
+  editRow(row: FreightVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialog = true
+  },
+  deleteRow(row: FreightVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteFreight(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
   },
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getData()
+    method.getFreightList()
   }),
   exportTable: () => {
     const $table = xTable.value
@@ -151,33 +224,10 @@ const method = reactive({
   sureSearch: () => {
     console.log(data.searchForm)
   },
-  getData() {
-    // TODO get data
-    data.tableData.push(
-      {
-        id: 10001,
-        transportation_supplier: '1',
-        send_city: '1',
-        receiver_city: '1',
-        weight_fee: 1,
-        volume_fee: 1,
-        min_payment: 1
-      },
-      {
-        id: 10002,
-        transportation_supplier: '2',
-        send_city: '2',
-        receiver_city: '2',
-        weight_fee: 2,
-        volume_fee: 2,
-        min_payment: 3
-      }
-    )
-  }
 })
 
 onMounted(() => {
-  method.getData()
+  method.getFreightList()
 })
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
