@@ -50,7 +50,7 @@ namespace ModernWMS.WMS.Controllers
 
         #region Api
         /// <summary>
-        /// page search
+        /// page search, sqlTitle input asn_status:0 ~ 8
         /// </summary>
         /// <param name="pageSearch">args</param>
         /// <returns></returns>
@@ -139,6 +139,26 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<string>.Error(msg);
             }
         }
+
+        /// <summary>
+        /// Bulk modify Goodsowner
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPut("bulk-modify-goods-owner")]
+        public async Task<ResultModel<bool>> BulkModifyGoodsownerAsync(AsnBulkModifyGoodsOwnerViewModel viewModel)
+        {
+            var (flag, msg) = await _asnService.BulkModifyGoodsownerAsync(viewModel);
+            if (flag)
+            {
+                return ResultModel<bool>.Success(flag);
+            }
+            else
+            {
+                return ResultModel<bool>.Error(msg, 400, flag);
+            }
+        }
+
         #endregion
 
     }

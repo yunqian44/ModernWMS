@@ -266,7 +266,35 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["delete_failed"]);
             }
         }
+
+        /// <summary>
+        /// Bulk modify Goodsowner
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> BulkModifyGoodsownerAsync(AsnBulkModifyGoodsOwnerViewModel viewModel)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entities = await Asns.Where(t => viewModel.idList.Contains(t.id)).ToListAsync();
+            //需要什么限制？
+            entities.ForEach(t =>
+            {
+                t.goods_owner_id = viewModel.goods_owner_id;
+                t.goods_owner_name = viewModel.goods_owner_name;
+                t.last_update_time = DateTime.Now;
+            });
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
         #endregion
+
     }
 }
  
