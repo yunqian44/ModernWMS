@@ -13,12 +13,7 @@
                   <v-col cols="12" sm="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
-                    <tooltip-btn
-                      icon="mdi-export-variant"
-                      :tooltip-text="$t('system.page.export')"
-                      @click="method.exportTable"
-                    >
-                    </tooltip-btn>
+                    <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
@@ -170,8 +165,8 @@ const method = reactive({
         email: 'Email',
         contact_tel: 'Contact Tel',
         creator: 'Creater',
-        create_time: new Date(),
-        last_update_time: new Date(),
+        create_time: '',
+        last_update_time: '',
         is_valid: true
       },
       {
@@ -183,8 +178,8 @@ const method = reactive({
         email: 'Email',
         contact_tel: 'Contact Tel',
         creator: 'Creater',
-        create_time: new Date(),
-        last_update_time: new Date(),
+        create_time: '',
+        last_update_time: '',
         is_valid: true
       }
     )
