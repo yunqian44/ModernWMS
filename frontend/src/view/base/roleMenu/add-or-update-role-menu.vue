@@ -35,7 +35,7 @@
                     icon="mdi-delete-outline"
                     :tooltip-text="$t('system.page.delete')"
                     :icon-color="errorColor"
-                    @click="method.removeItem(index)"
+                    @click="method.removeItem(index, item)"
                   ></tooltip-btn>
                 </div>
               </v-col>
@@ -62,7 +62,7 @@
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
 import { remove } from '@vue/shared'
-import { RoleMenuVO } from '@/types/Base/RoleMenu'
+import { RoleMenuVO, RoleMenuDetailVo } from '@/types/Base/RoleMenu'
 import { UserRoleVO } from '@/types/Base/UserRoleSetting'
 import i18n from '@/languages/i18n'
 import { errorColor } from '@/constant/style'
@@ -146,6 +146,7 @@ const method = reactive({
     emit('close')
   },
   submit: async () => {
+    console.log(data.form)
     const { valid } = await formRef.value.validate()
     // if (valid) {
     //   const { data: res } = dialogTitle.value === 'add' ? await addRoleMenu(data.form) : await updateRoleMenu(data.form)
@@ -169,10 +170,14 @@ const method = reactive({
     // }
   },
   // remove detail
-  removeItem: (index: number) => {
+  removeItem: (index: number, item: RoleMenuDetailVo) => {
+    console.log('你好')
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
       handleConfirm: async () => {
+        // if (item.id > 0) {
+        //   data.form.detailList.splice(index, 1)
+        // }
         data.form.detailList.splice(index, 1)
       }
     })
