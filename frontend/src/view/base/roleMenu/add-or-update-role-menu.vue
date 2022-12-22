@@ -6,7 +6,7 @@
         <v-card-text>
           <v-form ref="formRef">
             <v-select
-              v-model="data.form.role_name"
+              v-model="data.form.userrole_id"
               :items="data.combobox.role_name"
               item-title="label"
               item-value="value"
@@ -95,6 +95,7 @@ const data = reactive({
     role_name: '',
     detailList: []
   }),
+  removeDetailList: ref<RoleMenuDetailVo[]>([]),
   combobox: ref<{
     role_name: {
       label: string
@@ -146,39 +147,41 @@ const method = reactive({
     emit('close')
   },
   submit: async () => {
-    console.log(data.form)
     const { valid } = await formRef.value.validate()
-    // if (valid) {
-    //   const { data: res } = dialogTitle.value === 'add' ? await addRoleMenu(data.form) : await updateRoleMenu(data.form)
-    //   if (!res.isSuccess) {
-    //     hookComponent.$message({
-    //       type: 'error',
-    //       content: res.errorMessage
-    //     })
-    //     return
-    //   }
-    //   hookComponent.$message({
-    //     type: 'success',
-    //     content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
-    //   })
-    //   emit('saveSuccess')
-    // } else {
-    //   hookComponent.$message({
-    //     type: 'error',
-    //     content: i18n.global.t('system.checkText.checkFormFail')
-    //   })
-    // }
+    if (valid) {
+      const { data: res } = dialogTitle.value === 'add'
+          ? await addRoleMenu(data.form)
+          // Merge the deleted list and the original list
+          : await updateRoleMenu({ ...data.form, detailList: [...data.form.detailList, ...data.removeDetailList] })
+      if (!res.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: res.errorMessage
+        })
+        return
+      }
+      hookComponent.$message({
+        type: 'success',
+        content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+      })
+      emit('saveSuccess')
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.checkText.checkFormFail')
+      })
+    }
   },
   // remove detail
   removeItem: (index: number, item: RoleMenuDetailVo) => {
-    console.log('你好')
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
       handleConfirm: async () => {
-        // if (item.id > 0) {
-        //   data.form.detailList.splice(index, 1)
-        // }
-        data.form.detailList.splice(index, 1)
+        if (item.id > 0) {
+          item.id = -item.id
+          data.removeDetailList.push(item) // Cache remove row
+        }
+        data.form.detailList.splice(index, 1) // Remove row in detailList
       }
     })
   }

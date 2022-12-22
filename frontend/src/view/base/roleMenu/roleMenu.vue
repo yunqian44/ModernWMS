@@ -132,7 +132,6 @@ const data: DataProps = reactive({
   // Dialog info
   showDialog: false,
   dialogForm: {
-    userrole_id: 0,
     detailList: []
   }
 })
@@ -179,7 +178,7 @@ const method = reactive({
     method.getCompanyList()
   },
   editForm() {
-    if (data.activeRoleMenuForm.userrole_id <= 0) {
+    if (data.activeRoleMenuForm.userrole_id && data.activeRoleMenuForm.userrole_id <= 0) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')
@@ -190,7 +189,7 @@ const method = reactive({
     data.showDialog = true
   },
   deleteForm() {
-    if (data.activeRoleMenuForm.userrole_id <= 0) {
+    if (data.activeRoleMenuForm.userrole_id && data.activeRoleMenuForm.userrole_id <= 0) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')
@@ -251,7 +250,7 @@ const method = reactive({
   },
   // Click role name filter menus
   roleMenuListCellClick: ({ row }: xTableProperty) => {
-    if (data.activeRoleMenuForm.userrole_id === row.userrole_id) {
+    if (data.activeRoleMenuForm.userrole_id === row.userrole_id || !row.userrole_id) {
       return
     }
     method.getRoleMenus(row.userrole_id)
@@ -271,7 +270,6 @@ const method = reactive({
   // Refresh dialog data
   clearDialogForm: () => {
     data.dialogForm = {
-      userrole_id: 0,
       detailList: []
     }
   }
