@@ -11,3 +11,9 @@ export interface CustomerVO {
   last_update_time: Date
   is_valid: boolean
 }
+
+export interface DataProps {
+  tableData: CustomerVO[]
+  showDialog: boolean
+  dialogForm: CustomerVO
+}
