@@ -38,7 +38,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// <summary>
         /// role valid
         /// </summary>
-        public bool is_valid { get; set; } = false;
+        public bool is_valid { get; set; } = true;
 
 
         /// <summary>
