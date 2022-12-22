@@ -9,6 +9,7 @@ const http = axios.create({
   baseURL: SERVER_URL,
   timeout: 10000
 })
+console.log(SERVER_URL)
 
 // The interface array request failed
 let subscribesArr: Array<any> = []
