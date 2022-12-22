@@ -42,6 +42,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// sku_code
         /// </summary>
         [Display(Name = "sku_code")]
+        [Required(ErrorMessage = "Required")]
         [MaxLength(32, ErrorMessage = "MaxLength")]
         public string sku_code { get; set; } = string.Empty;
 
@@ -49,6 +50,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// sku_name
         /// </summary>
         [Display(Name = "sku_name")]
+        [Required(ErrorMessage = "Required")]
         [MaxLength(200, ErrorMessage = "MaxLength")]
         public string sku_name { get; set; } = string.Empty;
 
