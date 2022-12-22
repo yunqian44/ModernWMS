@@ -1,5 +1,5 @@
 /*
- * date：2022-12-21
+ * date：2022-12-22
  * developer：NoNo
  */
  using Microsoft.AspNetCore.Mvc;
@@ -8,23 +8,22 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// goodslocation controller
-     /// </summary>
-     [Route("goodslocation")]
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// freightfee controller
+    /// </summary>
+     [Route("freightfee")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "Base")]
-     public class GoodslocationController : BaseController
+     public class FreightfeeController : BaseController
      {
          #region Args
  
          /// <summary>
-         /// goodslocation Service
+         /// freightfee Service
          /// </summary>
-         private readonly IGoodslocationService _goodslocationService;
+         private readonly IFreightfeeService _freightfeeService;
  
          /// <summary>
          /// Localizer Service
@@ -36,14 +35,14 @@
          /// <summary>
          /// constructor
          /// </summary>
-         /// <param name="goodslocationService">goodslocation Service</param>
+         /// <param name="freightfeeService">freightfee Service</param>
         /// <param name="stringLocalizer">Localizer</param>
-         public GoodslocationController(
-             IGoodslocationService goodslocationService
+         public FreightfeeController(
+             IFreightfeeService freightfeeService
            , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
              )
          {
-             this._goodslocationService = goodslocationService;
+             this._freightfeeService = freightfeeService;
             this._stringLocalizer= stringLocalizer;
          }
          #endregion
@@ -55,11 +54,11 @@
          /// <param name="pageSearch">args</param>
          /// <returns></returns>
          [HttpPost("list")]
-         public async Task<ResultModel<PageData<GoodslocationViewModel>>> PageAsync(PageSearch pageSearch)
+         public async Task<ResultModel<PageData<FreightfeeViewModel>>> PageAsync(PageSearch pageSearch)
          {
-             var (data, totals) = await _goodslocationService.PageAsync(pageSearch, CurrentUser);
+             var (data, totals) = await _freightfeeService.PageAsync(pageSearch, CurrentUser);
               
-             return ResultModel<PageData<GoodslocationViewModel>>.Success(new PageData<GoodslocationViewModel>
+             return ResultModel<PageData<FreightfeeViewModel>>.Success(new PageData<FreightfeeViewModel>
              {
                  Rows = data,
                  Totals = totals
@@ -71,16 +70,16 @@
          /// </summary>
          /// <returns>args</returns>
         [HttpGet("all")]
-         public async Task<ResultModel<List<GoodslocationViewModel>>> GetAllAsync()
+         public async Task<ResultModel<List<FreightfeeViewModel>>> GetAllAsync()
          {
-             var data = await _goodslocationService.GetAllAsync(CurrentUser);
+             var data = await _freightfeeService.GetAllAsync(CurrentUser);
              if (data.Any())
              {
-                 return ResultModel<List<GoodslocationViewModel>>.Success(data);
+                 return ResultModel<List<FreightfeeViewModel>>.Success(data);
              }
              else
              {
-                 return ResultModel<List<GoodslocationViewModel>>.Success(new List<GoodslocationViewModel>());
+                 return ResultModel<List<FreightfeeViewModel>>.Success(new List<FreightfeeViewModel>());
              }
          }
  
@@ -89,16 +88,16 @@
          /// </summary>
          /// <returns>args</returns>
          [HttpGet]
-         public async Task<ResultModel<GoodslocationViewModel>> GetAsync(int id)
+         public async Task<ResultModel<FreightfeeViewModel>> GetAsync(int id)
          {
-             var data = await _goodslocationService.GetAsync(id);
+             var data = await _freightfeeService.GetAsync(id);
              if (data!=null)
              {
-                 return ResultModel<GoodslocationViewModel>.Success(data);
+                 return ResultModel<FreightfeeViewModel>.Success(data);
              }
              else
              {
-                 return ResultModel<GoodslocationViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+                 return ResultModel<FreightfeeViewModel>.Error(_stringLocalizer["not_exists_entity"]);
              }
          }
          /// <summary>
@@ -107,9 +106,9 @@
          /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPost]
-         public async Task<ResultModel<int>> AddAsync(GoodslocationViewModel viewModel)
+         public async Task<ResultModel<int>> AddAsync(FreightfeeViewModel viewModel)
          {
-             var (id, msg) = await _goodslocationService.AddAsync(viewModel,CurrentUser);
+             var (id, msg) = await _freightfeeService.AddAsync(viewModel,CurrentUser);
              if (id > 0)
              {
                  return ResultModel<int>.Success(id);
@@ -126,9 +125,9 @@
          /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPut]
-         public async Task<ResultModel<bool>> UpdateAsync(GoodslocationViewModel viewModel)
+         public async Task<ResultModel<bool>> UpdateAsync(FreightfeeViewModel viewModel)
          {
-             var (flag, msg) = await _goodslocationService.UpdateAsync(viewModel);
+             var (flag, msg) = await _freightfeeService.UpdateAsync(viewModel);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);
@@ -147,7 +146,7 @@
          [HttpDelete]
          public async Task<ResultModel<string>> DeleteAsync(int id)
          {
-             var (flag, msg) = await _goodslocationService.DeleteAsync(id);
+             var (flag, msg) = await _freightfeeService.DeleteAsync(id);
              if (flag)
              {
                  return ResultModel<string>.Success(msg);
@@ -157,8 +156,27 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-         #endregion
- 
-     }
+
+        /// <summary>
+        /// import freight fee by excel
+        /// </summary>
+        /// <param name="excel_datas">excel datas</param>
+        /// <returns></returns>
+        [HttpPost("excel")]
+        public async Task<ResultModel<string>> ExcelAsync(List<FreightfeeExcelmportViewModel> excel_datas)
+        {
+            var (flag, msg) = await _freightfeeService.ExcelAsync(excel_datas, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
+
+    }
  }
  
