@@ -16,7 +16,7 @@ namespace ModernWMS.WMS.Controllers
     /// </summary>
     [Route("asn")]
     [ApiController]
-    [ApiExplorerSettings(GroupName = "wms")]
+    [ApiExplorerSettings(GroupName = "WMS")]
     public class AsnController : BaseController
     {
         #region Args
