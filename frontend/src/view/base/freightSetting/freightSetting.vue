@@ -98,14 +98,14 @@
   </div>
 </template>
 
-<script lang="tsx" setup>
+<script lang="ts" setup>
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { FreightVO } from '@/types/Base/Freight'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { deleteFreight, getFreightList, addFreight, updateFreight } from '@/api/base/freightSetting'
+import { deleteFreight, getFreightList } from '@/api/base/freightSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-freight.vue'
 import i18n from '@/languages/i18n'
