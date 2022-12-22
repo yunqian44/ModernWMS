@@ -111,7 +111,7 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { CustomerVO } from '@/types/settings/Customer'
+import { CustomerVO } from '@/types/Base/Customer'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
