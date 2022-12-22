@@ -1,7 +1,7 @@
 import { UniformFileNaming } from '../System/Form'
 
 export interface RoleMenuVO extends UniformFileNaming {
-  userrole_id: number
+  userrole_id?: number
   role_name?: string
   detailList: RoleMenuDetailVo[]
 }
