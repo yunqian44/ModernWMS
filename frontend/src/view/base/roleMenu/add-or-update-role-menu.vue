@@ -41,7 +41,7 @@
               </v-col>
             </v-row>
             <v-btn
-              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right;"
+              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right"
               color="primary"
               :width="40"
               @click="data.form.detailList.push({ id: 0 })"
