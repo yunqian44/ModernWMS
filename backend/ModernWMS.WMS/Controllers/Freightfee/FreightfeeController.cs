@@ -8,15 +8,14 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// freightfee controller
-     /// </summary>
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// freightfee controller
+    /// </summary>
      [Route("freightfee")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "Base")]
      public class FreightfeeController : BaseController
      {
          #region Args
@@ -157,8 +156,27 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-         #endregion
- 
-     }
+
+        /// <summary>
+        /// import freight fee by excel
+        /// </summary>
+        /// <param name="excel_datas">excel datas</param>
+        /// <returns></returns>
+        [HttpPost("excel")]
+        public async Task<ResultModel<string>> ExcelAsync(List<FreightfeeExcelmportViewModel> excel_datas)
+        {
+            var (flag, msg) = await _freightfeeService.ExcelAsync(excel_datas, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
+
+    }
  }
  

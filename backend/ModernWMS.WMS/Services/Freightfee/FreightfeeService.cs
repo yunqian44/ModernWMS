@@ -181,7 +181,7 @@ namespace ModernWMS.WMS.Services
         }
 
         /// <summary>
-        /// import warehouses by excel
+        /// import freightfee by excel
         /// </summary>
         /// <param name="datas">excel datas</param>
         /// <param name="currentUser">current user</param>

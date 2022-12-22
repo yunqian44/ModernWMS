@@ -54,6 +54,14 @@
          /// <param name="id">id</param>
          /// <returns></returns>
          Task<(bool flag, string msg)> DeleteAsync(int id);
+
+        /// <summary>
+        /// import freightfee by excel
+        /// </summary>
+        /// <param name="datas">excel datas</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ExcelAsync(List<FreightfeeExcelmportViewModel> datas, CurrentUser currentUser);
          #endregion
      }
  }
