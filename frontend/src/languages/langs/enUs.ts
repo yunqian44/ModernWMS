@@ -21,7 +21,8 @@ export default {
     tips: {
       success: ' success!',
       fail: ' fail!',
-      beforeDeleteMessage: 'Are you sure you want to delete this data?'
+      beforeDeleteMessage: 'Are you sure you want to delete this data?',
+      beforeDeleteDetailMessage: 'Are you sure you want to delete this row?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
@@ -55,7 +56,8 @@ export default {
       freightSetting: 'Freight Setting',
       warehouseSetting: 'Warehouse Setting',
       customer: 'Customer Info',
-      supplier: 'Supplier Info'
+      supplier: 'Supplier Info',
+      roleMenu: 'Role Menu Settings'
     }
   },
   login: {
@@ -68,9 +70,9 @@ export default {
   },
   base: {
     freightSetting: {
-      carrier: 'Transportation Supplier',
-      departure_city: 'Send City',
-      arrival_city: 'Receiver City',
+      carrier: 'carrier',
+      departure_city: 'Departure City',
+      arrival_city: 'Arrival City',
       price_per_weight: 'Weight Fee',
       price_per_volume: 'Volume Fee',
       min_payment: 'Min Payment'
@@ -90,11 +92,26 @@ export default {
     warehouseSetting: {
       warehouseSetting: 'Warehouse Setting',
       reservoirSetting: 'Reservoir Setting',
+      locationSetting: 'Location Setting',
+      email: 'Email',
       warehouse_name: 'Warehouse Name',
       city: 'City',
       address: 'Address',
-      acontact_tel: 'Acontact Tel',
-      manager: 'Manager'
+      contact_tel: 'Acontact Tel',
+      manager: 'Manager',
+      is_valid: 'Valid',
+      area_name: 'Reservoir Name',
+      area_property: 'Reservoir Category',
+      location_name: 'Location Coding',
+      location_length: 'Location Length(m)',
+      location_width: 'Location Width(m)',
+      location_heigth: 'Location Height(m)',
+      location_volume: 'Location Volume（m³）',
+      location_load: 'Location Load（kg）',
+      roadway_number: 'Roadway Number',
+      shelf_number: 'Shelf Number',
+      layer_number: 'Layer Number',
+      tag_number: 'Tag Number'
     },
     customer: {
       customer_name: 'Customer Name',
@@ -145,6 +162,11 @@ export default {
       parent_name: 'Parent Category',
       creator: 'Creater',
       create_time: 'Creation Time'
+    },
+    roleMenu: {
+      role_name: 'Role Name',
+      menu_name: 'Menu Name',
+      beforeUpdateOrDel: 'Please select the data to be processed first!'
     }
   }
 }

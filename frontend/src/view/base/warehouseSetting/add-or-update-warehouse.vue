@@ -1,35 +1,53 @@
+<!-- Freight Setting Operate Dialog -->
 <template>
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.ownerOfCargo')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.warehouseSetting')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
-              v-model="data.form.goods_owner_name"
-              :label="$t('base.ownerOfCargo.goods_owner_name')"
-              :rules="data.rules.goods_owner_name"
+              v-model="data.form.warehouse_name"
+              :label="$t('base.warehouseSetting.warehouse_name')"
+              :rules="data.rules.warehouse_name"
               variant="outlined"
             ></v-text-field>
-            <v-text-field v-model="data.form.city" :label="$t('base.ownerOfCargo.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
+            <v-text-field
+              v-model="data.form.city"
+              :label="$t('base.warehouseSetting.city')"
+              :rules="data.rules.city"
+              variant="outlined"
+            ></v-text-field>
             <v-text-field
               v-model="data.form.address"
-              :label="$t('base.ownerOfCargo.address')"
+              :label="$t('base.warehouseSetting.address')"
               :rules="data.rules.address"
               variant="outlined"
             ></v-text-field>
             <v-text-field
-              v-model="data.form.manager"
-              :label="$t('base.ownerOfCargo.manager')"
-              :rules="data.rules.manager"
-              variant="outlined"
-            ></v-text-field>
-            <v-text-field
               v-model="data.form.contact_tel"
-              :label="$t('base.ownerOfCargo.contact_tel')"
+              :label="$t('base.warehouseSetting.contact_tel')"
               :rules="data.rules.contact_tel"
               variant="outlined"
             ></v-text-field>
+            <v-text-field
+              v-model="data.form.email"
+              :label="$t('base.warehouseSetting.email')"
+              :rules="data.rules.email"
+              variant="outlined"
+            ></v-text-field>
+            <v-text-field
+              v-model="data.form.manager"
+              :label="$t('base.warehouseSetting.manager')"
+              :rules="data.rules.manager"
+              variant="outlined"
+            ></v-text-field>
+            <v-switch
+              v-model="data.form.is_valid"
+              color="primary"
+              :label="$t('base.warehouseSetting.is_valid')"
+              :rules="data.rules.is_valid"
+            ></v-switch>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -43,17 +61,17 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { OwnerOfCargoVO } from '@/types/Base/OwnerOfCargo'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addOwnerOfCargo, updateOwnerOfCargo } from '@/api/base/ownerOfCargo'
+import { addWarehouse, updateWarehouse } from '@/api/base/warehouseSetting'
+import { WarehouseVO } from '@/types/Base/warehouse'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 
 const props = defineProps<{
   showDialog: boolean
-  form: OwnerOfCargoVO
+  form: WarehouseVO
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -66,20 +84,24 @@ const dialogTitle = computed(() => {
 })
 
 const data = reactive({
-  form: ref<OwnerOfCargoVO>({
+  form: ref<WarehouseVO>({
     id: 0,
-    goods_owner_name: '',
+    warehouse_name: '',
     city: '',
     address: '',
+    contact_tel: '',
+    email: '',
     manager: '',
-    contact_tel: ''
+    is_valid: true
   }),
   rules: {
-    goods_owner_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.ownerOfCargo.goods_owner_name') }!`],
-    city: [],
-    address: [],
+    warehouse_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`],
+    city: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.city') }!`],
+    address: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.address') }!`],
+    contact_tel: [],
+    email: [],
     manager: [],
-    contact_tel: []
+    is_valid: []
   }
 })
 
@@ -87,10 +109,13 @@ const method = reactive({
   closeDialog: () => {
     emit('close')
   },
+  initForm: () => {
+    data.form = props.form
+  },
   submit: async () => {
     const { valid } = await formRef.value.validate()
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add' ? await addOwnerOfCargo(data.form) : await updateOwnerOfCargo(data.form)
+      const { data: res } = dialogTitle.value === 'add' ? await addWarehouse(data.form) : await updateWarehouse(data.form)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
@@ -116,7 +141,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      data.form = props.form
+      method.initForm()
     }
   }
 )

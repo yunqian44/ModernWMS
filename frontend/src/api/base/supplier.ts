@@ -9,8 +9,8 @@ export const getSupplierAll = () => http({
   })
 
 // Find Data by Pagination
-export const getUserList = (data: PageConfigProps) => http({
-    url: '/user/list',
+export const getSupplierList = (data: PageConfigProps) => http({
+    url: '/supplier/list',
     method: 'post',
     data
   })

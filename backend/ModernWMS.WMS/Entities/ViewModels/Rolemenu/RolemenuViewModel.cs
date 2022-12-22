@@ -40,7 +40,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// menu_name
         /// </summary>
         [Display(Name = "menu_name")]
-        [Required(ErrorMessage = "Required")]
         [MaxLength(32, ErrorMessage = "MaxLength")]
         public string menu_name { get; set; } = string.Empty;
 
