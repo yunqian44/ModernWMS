@@ -37,7 +37,7 @@ import { lightGrey } from '@/constant/style'
 import i18n from '@/languages/i18n'
 import { router } from '@/router'
 import { store } from '@/store'
-import { DataProps } from '@/types/home/HomeHeader'
+import { DataProps } from '@/types/Home/HomeHeader'
 
 const routerInfo = useRouter()
 

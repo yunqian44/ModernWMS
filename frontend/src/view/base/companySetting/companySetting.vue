@@ -102,7 +102,7 @@
 import { computed, reactive, onMounted, ref } from 'vue'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { CompanyVO, DataProps } from '@/types/Base/companySetting'
+import { CompanyVO, DataProps } from '@/types/Base/CompanySetting'
 import { getCompanyAll, deleteCompany } from '@/api/base/companySetting'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'

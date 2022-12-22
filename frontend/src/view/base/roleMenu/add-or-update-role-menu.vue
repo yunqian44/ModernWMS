@@ -41,7 +41,7 @@
               </v-col>
             </v-row>
             <v-btn
-              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right;"
+              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right"
               color="primary"
               :width="40"
               @click="data.form.detailList.push({ id: 0 })"
@@ -146,7 +146,6 @@ const method = reactive({
     emit('close')
   },
   submit: async () => {
-    console.log(data.form)
     const { valid } = await formRef.value.validate()
     // if (valid) {
     //   const { data: res } = dialogTitle.value === 'add' ? await addRoleMenu(data.form) : await updateRoleMenu(data.form)

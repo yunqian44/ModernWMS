@@ -1,6 +1,6 @@
 import http from '@/utils/http/request'
 import { PageConfigProps } from '@/types/System/Form'
-import { FreightVO } from '@/types/Base/freight'
+import { FreightVO } from '@/types/Base/Freight'
 
 // Find Data by Pagination
 export const getFreightList = (data: PageConfigProps) => http({

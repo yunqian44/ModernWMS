@@ -106,7 +106,7 @@ import { reactive, computed, ref, watch } from 'vue'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addGoodsLocation, updateGoodsLocation } from '@/api/base/warehouseSetting'
-import { GoodsLocationVO } from '@/types/Base/warehouse'
+import { GoodsLocationVO } from '@/types/Base/Warehouse'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])

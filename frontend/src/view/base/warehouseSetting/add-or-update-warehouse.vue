@@ -64,7 +64,7 @@ import { reactive, computed, ref, watch } from 'vue'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addWarehouse, updateWarehouse } from '@/api/base/warehouseSetting'
-import { WarehouseVO } from '@/types/Base/warehouse'
+import { WarehouseVO } from '@/types/Base/Warehouse'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
