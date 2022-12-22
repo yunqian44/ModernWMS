@@ -15,7 +15,13 @@
      /// </summary>
      public interface IWarehouseService : IBaseService<WarehouseEntity>
      {
-         #region Api
+        #region Api
+        /// <summary>
+        /// get select items
+        /// </summary>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<List<FormSelectItem>> GetSelectItemsAsnyc(CurrentUser currentUser);
          /// <summary>
          /// page search
          /// </summary>

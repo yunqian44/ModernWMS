@@ -2,7 +2,8 @@
   "root": true,
   "globals": {
     "defineEmits": "readonly",
-    "defineProps": "readonly"
+    "defineProps": "readonly",
+    "defineExpose": "readonly"
   },
   "extends": ["plugin:@typescript-eslint/recommended", "plugin:vue/vue3-recommended", "airbnb-base"],
   "parserOptions": {

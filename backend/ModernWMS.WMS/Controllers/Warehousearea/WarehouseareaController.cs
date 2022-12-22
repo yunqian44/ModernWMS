@@ -49,7 +49,7 @@ namespace ModernWMS.WMS.Controllers
 
         #region Api
         /// <summary>
-        /// get select items
+        /// get warehousearea  select items by warehouse_id
         /// </summary>
         /// <returns></returns>
         [HttpGet("areas-by-warehouse_id")]

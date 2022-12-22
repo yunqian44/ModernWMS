@@ -1,4 +1,4 @@
-import { UniformFileNaming, TablePage } from '../System/Form'
+import { UniformFileNaming } from '../System/Form'
 
 export interface FreightVO extends UniformFileNaming{
   id: number

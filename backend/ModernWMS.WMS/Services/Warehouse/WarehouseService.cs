@@ -52,6 +52,27 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
+        /// get select items
+        /// </summary>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<List<FormSelectItem>> GetSelectItemsAsnyc(CurrentUser currentUser)
+        {
+            var res = new List<FormSelectItem>();
+            var DBSet = _dBContext.GetDbSet<WarehouseEntity>();
+            res.AddRange(await (from db in DBSet.AsNoTracking()
+                                where db.is_valid == true && db.tenant_id == currentUser.tenant_id
+                                select new FormSelectItem
+                                {
+                                    code = "warehouse_name",
+                                    name = db.warehouse_name,
+                                    value = db.id.ToString(),
+                                    comments = "warehouse datas",
+                                }).ToListAsync());
+            return res;
+        }
+
+        /// <summary>
         /// page search
         /// </summary>
         /// <param name="pageSearch">args</param>
