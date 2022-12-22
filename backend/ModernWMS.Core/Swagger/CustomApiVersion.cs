@@ -17,17 +17,9 @@ namespace ModernWMS.Core.Swagger
             /// </summary>
             Base,
             /// <summary>
-            /// Common
+            /// WMS
             /// </summary>
-            Common,
-            /// <summary>
-            /// Select
-            /// </summary>
-            Select,
-            /// <summary>
-            /// OpenApi
-            /// </summary>
-            OpenApi
+            WMS
         }
     }
 }

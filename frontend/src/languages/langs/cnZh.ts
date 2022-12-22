@@ -69,12 +69,13 @@ export default {
   },
   base: {
     freightSetting: {
-      transportationSupplier: '承运商',
-      sendCity: '始发城市',
-      receiverCity: '到货城市',
-      weightFee: '单公斤运费',
-      volumeFee: '单立方米运费',
-      minPayment: '最小运费'
+      carrier: '承运商',
+      departure_city: '始发城市',
+      arrival_city: '到货城市',
+      price_per_weight: '单公斤运费',
+      price_per_volume: '单立方米运费',
+      min_payment: '最小运费',
+      is_valid: '是否有效'
     },
     userManagement: {
       user_num: '员工编号',

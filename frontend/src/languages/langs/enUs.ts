@@ -69,12 +69,12 @@ export default {
   },
   base: {
     freightSetting: {
-      transportationSupplier: 'Transportation Supplier',
-      sendCity: 'Send City',
-      receiverCity: 'Receiver City',
-      weightFee: 'Weight Fee',
-      volumeFee: 'Volume Fee',
-      minPayment: 'Min Payment'
+      carrier: 'Transportation Supplier',
+      departure_city: 'Send City',
+      arrival_city: 'Receiver City',
+      price_per_weight: 'Weight Fee',
+      price_per_volume: 'Volume Fee',
+      min_payment: 'Min Payment'
     },
     userManagement: {
       user_num: 'User Num',
