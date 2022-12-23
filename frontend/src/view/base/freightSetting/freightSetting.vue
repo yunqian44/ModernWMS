@@ -45,7 +45,7 @@
                   height: cardHeight
                 }"
               >
-                <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+                <vxe-table ref="xTable" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
                   <vxe-column field="carrier" :title="$t('base.freightSetting.carrier')"></vxe-column>
@@ -54,7 +54,8 @@
                   <vxe-column field="price_per_weight" :title="$t('base.freightSetting.price_per_weight')"></vxe-column>
                   <vxe-column field="price_per_volume" :title="$t('base.freightSetting.price_per_volume')"></vxe-column>
                   <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
-                  <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
+                  <vxe-column field="creator" :title="$t('base.freightSetting.creator')"></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('base.freightSetting.create_time')" :formatter="['formatDate']"></vxe-column>
                   <vxe-column field="is_valid" :title="$t('base.freightSetting.is_valid')">
                     <template #default="{ row, column }">
                       <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
@@ -122,6 +123,8 @@ const data = reactive({
     price_per_weight: 0,
     price_per_volume: 0,
     min_payment: 0,
+    creator: '',
+    create_time: '',
     is_valid: true
   },
   searchForm: {
@@ -147,6 +150,8 @@ const method = reactive({
       price_per_weight: 0,
       price_per_volume: 0,
       min_payment: 0,
+      creator: '',
+      create_time: '',
       is_valid: true
     }
     data.showDialog = true
