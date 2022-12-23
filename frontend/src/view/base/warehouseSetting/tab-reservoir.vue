@@ -155,7 +155,7 @@ const method = reactive({
     data.tableData = res.data.rows
     data.tablePage.total = res.data.totals
   },
-  
+
   editRow(row: WarehouseAreaVO) {
     data.dialogForm = JSON.parse(JSON.stringify(row))
     data.showDialog = true
@@ -194,13 +194,16 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: '库区设置',
+        filename: i18n.global.t('base.warehouseSetting.reservoirSetting'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   },
   sureSearch: () => {

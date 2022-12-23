@@ -132,7 +132,9 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { hookComponent } from '@/components/system'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
@@ -197,13 +199,16 @@ const method = reactive({
       $table.exportData({
         type: 'csv',
         // TODO Write filename according to your file.
-        filename: 'xxx',
+        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   }
 })

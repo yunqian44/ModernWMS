@@ -37,7 +37,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableGoodsLocation" :column-config="{minWidth:'100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableGoodsLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('base.warehouseSetting.warehouse_name')"></vxe-column>
@@ -219,13 +219,16 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: '库位设置',
+        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        } 
+        }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   },
   sureSearch: () => {
