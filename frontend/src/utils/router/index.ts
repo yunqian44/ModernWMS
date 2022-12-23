@@ -92,8 +92,8 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.supplier')
     case 'roleMenu':
       return i18n.global.t('router.sideBar.roleMenu')
-    case 'stock':
-      return i18n.global.t('router.sideBar.stock')
+    case 'stockManagement':
+      return i18n.global.t('router.sideBar.stockManagement')
     default:
       return ''
   }

@@ -11,4 +11,4 @@ VALUES
 ('ownerOfCargo', 'baseModule', 'ownerOfCargo', 'base/ownerOfCargo', 1, 9),
 ('freightSetting', 'baseModule', 'freightSetting', 'base/freightSetting', 1, 10),
 ('customer', 'baseModule', 'customer', 'base/customer', 1, 11),
-('stock', 'stockManagement', 'stock', 'wms/stock', 1, 12)
+('stockManagement', '', 'stockManagement', 'wms/stockManagement', 1, 12)
