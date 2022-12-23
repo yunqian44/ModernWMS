@@ -231,7 +231,9 @@ namespace ModernWMS.WMS.Services
                             }).ToList();
             if (entities.Any(t => t.id < 0))
             {
-                Rolemenus.RemoveRange(entities.Where(t => t.id < 0).ToList());
+                var dels = entities.Where(t => t.id < 0).ToList();
+                dels.ForEach(t => t.id *= -1);
+                Rolemenus.RemoveRange(dels);
             }
             if (entities.Any(t => t.id > 0))
             {
