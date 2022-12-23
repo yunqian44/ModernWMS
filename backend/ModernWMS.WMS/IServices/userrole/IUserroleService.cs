@@ -6,7 +6,7 @@ using ModernWMS.Core.JWT;
 using ModernWMS.Core.Services;
  using ModernWMS.WMS.Entities.Models;
  using ModernWMS.WMS.Entities.ViewModels;
- 
+using ModernWMS.Core.Models;
  namespace ModernWMS.WMS.IServices
  {
      /// <summary>

@@ -37,12 +37,14 @@ namespace ModernWMS.Core.Services
         public async Task<LoginOutputViewModel> Login(LoginInputViewModel loginInput)
         {
             var users = await (from user in _sqlDBContext.GetDbSet<userEntity>().AsNoTracking()
+                                                join ur in _sqlDBContext.GetDbSet<UserroleEntity>().AsNoTracking() on user.user_role equals ur.role_name
                                                 where user.user_name == loginInput.user_name || user.user_num == loginInput.user_name
                                                 select new  {
                                                     user_id = user.id,
                                                     user_num = user.user_num,
                                                     user_name = user.user_name,
                                                     user_role = user.user_role,
+                                                    userrole_id = ur.id,
                                                     cipher = user.auth_string
                                                 }
                                                ).ToListAsync();
@@ -56,6 +58,7 @@ namespace ModernWMS.Core.Services
                     user_name = result.user_name,
                     user_num = result.user_num,
                     user_role = result.user_role,
+                    userrole_id = result.userrole_id
                 };
             }
             return null;

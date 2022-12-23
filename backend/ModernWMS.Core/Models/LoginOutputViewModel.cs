@@ -9,37 +9,42 @@ namespace ModernWMS.Core.Models
     public class LoginOutputViewModel
     {
         /// <summary>
-        /// 用户编号
+        /// user's num
         /// </summary>
         public string user_num { get; set; }
 
         /// <summary>
-        /// 用户名
+        /// user's name
         /// </summary>
         public string user_name { get; set; }
 
         /// <summary>
-        ///  用户标识
+        ///  user's id
         /// </summary>
         public int user_id { get; set; }
 
         /// <summary>
-        ///  用户标识
+        ///  user's role
         /// </summary>
         public string user_role { get; set; }
-        
+
         /// <summary>
-        /// token有效分钟数
+        ///  id of user's role
+        /// </summary>
+        public int userrole_id { get; set; }
+
+        /// <summary>
+        /// token expire time
         /// </summary>
         public int expire { get; set; }
 
         /// <summary>
-        /// 访问token
+        /// token
         /// </summary>
         public string access_token { get; set; }
 
         /// <summary>
-        /// 刷新token
+        /// refresh token
         /// </summary>
         public string refresh_token { get; set; }
 

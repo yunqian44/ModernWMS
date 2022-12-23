@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using ModernWMS.Core.Models;
 using ModernWMS.Core.Utility;
 
-namespace ModernWMS.WMS.Entities.Models
+namespace ModernWMS.Core.Models
 {
     /// <summary>
     /// userrole  entity

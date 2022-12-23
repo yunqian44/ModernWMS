@@ -53,7 +53,7 @@ namespace ModernWMS.WMS.Services
  
          #region Api
          /// <summary>
-         /// page search
+         /// stock page search
          /// </summary>
          /// <param name="pageSearch">args</param>
          /// <param name="currentUser">currentUser</param>
@@ -110,18 +110,19 @@ namespace ModernWMS.WMS.Services
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         select new StockManagementViewModel
                         {
+                            sku_id = ag.sku_id,
                             spu_name = spu.spu_name,
                             spu_code = spu.spu_code,
                             sku_code = sku.sku_code,
                             qty_asn = ag.qty_asn,
-                            qty_available = sg.qty - sg.qty_frozen - dp.qty_locked,
-                            qty_frozen = sg.qty_frozen,
-                            qty_locked = dp.qty_locked,
+                            qty_available = (sg.qty==null?0: sg.qty) - (sg.qty_frozen==null?0:sg.qty_frozen) - dp.qty_locked,
+                            qty_frozen = sg.qty_frozen==null?0: sg.qty_frozen,
+                            qty_locked = dp.qty_locked == null ? 0: dp.qty_locked,
                             qty_sorted = ag.qty_sorted,
                             qty_to_sort = ag.qty_to_sort,
                             shortage_qty = ag.shortage_qty,
                             qty_to_unload= ag.qty_to_unload,
-                            qty= sg.qty,
+                            qty= sg.qty == null?0: sg.qty,
                         };
              query = query .Where(queries.AsExpression<StockManagementViewModel>());
              int totals = await query.CountAsync();
@@ -131,7 +132,80 @@ namespace ModernWMS.WMS.Services
                         .ToListAsync();
              return (list, totals);
          }
-         #endregion
-     }
+
+        /// <summary>
+        /// location stock page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(List<LocationStockManagementViewModel> data, int totals)> LocationStockPageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+
+            var DbSet = _dBContext.GetDbSet<StockEntity>().Where(t => t.tenant_id.Equals(currentUser.tenant_id));
+            var dispatchpick_DBSet = _dBContext.GetDbSet<DispatchpicklistEntity>();
+            var dispatch_DBSet = _dBContext.GetDbSet<DispatchlistEntity>().Where(t => t.tenant_id.Equals(currentUser.tenant_id));
+            var sku_DBSet = _dBContext.GetDbSet<SkuEntity>().AsNoTracking();
+            var spu_DBSet = _dBContext.GetDbSet<SpuEntity>().AsNoTracking();
+            var location_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
+            var stock_group_datas = from stock in DbSet.AsNoTracking()
+                                    group stock by new { stock.sku_id ,stock.goods_location_id} into sg
+                                    select new
+                                    {
+                                        sku_id = sg.Key.sku_id,
+                                        goods_location_id = sg.Key.goods_location_id,
+                                        qty_frozen = sg.Where(t => t.is_freeze == true).Sum(e => e.qty),
+                                        qty = sg.Sum(t => t.qty)
+                                    };
+
+            var dispatch_group_datas = from dp in dispatch_DBSet.AsNoTracking()
+                                       join dpp in dispatchpick_DBSet.AsNoTracking() on dp.id equals dpp.dispatchlist_id
+                                       where dp.dispatch_status>1 && dp.dispatch_status<6
+                                       group dpp by new { dpp.sku_id,dpp.goods_location_id} into dg
+                                       select new
+                                       {
+                                           sku_id = dg.Key.sku_id,
+                                           goods_location_id = dg.Key.goods_location_id,
+                                           qty_locked = dg.Sum(t => t.pick_qty)
+                                       };
+
+            var query = from sg in stock_group_datas 
+                        join dp in dispatch_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { dp.sku_id, dp.goods_location_id } into dp_left
+                        from dp in dp_left.DefaultIfEmpty()
+                        join sku in sku_DBSet on sg.sku_id equals sku.id
+                        join spu in spu_DBSet on sku.spu_id equals spu.id
+                        join gl in location_DBSet on sg.goods_location_id equals gl.id
+                        select new LocationStockManagementViewModel
+                        {
+                            sku_id = sg.sku_id,
+                            spu_name = spu.spu_name,
+                            spu_code = spu.spu_code,
+                            sku_code = sku.sku_code,
+                            sku_name = sku.sku_name,
+                            qty_available = sg.qty - sg.qty_frozen - (dp.qty_locked == null?0: dp.qty_locked),
+                            qty_frozen = sg.qty_frozen,
+                            qty_locked = dp.qty_locked,
+                            qty = sg.qty,
+                            location_name = gl.location_name,
+                            warehouse = gl.warehouse_name,
+                        };
+            query = query.Where(queries.AsExpression<LocationStockManagementViewModel>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderBy(t => t.sku_code)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list, totals);
+        }
+        #endregion
+    }
  }
  

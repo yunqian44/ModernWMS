@@ -81,9 +81,9 @@ namespace ModernWMS.WMS.Controllers
          /// </summary>
          /// <returns>args</returns>
         [HttpGet("all")]
-         public async Task<ResultModel<List<WarehouseareaViewModel>>> GetAllAsync()
+         public async Task<ResultModel<List<WarehouseareaViewModel>>> GetAllAsync(int warehouse_id)
          {
-             var data = await _warehouseareaService.GetAllAsync(CurrentUser);
+             var data = await _warehouseareaService.GetAllAsync( warehouse_id, CurrentUser);
              if (data.Any())
              {
                  return ResultModel<List<WarehouseareaViewModel>>.Success(data);

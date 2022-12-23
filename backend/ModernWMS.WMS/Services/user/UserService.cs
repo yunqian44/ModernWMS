@@ -68,7 +68,7 @@ namespace ModernWMS.WMS.Services
                                 {
                                     code = "user_role",
                                     name = ur.role_name,
-                                    value = ur.role_name,
+                                    value = ur.id.ToString(),
                                     comments = "user's role",
                                 }).ToListAsync());
             return res;

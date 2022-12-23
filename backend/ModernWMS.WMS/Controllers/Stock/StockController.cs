@@ -16,7 +16,7 @@
      /// </summary>
      [Route("stock")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "WMS")]
      public class StockController : BaseController
      {
          #region Args
@@ -65,8 +65,24 @@
                  Totals = totals
              });
          }
-         #endregion
- 
-     }
+        /// <summary>
+        /// location stock page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("location-list")]
+        public async Task<ResultModel<PageData<LocationStockManagementViewModel>>> LocationStockPageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _stockService.LocationStockPageAsync(pageSearch, CurrentUser);
+
+            return ResultModel<PageData<LocationStockManagementViewModel>>.Success(new PageData<LocationStockManagementViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
+        #endregion
+
+    }
  }
  
