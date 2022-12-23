@@ -22,7 +22,9 @@ export default {
       success: ' success!',
       fail: ' fail!',
       beforeDeleteMessage: 'Are you sure you want to delete this data?',
-      beforeDeleteDetailMessage: 'Are you sure you want to delete this row?'
+      beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
+      detailLengthIsZero: 'Details verification before document submission!',
+      detailHasItemRepeat: 'The details contain duplicate items!'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',

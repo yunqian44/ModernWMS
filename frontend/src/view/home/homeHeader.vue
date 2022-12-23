@@ -82,7 +82,6 @@ const method = reactive({
     if (value === 'logout') {
       store.commit('system/clearOpenedMenu')
       store.commit('system/setCurrentRouterPath', '')
-      store.commit('system/setRefreshFlag', false)
 
       router.push('/login')
     }

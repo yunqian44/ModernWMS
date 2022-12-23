@@ -95,77 +95,77 @@ const method = reactive({
           vue_directory: 'home/homepage'
         },
         {
-          menu_name: '货主信息',
+          menu_name: 'ownerOfCargo',
           module: 'baseModule',
           vue_path: 'ownerOfCargo',
           vue_path_detail: '',
           vue_directory: 'base/ownerOfCargo'
         },
         {
-          menu_name: '用户管理',
+          menu_name: 'userManagement',
           module: 'baseModule',
           vue_path: 'userManagement',
           vue_path_detail: '',
           vue_directory: 'base/userManagement'
         },
         {
-          menu_name: '商品类别设置',
+          menu_name: 'commodityCategorySetting',
           module: 'baseModule',
           vue_path: 'commodityCategorySetting',
           vue_path_detail: '',
           vue_directory: 'base/commodityCategorySetting'
         },
         {
-          menu_name: '商品管理',
+          menu_name: 'commodityManagement',
           module: 'baseModule',
           vue_path: 'commodityManagement',
           vue_path_detail: '',
           vue_directory: 'base/commodityManagement'
         },
         {
-          menu_name: '用户角色设置',
+          menu_name: 'userRoleSetting',
           module: 'baseModule',
           vue_path: 'userRoleSetting',
           vue_path_detail: '',
           vue_directory: 'base/userRoleSetting'
         },
         {
-          menu_name: '公司信息',
+          menu_name: 'companySetting',
           module: 'baseModule',
           vue_path: 'companySetting',
           vue_path_detail: '',
           vue_directory: 'base/companySetting'
         },
         {
-          menu_name: '运费设置',
+          menu_name: 'freightSetting',
           module: 'baseModule',
           vue_path: 'freightSetting',
           vue_path_detail: '',
           vue_directory: 'base/freightSetting'
         },
         {
-          menu_name: '仓库设置',
+          menu_name: 'warehouseSetting',
           module: 'baseModule',
           vue_path: 'warehouseSetting',
           vue_path_detail: '',
           vue_directory: 'base/warehouseSetting'
         },
         {
-          menu_name: '客户信息',
+          menu_name: 'customer',
           module: 'baseModule',
           vue_path: 'customer',
           vue_path_detail: '',
           vue_directory: 'base/customer'
         },
         {
-          menu_name: '供应商信息',
+          menu_name: 'supplier',
           module: 'baseModule',
           vue_path: 'supplier',
           vue_path_detail: '',
           vue_directory: 'base/supplier'
         },
         {
-          menu_name: '角色菜单设置',
+          menu_name: 'roleMenu',
           module: 'baseModule',
           vue_path: 'roleMenu',
           vue_path_detail: '',

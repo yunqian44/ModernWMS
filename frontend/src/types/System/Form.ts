@@ -19,3 +19,7 @@ export interface PageConfigProps {
   sqlTitle?: string
   searchObjects?: any
 }
+
+export interface VxeTableRow {
+  _X_ROW_KEY?: string
+}
