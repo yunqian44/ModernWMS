@@ -6,17 +6,23 @@
         <v-toolbar color="white" :title="`${$t('base.warehouseSetting.reservoirSetting')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-text-field
-              v-model="data.form.warehouse_name"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+            <v-select
+              v-model="data.form.warehouse_id"
+              :items="data.combobox.warehouse_name"
+              item-title="label"
+              item-value="value"
               :rules="data.rules.warehouse_name"
+              :label="$t('base.warehouseSetting.warehouse_name')"
               variant="outlined"
-            ></v-text-field>
+              clearable
+              @update:model-value="method.changeWarehouse"
+            ></v-select>
             <v-text-field
               v-model="data.form.area_name"
               :label="$t('base.warehouseSetting.area_name')"
               :rules="data.rules.area_name"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-select
               v-model="data.form.area_property"
@@ -47,10 +53,11 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
+import { number } from '@intlify/core-base'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addWarehouseArea, updateWarehouseArea } from '@/api/base/warehouseSetting'
-import { WarehouseAreaVO } from '@/types/Base/Warehouse'
+import { addWarehouseArea, updateWarehouseArea, getCombobox } from '@/api/base/warehouseSetting'
+import { WarehouseAreaVO, AreaProperty } from '@/types/Base/Warehouse'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -76,31 +83,87 @@ const data = reactive({
     parent_id: 0,
     warehouse_name: '',
     area_name: '',
-    area_property: 0,
+    area_property: AreaProperty.picking_area,
     is_valid: true
   }),
   rules: {
-    warehouse_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`],
+    warehouse_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`
+    ],
     area_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`],
-    area_property: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`],
+    area_property: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`
+    ],
     is_valid: []
   },
   combobox: ref<{
-    area_property: {
+    warehouse_name: {
       label: string
       value: number
     }[]
+    area_property: {
+      label: string
+      value: AreaProperty
+    }[]
   }>({
-    area_property: [],
+    warehouse_name: [],
+    area_property: [
+      {
+        label: i18n.global.t('base.warehouseSetting.picking_area'),
+        value: AreaProperty.picking_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.stocking_area'),
+        value: AreaProperty.stocking_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.receiving_area'),
+        value: AreaProperty.receiving_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.return_area'),
+        value: AreaProperty.return_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.defective_area'),
+        value: AreaProperty.defective_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.inventory_area'),
+        value: AreaProperty.inventory_area
+      }
+    ]
   })
 })
 
 const method = reactive({
+  getCombobox: async () => {
+    data.combobox.warehouse_name = []
+    const { data: res } = await getCombobox()
+    if (!res.isSuccess) {
+      return
+    }
+    for (const item of res.data) {
+      data.combobox.warehouse_name.push({
+        label: item.name,
+        // WarehouseID is typeof number
+        value: Number(item.value)
+      })
+    }
+  },
   closeDialog: () => {
     emit('close')
   },
   initForm: () => {
     data.form = props.form
+  },
+  changeWarehouse: (warehouseID: any) => {
+    // Find the ID corresponding value
+    const warehouse = data.combobox.warehouse_name.find((item) => item.value === warehouseID)
+    if (warehouse) {
+      data.form.warehouse_name = warehouse.label
+      data.form.warehouse_id = warehouseID
+    }
   },
   submit: async () => {
     const { valid } = await formRef.value.validate()
@@ -132,6 +195,7 @@ watch(
   (val) => {
     if (val) {
       method.initForm()
+      method.getCombobox()
     }
   }
 )
