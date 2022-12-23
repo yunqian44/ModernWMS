@@ -60,7 +60,8 @@ export default {
       warehouseSetting: 'Warehouse Setting',
       customer: 'Customer Info',
       supplier: 'Supplier Info',
-      roleMenu: 'Role Menu Settings'
+      roleMenu: 'Role Menu Settings',
+      stockManagement: 'Stock Management'
     }
   },
   login: {
@@ -178,5 +179,6 @@ export default {
       menu_name: 'Menu Name',
       beforeUpdateOrDel: 'Please select the data to be processed first!'
     }
-  }
+  },
+  wms: { stock: {} }
 }
