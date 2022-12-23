@@ -42,10 +42,14 @@
       <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('base.warehouseSetting.warehouse_name')"></vxe-column>
       <vxe-column field="area_name" :title="$t('base.warehouseSetting.area_name')"></vxe-column>
-      <vxe-column field="area_property" :title="$t('base.warehouseSetting.area_property')"></vxe-column>
+      <vxe-column field="area_property" :title="$t('base.warehouseSetting.area_property')">
+        <template #default="{ row, column }">
+          <span>{{ formatAreaProperty(row[column.property]) }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">
-          <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
+          <span>{{ formatIsValid(row[column.property]) }}</span>
         </template>
       </vxe-column>
       <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
@@ -79,27 +83,28 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseVO, WarehouseAreaVO, GoodsLocationVO } from '@/types/Base/Warehouse'
+import { WarehouseVO, WarehouseAreaVO, GoodsLocationVO, AreaProperty } from '@/types/Base/Warehouse'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteWarehouseArea, getWarehouseAreaList } from '@/api/base/warehouseSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-reservoir.vue'
 import i18n from '@/languages/i18n'
+import { formatAreaProperty } from '@/utils/format/formatWarehouse'
+import { formatIsValid } from '@/utils/format/formatSystem'
 
 const xTableWarehouseArea = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
+  dialogForm: ref<WarehouseAreaVO>({
     id: 0,
-    warehouse_id: 0,
     parent_id: 0,
     warehouse_name: '',
     area_name: '',
-    area_property: 0,
+    area_property: AreaProperty.picking_area,
     is_valid: true
-  },
+  }),
   searchForm: {
     warehouse_name: ''
   },
@@ -117,11 +122,10 @@ const method = reactive({
   add: () => {
     data.dialogForm = {
       id: 0,
-      warehouse_id: 0,
       parent_id: 0,
       warehouse_name: '',
       area_name: '',
-      area_property: 0,
+      area_property: AreaProperty.picking_area,
       is_valid: true
     }
     data.showDialog = true
@@ -151,6 +155,7 @@ const method = reactive({
     data.tableData = res.data.rows
     data.tablePage.total = res.data.totals
   },
+  
   editRow(row: WarehouseAreaVO) {
     data.dialogForm = JSON.parse(JSON.stringify(row))
     data.showDialog = true

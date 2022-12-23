@@ -11,36 +11,42 @@
               :label="$t('base.warehouseSetting.warehouse_name')"
               :rules="data.rules.warehouse_name"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.city"
               :label="$t('base.warehouseSetting.city')"
               :rules="data.rules.city"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.address"
               :label="$t('base.warehouseSetting.address')"
               :rules="data.rules.address"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.contact_tel"
               :label="$t('base.warehouseSetting.contact_tel')"
               :rules="data.rules.contact_tel"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.email"
               :label="$t('base.warehouseSetting.email')"
               :rules="data.rules.email"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.manager"
               :label="$t('base.warehouseSetting.manager')"
               :rules="data.rules.manager"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-switch
               v-model="data.form.is_valid"

@@ -55,7 +55,7 @@
       <vxe-column field="tag_number" :title="$t('base.warehouseSetting.tag_number')"></vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">
-          <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
+          <span>{{ formatIsValid(row[column.property]) }}</span>
         </template>
       </vxe-column>
       <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
@@ -96,6 +96,7 @@ import { deleteGoodsLocation, getGoodsLocationList } from '@/api/base/warehouseS
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-location.vue'
 import i18n from '@/languages/i18n'
+import { formatIsValid } from '@/utils/format/formatSystem'
 
 const xTableGoodsLocation = ref()
 
