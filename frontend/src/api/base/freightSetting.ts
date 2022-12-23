@@ -9,6 +9,13 @@ export const getFreightList = (data: PageConfigProps) => http({
     data
   })
 
+// get data all
+export const getFreightAll = () => http({
+    url: '/freightfee/all',
+    method: 'get',
+    hideLoading: true
+  })
+
 // Add a new freightfee
 export const addFreight = (data: FreightVO) => http({
     url: '/freightfee',
