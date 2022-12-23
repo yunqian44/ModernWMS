@@ -11,78 +11,91 @@
               :label="$t('base.warehouseSetting.warehouse_name')"
               :rules="data.rules.warehouse_name"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.warehouse_area_name"
               :label="$t('base.warehouseSetting.area_name')"
               :rules="data.rules.warehouse_area_name"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.warehouse_area_property"
               :label="$t('base.warehouseSetting.area_property')"
               :rules="data.rules.warehouse_area_property"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_name"
               :label="$t('base.warehouseSetting.location_name')"
               :rules="data.rules.location_name"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_length"
               :label="$t('base.warehouseSetting.location_length')"
               :rules="data.rules.location_length"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_width"
               :label="$t('base.warehouseSetting.location_width')"
               :rules="data.rules.location_width"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_heigth"
               :label="$t('base.warehouseSetting.location_heigth')"
               :rules="data.rules.location_heigth"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_volume"
               :label="$t('base.warehouseSetting.location_volume')"
               :rules="data.rules.location_volume"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_load"
               :label="$t('base.warehouseSetting.location_load')"
               :rules="data.rules.location_load"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.roadway_number"
               :label="$t('base.warehouseSetting.roadway_number')"
               :rules="data.rules.roadway_number"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.shelf_number"
               :label="$t('base.warehouseSetting.shelf_number')"
               :rules="data.rules.shelf_number"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.layer_number"
               :label="$t('base.warehouseSetting.layer_number')"
               :rules="data.rules.layer_number"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="data.form.tag_number"
               :label="$t('base.warehouseSetting.tag_number')"
               :rules="data.rules.tag_number"
               variant="outlined"
+              clearable
             ></v-text-field>
             <v-switch
               v-model="data.form.is_valid"

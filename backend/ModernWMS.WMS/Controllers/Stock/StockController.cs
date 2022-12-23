@@ -50,16 +50,16 @@
  
          #region Api
          /// <summary>
-         /// page search
+         /// stock details page search
          /// </summary>
          /// <param name="pageSearch">args</param>
          /// <returns></returns>
-         [HttpPost("list")]
-         public async Task<ResultModel<PageData<StockViewModel>>> PageAsync(PageSearch pageSearch)
+         [HttpPost("stock-list")]
+         public async Task<ResultModel<PageData<StockManagementViewModel>>> StockPageAsync(PageSearch pageSearch)
          {
-             var (data, totals) = await _stockService.PageAsync(pageSearch, CurrentUser);
+             var (data, totals) = await _stockService.StockPageAsync(pageSearch, CurrentUser);
               
-             return ResultModel<PageData<StockViewModel>>.Success(new PageData<StockViewModel>
+             return ResultModel<PageData<StockManagementViewModel>>.Success(new PageData<StockManagementViewModel>
              {
                  Rows = data,
                  Totals = totals

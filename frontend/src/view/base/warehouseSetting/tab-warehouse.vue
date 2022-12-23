@@ -48,7 +48,7 @@
       <vxe-column field="manager" :title="$t('base.warehouseSetting.manager')"></vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">
-          <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
+          <span>{{ formatIsValid(row[column.property]) }}</span>
         </template>
       </vxe-column>
       <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
@@ -89,6 +89,7 @@ import { deleteWarehouse, getWarehouseList } from '@/api/base/warehouseSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-warehouse.vue'
 import i18n from '@/languages/i18n'
+import { formatIsValid } from '@/utils/format/formatSystem'
 
 const xTableWarehouse = ref()
 

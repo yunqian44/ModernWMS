@@ -22,7 +22,7 @@
          /// <param name="pageSearch">args</param>
          /// <param name="currentUser">current user</param>
          /// <returns></returns>
-         Task<(List<StockViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
+         Task<(List<StockManagementViewModel> data, int totals)> StockPageAsync(PageSearch pageSearch, CurrentUser currentUser);
        
          #endregion
      }

@@ -33,7 +33,7 @@ namespace ModernWMS.WMS.Entities.Models
         /// <summary>
         /// authority
         /// </summary>
-        public byte authority { get; set; }  = 0;
+        public byte authority { get; set; }  = 1;
 
         /// <summary>
         /// create_time

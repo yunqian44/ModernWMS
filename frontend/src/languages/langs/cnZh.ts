@@ -114,7 +114,13 @@ export default {
       roadway_number: '巷道号',
       shelf_number: '货架号',
       layer_number: '层号',
-      tag_number: '位号'
+      tag_number: '位号',
+      picking_area: '拣货区',
+      stocking_area: '备货区',
+      receiving_area: '收货区',
+      return_area: '退货区',
+      defective_area: '次品区',
+      inventory_area: '存货区'
     },
     customer: {
       customer_name: '客户名称',

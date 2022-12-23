@@ -113,7 +113,13 @@ export default {
       roadway_number: 'Roadway Number',
       shelf_number: 'Shelf Number',
       layer_number: 'Layer Number',
-      tag_number: 'Tag Number'
+      tag_number: 'Tag Number',
+      picking_area: 'Picking Area',
+      stocking_area: 'Stocking Area',
+      receiving_area: 'Receiving Area',
+      return_area: 'Return Area',
+      defective_area: 'Defective Area',
+      inventory_area: 'Inventory Area'
     },
     customer: {
       customer_name: 'Customer Name',

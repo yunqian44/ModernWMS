@@ -225,7 +225,7 @@ namespace ModernWMS.WMS.Services
                                 userrole_id = viewModel.userrole_id,
                                 menu_id = vm.menu_id,
                                 authority = vm.authority,
-                                create_time = db.id == null ? DateTime.Now : db.create_time,
+                                create_time = db == null ? DateTime.Now : db.create_time,
                                 last_update_time = DateTime.Now,
                                 tenant_id = currentUser.tenant_id
                             }).ToList();
