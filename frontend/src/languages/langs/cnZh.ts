@@ -80,7 +80,10 @@ export default {
       price_per_weight: '单公斤运费',
       price_per_volume: '单立方米运费',
       min_payment: '最小运费',
-      is_valid: '是否有效'
+      creator: '创建人',
+      create_time: '创建时间',
+      last_update_time: '最后更新时间',
+      is_valid: '是否有效',
     },
     userManagement: {
       user_num: '员工编号',
@@ -122,7 +125,10 @@ export default {
       receiving_area: '收货区',
       return_area: '退货区',
       defective_area: '次品区',
-      inventory_area: '存货区'
+      inventory_area: '存货区',
+      creator: '创建人',
+      create_time: '创建时间',
+      last_update_time: '最后更新时间',
     },
     customer: {
       customer_name: '客户名称',

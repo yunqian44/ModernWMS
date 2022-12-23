@@ -4,28 +4,28 @@ import { FreightVO } from '@/types/Base/Freight'
 
 // Find Data by Pagination
 export const getFreightList = (data: PageConfigProps) => http({
-    url: '/freight/list',
+    url: '/freightfee/list',
     method: 'post',
     data
   })
 
-// Add a new freight
+// Add a new freightfee
 export const addFreight = (data: FreightVO) => http({
-    url: '/freight',
+    url: '/freightfee',
     method: 'post',
     data
   })
 
-// Update freight
+// Update freightfee
 export const updateFreight = (data: FreightVO) => http({
-    url: '/freight',
+    url: '/freightfee',
     method: 'put',
     data
   })
 
-// Delete freight
+// Delete freightfee
 export const deleteFreight = (id: number) => http({
-    url: '/freight',
+    url: '/freightfee',
     method: 'delete',
     params: {
       id

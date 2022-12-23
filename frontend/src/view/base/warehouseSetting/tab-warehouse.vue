@@ -37,7 +37,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableWarehouse" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableWarehouse" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('base.warehouseSetting.warehouse_name')"></vxe-column>
@@ -46,6 +46,13 @@
       <vxe-column field="contact_tel" :title="$t('base.warehouseSetting.contact_tel')"></vxe-column>
       <vxe-column field="email" :title="$t('base.warehouseSetting.email')"></vxe-column>
       <vxe-column field="manager" :title="$t('base.warehouseSetting.manager')"></vxe-column>
+      <vxe-column field="creator" :title="$t('base.warehouseSetting.creator')"></vxe-column>
+      <vxe-column
+        field="create_time"
+        width="170px"
+        :title="$t('base.warehouseSetting.create_time')"
+        :formatter="['formatDate']"
+      ></vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">
           <span>{{ formatIsValid(row[column.property]) }}</span>
