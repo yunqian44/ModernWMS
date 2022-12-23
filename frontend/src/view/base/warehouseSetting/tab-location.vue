@@ -14,7 +14,7 @@
           <v-col cols="4"></v-col>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <v-text-field
+            <!-- <v-text-field
               v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
@@ -23,7 +23,7 @@
               :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
-            </v-text-field>
+            </v-text-field> -->
           </v-col>
         </v-row>
       </v-col>
@@ -37,12 +37,16 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableGoodsLocation" :column-config="{minWidth:'100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableGoodsLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('base.warehouseSetting.warehouse_name')"></vxe-column>
       <vxe-column field="warehouse_area_name" :title="$t('base.warehouseSetting.area_name')"></vxe-column>
-      <vxe-column field="warehouse_area_property" :title="$t('base.warehouseSetting.area_property')"></vxe-column>
+      <vxe-column field="warehouse_area_property" :title="$t('base.warehouseSetting.area_property')">
+        <template #default="{ row, column }">
+          <span>{{ formatAreaProperty(row[column.property]) }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="location_name" :title="$t('base.warehouseSetting.location_name')"></vxe-column>
       <vxe-column width="150px" field="location_length" :title="$t('base.warehouseSetting.location_length')"></vxe-column>
       <vxe-column width="150px" field="location_width" :title="$t('base.warehouseSetting.location_width')"></vxe-column>
@@ -58,7 +62,7 @@
           <span>{{ formatIsValid(row[column.property]) }}</span>
         </template>
       </vxe-column>
-      <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
         <template #default="{ row }">
           <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
           <tooltip-btn
@@ -97,18 +101,16 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-location.vue'
 import i18n from '@/languages/i18n'
 import { formatIsValid } from '@/utils/format/formatSystem'
+import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 
 const xTableGoodsLocation = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
+  dialogForm: ref<GoodsLocationVO>({
     id: 0,
-    warehouse_id: 0,
-    warehouse_area_id: 0,
     warehouse_name: '',
     warehouse_area_name: '',
-    warehouse_area_property: 0,
     location_name: '',
     location_length: 0,
     location_width: 0,
@@ -120,7 +122,7 @@ const data = reactive({
     layer_number: '',
     tag_number: '',
     is_valid: true
-  },
+  }),
   searchForm: {
     warehouse_name: ''
   },
@@ -138,11 +140,8 @@ const method = reactive({
   add: () => {
     data.dialogForm = {
       id: 0,
-      warehouse_id: 0,
-      warehouse_area_id: 0,
       warehouse_name: '',
       warehouse_area_name: '',
-      warehouse_area_property: 0,
       location_name: '',
       location_length: 0,
       location_width: 0,
@@ -220,12 +219,16 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
-        } 
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+        }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   },
   sureSearch: () => {

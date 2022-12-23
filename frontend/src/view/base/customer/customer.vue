@@ -65,7 +65,7 @@
                 :title="$t('base.customer.last_update_time')"
                 :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
               ></vxe-column>
-              <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+              <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                 <template #default="{ row }">
                   <tooltip-btn
                     :flat="true"
@@ -208,8 +208,9 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: i18n.global.t('router.sideBar.customer'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {

@@ -35,10 +35,19 @@ export const deleteWarehouse = (id: number) => http({
     }
   })
 
-  // Get the combobox item
-export const getCombobox = () => http({
+  // Get the combobox item with warehouse
+export const getWarehouseSelect = () => http({
     url: '/warehouse/select-item',
     method: 'get',
+  })
+  
+  // Get the combobox item with warehouse area
+export const getWarehouseAreaSelect = (warehouse_id: number) => http({
+    url: '/warehousearea/areas-by-warehouse_id',
+    method: 'get',
+    params: {
+      warehouse_id
+    }
   })
 
 /**

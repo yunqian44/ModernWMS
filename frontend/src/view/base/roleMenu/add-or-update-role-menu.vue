@@ -65,7 +65,7 @@ import { addRoleMenu, updateRoleMenu, getMenus } from '@/api/base/roleMenu'
 import { getUserRoleAll } from '@/api/base/userRoleSetting'
 import { MenuItem } from '@/types/System/Store'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { checkDetailRepeatGetBool } from '@/utils/dataProcessing/page'
+import { checkDetailRepeatGetBool } from '@/utils/dataVerification/page'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])

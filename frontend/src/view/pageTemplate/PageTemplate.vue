@@ -90,7 +90,7 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -132,7 +132,9 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { hookComponent } from '@/components/system'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
@@ -196,12 +198,17 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        // TODO Write filename according to your file.
+        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   }
 })

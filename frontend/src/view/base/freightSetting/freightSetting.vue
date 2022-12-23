@@ -60,7 +60,7 @@
                       <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -213,17 +213,21 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: i18n.global.t('router.sideBar.freightSetting'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
-      console.error('导出时发生未知错误', error)
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+      })
     }
   },
   sureSearch: () => {
     console.log(data.searchForm)
-  },
+  }
 })
 
 onMounted(() => {

@@ -158,6 +158,9 @@ const method = reactive({
       return
     }
     data.roleList = res.data
+    if (data.roleList.length > 0) {
+      method.roleMenuListCellClick({ row: data.roleList[0] })
+    }
   },
   // Add user
   add: () => {
@@ -230,8 +233,9 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: i18n.global.t('router.sideBar.roleMenu'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {

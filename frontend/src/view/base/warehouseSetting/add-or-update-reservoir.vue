@@ -56,7 +56,7 @@ import { reactive, computed, ref, watch } from 'vue'
 import { number } from '@intlify/core-base'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addWarehouseArea, updateWarehouseArea, getCombobox } from '@/api/base/warehouseSetting'
+import { addWarehouseArea, updateWarehouseArea, getWarehouseSelect } from '@/api/base/warehouseSetting'
 import { WarehouseAreaVO, AreaProperty } from '@/types/Base/Warehouse'
 
 const formRef = ref()
@@ -139,14 +139,14 @@ const data = reactive({
 const method = reactive({
   getCombobox: async () => {
     data.combobox.warehouse_name = []
-    const { data: res } = await getCombobox()
+    const { data: res } = await getWarehouseSelect()
     if (!res.isSuccess) {
       return
     }
     for (const item of res.data) {
       data.combobox.warehouse_name.push({
         label: item.name,
-        // WarehouseID is typeof number
+        // WarehouseID is a numberic type
         value: Number(item.value)
       })
     }

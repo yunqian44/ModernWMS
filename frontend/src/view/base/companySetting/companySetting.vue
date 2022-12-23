@@ -71,7 +71,7 @@
               <vxe-column field="address" :title="$t('base.companySetting.address')"></vxe-column>
               <vxe-column field="manager" :title="$t('base.companySetting.manager')"></vxe-column>
               <vxe-column field="contact_tel" :title="$t('base.companySetting.contact_tel')"></vxe-column>
-              <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+              <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                 <template #default="{ row }">
                   <tooltip-btn
                     :flat="true"
@@ -202,8 +202,9 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: i18n.global.t('router.sideBar.companySetting'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
