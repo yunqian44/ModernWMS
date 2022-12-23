@@ -158,6 +158,9 @@ const method = reactive({
       return
     }
     data.roleList = res.data
+    if (data.roleList.length > 0) {
+      method.roleMenuListCellClick({ row: data.roleList[0] })
+    }
   },
   // Add user
   add: () => {
@@ -178,18 +181,24 @@ const method = reactive({
     method.getCompanyList()
   },
   editForm() {
-    if (data.activeRoleMenuForm.userrole_id && data.activeRoleMenuForm.userrole_id <= 0) {
+    if (!data.activeRoleMenuForm.userrole_id) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')
       })
       return
     }
-    data.dialogForm = data.activeRoleMenuForm
+    data.dialogForm = JSON.parse(JSON.stringify(data.activeRoleMenuForm))
+    // Delete rowid of existing data
+    for (const item of data.dialogForm.detailList) {
+      if (item._X_ROW_KEY) {
+        delete item._X_ROW_KEY
+      }
+    }
     data.showDialog = true
   },
   deleteForm() {
-    if (data.activeRoleMenuForm.userrole_id && data.activeRoleMenuForm.userrole_id <= 0) {
+    if (!data.activeRoleMenuForm.userrole_id) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('base.roleMenu.beforeUpdateOrDel')

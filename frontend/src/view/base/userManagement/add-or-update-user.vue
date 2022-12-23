@@ -63,7 +63,7 @@ import { reactive, computed, ref, watch } from 'vue'
 import { UserVO } from '@/types/Base/UserManagement'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addUser, updateUser } from '@/api/base/userManagement'
+import { addUser, updateUser, getSelectItem } from '@/api/base/userManagement'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -112,15 +112,28 @@ const data = reactive({
 
 const method = reactive({
   // Get the options required by the drop-down box
-  getCombobox: () => {
+  getCombobox: async () => {
+    // Static drop-down box
     const sexOptions = ['male', 'female']
     data.combobox.sex = []
-    data.combobox.user_role = ['假装有']
     for (const sex of sexOptions) {
       data.combobox.sex.push({
         label: i18n.global.t(`system.combobox.sex.${ sex }`),
         value: sex
       })
+    }
+    // Dynamic drop-down box
+    data.combobox.user_role = []
+    const { data: res } = await getSelectItem()
+    if (!res.isSuccess) {
+      return
+    }
+    for (const item of res.data) {
+      switch (item.code) {
+        case 'user_role':
+          data.combobox.user_role.push(item.name)
+          break
+      }
     }
   },
   closeDialog: () => {

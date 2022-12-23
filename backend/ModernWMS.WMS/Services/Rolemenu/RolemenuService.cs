@@ -151,7 +151,7 @@ namespace ModernWMS.WMS.Services
             var Rolemenus = _dBContext.GetDbSet<RolemenuEntity>(); 
             var Menus = _dBContext.GetDbSet<MenuEntity>();
             var data = await (from rm in Rolemenus.AsNoTracking()
-                              join m in Menus.AsNoTracking() on rm.userrole_id equals m.id
+                              join m in Menus.AsNoTracking() on rm.menu_id equals m.id
                               where rm.userrole_id == userrole_id
                               orderby m.sort, m.menu_name
                               select new MenuViewModel
@@ -225,7 +225,7 @@ namespace ModernWMS.WMS.Services
                                 userrole_id = viewModel.userrole_id,
                                 menu_id = vm.menu_id,
                                 authority = vm.authority,
-                                create_time = db.id == null ? DateTime.Now : db.create_time,
+                                create_time = db == null ? DateTime.Now : db.create_time,
                                 last_update_time = DateTime.Now,
                                 tenant_id = currentUser.tenant_id
                             }).ToList();

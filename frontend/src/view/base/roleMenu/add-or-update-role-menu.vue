@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
-      <v-card>
+      <v-card class="formCard">
         <v-toolbar color="white" :title="`${$t('router.sideBar.roleMenu')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
@@ -40,12 +40,7 @@
                 </div>
               </v-col>
             </v-row>
-            <v-btn
-              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right"
-              color="primary"
-              :width="40"
-              @click="data.form.detailList.push({ id: 0 })"
-            >
+            <v-btn style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right" color="primary" :width="40" @click="method.AddDetail">
               +
             </v-btn>
           </v-form>
@@ -60,8 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, ref, watch } from 'vue'
-import { remove } from '@vue/shared'
+import { reactive, computed, ref, watch, nextTick } from 'vue'
 import { RoleMenuVO, RoleMenuDetailVo } from '@/types/Base/RoleMenu'
 import { UserRoleVO } from '@/types/Base/UserRoleSetting'
 import i18n from '@/languages/i18n'
@@ -71,6 +65,7 @@ import { addRoleMenu, updateRoleMenu, getMenus } from '@/api/base/roleMenu'
 import { getUserRoleAll } from '@/api/base/userRoleSetting'
 import { MenuItem } from '@/types/System/Store'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import { checkDetailRepeatGetBool } from '@/utils/dataVerification/page'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -82,14 +77,8 @@ const props = defineProps<{
 
 const isShow = computed(() => props.showDialog)
 
-const dialogTitle = computed(() => {
-  if (props.form.userrole_id && props.form.userrole_id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
-
 const data = reactive({
+  dialogTitle: '',
   form: ref<RoleMenuVO>({
     userrole_id: 0,
     role_name: '',
@@ -116,6 +105,29 @@ const data = reactive({
 })
 
 const method = reactive({
+  // Add a new detail
+  AddDetail: () => {
+    data.form.detailList.push({ id: 0 })
+    // Let the scroll bar go to the bottom, Improve user experience
+    const carText = document.querySelector('.formCard')
+    if (carText && carText.scrollHeight > carText.clientHeight) {
+      nextTick(() => {
+        // Set scroll bar to the bottom
+        carText.scrollTop = carText.scrollHeight
+      })
+    }
+  },
+  // Get dialog type, add or update
+  getDialogType: () => {
+    // This is special because this document is not actually a table,
+    // but the data associated with another table.
+    // so directly use the details to determine whether it is a new document
+    if (props.form.detailList.length > 0) {
+      data.dialogTitle = 'update'
+    } else {
+      data.dialogTitle = 'add'
+    }
+  },
   // Get the options required by the drop-down box
   getCombobox: async () => {
     data.combobox.role_name = []
@@ -146,13 +158,34 @@ const method = reactive({
   closeDialog: () => {
     emit('close')
   },
+  // Details verification before document submission
+  beforeSubmit: (): boolean => {
+    let flag = true
+    if (data.form.detailList.length === 0) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.detailLengthIsZero')
+      })
+      flag = false
+    } else if (checkDetailRepeatGetBool(data.form.detailList, ['menu_id'])) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.detailHasItemRepeat')
+      })
+      flag = false
+    }
+    return flag
+  },
   submit: async () => {
+    const beforeSubmitFlag = method.beforeSubmit()
+    if (!beforeSubmitFlag) {
+      return
+    }
     const { valid } = await formRef.value.validate()
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add'
+      const { data: res } = data.dialogTitle === 'add'
           ? await addRoleMenu(data.form)
-          // Merge the deleted list and the original list
-          : await updateRoleMenu({ ...data.form, detailList: [...data.form.detailList, ...data.removeDetailList] })
+          : await updateRoleMenu({ ...data.form, detailList: [...data.form.detailList, ...data.removeDetailList] }) // Merge the deleted list and the original list
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
@@ -191,6 +224,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
+      method.getDialogType()
       method.getCombobox()
       data.form = props.form
     }
