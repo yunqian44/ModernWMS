@@ -61,10 +61,6 @@ const method = reactive({
     })
 
     if (loginRes.isSuccess) {
-      hookComponent.$message({
-        type: 'success',
-        content: i18n.global.t('login.loginSuccess')
-      })
       // TODO 把用户权限信息加进来
       // let expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
       const expiredTime = new Date().getTime() + 1 * 60 * 1000
@@ -89,95 +85,12 @@ const method = reactive({
         })
         return
       }
-      // test menus
-      // const testMenus = [
-      //   // static
-      //   {
-      //     menu_name: '首页',
-      //     module: '',
-      //     vue_path: 'homepage',
-      //     vue_path_detail: '',
-      //     vue_directory: 'home/homepage'
-      //   },
-      //   {
-      //     menu_name: 'ownerOfCargo',
-      //     module: 'baseModule',
-      //     vue_path: 'ownerOfCargo',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/ownerOfCargo'
-      //   },
-      //   {
-      //     menu_name: 'userManagement',
-      //     module: 'baseModule',
-      //     vue_path: 'userManagement',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/userManagement'
-      //   },
-      //   {
-      //     menu_name: 'commodityCategorySetting',
-      //     module: 'baseModule',
-      //     vue_path: 'commodityCategorySetting',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/commodityCategorySetting'
-      //   },
-      //   {
-      //     menu_name: 'commodityManagement',
-      //     module: 'baseModule',
-      //     vue_path: 'commodityManagement',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/commodityManagement'
-      //   },
-      //   {
-      //     menu_name: 'userRoleSetting',
-      //     module: 'baseModule',
-      //     vue_path: 'userRoleSetting',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/userRoleSetting'
-      //   },
-      //   {
-      //     menu_name: 'companySetting',
-      //     module: 'baseModule',
-      //     vue_path: 'companySetting',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/companySetting'
-      //   },
-      //   {
-      //     menu_name: 'freightSetting',
-      //     module: 'baseModule',
-      //     vue_path: 'freightSetting',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/freightSetting'
-      //   },
-      //   {
-      //     menu_name: 'warehouseSetting',
-      //     module: 'baseModule',
-      //     vue_path: 'warehouseSetting',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/warehouseSetting'
-      //   },
-      //   {
-      //     menu_name: 'customer',
-      //     module: 'baseModule',
-      //     vue_path: 'customer',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/customer'
-      //   },
-      //   {
-      //     menu_name: 'supplier',
-      //     module: 'baseModule',
-      //     vue_path: 'supplier',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/supplier'
-      //   },
-      //   {
-      //     menu_name: 'roleMenu',
-      //     module: 'baseModule',
-      //     vue_path: 'roleMenu',
-      //     vue_path_detail: '',
-      //     vue_directory: 'base/roleMenu'
-      //   }
-      // ]
       store.commit('user/setUserMenuList', authorityRes.data)
+
+      hookComponent.$message({
+        type: 'success',
+        content: i18n.global.t('login.loginSuccess')
+      })
 
       // Remember user login info
       if (data.remember) {
