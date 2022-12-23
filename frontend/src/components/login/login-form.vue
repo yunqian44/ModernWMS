@@ -70,7 +70,7 @@ const method = reactive({
       store.commit('user/setExpirationTime', expiredTime)
       store.commit('user/setEffectiveMinutes', loginRes.data.expire)
 
-      const { data: authorityRes } = await getUserAuthority(loginRes.data.user_role_id)
+      const { data: authorityRes } = await getUserAuthority(loginRes.data.userrole_id)
       if (!authorityRes.isSuccess) {
         hookComponent.$message({
           type: 'error',
