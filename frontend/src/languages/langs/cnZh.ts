@@ -185,6 +185,19 @@ export default {
       role_name: '角色名称',
       menu_name: '菜单名称',
       beforeUpdateOrDel: '请先选择需要处理的数据!'
+    },
+    commodityManagement: {
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      category_name: '商品类别',
+      spu_description: '商品描述',
+      bar_code: '商品条码',
+      sku_name: '规格编码',
+      supplier_name: '供应商',
+      brand: '品牌',
+      unit: '商品单位',
+      cost: '商品成本',
+      price: '商品价格'
     }
   },
   wms: { stock: {} }

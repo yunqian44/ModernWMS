@@ -64,13 +64,24 @@
               height: cardHeight
             }"
           >
-            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+            <vxe-table
+              ref="xTable"
+              :data="data.tableData"
+              :height="tableHeight"
+              align="center"
+            >
               <vxe-column type="seq" width="60"></vxe-column>
-              <vxe-column field="company_name" :title="$t('base.companySetting.company_name')"></vxe-column>
-              <vxe-column field="city" :title="$t('base.companySetting.city')"></vxe-column>
-              <vxe-column field="address" :title="$t('base.companySetting.address')"></vxe-column>
-              <vxe-column field="manager" :title="$t('base.companySetting.manager')"></vxe-column>
-              <vxe-column field="contact_tel" :title="$t('base.companySetting.contact_tel')"></vxe-column>
+              <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
+              <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
+              <vxe-column field="category_name" :title="$t('base.commodityManagement.category_name')"></vxe-column>
+              <vxe-column field="spu_description" :title="$t('base.commodityManagement.spu_description')"></vxe-column>
+              <vxe-column field="bar_code" :title="$t('base.commodityManagement.bar_code')"></vxe-column>
+              <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column>
+              <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"></vxe-column>
+              <vxe-column field="brand" :title="$t('base.commodityManagement.brand')"></vxe-column>
+              <vxe-column field="unit" :title="$t('base.commodityManagement.unit')"></vxe-column>
+              <vxe-column field="cost" :title="$t('base.commodityManagement.cost')"></vxe-column>
+              <vxe-column field="price" :title="$t('base.commodityManagement.price')"></vxe-column>
               <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                 <template #default="{ row }">
                   <tooltip-btn

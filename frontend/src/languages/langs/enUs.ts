@@ -178,6 +178,19 @@ export default {
       role_name: 'Role Name',
       menu_name: 'Menu Name',
       beforeUpdateOrDel: 'Please select the data to be processed first!'
+    },
+    commodityManagement: {
+      spu_code: 'Commodity Code',
+      spu_name: 'Commodity Name',
+      category_name: 'Commodity Category',
+      spu_description: 'Commodity Description',
+      bar_code: 'Specification Code',
+      sku_name: 'Specification Name',
+      supplier_name: 'Supplier',
+      brand: 'Brand',
+      unit: 'Commodity Unit',
+      cost: 'Commodity Cost',
+      price: 'Commodity Price'
     }
   },
   wms: { stock: {} }
