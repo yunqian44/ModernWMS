@@ -34,14 +34,13 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// role_name
         /// </summary>
         [Display(Name = "role_name")]
-        [Required(ErrorMessage = "Required")]
         [MaxLength(32, ErrorMessage = "MaxLength")]
         public string role_name { get; set; } = string.Empty;
 
         /// <summary>
         /// role valid
         /// </summary>
-        public bool is_valid { get; set; } = false;
+        public bool is_valid { get; set; } = true;
 
         /// <summary>
         /// menu details
