@@ -59,7 +59,8 @@ export default {
       warehouseSetting: '仓库设置',
       customer: '客户信息',
       supplier: '供应商信息',
-      roleMenu: '角色菜单设置'
+      roleMenu: '角色菜单设置',
+      stockManagement: '库存管理'
     }
   },
   login: {
@@ -178,5 +179,6 @@ export default {
       menu_name: '菜单名称',
       beforeUpdateOrDel: '请先选择需要处理的数据!'
     }
-  }
+  },
+  wms: { stock: {} }
 }
