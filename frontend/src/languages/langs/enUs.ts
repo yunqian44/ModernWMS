@@ -21,7 +21,7 @@ export default {
     tips: {
       success: ' success!',
       fail: ' fail!',
-      beforeDeleteMessage: 'Are you sure you want to delete this data?',
+      beforeDeleteMessage: 'Do you want to delete this data?',
       beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
       detailLengthIsZero: 'Details verification before document submission!',
       detailHasItemRepeat: 'The details contain duplicate items!'
@@ -68,7 +68,8 @@ export default {
     rememberTips: 'Remember me',
     userName: 'UserName',
     password: 'Password',
-    loginSuccess: 'Login succeeded!'
+    loginSuccess: 'Login succeeded!',
+    notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!'
   },
   base: {
     freightSetting: {

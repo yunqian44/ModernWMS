@@ -68,7 +68,8 @@ export default {
     rememberTips: '记住账号密码',
     userName: '用户名',
     password: '密码',
-    loginSuccess: '登录成功'
+    loginSuccess: '登录成功',
+    notAuthority: '您的账号不包含任何菜单, 请联系管理员增加!'
   },
   base: {
     freightSetting: {

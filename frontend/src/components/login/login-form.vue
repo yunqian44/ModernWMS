@@ -5,13 +5,7 @@
     </div>
     <div class="formContainer">
       <v-form ref="VFormRef" v-model="data.valid" lazy-validation @keydown.enter.prevent="method.login()">
-        <v-text-field
-          v-model="data.userName"
-          required
-          :rules="data.userNameVaildRules"
-          :label="$t('login.userName')"
-          variant="solo"
-        ></v-text-field>
+        <v-text-field v-model="data.userName" required :rules="data.userNameVaildRules" :label="$t('login.userName')" variant="solo"></v-text-field>
         <v-text-field
           v-model="data.password"
           required
@@ -34,7 +28,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { Md5 } from 'ts-md5'
 import i18n from '@/languages/i18n'
-import { login } from '@/api/sys/login'
+import { login, getUserAuthority } from '@/api/sys/login'
 import { store } from '@/store'
 import { hookComponent } from '@/components/system'
 import { router } from '@/router/index'
@@ -48,12 +42,8 @@ const data = reactive({
   userName: '',
   password: '',
   remember: false,
-  userNameVaildRules: [
-    (v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.userName') }!`
-  ],
-  passwordVaildRules: [
-    (v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.password') }!`
-  ]
+  userNameVaildRules: [(v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.userName') }!`],
+  passwordVaildRules: [(v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.password') }!`]
 })
 
 const method = reactive({
@@ -84,95 +74,110 @@ const method = reactive({
       store.commit('user/setExpirationTime', expiredTime)
       store.commit('user/setEffectiveMinutes', loginRes.data.expire)
 
+      const { data: authorityRes } = await getUserAuthority(loginRes.data.user_role_id)
+      if (!authorityRes.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: authorityRes.errorMessage
+        })
+        return
+      }
+      if (authorityRes.data.length <= 0) {
+        hookComponent.$message({
+          type: 'error',
+          content: i18n.global.t('login.notAuthority')
+        })
+        return
+      }
       // test menus
-      const testMenus = [
-        // static
-        {
-          menu_name: '首页',
-          module: '',
-          vue_path: 'homepage',
-          vue_path_detail: '',
-          vue_directory: 'home/homepage'
-        },
-        {
-          menu_name: 'ownerOfCargo',
-          module: 'baseModule',
-          vue_path: 'ownerOfCargo',
-          vue_path_detail: '',
-          vue_directory: 'base/ownerOfCargo'
-        },
-        {
-          menu_name: 'userManagement',
-          module: 'baseModule',
-          vue_path: 'userManagement',
-          vue_path_detail: '',
-          vue_directory: 'base/userManagement'
-        },
-        {
-          menu_name: 'commodityCategorySetting',
-          module: 'baseModule',
-          vue_path: 'commodityCategorySetting',
-          vue_path_detail: '',
-          vue_directory: 'base/commodityCategorySetting'
-        },
-        {
-          menu_name: 'commodityManagement',
-          module: 'baseModule',
-          vue_path: 'commodityManagement',
-          vue_path_detail: '',
-          vue_directory: 'base/commodityManagement'
-        },
-        {
-          menu_name: 'userRoleSetting',
-          module: 'baseModule',
-          vue_path: 'userRoleSetting',
-          vue_path_detail: '',
-          vue_directory: 'base/userRoleSetting'
-        },
-        {
-          menu_name: 'companySetting',
-          module: 'baseModule',
-          vue_path: 'companySetting',
-          vue_path_detail: '',
-          vue_directory: 'base/companySetting'
-        },
-        {
-          menu_name: 'freightSetting',
-          module: 'baseModule',
-          vue_path: 'freightSetting',
-          vue_path_detail: '',
-          vue_directory: 'base/freightSetting'
-        },
-        {
-          menu_name: 'warehouseSetting',
-          module: 'baseModule',
-          vue_path: 'warehouseSetting',
-          vue_path_detail: '',
-          vue_directory: 'base/warehouseSetting'
-        },
-        {
-          menu_name: 'customer',
-          module: 'baseModule',
-          vue_path: 'customer',
-          vue_path_detail: '',
-          vue_directory: 'base/customer'
-        },
-        {
-          menu_name: 'supplier',
-          module: 'baseModule',
-          vue_path: 'supplier',
-          vue_path_detail: '',
-          vue_directory: 'base/supplier'
-        },
-        {
-          menu_name: 'roleMenu',
-          module: 'baseModule',
-          vue_path: 'roleMenu',
-          vue_path_detail: '',
-          vue_directory: 'base/roleMenu'
-        }
-      ]
-      store.commit('user/setUserMenuList', testMenus)
+      // const testMenus = [
+      //   // static
+      //   {
+      //     menu_name: '首页',
+      //     module: '',
+      //     vue_path: 'homepage',
+      //     vue_path_detail: '',
+      //     vue_directory: 'home/homepage'
+      //   },
+      //   {
+      //     menu_name: 'ownerOfCargo',
+      //     module: 'baseModule',
+      //     vue_path: 'ownerOfCargo',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/ownerOfCargo'
+      //   },
+      //   {
+      //     menu_name: 'userManagement',
+      //     module: 'baseModule',
+      //     vue_path: 'userManagement',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/userManagement'
+      //   },
+      //   {
+      //     menu_name: 'commodityCategorySetting',
+      //     module: 'baseModule',
+      //     vue_path: 'commodityCategorySetting',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/commodityCategorySetting'
+      //   },
+      //   {
+      //     menu_name: 'commodityManagement',
+      //     module: 'baseModule',
+      //     vue_path: 'commodityManagement',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/commodityManagement'
+      //   },
+      //   {
+      //     menu_name: 'userRoleSetting',
+      //     module: 'baseModule',
+      //     vue_path: 'userRoleSetting',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/userRoleSetting'
+      //   },
+      //   {
+      //     menu_name: 'companySetting',
+      //     module: 'baseModule',
+      //     vue_path: 'companySetting',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/companySetting'
+      //   },
+      //   {
+      //     menu_name: 'freightSetting',
+      //     module: 'baseModule',
+      //     vue_path: 'freightSetting',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/freightSetting'
+      //   },
+      //   {
+      //     menu_name: 'warehouseSetting',
+      //     module: 'baseModule',
+      //     vue_path: 'warehouseSetting',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/warehouseSetting'
+      //   },
+      //   {
+      //     menu_name: 'customer',
+      //     module: 'baseModule',
+      //     vue_path: 'customer',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/customer'
+      //   },
+      //   {
+      //     menu_name: 'supplier',
+      //     module: 'baseModule',
+      //     vue_path: 'supplier',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/supplier'
+      //   },
+      //   {
+      //     menu_name: 'roleMenu',
+      //     module: 'baseModule',
+      //     vue_path: 'roleMenu',
+      //     vue_path_detail: '',
+      //     vue_directory: 'base/roleMenu'
+      //   }
+      // ]
+      store.commit('user/setUserMenuList', authorityRes.data)
 
       // Remember user login info
       if (data.remember) {
@@ -187,6 +192,11 @@ const method = reactive({
       // Jump home
       store.commit('system/setCurrentRouterPath', 'homepage')
       router.push('home')
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: loginRes.errorMessage
+      })
     }
   }
 })
@@ -218,8 +228,8 @@ onMounted(() => {
       font-weight: 500;
       line-height: 2rem;
       letter-spacing: normal !important;
-      font-family: inter, sans-serif, -apple-system, blinkmacsystemfont, Segoe UI, roboto, Helvetica Neue, arial,
-        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', Segoe UI Symbol !important;
+      font-family: inter, sans-serif, -apple-system, blinkmacsystemfont, Segoe UI, roboto, Helvetica Neue, arial, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', Segoe UI Symbol !important;
       text-transform: none !important;
     }
   }
