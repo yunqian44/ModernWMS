@@ -66,7 +66,7 @@ namespace ModernWMS.WMS.Services
                     queries.Add(s);
                 });
             }
-            Byte asn_status = 0;
+            Byte asn_status = 255;
             if (pageSearch.sqlTitle.ToLower().Contains("asn_status"))
             {
                 asn_status = Convert.ToByte(pageSearch.sqlTitle.Trim().ToLower().Replace("asn_status","").Replace("：", "").Replace(":", "").Replace("=", ""));
@@ -78,7 +78,7 @@ namespace ModernWMS.WMS.Services
                         join p in Spus.AsNoTracking() on m.spu_id equals p.id
                         join k in Skus.AsNoTracking() on m.sku_id equals k.id
                         where m.tenant_id == currentUser.tenant_id
-                        && m.asn_status == asn_status
+                        && (asn_status == 255 || m.asn_status == asn_status)
                         select new AsnViewModel
                         {
                             id = m.id,
@@ -295,6 +295,11 @@ namespace ModernWMS.WMS.Services
         }
         #endregion
 
+        #region Flow Api
+
+
+
+        #endregion
     }
 }
  
