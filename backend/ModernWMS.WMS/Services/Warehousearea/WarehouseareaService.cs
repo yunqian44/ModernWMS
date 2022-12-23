@@ -124,10 +124,14 @@ namespace ModernWMS.WMS.Services
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<WarehouseareaViewModel>> GetAllAsync(CurrentUser currentUser)
+        public async Task<List<WarehouseareaViewModel>> GetAllAsync(int warehouse_id, CurrentUser currentUser)
         {
-            var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>();
-            var data = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).ToListAsync();
+            var DbSet = _dBContext.GetDbSet<WarehouseareaEntity>().AsNoTracking();
+            if (warehouse_id > 0)
+            {
+                DbSet = DbSet.Where(t=>t.warehouse_id == warehouse_id);
+            }
+            var data = await DbSet.Where(t =>t.is_valid == true && t.tenant_id.Equals(currentUser.tenant_id)).ToListAsync();
             return data.Adapt<List<WarehouseareaViewModel>>();
         }
 

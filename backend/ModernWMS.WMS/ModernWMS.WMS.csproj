@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ModernWMS.Core\ModernWMS.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\Models\userrole\" />
+  </ItemGroup>
+
 </Project>

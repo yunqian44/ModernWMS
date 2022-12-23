@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ModernWMS.WMS.Entities.ViewModels
 {
     /// <summary>
-    /// StockManagementViewModel
+    /// goods location stock management viewmodel
     /// </summary>
-    public class StockManagementViewModel
+    public class LocationStockManagementViewModel
     {
-        #region constructor
         /// <summary>
-        /// constructor
+        /// warehouse
         /// </summary>
-        public StockManagementViewModel()
-        {
+        public string warehouse { get; set; } = string.Empty;
+        /// <summary>
+        /// location_name
+        /// </summary>
+        public string location_name { get; set; } = string.Empty;
 
-        }
-        #endregion
-        #region Property
         /// <summary>
         /// spu_code
         /// </summary>
@@ -32,14 +33,19 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string spu_name { get; set; } = string.Empty;
 
         /// <summary>
+        /// sku_id
+        /// </summary>
+        public int sku_id { get; set; } = 0;
+
+        /// <summary>
         /// sku_code
         /// </summary>
         public string sku_code { get; set; } = string.Empty;
 
         /// <summary>
-        /// sku_id
+        /// sku_name
         /// </summary>
-        public int sku_id { get; set; } = 0;
+        public string sku_name { get; set; } = string.Empty;
 
         /// <summary>
         /// quantity
@@ -49,7 +55,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// <summary>
         /// quantity available
         /// </summary>
-        public int qty_available { get; set; } = 0;  
+        public int qty_available { get; set; } = 0;
 
         /// <summary>
         /// quantity locked
@@ -60,32 +66,5 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// quantity frozen
         /// </summary>
         public int qty_frozen { get; set; } = 0;
-
-        /// <summary>
-        /// asn qty
-        /// </summary>
-        public int qty_asn { get; set; } = 0;
-
-        /// <summary>
-        /// qty to be unloaded
-        /// </summary>
-        public int qty_to_unload { get; set; } = 0;
-
-        /// <summary>
-        ///  qty to be sorted
-        /// </summary>
-        public int qty_to_sort { get; set; } = 0;
-
-        /// <summary>
-        /// qty sorted
-        /// </summary>
-        public int qty_sorted { get; set; } = 0;
-
-        /// <summary>
-        /// shortage qty
-        /// </summary>
-        public int shortage_qty { get; set; } = 0;
-        #endregion
-
     }
 }

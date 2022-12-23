@@ -11,7 +11,7 @@ using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
-
+using ModernWMS.Core.Models;
 namespace ModernWMS.WMS.Services
 {
     /// <summary>
