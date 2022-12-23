@@ -158,6 +158,9 @@ const method = reactive({
       return
     }
     data.roleList = res.data
+    if (data.roleList.length > 0) {
+      method.roleMenuListCellClick({ row: data.roleList[0] })
+    }
   },
   // Add user
   add: () => {

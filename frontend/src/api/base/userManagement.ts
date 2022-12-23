@@ -3,6 +3,12 @@ import { PageConfigProps } from '@/types/System/Form'
 import { UserVO, ChangePwdAPIParams } from '@/types/Base/UserManagement'
 
 // Find Data by Pagination
+export const getSelectItem = () => http({
+    url: '/user/select-item',
+    method: 'get'
+  })
+
+// Find Data by Pagination
 export const getUserList = (data: PageConfigProps) => http({
     url: '/user/list',
     method: 'post',
