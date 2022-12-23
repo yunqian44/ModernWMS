@@ -6,26 +6,36 @@
         <v-toolbar color="white" :title="`${$t('base.warehouseSetting.locationSetting')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-text-field
-              v-model="data.form.warehouse_name"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+            <v-select
+              v-model="data.form.warehouse_id"
+              :items="data.combobox.warehouse_name"
+              item-title="label"
+              item-value="value"
               :rules="data.rules.warehouse_name"
+              :label="$t('base.warehouseSetting.warehouse_name')"
               variant="outlined"
               clearable
-            ></v-text-field>
-            <v-text-field
-              v-model="data.form.warehouse_area_name"
-              :label="$t('base.warehouseSetting.area_name')"
+              @update:model-value="method.changeWarehouse"
+            ></v-select>
+            <v-select
+              v-model="data.form.warehouse_area_id"
+              :items="data.combobox.warehouse_area_name"
+              item-title="label"
+              item-value="value"
               :rules="data.rules.warehouse_area_name"
+              :label="$t('base.warehouseSetting.area_name')"
               variant="outlined"
               clearable
-            ></v-text-field>
+              @update:model-value="method.changeWarehouseArea"
+            ></v-select>
+            <!-- TODO 将数字型转换成文字显示，并且选完库区后联动显示 -->
             <v-text-field
               v-model="data.form.warehouse_area_property"
               :label="$t('base.warehouseSetting.area_property')"
               :rules="data.rules.warehouse_area_property"
               variant="outlined"
               clearable
+              disabled
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_name"
@@ -116,10 +126,10 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addGoodsLocation, updateGoodsLocation } from '@/api/base/warehouseSetting'
+import { addGoodsLocation, updateGoodsLocation, getWarehouseSelect, getWarehouseAreaSelect } from '@/api/base/warehouseSetting'
 import { GoodsLocationVO } from '@/types/Base/Warehouse'
+import i18n from '@/languages/i18n'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -141,11 +151,8 @@ const dialogTitle = computed(() => {
 const data = reactive({
   form: ref<GoodsLocationVO>({
     id: 0,
-    warehouse_id: 0,
-    warehouse_area_id: 0,
     warehouse_name: '',
     warehouse_area_name: '',
-    warehouse_area_property: 0,
     location_name: '',
     location_length: 0,
     location_width: 0,
@@ -166,7 +173,7 @@ const data = reactive({
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`
     ],
     warehouse_area_property: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`
+      // (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`
     ],
     location_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.location_name') }!`
@@ -181,10 +188,90 @@ const data = reactive({
     layer_number: [],
     tag_number: [],
     is_valid: []
-  }
+  },
+  combobox: ref<{
+    warehouse_name: {
+      label: string
+      value: number
+    }[]
+    warehouse_area_name: {
+      label: string
+      value: number
+    }[]
+  }>({
+    warehouse_name: [],
+    warehouse_area_name: []
+  })
 })
 
 const method = reactive({
+  changeWarehouse: (warehouseID: any) => {
+    data.combobox.warehouse_area_name = []
+
+    if (!warehouseID) {
+      method.initWarehouseArea()
+      return
+    }
+    
+    // Find the ID corresponding value
+    const warehouse = data.combobox.warehouse_name.find((item) => item.value === warehouseID)
+    if (warehouse) {
+      data.form.warehouse_name = warehouse.label
+      data.form.warehouse_id = warehouseID
+
+      // Clear messages of warehouse area when warehouse changed.
+      method.initWarehouseArea()
+      method.getWarehouseAreaSelect(warehouseID)
+    }
+  },
+  changeWarehouseArea: (warehouseAreaID: any) => {
+    if (!warehouseAreaID) {
+      method.initWarehouseArea()
+      return
+    }
+
+    // Find the ID corresponding value
+    const warehouse = data.combobox.warehouse_area_name.find((item) => item.value === warehouseAreaID)
+    if (warehouse) {
+      data.form.warehouse_area_name = warehouse.label
+      data.form.warehouse_area_id = warehouseAreaID
+    }
+  },
+  // Clear messages of warehouse area when warehouse changed.
+  initWarehouseArea() {
+    delete data.form.warehouse_area_id
+    data.form.warehouse_area_name = ''
+    delete data.form.warehouse_area_property
+  },
+  getWarehouseSelect: async () => {
+    data.combobox.warehouse_name = []
+    const { data: res } = await getWarehouseSelect()
+    if (!res.isSuccess) {
+      return
+    }
+    for (const item of res.data) {
+      data.combobox.warehouse_name.push({
+        label: item.name,
+        // WarehouseID is a numberic type
+        value: Number(item.value)
+      })
+    }
+  },
+  // Get warehouse area select when warehouse changed.
+  getWarehouseAreaSelect: async (warehouseID: number) => {
+    data.combobox.warehouse_area_name = []
+    const { data: res } = await getWarehouseAreaSelect(warehouseID)
+    if (!res.isSuccess) {
+      return
+    }
+    for (const item of res.data) {
+      data.combobox.warehouse_area_name.push({
+        label: item.name,
+        // WarehouseAreaID is a numberic type
+        value: Number(item.value)
+      })
+    }
+  },
   closeDialog: () => {
     emit('close')
   },
@@ -221,6 +308,7 @@ watch(
   (val) => {
     if (val) {
       method.initForm()
+      method.getWarehouseSelect()
     }
   }
 )

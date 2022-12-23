@@ -90,7 +90,7 @@
                 <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -196,8 +196,10 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        // TODO Write filename according to your file.
+        filename: 'xxx',
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {

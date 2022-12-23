@@ -27,7 +27,7 @@ export interface GoodsLocationVO extends UniformFileNaming {
   warehouse_area_id?: number
   warehouse_name: string
   warehouse_area_name: string
-  warehouse_area_property: number
+  warehouse_area_property?: number
   location_name: string
   location_length?: number
   location_width?: number

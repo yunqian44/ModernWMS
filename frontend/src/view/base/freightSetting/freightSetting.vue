@@ -213,8 +213,9 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: '运费设置',
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {

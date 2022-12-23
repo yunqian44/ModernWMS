@@ -14,7 +14,7 @@
           <v-col cols="4"></v-col>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <v-text-field
+            <!-- <v-text-field
               v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
@@ -23,7 +23,7 @@
               :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
-            </v-text-field>
+            </v-text-field> -->
           </v-col>
         </v-row>
       </v-col>
@@ -52,7 +52,7 @@
           <span>{{ formatIsValid(row[column.property]) }}</span>
         </template>
       </vxe-column>
-      <vxe-column :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
         <template #default="{ row }">
           <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
           <tooltip-btn
@@ -194,8 +194,9 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
+        filename: '库区设置',
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type)
+          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
