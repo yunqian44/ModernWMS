@@ -68,20 +68,15 @@
           >
             <v-row :no-gutters="true">
               <v-col :cols="3" class="dataListCol">
-                <v-card>
-                  <vxe-table
-                    ref="xTable"
-                    :data="data.roleList"
-                    :height="tableHeight"
-                    :show-header="false"
-                    align="center"
-                    :round="true"
-                    :size="'small'"
-                    :cell-style="method.roleMenuListCellStyle"
-                    @cell-click="method.roleMenuListCellClick"
-                  >
-                    <vxe-column field="role_name" :title="$t('base.roleMenu.role_name')"> </vxe-column>
-                  </vxe-table>
+                <v-card :height="tableHeight">
+                  <NavListVue
+                    :list-data="data.roleList"
+                    :title="data.navListOptions.title"
+                    :label-key="data.navListOptions.labelKey"
+                    :index-key="data.navListOptions.indexKey"
+                    :index-value="data.navListOptions.indexValue"
+                    @item-click="method.navListClick"
+                  />
                 </v-card>
               </v-col>
               <v-col :cols="9">
@@ -108,15 +103,22 @@
 import { computed, reactive, onMounted, ref } from 'vue'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { DataProps, xTableProperty } from '@/types/Base/RoleMenu'
+import { DataProps, RoleMenuVO } from '@/types/Base/RoleMenu'
 import { getRoleMenuAll, getRoleMenuById, deleteRoleMenu } from '@/api/base/roleMenu'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-role-menu.vue'
 import i18n from '@/languages/i18n'
+import NavListVue from '@/components/page/nav-list.vue'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
+  navListOptions: {
+    title: i18n.global.t('base.roleMenu.role_name'),
+    labelKey: 'role_name',
+    indexKey: 'userrole_id',
+    indexValue: ''
+  },
   // Activation id
   activeRoleMenuForm: {
     userrole_id: 0,
@@ -156,7 +158,7 @@ const method = reactive({
     if (data.roleList.findIndex((item) => item.userrole_id === data.activeRoleMenuForm.userrole_id) > -1 && data.activeRoleMenuForm.userrole_id) {
       method.getRoleMenus(data.activeRoleMenuForm.userrole_id)
     } else if (data.roleList.length > 0) {
-      method.roleMenuListCellClick({ row: data.roleList[0] })
+      method.navListClick(data.roleList[0])
     } else {
       data.activeRoleMenuForm = {
         userrole_id: 0,
@@ -248,26 +250,6 @@ const method = reactive({
       })
     }
   },
-  // Table dynamic style, mainly used to display the currently active row
-  roleMenuListCellStyle: ({ row }: xTableProperty) => {
-    const styles = {
-      cursor: 'pointer',
-      backgroundColor: '',
-      color: ''
-    }
-    if (data.activeRoleMenuForm.userrole_id === row.userrole_id) {
-      styles.backgroundColor = '#9256fd'
-      styles.color = '#ffffff'
-    }
-    return styles
-  },
-  // Click role name filter menus
-  roleMenuListCellClick: ({ row }: xTableProperty) => {
-    if (data.activeRoleMenuForm.userrole_id === row.userrole_id || !row.userrole_id) {
-      return
-    }
-    method.getRoleMenus(row.userrole_id)
-  },
   // Get detailed data
   getRoleMenus: async (userrole_id: number) => {
     const { data: res } = await getRoleMenuById(userrole_id)
@@ -285,6 +267,14 @@ const method = reactive({
     data.dialogForm = {
       detailList: []
     }
+  },
+  // Click navList
+  navListClick: (item: RoleMenuVO) => {
+    if (!item.userrole_id) {
+      return
+    }
+    data.navListOptions.indexValue = String(item.userrole_id)
+    method.getRoleMenus(item.userrole_id)
   }
 })
 

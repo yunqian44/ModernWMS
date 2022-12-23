@@ -12,6 +12,13 @@ export interface TablePage {
   pageSize: number
 }
 
+export interface NavListOptions {
+  title: string
+  labelKey: string
+  indexKey: string
+  indexValue: string
+}
+
 // API Required paging parameters
 export interface PageConfigProps {
   pageIndex: number

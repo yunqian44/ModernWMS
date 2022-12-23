@@ -24,7 +24,8 @@ export default {
       beforeDeleteMessage: '您确定要删除此条数据吗?',
       beforeDeleteDetailMessage: '您确定要删除此行吗?',
       detailLengthIsZero: '请添加明细数据!',
-      detailHasItemRepeat: '明细中含有重复项目!'
+      detailHasItemRepeat: '明细中含有重复项目!',
+      noData: '暂无数据'
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',

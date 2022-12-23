@@ -24,7 +24,8 @@ export default {
       beforeDeleteMessage: 'Do you want to delete this data?',
       beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
       detailLengthIsZero: 'Details verification before document submission!',
-      detailHasItemRepeat: 'The details contain duplicate items!'
+      detailHasItemRepeat: 'The details contain duplicate items!',
+      noData: 'no data'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',

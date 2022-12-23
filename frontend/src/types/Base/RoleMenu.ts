@@ -1,4 +1,4 @@
-import { UniformFileNaming, VxeTableRow } from '../System/Form'
+import { NavListOptions, UniformFileNaming, VxeTableRow } from '../System/Form'
 
 export interface RoleMenuVO extends UniformFileNaming {
   userrole_id?: number
@@ -12,14 +12,10 @@ export interface RoleMenuDetailVo extends VxeTableRow {
   menu_name?: string
 }
 
-// Attributes required for the table click method
-export interface xTableProperty {
-  row: RoleMenuVO
-}
-
 export interface DataProps {
   activeRoleMenuForm: RoleMenuVO
   roleList: RoleMenuVO[]
   showDialog: boolean
   dialogForm: RoleMenuVO
+  navListOptions: NavListOptions
 }
