@@ -47,7 +47,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// authority
         /// </summary>
         [Display(Name = "authority")]
-        public byte authority { get; set; } = 0;
+        public byte authority { get; set; } = 1;
 
         #endregion
 
