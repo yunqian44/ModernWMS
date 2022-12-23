@@ -151,7 +151,7 @@ namespace ModernWMS.WMS.Services
             var Rolemenus = _dBContext.GetDbSet<RolemenuEntity>(); 
             var Menus = _dBContext.GetDbSet<MenuEntity>();
             var data = await (from rm in Rolemenus.AsNoTracking()
-                              join m in Menus.AsNoTracking() on rm.userrole_id equals m.id
+                              join m in Menus.AsNoTracking() on rm.menu_id equals m.id
                               where rm.userrole_id == userrole_id
                               orderby m.sort, m.menu_name
                               select new MenuViewModel
