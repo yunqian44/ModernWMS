@@ -229,10 +229,7 @@ namespace ModernWMS.WMS.Services
                                 last_update_time = DateTime.Now,
                                 tenant_id = currentUser.tenant_id
                             }).ToList();
-            if (entities.Any(t => t.id < 0))
-            {
-                Rolemenus.RemoveRange(entities.Where(t => t.id < 0).ToList());
-            }
+            
             if (entities.Any(t => t.id > 0))
             {
                 Rolemenus.UpdateRange(entities.Where(t => t.id > 0).ToList());
@@ -241,7 +238,12 @@ namespace ModernWMS.WMS.Services
             {
                 Rolemenus.AddRange(entities.Where(t => t.id == 0).ToList());
             }
-
+            if (entities.Any(t => t.id < 0))
+            {
+                var dels = entities.Where(t => t.id < 0).ToList();
+                dels.ForEach(t => t.id *= -1);
+                Rolemenus.RemoveRange(dels);
+            }
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
