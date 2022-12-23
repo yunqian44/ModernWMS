@@ -144,11 +144,6 @@ const method = reactive({
   getCompanyList: async () => {
     // Clear detailed data before refreshing
     method.clearDialogForm()
-    data.activeRoleMenuForm = {
-      userrole_id: 0,
-      role_name: '',
-      detailList: []
-    }
     const { data: res } = await getRoleMenuAll()
     if (!res.isSuccess) {
       hookComponent.$message({
@@ -158,8 +153,16 @@ const method = reactive({
       return
     }
     data.roleList = res.data
-    if (data.roleList.length > 0) {
+    if (data.roleList.findIndex((item) => item.userrole_id === data.activeRoleMenuForm.userrole_id) > -1 && data.activeRoleMenuForm.userrole_id) {
+      method.getRoleMenus(data.activeRoleMenuForm.userrole_id)
+    } else if (data.roleList.length > 0) {
       method.roleMenuListCellClick({ row: data.roleList[0] })
+    } else {
+      data.activeRoleMenuForm = {
+        userrole_id: 0,
+        role_name: '',
+        detailList: []
+      }
     }
   },
   // Add user

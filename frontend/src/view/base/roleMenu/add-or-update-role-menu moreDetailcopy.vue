@@ -15,18 +15,34 @@
               variant="outlined"
               clearable
             ></v-select>
-            <v-select
-              v-model="data.menusSelectedList"
-              :items="data.combobox.menu_name"
-              item-title="label"
-              item-value="value"
-              :label="$t('base.roleMenu.menu_name')"
-              variant="outlined"
-              chips
-              multiple
-              clearable
-            >
-            </v-select>
+            <v-row v-for="(item, index) of data.form.detailList" :key="index">
+              <v-col :cols="10">
+                <v-select
+                  v-model="item.menu_id"
+                  :items="data.combobox.menu_name"
+                  item-title="label"
+                  item-value="value"
+                  :rules="data.rules.menu_name"
+                  :label="$t('base.roleMenu.menu_name')"
+                  variant="outlined"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col :cols="2">
+                <div class="detailBtnContainer">
+                  <tooltip-btn
+                    :flat="true"
+                    icon="mdi-delete-outline"
+                    :tooltip-text="$t('system.page.delete')"
+                    :icon-color="errorColor"
+                    @click="method.removeItem(index, item)"
+                  ></tooltip-btn>
+                </div>
+              </v-col>
+            </v-row>
+            <v-btn style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right" color="primary" :width="40" @click="method.AddDetail">
+              +
+            </v-btn>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -39,14 +55,17 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, ref, watch } from 'vue'
+import { reactive, computed, ref, watch, nextTick } from 'vue'
 import { RoleMenuVO, RoleMenuDetailVo } from '@/types/Base/RoleMenu'
 import { UserRoleVO } from '@/types/Base/UserRoleSetting'
 import i18n from '@/languages/i18n'
+import { errorColor } from '@/constant/style'
 import { hookComponent } from '@/components/system/index'
 import { addRoleMenu, updateRoleMenu, getMenus } from '@/api/base/roleMenu'
 import { getUserRoleAll } from '@/api/base/userRoleSetting'
 import { MenuItem } from '@/types/System/Store'
+import tooltipBtn from '@/components/tooltip-btn.vue'
+import { checkDetailRepeatGetBool } from '@/utils/dataVerification/page'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -65,11 +84,7 @@ const data = reactive({
     role_name: '',
     detailList: []
   }),
-  // Multiple drop-down box values, mainly used to temporarily save the selected values
-  menusSelectedList: ref<any[]>([]),
-  // If it is modified, you need to pass a negative ID to the API to delete the existing details
   removeDetailList: ref<RoleMenuDetailVo[]>([]),
-  // Drop down box options
   combobox: ref<{
     role_name: {
       label: string
@@ -90,6 +105,18 @@ const data = reactive({
 })
 
 const method = reactive({
+  // Add a new detail
+  AddDetail: () => {
+    data.form.detailList.push({ id: 0 })
+    // Let the scroll bar go to the bottom, Improve user experience
+    const carText = document.querySelector('.formCard')
+    if (carText && carText.scrollHeight > carText.clientHeight) {
+      nextTick(() => {
+        // Set scroll bar to the bottom
+        carText.scrollTop = carText.scrollHeight
+      })
+    }
+  },
   // Get dialog type, add or update
   getDialogType: () => {
     // This is special because this document is not actually a table,
@@ -134,27 +161,16 @@ const method = reactive({
   // Details verification before document submission
   beforeSubmit: (): boolean => {
     let flag = true
-    // Process the new dropdown options
-    for (const item of data.menusSelectedList) {
-      if (data.form.detailList.findIndex((dl) => dl.menu_id === item) < 0) {
-        data.form.detailList.push({
-          id: 0,
-          menu_id: item
-        })
-      }
-    }
-    if (data.dialogTitle === 'update') {
-      for (const item of data.form.detailList) {
-        if (!data.menusSelectedList.includes(item.menu_id)) {
-          // Delete if ID is negative
-          item.id = -item.id
-        }
-      }
-    }
     if (data.form.detailList.length === 0) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('system.tips.detailLengthIsZero')
+      })
+      flag = false
+    } else if (checkDetailRepeatGetBool(data.form.detailList, ['menu_id'])) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.detailHasItemRepeat')
       })
       flag = false
     }
@@ -188,6 +204,19 @@ const method = reactive({
         content: i18n.global.t('system.checkText.checkFormFail')
       })
     }
+  },
+  // remove detail
+  removeItem: (index: number, item: RoleMenuDetailVo) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
+      handleConfirm: async () => {
+        if (item.id > 0) {
+          item.id = -item.id
+          data.removeDetailList.push(item) // Cache remove row
+        }
+        data.form.detailList.splice(index, 1) // Remove row in detailList
+      }
+    })
   }
 })
 
@@ -198,11 +227,24 @@ watch(
       method.getDialogType()
       method.getCombobox()
       data.form = props.form
-      data.menusSelectedList = data.form.detailList.map((item) => item.menu_id)
     }
   }
 )
 </script>
 
 <style scoped lang="less">
+// .v-form {
+//   div {
+//     margin-bottom: 7px;
+//   }
+// }
+.detailBtnContainer {
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+// .v-col {
+//   padding: 0 !important;
+// }
 </style>

@@ -92,6 +92,8 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.supplier')
     case 'roleMenu':
       return i18n.global.t('router.sideBar.roleMenu')
+    case 'stock':
+      return i18n.global.t('router.sideBar.stock')
     default:
       return ''
   }
@@ -102,6 +104,8 @@ function GetModuleAndIcon(name: string) {
       return 'cog'
     case 'homepage':
       return 'home'
+    case 'stockManagement':
+      return 'warehouse'
     default:
       return ''
   }
