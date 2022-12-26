@@ -16,7 +16,9 @@ export default {
       edit: '编辑',
       delete: '删除',
       close: '关闭',
-      submit: '提交'
+      submit: '提交',
+      reset: '重置',
+      confirm: '确认'
     },
     tips: {
       success: '成功!',
@@ -102,6 +104,7 @@ export default {
       warehouseSetting: '仓库设置',
       reservoirSetting: '库区设置',
       locationSetting: '库位设置',
+      locationSelectModal: '库位选择框',
       email: 'Email',
       warehouse_name: '仓库名称',
       city: '所在城市',

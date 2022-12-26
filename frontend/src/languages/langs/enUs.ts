@@ -16,7 +16,9 @@ export default {
       edit: 'Edit',
       delete: 'Delete',
       close: 'Colse',
-      submit: 'Submit'
+      submit: 'Submit',
+      reset: 'Reset',
+      confirm: 'Confirm'
     },
     tips: {
       success: ' success!',
@@ -98,6 +100,7 @@ export default {
       warehouseSetting: 'Warehouse Setting',
       reservoirSetting: 'Reservoir Setting',
       locationSetting: 'Location Setting',
+      locationSelectModal: 'Location Select Modal',
       email: 'Email',
       warehouse_name: 'Warehouse Name',
       city: 'City',
