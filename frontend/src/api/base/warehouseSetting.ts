@@ -43,7 +43,7 @@ export const getWarehouseSelect = () => http({
   
   // Get the combobox item with warehouse area
 export const getWarehouseAreaSelect = (warehouse_id: number) => http({
-    url: '/warehousearea/areas-by-warehouse_id',
+    url: '/warehousearea/all',
     method: 'get',
     params: {
       warehouse_id
