@@ -1,5 +1,5 @@
 /*
- * date：2022-12-23
+ * date：2022-12-26
  * developer：NoNo
  */
 using System;
@@ -12,27 +12,18 @@ using ModernWMS.Core.Utility;
 namespace ModernWMS.WMS.Entities.Models
 {
     /// <summary>
-    /// stockprocessdetail  entity
+    /// stockadjust  entity
     /// </summary>
-    [Table("stockprocessdetail")]
-    public class StockprocessdetailEntity : BaseModel
+    [Table("stockadjust")]
+    public class StockadjustEntity : BaseModel
     {
-        #region  foreign table
-
-         /// <summary>
-         /// foreign table
-         /// </summary>
-        [ForeignKey("stockprocessID")]
-         public StockprocessEntity Stockprocess { get; set; }
-
-        #endregion
 
         #region Property
 
         /// <summary>
-        /// stock_process_id
+        /// job_code
         /// </summary>
-        public int stock_process_id { get; set; }  = 0;
+        public string job_code { get; set; }  = string.Empty;
 
         /// <summary>
         /// sku_id
@@ -55,6 +46,16 @@ namespace ModernWMS.WMS.Entities.Models
         public int qty { get; set; }  = 0;
 
         /// <summary>
+        /// creator
+        /// </summary>
+        public string creator { get; set; }  = string.Empty;
+
+        /// <summary>
+        /// create_time
+        /// </summary>
+        public DateTime create_time { get; set; }  = UtilConvert.MinDate;
+
+        /// <summary>
         /// last_update_time
         /// </summary>
         public DateTime last_update_time { get; set; }  = UtilConvert.MinDate;
@@ -65,14 +66,21 @@ namespace ModernWMS.WMS.Entities.Models
         public byte tenant_id { get; set; }  = 0;
 
         /// <summary>
-        /// is_source
-        /// </summary>
-        public bool is_source { get; set; } = false;
-
-        /// <summary>
         /// is_update_stock
         /// </summary>
         public bool is_update_stock { get; set; } = false;
+
+        /// <summary>
+        /// job_type
+        /// </summary>
+        public byte job_type { get; set; }  = 0;
+
+        /// <summary>
+        /// source_table_id
+        /// </summary>
+        public int source_table_id { get; set; }  = 0;
+
+
         #endregion
 
     }

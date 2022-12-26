@@ -100,6 +100,10 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         public string unit { get; set; } = string.Empty;
 
+        /// <summary>
+        /// is_update_stock
+        /// </summary>
+        public bool is_update_stock { get; set; } = false;
         #endregion
 
     }

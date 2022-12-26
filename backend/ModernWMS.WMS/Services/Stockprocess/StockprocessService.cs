@@ -16,6 +16,7 @@ using ModernWMS.Core.DynamicSearch;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 
 namespace ModernWMS.WMS.Services
 {
@@ -59,7 +60,7 @@ namespace ModernWMS.WMS.Services
         /// <param name="pageSearch">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(List<StockprocessViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        public async Task<(List<StockprocessGetViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
         {
             QueryCollection queries = new QueryCollection();
             if (pageSearch.searchObjects.Any())
@@ -70,26 +71,51 @@ namespace ModernWMS.WMS.Services
                 });
             }
             var DbSet = _dBContext.GetDbSet<StockprocessEntity>();
-            var query = DbSet.AsNoTracking()
+            var adjust_DBSet = _dBContext.GetDbSet<StockadjustEntity>().AsNoTracking();
+            var adjusted = from a in adjust_DBSet
+                           join d in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking() on a.source_table_id equals d.id
+                           where a.job_type == 2
+                           group d by d.stock_process_id into ag
+                           select new
+                           {
+                               stockprocess_id = ag.Key
+                           };
+            var query = from m in DbSet.AsNoTracking()
+                        join a in adjusted on m.id equals a.stockprocess_id
+                        select new StockprocessGetViewModel
+                        {
+                            id = m.id,
+                            job_code = m.job_code,
+                            job_type = m.job_type,
+                            process_status = m.process_status,
+                            processor = m.processor,
+                            process_time = m.process_time,
+                            creator = m.creator,
+                            create_time = m.create_time,
+                            last_update_time = m.last_update_time,
+                            tenant_id = m.tenant_id,
+                            adjust_status = (m.process_status && (a.stockprocess_id == null ? false : true)) ? true : false
+                        };
+            query = query
                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                .Where(queries.AsExpression<StockprocessEntity>());
+                .Where(queries.AsExpression<StockprocessGetViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
                        .Take(pageSearch.pageSize)
                        .ToListAsync();
-            return (list.Adapt<List<StockprocessViewModel>>(), totals);
+            return (list, totals);
         }
 
         /// <summary>
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<StockprocessViewModel>> GetAllAsync(CurrentUser currentUser)
+        public async Task<List<StockprocessGetViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<StockprocessEntity>();
             var data = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).ToListAsync();
-            return data.Adapt<List<StockprocessViewModel>>();
+            return data.Adapt<List<StockprocessGetViewModel>>();
         }
 
         /// <summary>
@@ -168,11 +194,10 @@ namespace ModernWMS.WMS.Services
                     exp = Expression.Or(t_exp, exp);
                 }
             }
-            Expression<Func<StockEntity, bool>> predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1]{parameterExpression});
-            var stocks =await stock_DBSet.AsNoTracking().Where(predicate_res).ToListAsync();
-            var lockeds = await (from m in DbSet.AsNoTracking()
-                                 join d in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking() on m.id equals d.stock_process_id
-                                 where m.process_status == false && entity.detailList.Where(t => t.is_source == true).Select(t => t.goods_location_id).Contains(d.goods_location_id)
+            Expression<Func<StockEntity, bool>> predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1] { parameterExpression });
+            var stocks = await stock_DBSet.AsNoTracking().Where(predicate_res).ToListAsync();
+            var lockeds = await (from d in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking()
+                                 where d.is_update_stock == false && entity.detailList.Where(t => t.is_source == true).Select(t => t.goods_location_id).Contains(d.goods_location_id)
                                  && entity.detailList.Where(t => t.is_source == true).Select(t => t.sku_id).Contains(d.sku_id)
                                  group d by new { d.goods_location_id, d.sku_id } into lg
                                  select new
@@ -187,19 +212,19 @@ namespace ModernWMS.WMS.Services
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
             await DbSet.AddAsync(entity);
-            foreach(var d in entity.detailList)
-            { 
-                var s = stocks.FirstOrDefault(t=>t.sku_id== d.sku_id && t.goods_location_id == d.goods_location_id);
-                if(s == null)
+            foreach (var d in entity.detailList)
+            {
+                var s = stocks.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
+                if (s == null)
                 {
                     return (0, _stringLocalizer["data_changed"]);
                 }
-                else if(s.is_freeze == true)
+                else if (s.is_freeze == true)
                 {
                     return (0, _stringLocalizer["stock_frozen"]);
                 }
-                var locked =  lockeds.FirstOrDefault(t=>t.sku_id==d.sku_id&&t.goods_location_id==d.goods_location_id);
-                if((s.qty - (locked == null ? 0 : locked.qty_locked)) < d.qty)
+                var locked = lockeds.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
+                if ((s.qty - (locked == null ? 0 : locked.qty_locked)) < d.qty)
                 {
                     return (0, _stringLocalizer["data_changed"]);
                 }
@@ -251,7 +276,9 @@ namespace ModernWMS.WMS.Services
         /// <returns></returns>
         public async Task<(bool flag, string msg)> DeleteAsync(int id)
         {
-            var qty = await _dBContext.GetDbSet<StockprocessEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
+            var entity = await _dBContext.GetDbSet<StockprocessEntity>().Where(t => t.id.Equals(id)).FirstOrDefaultAsync();
+
+            var qty = await _dBContext.GetDbSet<StockprocessEntity>().Where(t => t.id.Equals(id) && t.process_status == false).ExecuteDeleteAsync();
             if (qty > 0)
             {
                 return (true, _stringLocalizer["delete_success"]);
@@ -260,6 +287,71 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["delete_failed"]);
             }
+        }
+
+        /// <summary>
+        /// confirm adjustment
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmAdjustment(int id, CurrentUser currentUser)
+        {
+            var DBSet = _dBContext.GetDbSet<StockprocessEntity>();
+            var entity = await DBSet.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            var detail_DBSet = _dBContext.GetDbSet<StockprocessdetailEntity>();
+            var adjust_DBset = _dBContext.GetDbSet<StockadjustEntity>();
+            var details = await detail_DBSet.AsNoTracking().Where(t => t.stock_process_id == id).ToListAsync();
+            var adjusts = (from d in details
+                           select new StockadjustEntity
+                           {
+                               sku_id = d.sku_id,
+                               source_table_id = d.id,
+                               is_update_stock = false,
+                               goods_location_id = d.goods_location_id,
+                               job_type = 2,
+                               goods_owner_id = d.goods_owner_id,
+                               qty = d.is_source ? -d.qty : d.qty,
+                               create_time = DateTime.Now,
+                               creator = currentUser.user_name,
+                               last_update_time = DateTime.Now,
+                               tenant_id = currentUser.tenant_id,
+                           }).ToList();
+            entity.last_update_time = DateTime.Now;
+            await adjust_DBset.AddRangeAsync(adjusts);
+            var res = await _dBContext.SaveChangesAsync();
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            return (false, _stringLocalizer["operation_failed"]);
+        }
+
+        /// <summary>
+        /// confirm processing
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmProcess(int id)
+        {
+            var DBSet = _dBContext.GetDbSet<StockprocessEntity>();
+            var entity = await DBSet.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            entity.process_status = true;
+            entity.last_update_time = DateTime.Now;
+            var res = await _dBContext.SaveChangesAsync();
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            return (false, _stringLocalizer["operation_failed"]);
         }
         #endregion
     }

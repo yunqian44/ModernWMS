@@ -1,5 +1,5 @@
 /*
- * date：2022-12-23
+ * date：2022-12-26
  * developer：NoNo
  */
  using Microsoft.AspNetCore.Mvc;
@@ -8,23 +8,22 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// stockprocess controller
-     /// </summary>
-     [Route("stockprocess")]
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// stockadjust controller
+    /// </summary>
+     [Route("stockadjust")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "WMS")]
-     public class StockprocessController : BaseController
+     public class StockadjustController : BaseController
      {
          #region Args
  
          /// <summary>
-         /// stockprocess Service
+         /// stockadjust Service
          /// </summary>
-         private readonly IStockprocessService _stockprocessService;
+         private readonly IStockadjustService _stockadjustService;
  
          /// <summary>
          /// Localizer Service
@@ -36,14 +35,14 @@
          /// <summary>
          /// constructor
          /// </summary>
-         /// <param name="stockprocessService">stockprocess Service</param>
+         /// <param name="stockadjustService">stockadjust Service</param>
         /// <param name="stringLocalizer">Localizer</param>
-         public StockprocessController(
-             IStockprocessService stockprocessService
+         public StockadjustController(
+             IStockadjustService stockadjustService
            , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
              )
          {
-             this._stockprocessService = stockprocessService;
+             this._stockadjustService = stockadjustService;
             this._stringLocalizer= stringLocalizer;
          }
          #endregion
@@ -55,11 +54,11 @@
          /// <param name="pageSearch">args</param>
          /// <returns></returns>
          [HttpPost("list")]
-         public async Task<ResultModel<PageData<StockprocessGetViewModel>>> PageAsync(PageSearch pageSearch)
+         public async Task<ResultModel<PageData<StockadjustViewModel>>> PageAsync(PageSearch pageSearch)
          {
-             var (data, totals) = await _stockprocessService.PageAsync(pageSearch, CurrentUser);
+             var (data, totals) = await _stockadjustService.PageAsync(pageSearch, CurrentUser);
               
-             return ResultModel<PageData<StockprocessGetViewModel>>.Success(new PageData<StockprocessGetViewModel>
+             return ResultModel<PageData<StockadjustViewModel>>.Success(new PageData<StockadjustViewModel>
              {
                  Rows = data,
                  Totals = totals
@@ -71,16 +70,16 @@
          /// </summary>
          /// <returns>args</returns>
         [HttpGet("all")]
-         public async Task<ResultModel<List<StockprocessGetViewModel>>> GetAllAsync()
+         public async Task<ResultModel<List<StockadjustViewModel>>> GetAllAsync()
          {
-             var data = await _stockprocessService.GetAllAsync(CurrentUser);
+             var data = await _stockadjustService.GetAllAsync(CurrentUser);
              if (data.Any())
              {
-                 return ResultModel<List<StockprocessGetViewModel>>.Success(data);
+                 return ResultModel<List<StockadjustViewModel>>.Success(data);
              }
              else
              {
-                 return ResultModel<List<StockprocessGetViewModel>>.Success(new List<StockprocessGetViewModel>());
+                 return ResultModel<List<StockadjustViewModel>>.Success(new List<StockadjustViewModel>());
              }
          }
  
@@ -89,16 +88,16 @@
          /// </summary>
          /// <returns>args</returns>
          [HttpGet]
-         public async Task<ResultModel<StockprocessWithDetailViewModel>> GetAsync(int id)
+         public async Task<ResultModel<StockadjustViewModel>> GetAsync(int id)
          {
-             var data = await _stockprocessService.GetAsync(id);
+             var data = await _stockadjustService.GetAsync(id);
              if (data!=null)
              {
-                 return ResultModel<StockprocessWithDetailViewModel>.Success(data);
+                 return ResultModel<StockadjustViewModel>.Success(data);
              }
              else
              {
-                 return ResultModel<StockprocessWithDetailViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+                 return ResultModel<StockadjustViewModel>.Error(_stringLocalizer["not_exists_entity"]);
              }
          }
          /// <summary>
@@ -107,9 +106,9 @@
          /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPost]
-         public async Task<ResultModel<int>> AddAsync(StockprocessViewModel viewModel)
+         public async Task<ResultModel<int>> AddAsync(StockadjustViewModel viewModel)
          {
-             var (id, msg) = await _stockprocessService.AddAsync(viewModel,CurrentUser);
+             var (id, msg) = await _stockadjustService.AddAsync(viewModel,CurrentUser);
              if (id > 0)
              {
                  return ResultModel<int>.Success(id);
@@ -126,9 +125,9 @@
          /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPut]
-         public async Task<ResultModel<bool>> UpdateAsync(StockprocessViewModel viewModel)
+         public async Task<ResultModel<bool>> UpdateAsync(StockadjustViewModel viewModel)
          {
-             var (flag, msg) = await _stockprocessService.UpdateAsync(viewModel);
+             var (flag, msg) = await _stockadjustService.UpdateAsync(viewModel);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);
@@ -147,7 +146,7 @@
          [HttpDelete]
          public async Task<ResultModel<string>> DeleteAsync(int id)
          {
-             var (flag, msg) = await _stockprocessService.DeleteAsync(id);
+             var (flag, msg) = await _stockadjustService.DeleteAsync(id);
              if (flag)
              {
                  return ResultModel<string>.Success(msg);
@@ -157,34 +156,16 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-        /// <summary>
-        /// confirm processing
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpPut("process-confirm")]
-        public async Task<ResultModel<string>> ConfirmProcess(int id)
-        {
-            var (flag, msg) = await _stockprocessService.ConfirmProcess(id);
-            if (flag)
-            {
-                return ResultModel<string>.Success(msg);
-            }
-            else
-            {
-                return ResultModel<string>.Error(msg);
-            }
-        }
 
         /// <summary>
         /// confirm adjustment
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut("adjustment-confirm")]
+        [HttpPut("confirm")]
         public async Task<ResultModel<string>> ConfirmAdjustment(int id)
         {
-            var (flag, msg) = await _stockprocessService.ConfirmAdjustment(id, CurrentUser);
+            var (flag, msg) = await _stockadjustService.ConfirmAdjustment(id);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);
