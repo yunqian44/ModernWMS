@@ -18,7 +18,8 @@ export default {
       close: 'Colse',
       submit: 'Submit',
       reset: 'Reset',
-      confirm: 'Confirm'
+      confirm: 'Confirm',
+      insertOneRow: 'Insert One Row'
     },
     tips: {
       success: ' success!',
@@ -193,7 +194,11 @@ export default {
       brand: 'Brand',
       unit: 'Commodity Unit',
       cost: 'Commodity Cost',
-      price: 'Commodity Price'
+      price: 'Commodity Price',
+      origin: 'origin',
+      length_unit: 'Length Unit',
+      volume_unit: 'Volume Unit',
+      weight_unit: 'Weight Unit',
     }
   },
   wms: { stock: {} }

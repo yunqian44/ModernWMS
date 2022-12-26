@@ -177,7 +177,7 @@ const method = reactive({
   }
 })
 
-const searchFormHeight = computed(() => computedSelectTableSearchHeight())
+const searchFormHeight = computed(() => computedSelectTableSearchHeight({}))
 
 watch(
   () => isShow.value,

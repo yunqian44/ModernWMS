@@ -18,7 +18,8 @@ export default {
       close: '关闭',
       submit: '提交',
       reset: '重置',
-      confirm: '确认'
+      confirm: '确认',
+      insertOneRow: '新增一行'
     },
     tips: {
       success: '成功!',
@@ -200,7 +201,11 @@ export default {
       brand: '品牌',
       unit: '商品单位',
       cost: '商品成本',
-      price: '商品价格'
+      price: '商品价格',
+      origin: '产地',
+      length_unit: '长度单位',
+      volume_unit: '体积单位',
+      weight_unit: '重量单位',
     }
   },
   wms: { stock: {} }
