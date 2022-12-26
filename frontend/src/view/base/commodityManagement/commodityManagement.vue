@@ -64,12 +64,7 @@
               height: cardHeight
             }"
           >
-            <vxe-table
-              ref="xTable"
-              :data="data.tableData"
-              :height="tableHeight"
-              align="center"
-            >
+            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
               <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
@@ -113,7 +108,7 @@
 import { computed, reactive, onMounted, ref } from 'vue'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { CompanyVO, DataProps } from '@/types/Base/CompanySetting'
+import { CommodityVO, DataProps } from '@/types/Base/CommodityManagement'
 import { getCompanyAll, deleteCompany } from '@/api/base/companySetting'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'
@@ -132,11 +127,21 @@ const data: DataProps = reactive({
   showDialog: false,
   dialogForm: {
     id: 0,
-    company_name: '',
-    city: '',
-    address: '',
-    manager: '',
-    contact_tel: ''
+    spu_code: '',
+    spu_name: '',
+    category_name: '',
+    spu_description: '',
+    bar_code: '',
+    sku_name: '',
+    supplier_name: '',
+    brand: '',
+    unit: '',
+    cost: '',
+    price: '',
+    origin: '',
+    length_unit: 0,
+    volume_unit: 0,
+    weight_unit: 0
   }
 })
 
@@ -160,11 +165,21 @@ const method = reactive({
   add: () => {
     data.dialogForm = {
       id: 0,
-      company_name: '',
-      city: '',
-      address: '',
-      manager: '',
-      contact_tel: ''
+      spu_code: '',
+      spu_name: '',
+      category_name: '',
+      spu_description: '',
+      bar_code: '',
+      sku_name: '',
+      supplier_name: '',
+      brand: '',
+      unit: '',
+      cost: '',
+      price: '',
+      origin: '',
+      length_unit: 0,
+      volume_unit: 0,
+      weight_unit: 0
     }
     data.showDialog = true
   },
@@ -181,11 +196,11 @@ const method = reactive({
   refresh: () => {
     method.getCompanyList()
   },
-  editRow(row: CompanyVO) {
+  editRow(row: CommodityVO) {
     data.dialogForm = JSON.parse(JSON.stringify(row))
     data.showDialog = true
   },
-  deleteRow(row: CompanyVO) {
+  deleteRow(row: CommodityVO) {
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
@@ -213,7 +228,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('router.sideBar.companySetting'),
+        filename: i18n.global.t('router.sideBar.commodityManagement'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }

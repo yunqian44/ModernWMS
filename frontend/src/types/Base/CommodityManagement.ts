@@ -13,6 +13,10 @@ export interface CommodityVO extends UniformFileNaming {
   unit: string
   cost: string
   price: string
+  origin: string
+  length_unit: number
+  volume_unit: number
+  weight_unit: number
 }
 
 export interface CommodityDetailVO {

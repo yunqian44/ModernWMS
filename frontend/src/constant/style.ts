@@ -4,6 +4,7 @@ interface pageHasElement {
   hasPager?: boolean
   hasTab?: boolean
   hasOperateBtn?: boolean
+  hasToolBar?: boolean
 }
 
 export const primaryColor = '#9C27B0'
@@ -16,7 +17,8 @@ export const SYSTEM_HEIGHT = {
   TAB: 70,
   OPERATE_BAR: 52,
   VXE_PAGER: 48,
-  SELECT_TABLE: 500
+  SELECT_TABLE: 500,
+  TOOLBAR: 40
 }
 
 // The height of the content card
@@ -56,8 +58,16 @@ export const computedTableHeight = ({ hasPager = true, hasTab = true, hasOperate
   return `${ res }px`
 }
 
-// The height of the table in select modal.
-export const computedSelectTableSearchHeight = () => {
-  const res = SYSTEM_HEIGHT.SELECT_TABLE + SYSTEM_HEIGHT.VXE_PAGER
+// The height of the table container in select modal.
+export const computedSelectTableSearchHeight = ({ hasPager = true, hasToolBar = false }: pageHasElement) => {
+  let res = SYSTEM_HEIGHT.SELECT_TABLE
+
+  if (hasPager) {
+    res += SYSTEM_HEIGHT.VXE_PAGER
+  }
+  if (hasToolBar) {
+    res += SYSTEM_HEIGHT.TOOLBAR
+  }
+
   return `${ res }px`
 }

@@ -101,9 +101,10 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { formatIsValid } from '@/utils/format/formatSystem'
 import { formatAreaProperty } from '@/utils/format/formatWarehouse'
-import { SearchObject, SearchOperator } from '@/types/System/Form'
+import { SearchObject } from '@/types/System/Form'
 import { computedSelectTableSearchHeight, SYSTEM_HEIGHT } from '@/constant/style'
 import { DEBOUNCE_TIME } from '@/constant/system'
+import { setSearchObject } from '@/utils/common'
 
 const emit = defineEmits(['close', 'sureSelect'])
 const xTable = ref()
@@ -120,7 +121,7 @@ const data = reactive({
     total: 0,
     pageIndex: 1,
     pageSize: 10,
-    searchObject: ref<Array<SearchObject>>([])
+    searchObjects: ref<Array<SearchObject>>([])
   }),
   searchForm: {
     location_name: ''
@@ -137,35 +138,8 @@ const method = reactive({
   }),
 
   sureSearch: () => {
-    method.setSearchObject()
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
     method.getList()
-  },
-
-  setSearchObject: () => {
-    try {
-      const searchObject: Array<SearchObject> = []
-      for (const key in data.searchForm) {
-        const str = key as string
-        const searchValue = data.searchForm[str as keyof typeof data.searchForm]
-
-        if (searchValue && searchValue.trim() !== '') {
-          searchObject.push({
-            name: key,
-            operators: SearchOperator.INCLUDE,
-            text: searchValue,
-            value: searchValue
-          })
-        }
-      }
-
-      if (searchObject.length !== 0) {
-        data.tablePage.searchObject = searchObject
-      } else {
-        data.tablePage.searchObject = []
-      }
-    } catch (error) {
-      data.tablePage.searchObject = []
-    }
   },
 
   getList: async () => {
@@ -189,7 +163,7 @@ const method = reactive({
     }
 
     // Clear search params
-    data.tablePage.searchObject = []
+    data.tablePage.searchObjects = []
   },
 
   submit: () => {
@@ -203,7 +177,7 @@ const method = reactive({
   }
 })
 
-const searchFormHeight = computed(() => computedSelectTableSearchHeight())
+const searchFormHeight = computed(() => computedSelectTableSearchHeight({}))
 
 watch(
   () => isShow.value,

@@ -165,7 +165,6 @@ const method = reactive({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
         if (row.id) {
-          // TODO 接口
           const { data: res } = await deleteWarehouseArea(row.id)
           if (!res.isSuccess) {
             hookComponent.$message({

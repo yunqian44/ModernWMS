@@ -197,6 +197,7 @@ const data = reactive({
     warehouse_area_name: {
       label: string
       value: number
+      meta: any
     }[]
   }>({
     warehouse_name: [],
@@ -235,6 +236,7 @@ const method = reactive({
     if (warehouse) {
       data.form.warehouse_area_name = warehouse.label
       data.form.warehouse_area_id = warehouseAreaID
+      data.form.warehouse_area_property = warehouse.meta
     }
   },
   // Clear messages of warehouse area when warehouse changed.
@@ -266,9 +268,11 @@ const method = reactive({
     }
     for (const item of res.data) {
       data.combobox.warehouse_area_name.push({
-        label: item.name,
-        // WarehouseAreaID is a numberic type
-        value: Number(item.value)
+        label: item.area_name,
+        // ID: WarehouseAreaID
+        value: item.id,
+        // Custom Property
+        meta: item.area_property
       })
     }
   },
