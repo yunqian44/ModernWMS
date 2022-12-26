@@ -30,3 +30,15 @@ export interface PageConfigProps {
 export interface VxeTableRow {
   _X_ROW_KEY?: string
 }
+
+export interface SearchObject {
+  name?: string,
+  operators?: SearchOperator,
+  text?: string,
+  value?: string
+}
+
+export enum SearchOperator {
+  INCLUDE = 6,
+  EQUAL = 1
+}

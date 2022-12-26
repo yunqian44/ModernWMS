@@ -15,7 +15,8 @@ export const SYSTEM_HEIGHT = {
   HEADER: 60,
   TAB: 70,
   OPERATE_BAR: 52,
-  VXE_PAGER: 48
+  VXE_PAGER: 48,
+  SELECT_TABLE: 500
 }
 
 // The height of the content card
@@ -52,5 +53,11 @@ export const computedTableHeight = ({ hasPager = true, hasTab = true, hasOperate
     res -= SYSTEM_HEIGHT.OPERATE_BAR
   }
 
+  return `${ res }px`
+}
+
+// The height of the table in select modal.
+export const computedSelectTableSearchHeight = () => {
+  const res = SYSTEM_HEIGHT.SELECT_TABLE + SYSTEM_HEIGHT.VXE_PAGER
   return `${ res }px`
 }
