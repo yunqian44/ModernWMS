@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Formatters.Xml;
+using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace ModernWMS.WMS.Services
 {
@@ -150,6 +151,13 @@ namespace ModernWMS.WMS.Services
                 return null;
             }
             var res = entity.Adapt<StockprocessWithDetailViewModel>();
+            var adjust_DBSet = _dBContext.GetDbSet<StockadjustEntity>().AsNoTracking();
+            var adjusted = await (from a in adjust_DBSet
+                                  join d in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking() on a.source_table_id equals d.id
+                                  where a.job_type == 2
+                                  select a
+                           ).AnyAsync();
+            res.adjust_status = adjusted;        
             res.source_detail_list = details.Where(t => t.is_source == true).ToList();
             res.target_detail_list = details.Where(t => t.is_source == false).ToList();
             return res;

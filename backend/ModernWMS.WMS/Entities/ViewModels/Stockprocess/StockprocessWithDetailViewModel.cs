@@ -91,6 +91,10 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [Display(Name = "tenant_id")]
         public byte tenant_id { get; set; } = 0;
 
+        /// <summary>
+        /// adjust_status
+        /// </summary>
+        public bool adjust_status { get; set; } = true;
 
         #endregion
         /// <summary>
