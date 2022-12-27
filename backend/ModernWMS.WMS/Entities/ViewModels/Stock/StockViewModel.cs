@@ -74,7 +74,41 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [Display(Name = "tenant_id")]
         public byte tenant_id { get; set; } = 0;
 
+        /// <summary>
+        /// warehouse
+        /// </summary>
+        public string warehouse { get; set; } = string.Empty;
 
+        /// <summary>
+        /// location_name
+        /// </summary>
+        public string location_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// spu_code
+        /// </summary>
+        public string spu_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// spu_name
+        /// </summary>
+        public string spu_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// sku_code
+        /// </summary>
+        public string sku_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// sku_name
+        /// </summary>
+        public string sku_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// qty_available
+        /// </summary>
+        [Display(Name = "qty_available")]
+        public int qty_available { get; set; } = 0;
         #endregion
 
     }

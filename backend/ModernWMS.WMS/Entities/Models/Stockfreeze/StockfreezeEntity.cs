@@ -1,5 +1,5 @@
 /*
- * date：2022-12-22
+ * date：2022-12-26
  * developer：NoNo
  */
 using System;
@@ -12,13 +12,23 @@ using ModernWMS.Core.Utility;
 namespace ModernWMS.WMS.Entities.Models
 {
     /// <summary>
-    /// stock  entity
+    /// stockfreeze  entity
     /// </summary>
-    [Table("stock")]
-    public class StockEntity : BaseModel
+    [Table("stockfreeze")]
+    public class StockfreezeEntity : BaseModel
     {
 
         #region Property
+
+        /// <summary>
+        /// job_code
+        /// </summary>
+        public string job_code { get; set; }  = string.Empty;
+
+        /// <summary>
+        /// job_type
+        /// </summary>
+        public bool job_type { get; set; } = false;
 
         /// <summary>
         /// sku_id
@@ -26,29 +36,28 @@ namespace ModernWMS.WMS.Entities.Models
         public int sku_id { get; set; }  = 0;
 
         /// <summary>
-        /// goods_location_id
-        /// </summary>
-        public int goods_location_id { get; set; }  = 0;
-
-        /// <summary>
-        /// qty
-        /// </summary>
-        public int qty { get; set; }  = 0;
-
-        /// <summary>
         /// goods_owner_id
         /// </summary>
         public int goods_owner_id { get; set; }  = 0;
 
         /// <summary>
-        /// is_freeze
+        /// goods_location_id
         /// </summary>
-        public bool is_freeze { get; set; } = false;
+        public int goods_location_id { get; set; }  = 0;
+
+        /// <summary>
+        /// handler
+        /// </summary>
+        public string handler { get; set; }  = string.Empty;
+
+        /// <summary>
+        /// operate_time
+        /// </summary>
+        public DateTime handle_time { get; set; }  = UtilConvert.MinDate;
 
         /// <summary>
         /// last_update_time
         /// </summary>
-        [ConcurrencyCheck]
         public DateTime last_update_time { get; set; }  = UtilConvert.MinDate;
 
         /// <summary>

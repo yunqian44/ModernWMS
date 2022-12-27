@@ -81,6 +81,23 @@
                 Totals = totals
             });
         }
+
+        /// <summary>
+        /// page search select
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("select")]
+        public async Task<ResultModel<PageData<StockViewModel>>> SelectPageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _stockService.SelectPageAsync(pageSearch, CurrentUser);
+
+            return ResultModel<PageData<StockViewModel>>.Success(new PageData<StockViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
         #endregion
 
     }

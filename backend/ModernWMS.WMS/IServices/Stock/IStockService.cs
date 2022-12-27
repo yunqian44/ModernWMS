@@ -30,6 +30,14 @@
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
         Task<(List<LocationStockManagementViewModel> data, int totals)> LocationStockPageAsync(PageSearch pageSearch, CurrentUser currentUser);
+
+        /// <summary>
+        ///  page search select
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(List<StockViewModel> data, int totals)> SelectPageAsync(PageSearch pageSearch, CurrentUser currentUser);
          #endregion
      }
  }
