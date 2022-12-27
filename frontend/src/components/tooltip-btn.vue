@@ -1,7 +1,7 @@
 <template>
   <v-tooltip location="bottom">
     <template #activator="{ props }">
-      <v-btn :flat="flat" class="mr-3" :size="size" icon v-bind="props" @click="method.clickEvent">
+      <v-btn :disabled="disabled" :flat="flat" class="mr-3" :size="size" icon v-bind="props" @click="method.clickEvent">
         <v-icon :color="iconColor"> {{ icon }} </v-icon>
       </v-btn>
     </template>
@@ -35,6 +35,10 @@ defineProps({
   iconColor: {
     type: String,
     default: ''
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 

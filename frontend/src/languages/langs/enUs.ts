@@ -19,7 +19,8 @@ export default {
       submit: 'Submit',
       reset: 'Reset',
       confirm: 'Confirm',
-      insertOneRow: 'Insert One Row'
+      insertOneRow: 'Insert One Row',
+      view: 'View'
     },
     tips: {
       success: ' success!',
@@ -64,7 +65,9 @@ export default {
       customer: 'Customer Info',
       supplier: 'Supplier Info',
       roleMenu: 'Role Menu Settings',
-      stockManagement: 'Stock Management'
+      stockManagement: 'Stock Management',
+      warehouseWorkingModule: 'Warehouse Working',
+      warehouseProcessing: 'Warehouse Processing'
     }
   },
   login: {
@@ -198,8 +201,36 @@ export default {
       origin: 'origin',
       length_unit: 'Length Unit',
       volume_unit: 'Volume Unit',
-      weight_unit: 'Weight Unit',
+      weight_unit: 'Weight Unit'
     }
   },
-  wms: { stock: {} }
+  wms: {
+    stock: {},
+    warehouseWorking: {
+      warehouseProcessing: {
+        job_code: 'Job Code',
+        job_type: 'Job Type',
+        process_status: 'Process Status',
+        processor: 'Processor',
+        process_time: 'Process Time',
+        qty: 'Qty',
+        is_source: 'Is Source',
+        spu_code: 'Commodity Code',
+        spu_name: 'Commodity Name',
+        sku_code: 'Specification Code',
+        unit: 'Unit',
+        is_update_stock: 'Is Updated Stock',
+        creator: 'Creator',
+        create_time: 'Create Time',
+        last_update_time: 'Last Update Time',
+        adjust_status: 'Is Updated Stock',
+        source: 'source',
+        target: 'target',
+        process_split: 'Split Processing',
+        process_combine: 'Combine Processing',
+        confirmProcess: 'Confirm Process',
+        confirmAdjust: 'Confirm Adjust',
+      }
+    }
+  }
 }
