@@ -7,12 +7,11 @@
  using ModernWMS.Core.JWT;
  using ModernWMS.WMS.Entities.Models;
  using ModernWMS.WMS.Entities.ViewModels;
- 
- namespace ModernWMS.WMS.IServices
- {
-     /// <summary>
-     /// Interface of StockService
-     /// </summary>
+namespace ModernWMS.WMS.IServices
+{
+    /// <summary>
+    /// Interface of StockService
+    /// </summary>
      public interface IStockService : IBaseService<StockEntity>
      {
          #region Api
@@ -38,6 +37,14 @@
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
         Task<(List<StockViewModel> data, int totals)> SelectPageAsync(PageSearch pageSearch, CurrentUser currentUser);
+
+        /// <summary>
+        /// sku page search select
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(List<SkuSelectViewModel> data, int totals)> SkuSelectPageAsync(PageSearch pageSearch, CurrentUser currentUser);
          #endregion
      }
  }
