@@ -5,6 +5,7 @@
         <v-toolbar color="white" :title="`${$t('router.sideBar.warehouseProcessing')}（${jobTypeComp}）`"></v-toolbar>
         <v-card-text>
           <v-row>
+            <!-- Source Table -->
             <v-col cols="6">
               <div class="dataTable">
                 <div class="toolbar">
@@ -15,37 +16,38 @@
                     icon="mdi-plus"
                     :tooltip-text="$t('system.page.add')"
                     size="x-small"
+                    :disabled="operateDisabled"
                     @click="method.openSelect('source')"
                   ></tooltip-btn>
-                  <!-- <tooltip-btn
-                    icon="mdi-export-variant"
-                    :tooltip-text="$t('system.page.export')"
-                    size="x-small"
-                    @click="method.exportTable('source')"
-                  ></tooltip-btn> -->
                 </div>
                 <vxe-table
                   ref="xTableSource"
                   :column-config="{ minWidth: '100px' }"
                   :data="data.form.source_detail_list"
                   :height="SYSTEM_HEIGHT.SELECT_TABLE"
+                  :edit-config="{ trigger: 'click', mode: 'cell' }"
+                  :edit-rules="data.validRulesSource"
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="spu_code" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_name')"></vxe-column>
-                  <vxe-column field="qty" :title="$t('wms.warehouseWorking.warehouseProcessing.qty')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('wms.warehouseWorking.warehouseProcessing.sku_code')"></vxe-column>
-                  <vxe-column field="unit" :title="$t('wms.warehouseWorking.warehouseProcessing.unit')"></vxe-column>
-                  <!-- <vxe-column field="is_source" :title="$t('wms.warehouseWorking.warehouseProcessing.is_source')"></vxe-column> -->
-                  <vxe-column field="is_update_stock" width="150" :title="$t('wms.warehouseWorking.warehouseProcessing.is_update_stock')">
-                    <template #default="{ row, column }">
-                      <span>{{ formatIsValid(row[column.property]) }}</span>
+                  <vxe-column
+                    field="qty"
+                    :title="$t('wms.warehouseWorking.warehouseProcessing.qty')"
+                    :edit-render="{ autofocus: '.vxe-input--inner' }"
+                  >
+                    <template #edit="{ row }">
+                      <vxe-input v-model="row.qty" type="text"></vxe-input>
                     </template>
                   </vxe-column>
+                  <vxe-column field="unit" :title="$t('wms.warehouseWorking.warehouseProcessing.unit')"></vxe-column>
                 </vxe-table>
               </div>
             </v-col>
+
+            <!-- Target Table -->
             <v-col cols="6">
               <div class="dataTable">
                 <div class="toolbar">
@@ -56,32 +58,36 @@
                     icon="mdi-plus"
                     :tooltip-text="$t('system.page.add')"
                     size="x-small"
+                    :disabled="operateDisabled"
                     @click="method.openSelect('target')"
                   ></tooltip-btn>
-                  <!-- <tooltip-btn
-                    icon="mdi-export-variant"
-                    :tooltip-text="$t('system.page.export')"
-                    size="x-small"
-                    @click="method.exportTable('target')"
-                  ></tooltip-btn> -->
                 </div>
                 <vxe-table
                   ref="xTableTarget"
                   :column-config="{ minWidth: '100px' }"
                   :data="data.form.target_detail_list"
                   :height="SYSTEM_HEIGHT.SELECT_TABLE"
+                  :edit-config="{ trigger: 'click', mode: 'cell' }"
+                  :edit-rules="data.validRulesTarget"
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="spu_code" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_name')"></vxe-column>
-                  <vxe-column field="qty" :title="$t('wms.warehouseWorking.warehouseProcessing.qty')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('wms.warehouseWorking.warehouseProcessing.sku_code')"></vxe-column>
+                  <vxe-column
+                    field="qty"
+                    :title="$t('wms.warehouseWorking.warehouseProcessing.qty')"
+                    :edit-render="{ autofocus: '.vxe-input--inner' }"
+                  >
+                    <template #edit="{ row }">
+                      <vxe-input v-model="row.qty" type="text"></vxe-input>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="unit" :title="$t('wms.warehouseWorking.warehouseProcessing.unit')"></vxe-column>
-                  <!-- <vxe-column field="is_source" :title="$t('wms.warehouseWorking.warehouseProcessing.is_source')"></vxe-column> -->
-                  <vxe-column field="is_update_stock" width="150" :title="$t('wms.warehouseWorking.warehouseProcessing.is_update_stock')">
-                    <template #default="{ row, column }">
-                      <span>{{ formatIsValid(row[column.property]) }}</span>
+                  <vxe-column field="location_name" :title="$t('wms.warehouseWorking.warehouseProcessing.target_location')" :edit-render="{}">
+                    <template #edit="{ row }">
+                      <vxe-input v-model="row.location_name" readonly type="search" @search-click="method.openLocationSelect(row)"></vxe-input>
                     </template>
                   </vxe-column>
                 </vxe-table>
@@ -91,26 +97,32 @@
         </v-card-text>
         <v-card-actions class="justify-end">
           <v-btn variant="text" @click="method.closeDialog">{{ $t('system.page.close') }}</v-btn>
-          <v-btn color="primary" variant="text" @click="method.submit">{{ $t('system.page.submit') }}</v-btn>
+          <v-btn color="primary" variant="text" :disabled="operateDisabled" @click="method.submit">{{ $t('system.page.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
     </template>
   </v-dialog>
-  <commodity-select :show-dialog="data.showDialogSelect" @close="method.closeDialogSelect" @sureSelect="method.sureSelect" />
+
+  <commodity-select :show-dialog="data.showCommodityDialogSelect" @close="method.closeDialogSelect('source')" @sureSelect="method.sureSelect" />
+  <sku-select :show-dialog="data.showSkuDialogSelect" @close="method.closeDialogSelect('target')" @sureSelect="method.sureSelect" />
+  <location-select :show-dialog="data.showLocationDialogSelect" @close="method.closeLocationDialogSelect" @sureSelect="method.sureSelectLocation" />
 </template>
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { WarehouseProcessingVO, JobType, ProcessStatus } from '@/types/WarehouseWorking/WarehouseProcessing'
+import { VxeTablePropTypes } from 'vxe-table'
+import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/WarehouseWorking/WarehouseProcessing'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addStockProcess, updateStockProcess } from '@/api/wms/warehouseProcessing'
+import { addStockProcess } from '@/api/wms/warehouseProcessing'
 import { SYSTEM_HEIGHT } from '@/constant/style'
-import { formatIsValid } from '@/utils/format/formatSystem'
+import { removeObjectNull, removeArrayNull } from '@/utils/common'
+import { PROCESS_JOB_COMBINE, PROCESS_JOB_SPLIT } from '@/constant/warehouseWorking'
 import commoditySelect from '@/components/select/commodity-select.vue'
+import locationSelect from '@/components/select/location-select.vue'
+import skuSelect from '@/components/select/sku-select.vue'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 
-const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 const xTableSource = ref()
 const xTableTarget = ref()
@@ -118,37 +130,15 @@ const xTableTarget = ref()
 const props = defineProps<{
   showDialog: boolean
   form: WarehouseProcessingVO
-  processType: number
+  processType: boolean
 }>()
 
 const isShow = computed(() => props.showDialog)
-
-const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
-
-const data = reactive({
-  form: ref<WarehouseProcessingVO>({
-    id: 0,
-    job_code: '',
-    job_type: JobType.COMBINE,
-    process_status: ProcessStatus.UNFINISH,
-    processor: '',
-    process_time: '',
-    source_detail_list: [],
-    target_detail_list: []
-  }),
-  tableData: [],
-  // 'source' | 'target'
-  curSelectType: '',
-  showDialogSelect: false,
-  rules: {
-    // company_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.companySetting.company_name') }!`],
-  }
-})
+const isUpdate = computed(() => props.form.id && props.form.id > 0)
+const jobTypeComp = computed(() => (data.form.job_type === PROCESS_JOB_COMBINE
+    ? i18n.global.t('wms.warehouseWorking.warehouseProcessing.process_combine')
+    : i18n.global.t('wms.warehouseWorking.warehouseProcessing.process_split')))
+const operateDisabled = computed(() => !!isUpdate.value)
 
 const method = reactive({
   initForm: () => {
@@ -162,16 +152,25 @@ const method = reactive({
 
   openSelect: (type: string) => {
     data.curSelectType = type
-    data.showDialogSelect = true
+
+    if (type === 'source') {
+      data.showCommodityDialogSelect = true
+    } else if (type === 'target') {
+      // Target should select the data with 'sku-select-modal'
+      data.showSkuDialogSelect = true
+    }
   },
 
-  closeDialogSelect: () => {
-    data.showDialogSelect = false
+  closeDialogSelect: (type: string) => {
+    if (type === 'source') {
+      data.showCommodityDialogSelect = false
+    } else if (type === 'target') {
+      // Target should select the data with 'sku-select-modal'
+      data.showSkuDialogSelect = false
+    }
   },
 
-  // TODO 改为商品的 Model
   sureSelect: (selectRecords: any) => {
-    console.log(selectRecords)
     if (data.curSelectType === 'source') {
       method.insertSourceData(selectRecords)
     } else if (data.curSelectType === 'target') {
@@ -179,29 +178,141 @@ const method = reactive({
     }
   },
 
-  insertSourceData: (selectRecords: any) => {
-    // TODO 改为商品的 Model
-    // TODO 判断重复id（写一个公共方法）
-    // Combine: That can select more source commodity
-    if (data.form.job_type === JobType.COMBINE) {
-      selectRecords.forEach((record: any) => {
-        xTableSource.value.insertAt(record, -1)
+  openLocationSelect: (row: WarehouseProcessingDetailVO) => {
+    data.curSelectRow = row
+    data.showLocationDialogSelect = true
+  },
+
+  closeLocationDialogSelect: () => {
+    data.showLocationDialogSelect = false
+  },
+
+  sureSelectLocation: (selectRecords: any) => {
+    if (selectRecords.length > 0) {
+      const $table = xTableTarget.value
+      const tableData = $table.getTableData().fullData
+      tableData.forEach((row: WarehouseProcessingDetailVO) => {
+        if (data.curSelectRow.sku_id === row.sku_id) {
+          row.goods_location_id = selectRecords[0].id
+          row.location_name = selectRecords[0].location_name
+        }
       })
-    } else if (data.form.job_type === JobType.SPLIT) {
-      // Split: That just can select one source commodity
-      xTableSource.value.insertAt(selectRecords[0], -1)
+      // Tips: Must to reload!
+      $table.reloadData(tableData)
+    }
+  },
+
+  insertSourceData: (selectRecords: any) => {
+    const $table = xTableSource.value
+    const tableData = $table.getTableData().fullData
+
+    // Combine: That can select more source commodity
+    if (data.form.job_type === PROCESS_JOB_COMBINE) {
+      for (const record of selectRecords) {
+        const isRepeat = tableData.some((data: WarehouseProcessingDetailVO) => data.sku_id === record.sku_id)
+        if (isRepeat) {
+          continue
+        }
+
+        $table.insertAt(
+          {
+            id: 0,
+            stock_process_id: 0,
+            sku_id: record.sku_id,
+            goods_owner_id: 0,
+            goods_location_id: record.goods_location_id,
+            qty: record.qty_available || 0,
+            tenant_id: 0,
+            is_source: true,
+            spu_code: record.spu_code,
+            spu_name: record.spu_name,
+            sku_code: record.sku_code,
+            unit: record.unit,
+            is_update_stock: false,
+            qty_available: record.qty_available
+          },
+          -1
+        )
+        // })
+      }
+    } else if (data.form.job_type === PROCESS_JOB_SPLIT) {
+      // Split: That just can select one source commodity.
+      // It should remove all data before insert.
+      $table.remove()
+      $table.insertAt(
+        {
+          id: 0,
+          stock_process_id: 0,
+          sku_id: selectRecords[0].sku_id,
+          goods_owner_id: 0,
+          goods_location_id: selectRecords[0].goods_location_id,
+          qty: selectRecords[0].qty_available || 0,
+          tenant_id: 0,
+          is_source: true,
+          spu_code: selectRecords[0].spu_code,
+          spu_name: selectRecords[0].spu_name,
+          sku_code: selectRecords[0].sku_code,
+          unit: selectRecords[0].unit,
+          is_update_stock: false,
+          qty_available: selectRecords[0].qty_available
+        },
+        -1
+      )
     }
   },
 
   insertTargetData: (selectRecords: any) => {
+    const $table = xTableTarget.value
+    const tableData = $table.getTableData().fullData
+
     // Combine: That just can select one target commodity
-    if (data.form.job_type === JobType.COMBINE) {
-      xTableTarget.value.insertAt(selectRecords[0], -1)
-    } else if (data.form.job_type === JobType.SPLIT) {
+    if (data.form.job_type === PROCESS_JOB_COMBINE) {
+      // It should remove all data before insert.
+      $table.remove()
+      $table.insertAt(
+        {
+          id: 0,
+          stock_process_id: 0,
+          sku_id: selectRecords[0].sku_id,
+          goods_owner_id: 0,
+          goods_location_id: selectRecords[0].goods_location_id,
+          qty: 0,
+          tenant_id: 0,
+          is_source: false,
+          spu_code: selectRecords[0].spu_code,
+          spu_name: selectRecords[0].spu_name,
+          sku_code: selectRecords[0].sku_code,
+          unit: selectRecords[0].unit,
+          is_update_stock: false
+        },
+        -1
+      )
+    } else if (data.form.job_type === PROCESS_JOB_SPLIT) {
       // Split: That can select more target commodity
-      selectRecords.forEach((record: any) => {
-        xTableTarget.value.insertAt(record, -1)
-      })
+      for (const record of selectRecords) {
+        const isRepeat = tableData.some((data: WarehouseProcessingDetailVO) => data.sku_id === record.sku_id)
+        if (isRepeat) {
+          continue
+        }
+        $table.insertAt(
+          {
+            id: 0,
+            stock_process_id: 0,
+            sku_id: record.sku_id,
+            goods_owner_id: 0,
+            goods_location_id: record.goods_location_id,
+            qty: 0,
+            tenant_id: 0,
+            is_source: false,
+            spu_code: record.spu_code,
+            spu_name: record.spu_name,
+            sku_code: record.sku_code,
+            unit: record.unit,
+            is_update_stock: false
+          },
+          -1
+        )
+      }
     }
   },
 
@@ -225,34 +336,163 @@ const method = reactive({
   },
 
   submit: async () => {
-    const { valid } = await formRef.value.validate()
-    if (valid) {
-      // TODO 改为只能查看不能编辑
-      const { data: res } = dialogTitle.value === 'add' ? await addStockProcess(data.form) : await updateStockProcess(data.form)
-      if (!res.isSuccess) {
-        hookComponent.$message({
-          type: 'error',
-          content: res.errorMessage
-        })
-        return
-      }
+    const validSource = await method.validSourceTable()
+    const validTarget = await method.validTargetTable()
+    if (!validSource || !validTarget) {
+      return
+    }
+
+    const form = method.constructFormBody()
+
+    const { data: res } = await addStockProcess(form)
+    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'success',
-        content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+        type: 'error',
+        content: res.errorMessage
       })
-      emit('saveSuccess')
-    } else {
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+    })
+    emit('saveSuccess')
+  },
+
+  constructFormBody: () => {
+    const $tableSource = xTableSource.value
+    const $tableTarget = xTableTarget.value
+
+    const tableSourceRecords = $tableSource.getTableData().fullData
+    const tableTargetRecords = $tableTarget.getTableData().fullData
+
+    // Need combine source and target to server.
+    let form = { ...data.form }
+    form.detailList = [...tableSourceRecords, ...tableTargetRecords]
+    form = removeObjectNull(form)
+
+    delete form.source_detail_list
+    delete form.target_detail_list
+
+    return form
+  },
+
+  validSourceTable: async () => {
+    const $table = xTableSource.value
+    const tableData = $table.getTableData().fullData
+
+    // 1.The table must have data.
+    if (!tableData.length) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.detailLengthIsZero')
+      })
+      return false
+    }
+
+    // 2.The properties valid.
+    const errMap = await $table.validate()
+    if (errMap) {
       hookComponent.$message({
         type: 'error',
         content: i18n.global.t('system.checkText.checkFormFail')
       })
+      return false
+    }
+
+    return true
+  },
+
+  validTargetTable: async () => {
+    const $table = xTableTarget.value
+    const tableData = $table.getTableData().fullData
+
+    // 1.The table must have data.
+    if (!tableData.length) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.detailLengthIsZero')
+      })
+      return false
+    }
+
+    // 2.The properties valid.
+    const errMap = await $table.validate()
+    if (errMap) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.checkText.checkFormFail')
+      })
+      return false
+    }
+
+    return true
+  },
+
+  // The 'qty' can't more than 'qty_available'
+  validQty: ({ cellValue, row }: any) => {
+    const qty = cellValue || 0
+    const qtyAvailable = row.qty_available || 0
+
+    if (qty > qtyAvailable) {
+      return new Error(`${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qtyMoreThanAvailable') } ${ qtyAvailable }`)
     }
   }
 })
 
-const jobTypeComp = computed(() => (data.form.job_type === JobType.COMBINE
-    ? i18n.global.t('wms.warehouseWorking.warehouseProcessing.process_combine')
-    : i18n.global.t('wms.warehouseWorking.warehouseProcessing.process_split')))
+const data = reactive({
+  tableData: [],
+  // 'source' | 'target'
+  curSelectType: '',
+
+  showCommodityDialogSelect: false,
+  showSkuDialogSelect: false,
+  showLocationDialogSelect: false,
+
+  form: ref<WarehouseProcessingVO>({
+    id: 0,
+    job_code: '',
+    job_type: PROCESS_JOB_COMBINE,
+    process_status: false,
+    processor: '',
+    process_time: '',
+    source_detail_list: [],
+    target_detail_list: []
+  }),
+  curSelectRow: ref<WarehouseProcessingDetailVO>({
+    id: 0,
+    stock_process_id: 0,
+    sku_id: 0,
+    goods_owner_id: 0,
+    goods_location_id: 0,
+    qty: 0,
+    is_source: true,
+    spu_code: '',
+    spu_name: '',
+    sku_code: '',
+    unit: '',
+    is_update_stock: false
+  }),
+  validRulesSource: ref<VxeTablePropTypes.EditRules>({
+    qty: [
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qty') }` },
+      {
+        validator: method.validQty
+      }
+    ]
+  }),
+  validRulesTarget: ref<VxeTablePropTypes.EditRules>({
+    qty: [
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qty') }` }
+    ],
+    location_name: [
+      {
+        required: true,
+        message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.target_location') }`
+      }
+    ]
+  })
+})
 
 watch(
   () => isShow.value,

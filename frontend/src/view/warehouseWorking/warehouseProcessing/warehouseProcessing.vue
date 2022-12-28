@@ -14,12 +14,12 @@
                     <tooltip-btn
                       icon="mdi-arrow-split-vertical "
                       :tooltip-text="$t('wms.warehouseWorking.warehouseProcessing.process_split')"
-                      @click="method.add(JobType.SPLIT)"
+                      @click="method.add(false)"
                     ></tooltip-btn>
                     <tooltip-btn
                       icon="mdi-group"
                       :tooltip-text="$t('wms.warehouseWorking.warehouseProcessing.process_combine')"
-                      @click="method.add(JobType.COMBINE)"
+                      @click="method.add(true)"
                     ></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
                     <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
@@ -29,19 +29,8 @@
                   <v-col cols="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <v-col cols="4"></v-col>
-                      <v-col cols="4"> </v-col>
-                      <v-col cols="4">
-                        <!-- <v-text-field
-                          v-model="data.searchForm.carrier"
-                          clearable
-                          hide-details
-                          density="comfortable"
-                          class="searchInput ml-5 mt-1"
-                          :label="$t('wms.warehouseWorking.warehouseProcessing.carrier')"
-                          variant="solo"
-                        >
-                        </v-text-field> -->
-                      </v-col>
+                      <v-col cols="4"></v-col>
+                      <v-col cols="4"></v-col>
                     </v-row>
                   </v-col>
                 </v-row>
@@ -57,8 +46,12 @@
                 <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="job_code" :title="$t('wms.warehouseWorking.warehouseProcessing.job_code')"></vxe-column>
-                  <vxe-column field="job_type" :title="$t('wms.warehouseWorking.warehouseProcessing.job_type')"></vxe-column>
+                  <vxe-column field="job_code" width="150px" :title="$t('wms.warehouseWorking.warehouseProcessing.job_code')"></vxe-column>
+                  <vxe-column field="job_type" :title="$t('wms.warehouseWorking.warehouseProcessing.job_type')">
+                    <template #default="{ row, column }">
+                      <span>{{ formatProcessJobType(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="adjust_status" :title="$t('wms.warehouseWorking.warehouseProcessing.adjust_status')">
                     <template #default="{ row, column }">
                       <span>{{ formatIsValid(row[column.property]) }}</span>
@@ -125,7 +118,7 @@
           </v-window>
         </v-card-text>
       </v-card>
-      <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" :process-type="data.processType" @close="method.closeDialog" />
+      <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" :process-type="data.processType" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
     </div>
   </div>
 </template>
@@ -134,14 +127,16 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseProcessingVO, WarehouseProcessingDetailVO, ProcessStatus, JobType } from '@/types/warehouseWorking/WarehouseProcessing'
+import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/warehouseWorking/WarehouseProcessing'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockProcess, getStockProcessList, getStockProcessOne, confirmAdjustment, confirmProcess } from '@/api/wms/warehouseProcessing'
+import { PROCESS_JOB_COMBINE } from '@/constant/warehouseWorking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import { formatIsValid } from '@/utils/format/formatSystem'
+import { formatProcessJobType } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-process.vue'
 import i18n from '@/languages/i18n'
@@ -150,11 +145,16 @@ const xTable = ref()
 
 const data = reactive({
   showDialog: false,
+  processType: PROCESS_JOB_COMBINE,
+  timer: ref<any>(null),
+  activeTab: null,
+  searchForm: {},
+  tableData: ref<WarehouseProcessingVO[]>([]),
   dialogForm: {
     id: 0,
     job_code: '',
-    job_type: JobType.COMBINE,
-    process_status: ProcessStatus.UNFINISH,
+    job_type: PROCESS_JOB_COMBINE,
+    process_status: false,
     processor: '',
     process_time: '',
     source_detail_list: ref<any[]>([]),
@@ -163,28 +163,23 @@ const data = reactive({
     create_time: '',
     adjust_status: false
   },
-  processType: JobType.COMBINE,
-  searchForm: {},
-  activeTab: null,
-  tableData: ref<WarehouseProcessingVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
     pageSize: 10,
     searchObjects: ref<Array<SearchObject>>([])
-  }),
-  timer: ref<any>(null)
+  })
 })
 
 const method = reactive({
   // Open a dialog to add
-  add: (jobType: JobType) => {
+  add: (jobType: boolean) => {
     data.processType = jobType
     data.dialogForm = {
       id: 0,
       job_code: '',
       job_type: jobType,
-      process_status: ProcessStatus.UNFINISH,
+      process_status: false,
       processor: '',
       process_time: '',
       source_detail_list: [],
@@ -197,19 +192,23 @@ const method = reactive({
       data.showDialog = true
     })
   },
-  // Shut add or update dialog
-  closeDialog: () => {
-    data.showDialog = false
-  },
+
   // After add or update success.
   saveSuccess: () => {
     method.refresh()
     method.closeDialog()
   },
+
   // Refresh data
   refresh: () => {
     method.getStockProcessList()
   },
+
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+
   getStockProcessList: async () => {
     const { data: res } = await getStockProcessList(data.tablePage)
     if (!res.isSuccess) {
@@ -219,113 +218,42 @@ const method = reactive({
       })
       return
     }
-    // data.tableData = res.data.rows
-    // TODO 把mock数据去掉
-    data.tableData = [
-      {
-        id: 1,
-        job_code: 'code',
-        job_type: JobType.SPLIT,
-        process_status: ProcessStatus.UNFINISH,
-        processor: '张三',
-        process_time: '2022-02-02',
-        creator: '李四',
-        create_time: '2022-02-03',
-        adjust_status: false
-      }
-    ]
+    data.tableData = res.data.rows
     data.tablePage.total = res.data.totals
   },
 
   viewRow: async (row: WarehouseProcessingVO) => {
-    try {
-      // data.dialogForm = JSON.parse(JSON.stringify(row))
-      await method.getOne(row.id)
-      nextTick(() => {
-        data.showDialog = true
-      })
-    } catch (error) {
-      console.error(error)
-    }
+    await method.getOne(row.id)
+    nextTick(() => {
+      data.showDialog = true
+    })
   },
 
   getOne: async (id: number) => {
-    // const { data: res } = await getStockProcessOne(id)
-    // if (!res.isSuccess) {
-    //   hookComponent.$message({
-    //     type: 'error',
-    //     content: res.errorMessage
-    //   })
-    //   return
-    // }
-    // data.dialogForm = res.data
-    // TODO 把mock数据去掉
-    const form = {
-      id: 1,
-      job_code: 'code',
-      job_type: JobType.SPLIT,
-      process_status: ProcessStatus.UNFINISH,
-      processor: '张三',
-      process_time: '2022-02-02',
-      creator: '李四',
-      create_time: '2022-02-03',
-      adjust_status: false,
-      source_detail_list: [
-        {
-          id: 0,
-          stock_process_id: 0,
-          sku_id: 0,
-          goods_owner_id: 0,
-          goods_location_id: 0,
-          qty: 0,
-          last_update_time: '2022-12-27T09:33:21.423Z',
-          tenant_id: 0,
-          is_source: true,
-          spu_code: 'string',
-          spu_name: 'string',
-          sku_code: 'string',
-          unit: 'string',
-          is_update_stock: true
-        }
-      ],
-      target_detail_list: [
-        {
-          id: 0,
-          stock_process_id: 0,
-          sku_id: 0,
-          goods_owner_id: 0,
-          goods_location_id: 0,
-          qty: 0,
-          last_update_time: '2022',
-          tenant_id: 0,
-          is_source: true,
-          spu_code: 'string',
-          spu_name: 'string',
-          sku_code: 'string',
-          unit: 'string',
-          is_update_stock: true
-        },
-        {
-          id: 0,
-          stock_process_id: 0,
-          sku_id: 0,
-          goods_owner_id: 0,
-          goods_location_id: 0,
-          qty: 0,
-          last_update_time: '2023',
-          tenant_id: 0,
-          is_source: true,
-          spu_code: '11',
-          spu_name: '22',
-          sku_code: '33',
-          unit: 'string',
-          is_update_stock: true
-        }
-      ]
+    const { data: res } = await getStockProcessOne(id)
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
     }
-    data.dialogForm = form
+
+    data.dialogForm = res.data
   },
+
   deleteRow(row: WarehouseProcessingVO) {
+    const alreadyProcess = method.confirmProcessBtnDisabled(row)
+    const alreadyAdjust = method.confirmProcessBtnDisabled(row)
+
+    if (alreadyProcess) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('wms.warehouseWorking.warehouseProcessing.alreadyProcess')
+      })
+      return
+    }
+
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
@@ -338,6 +266,7 @@ const method = reactive({
             })
             return
           }
+
           hookComponent.$message({
             type: 'success',
             content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
@@ -347,12 +276,13 @@ const method = reactive({
       }
     })
   },
+
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
-
-    method.getStockProcessList()
+    method.refresh()
   }),
+
   exportTable: () => {
     const $table = xTable.value
     try {
@@ -370,10 +300,12 @@ const method = reactive({
       })
     }
   },
+
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
-    method.getStockProcessList()
+    method.refresh()
   },
+
   // The btn will become disabled when the 'process_status' is false
   confirmProcessBtnDisabled: (row: WarehouseProcessingVO) => !!row.process_status,
 
@@ -382,38 +314,54 @@ const method = reactive({
   confirmAdjustBtnDisabled: (row: WarehouseProcessingVO) => !row.process_status || !!row.adjust_status,
 
   confirmProcess: async (row: WarehouseProcessingDetailVO) => {
-    const { data: res } = await confirmProcess(row.id)
-    if (!res.isSuccess) {
-      hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
-      })
-      return
-    }
-    hookComponent.$message({
-      type: 'success',
-      content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmProcess') }${ i18n.global.t('system.tips.success') }`
+    hookComponent.$dialog({
+      content: i18n.global.t('wms.warehouseWorking.warehouseProcessing.beforeConfirmProcess'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await confirmProcess(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmProcess') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
     })
   },
 
   confirmAdjust: async (row: WarehouseProcessingDetailVO) => {
-    const { data: res } = await confirmAdjustment(row.id)
-    if (!res.isSuccess) {
-      hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
-      })
-      return
-    }
-    hookComponent.$message({
-      type: 'success',
-      content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
+    hookComponent.$dialog({
+      content: i18n.global.t('wms.warehouseWorking.warehouseProcessing.beforeConfirmAdjust'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await confirmAdjustment(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
     })
   }
 })
 
 onMounted(() => {
-  method.getStockProcessList()
+  method.refresh()
 })
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))

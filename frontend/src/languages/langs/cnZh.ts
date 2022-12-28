@@ -199,8 +199,9 @@ export default {
       category_name: '商品类别',
       spu_description: '商品描述',
       bar_code: '商品条码',
+      sku_code: '规格编码',
       sku_name: '规格编码',
-      supplier_name: '供应商',
+      supplier_name: '供应商名称',
       brand: '品牌',
       unit: '商品单位',
       cost: '商品成本',
@@ -212,7 +213,13 @@ export default {
     }
   },
   wms: {
-    stock: {},
+    stock: {
+      stockSelectModal: '库存选择框',
+      skuSelectModal: '商品选择框',
+      warehouse: '仓库名称',
+      location_name: '库位编码',
+      qty_available: '可用数量',
+    },
     warehouseWorking: {
       warehouseProcessing: {
         job_code: '作业单号',
@@ -225,6 +232,9 @@ export default {
         spu_code: '商品编码',
         spu_name: '商品名称',
         sku_code: '规格编码',
+        sku_name: '规格名称',
+        target_warehouse: '目标仓库',
+        target_location: '目标库位',
         unit: '商品单位',
         is_update_stock: '是否已更新库存',
         creator: '创建人',
@@ -237,6 +247,11 @@ export default {
         process_combine: '组合加工',
         confirmProcess: '确认加工',
         confirmAdjust: '确认调整',
+        qtyMoreThanAvailable: '不可超过可用数量',
+        beforeConfirmProcess: '您确认对该条数据进行加工吗？',
+        beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
+        alreadyProcess: '该数据已完成加工，不可删除',
+        alreadyAdjust: '该数据已完成调整，不可删除'
       }
     }
   }

@@ -3,7 +3,7 @@
   <v-dialog v-model="isShow" width="60%" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('wms.stock.stockSelectModal')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('wms.stock.skuSelectModal')}`"></v-toolbar>
         <v-card-text>
           <v-row>
             <v-col cols="3">
@@ -34,13 +34,14 @@
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="warehouse" :title="$t('wms.stock.warehouse')"></vxe-column>
-                  <vxe-column field="location_name" :title="$t('wms.stock.location_name')"></vxe-column>
                   <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
                   <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column>
-                  <vxe-column field="qty_available" :title="$t('wms.stock.qty_available')"></vxe-column>
+                  <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"></vxe-column>
+                  <vxe-column field="brand" :title="$t('base.commodityManagement.brand')"></vxe-column>
+                  <vxe-column field="origin" :title="$t('base.commodityManagement.origin')"></vxe-column>
+                  <vxe-column field="unit" :title="$t('base.commodityManagement.unit')"></vxe-column>
                 </vxe-table>
                 <vxe-pager
                   :current-page="data.tablePage.pageIndex"
@@ -81,7 +82,7 @@
 import { reactive, computed, ref, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { hookComponent } from '@/components/system/index'
-import { getStockSelectList } from '@/api/wms/stockManagement'
+import { getSkuSelectList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { formatIsValid } from '@/utils/format/formatSystem'
@@ -128,7 +129,7 @@ const method = reactive({
   },
 
   getList: async () => {
-    const { data: res } = await getStockSelectList(data.tablePage)
+    const { data: res } = await getSkuSelectList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',

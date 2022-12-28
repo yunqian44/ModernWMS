@@ -192,8 +192,9 @@ export default {
       category_name: 'Commodity Category',
       spu_description: 'Commodity Description',
       bar_code: 'Specification Code',
+      sku_code: 'Specification Code',
       sku_name: 'Specification Name',
-      supplier_name: 'Supplier',
+      supplier_name: 'Supplier Name',
       brand: 'Brand',
       unit: 'Commodity Unit',
       cost: 'Commodity Cost',
@@ -205,7 +206,13 @@ export default {
     }
   },
   wms: {
-    stock: {},
+    stock: {
+      stockSelectModal: 'Stock Select Modal',
+      skuSelectModal: 'Commodity Select Modal',
+      warehouse: 'Warehouse Name',
+      location_name: 'Location Name',
+      qty_available: 'Available Qty',
+    },
     warehouseWorking: {
       warehouseProcessing: {
         job_code: 'Job Code',
@@ -218,18 +225,26 @@ export default {
         spu_code: 'Commodity Code',
         spu_name: 'Commodity Name',
         sku_code: 'Specification Code',
+        sku_name: 'Specification Name',
+        target_warehouse: 'Target Warehouse',
+        target_location: 'Target Location',
         unit: 'Unit',
         is_update_stock: 'Is Updated Stock',
         creator: 'Creator',
         create_time: 'Create Time',
         last_update_time: 'Last Update Time',
         adjust_status: 'Is Updated Stock',
-        source: 'source',
-        target: 'target',
+        source: 'Source',
+        target: 'Target',
         process_split: 'Split Processing',
         process_combine: 'Combine Processing',
         confirmProcess: 'Confirm Process',
         confirmAdjust: 'Confirm Adjust',
+        qtyMoreThanAvailable: 'Can\'t more than the number of Available',
+        beforeConfirmProcess: 'Are you sure to process this data?',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?',
+        alreadyProcess: 'The data can\'t delete because it had been processed',
+        alreadyAdjust: 'The data can\'t delete because it had been adjusted'
       }
     }
   }
