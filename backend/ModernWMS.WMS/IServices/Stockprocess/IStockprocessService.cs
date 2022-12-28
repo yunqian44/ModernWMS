@@ -60,7 +60,7 @@
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> ConfirmProcess(int id);
+        Task<(bool flag, string msg)> ConfirmProcess(int id, CurrentUser currentUser);
 
 
         /// <summary>

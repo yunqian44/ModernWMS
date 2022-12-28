@@ -22,7 +22,7 @@ namespace ModernWMS.WMS.Entities.Models
          /// <summary>
          /// foreign table
          /// </summary>
-        [ForeignKey("stockprocessID")]
+        [ForeignKey("stock_process_id")]
          public StockprocessEntity Stockprocess { get; set; }
 
         #endregion

@@ -417,17 +417,24 @@ namespace ModernWMS.WMS.Services
             string code;
             string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
             string maxNo = await _dBContext.GetDbSet<StockmoveEntity>().MaxAsync(t => t.job_code);
-            string maxDate = maxNo.Substring(0, 8);
-            string maxDateNo = maxNo.Substring(9, 4);
-            if (date == maxDate)
+            if (maxNo == null)
             {
-                int.TryParse(maxDateNo, out int dd);
-                int newDateNo = dd + 1;
-                code = date + "-" + newDateNo.ToString("0000");
+                code = date + "-0001";
             }
             else
             {
-                code = date + "-0001";
+                string maxDate = maxNo.Substring(0, 8);
+                string maxDateNo = maxNo.Substring(9, 4);
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
             }
 
             return code;

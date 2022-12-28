@@ -13,8 +13,9 @@
  using ModernWMS.Core.JWT;
  using Microsoft.Extensions.Localization;
  using ModernWMS.Core.DynamicSearch;
- 
- namespace ModernWMS.WMS.Services
+using ModernWMS.WMS.Entities.ViewModels.Dispatchlist;
+
+namespace ModernWMS.WMS.Services
  {
      /// <summary>
      ///  Dispatchlist Service
@@ -77,15 +78,52 @@
                         .ToListAsync();
              return (list.Adapt<List<DispatchlistViewModel>>(), totals);
          }
- 
-         /// <summary>
-         /// Get all records
-         /// </summary>
-         /// <returns></returns>
-         public async Task<List<DispatchlistViewModel>> GetAllAsync(CurrentUser currentUser)
+        /// <summary>
+        /// advanced dispatch order page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(List<PreDispatchlistViewModel> data, int totals)> AdvancedDispatchlistPageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+            var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var query = from d in DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id))
+                        group d by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name ,d.create_time,d.creator}
+                        into dg
+                        select new PreDispatchlistViewModel
+                        {
+                            dispatch_no = dg.Key.dispatch_no,
+                            dispatch_status = dg.Key.dispatch_status,
+                            customer_id = dg.Key.customer_id,
+                            customer_name = dg.Key.customer_name,
+                            qty = dg.Sum(t => t.qty),
+                            volume = dg.Sum(t => t.volume),
+                            weight = dg.Sum(t => t.weight),
+                        };
+            query = query.Where(queries.AsExpression<PreDispatchlistViewModel>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderByDescending(t => t.create_time)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list, totals);
+        }
+        /// <summary>
+        /// Get dispatchlist by dispatch_no
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DispatchlistViewModel>> GetAllAsync(string dispatch_no)
          {
              var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
-             var data = await DbSet.AsNoTracking().Where(t=>t.tenant_id.Equals(currentUser.tenant_id)).ToListAsync();
+             var data = await DbSet.AsNoTracking().Where(t=>t.dispatch_no==dispatch_no).ToListAsync();
              return data.Adapt<List<DispatchlistViewModel>>();
          }
  
@@ -103,13 +141,13 @@
              }
              return entity.Adapt<DispatchlistViewModel>();
          }
-         /// <summary>
-         /// add a new record
-         /// </summary>
-         /// <param name="viewModel">viewmodel</param>
-         /// <param name="currentUser">current user</param>
-         /// <returns></returns>
-         public async Task<(int id, string msg)> AddAsync(DispatchlistViewModel viewModel, CurrentUser currentUser)
+        /// <summary>
+        /// add a new Dispatchlist
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<(int id, string msg)> AddAsync(DispatchlistViewModel viewModel, CurrentUser currentUser)
          {
              var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
              var entity = viewModel.Adapt<DispatchlistEntity>();
@@ -207,17 +245,24 @@
             string code;
             string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
             string maxNo =await _dBContext.GetDbSet<DispatchlistEntity>().MaxAsync(t => t.dispatch_no);
-            string maxDate = maxNo.Substring(0, 8);
-            string maxDateNo = maxNo.Substring(9, 4);
-            if (date == maxDate)
+            if (maxNo == null)
             {
-                int.TryParse(maxDateNo, out int dd);
-                int newDateNo = dd + 1;
-                code = date + "-" + newDateNo.ToString("0000");
+                code = date + "-0001";
             }
             else
             {
-                code = date + "-0001";
+                string maxDate = maxNo.Substring(0, 8);
+                string maxDateNo = maxNo.Substring(9, 4);
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
             }
 
             return code;

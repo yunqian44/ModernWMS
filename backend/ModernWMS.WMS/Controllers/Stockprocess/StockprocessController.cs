@@ -165,7 +165,7 @@
         [HttpPut("process-confirm")]
         public async Task<ResultModel<string>> ConfirmProcess(int id)
         {
-            var (flag, msg) = await _stockprocessService.ConfirmProcess(id);
+            var (flag, msg) = await _stockprocessService.ConfirmProcess(id,CurrentUser);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);

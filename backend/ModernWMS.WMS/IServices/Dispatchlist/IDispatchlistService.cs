@@ -23,11 +23,7 @@
          /// <param name="currentUser">current user</param>
          /// <returns></returns>
          Task<(List<DispatchlistViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
-         /// <summary>
-         /// Get all records
-         /// </summary>
-         /// <returns></returns>
-         Task<List<DispatchlistViewModel>> GetAllAsync(CurrentUser currentUser);
+
          /// <summary>
          /// Get a record by id
          /// </summary>

@@ -66,23 +66,7 @@
              });
          }
  
-         /// <summary>
-         /// get all records
-         /// </summary>
-         /// <returns>args</returns>
-        [HttpGet("all")]
-         public async Task<ResultModel<List<DispatchlistViewModel>>> GetAllAsync()
-         {
-             var data = await _dispatchlistService.GetAllAsync(CurrentUser);
-             if (data.Any())
-             {
-                 return ResultModel<List<DispatchlistViewModel>>.Success(data);
-             }
-             else
-             {
-                 return ResultModel<List<DispatchlistViewModel>>.Success(new List<DispatchlistViewModel>());
-             }
-         }
+       
  
          /// <summary>
          /// get a record by id
