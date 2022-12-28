@@ -15,6 +15,7 @@ using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DynamicSearch;
 using System.Runtime.Intrinsics.Arm;
 using System.Net.WebSockets;
+using System.Linq;
 
 namespace ModernWMS.WMS.Services
 {
@@ -202,7 +203,7 @@ namespace ModernWMS.WMS.Services
                         join dp in dispatch_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { dp.sku_id, dp.goods_location_id } into dp_left
                         from dp in dp_left.DefaultIfEmpty()
                         join pl in process_locked_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { pl.sku_id, pl.goods_location_id } into pl_left
-                        from pl in pl_left
+                        from pl in pl_left.DefaultIfEmpty()
                         join sku in sku_DBSet on sg.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         join gl in location_DBSet on sg.goods_location_id equals gl.id
@@ -276,7 +277,7 @@ namespace ModernWMS.WMS.Services
                         join dp in dispatch_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { dp.sku_id, dp.goods_location_id } into dp_left
                         from dp in dp_left.DefaultIfEmpty()
                         join pl in process_locked_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { pl.sku_id, pl.goods_location_id } into pl_left
-                        from pl in pl_left
+                        from pl in pl_left.DefaultIfEmpty()
                         join sku in sku_DBSet on sg.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         join gl in location_DBSet on sg.goods_location_id equals gl.id
@@ -298,8 +299,53 @@ namespace ModernWMS.WMS.Services
                             id = sg.id,
                             last_update_time = sg.last_update_time,
                             tenant_id = sg.tenant_id,
+                            unit= sku.unit,
                         };
+            query = query.Where(t => t.qty_available > 0);
             query = query.Where(queries.AsExpression<StockViewModel>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderBy(t => t.sku_code)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list, totals);
+        }
+
+        /// <summary>
+        ///  sku page search select
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser<param>
+        /// <returns></returns>
+        public async Task<(List<SkuSelectViewModel> data, int totals)> SkuSelectPageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+            var sku_DBSet = _dBContext.GetDbSet<SkuEntity>();
+            var spu_DBSet = _dBContext.GetDbSet<SpuEntity>();
+            var query = from sku in sku_DBSet.AsNoTracking()
+                        join spu in spu_DBSet.AsNoTracking() on sku.spu_id equals spu.id
+                        where spu.tenant_id == currentUser.tenant_id
+                        select new SkuSelectViewModel {
+                            spu_id = sku.spu_id,
+                            sku_code = sku.sku_code,
+                            sku_name = sku.sku_name,
+                            unit = sku.unit,
+                            spu_code = spu.spu_code,
+                            spu_name = spu.spu_name,
+                            supplier_id = spu.supplier_id,
+                            supplier_name = spu.supplier_name,
+                            brand = spu.brand,
+                            origin = spu.origin,
+                            sku_id = sku.id
+                        };
+            query = query.Where(queries.AsExpression<SkuSelectViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderBy(t => t.sku_code)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)

@@ -12,19 +12,19 @@
  namespace ModernWMS.WMS.Controllers
  {
      /// <summary>
-     /// stockmove controller
+     /// dispatchlist controller
      /// </summary>
-     [Route("stockmove")]
+     [Route("dispatchlist")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "WMS")]
-     public class StockmoveController : BaseController
+     public class DispatchlistController : BaseController
      {
          #region Args
  
          /// <summary>
-         /// stockmove Service
+         /// dispatchlist Service
          /// </summary>
-         private readonly IStockmoveService _stockmoveService;
+         private readonly IDispatchlistService _dispatchlistService;
  
          /// <summary>
          /// Localizer Service
@@ -36,14 +36,14 @@
          /// <summary>
          /// constructor
          /// </summary>
-         /// <param name="stockmoveService">stockmove Service</param>
+         /// <param name="dispatchlistService">dispatchlist Service</param>
         /// <param name="stringLocalizer">Localizer</param>
-         public StockmoveController(
-             IStockmoveService stockmoveService
+         public DispatchlistController(
+             IDispatchlistService dispatchlistService
            , IStringLocalizer<ModernWMS.Core.MultiLanguage> stringLocalizer
              )
          {
-             this._stockmoveService = stockmoveService;
+             this._dispatchlistService = dispatchlistService;
             this._stringLocalizer= stringLocalizer;
          }
          #endregion
@@ -55,50 +55,34 @@
          /// <param name="pageSearch">args</param>
          /// <returns></returns>
          [HttpPost("list")]
-         public async Task<ResultModel<PageData<StockmoveViewModel>>> PageAsync(PageSearch pageSearch)
+         public async Task<ResultModel<PageData<DispatchlistViewModel>>> PageAsync(PageSearch pageSearch)
          {
-             var (data, totals) = await _stockmoveService.PageAsync(pageSearch, CurrentUser);
+             var (data, totals) = await _dispatchlistService.PageAsync(pageSearch, CurrentUser);
               
-             return ResultModel<PageData<StockmoveViewModel>>.Success(new PageData<StockmoveViewModel>
+             return ResultModel<PageData<DispatchlistViewModel>>.Success(new PageData<DispatchlistViewModel>
              {
                  Rows = data,
                  Totals = totals
              });
          }
  
-         /// <summary>
-         /// get all records
-         /// </summary>
-         /// <returns>args</returns>
-        [HttpGet("all")]
-         public async Task<ResultModel<List<StockmoveViewModel>>> GetAllAsync()
-         {
-             var data = await _stockmoveService.GetAllAsync(CurrentUser);
-             if (data.Any())
-             {
-                 return ResultModel<List<StockmoveViewModel>>.Success(data);
-             }
-             else
-             {
-                 return ResultModel<List<StockmoveViewModel>>.Success(new List<StockmoveViewModel>());
-             }
-         }
+       
  
          /// <summary>
          /// get a record by id
          /// </summary>
          /// <returns>args</returns>
          [HttpGet]
-         public async Task<ResultModel<StockmoveViewModel>> GetAsync(int id)
+         public async Task<ResultModel<DispatchlistViewModel>> GetAsync(int id)
          {
-             var data = await _stockmoveService.GetAsync(id);
+             var data = await _dispatchlistService.GetAsync(id);
              if (data!=null)
              {
-                 return ResultModel<StockmoveViewModel>.Success(data);
+                 return ResultModel<DispatchlistViewModel>.Success(data);
              }
              else
              {
-                 return ResultModel<StockmoveViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+                 return ResultModel<DispatchlistViewModel>.Error(_stringLocalizer["not_exists_entity"]);
              }
          }
          /// <summary>
@@ -107,9 +91,9 @@
          /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPost]
-         public async Task<ResultModel<int>> AddAsync(StockmoveViewModel viewModel)
+         public async Task<ResultModel<int>> AddAsync(DispatchlistViewModel viewModel)
          {
-             var (id, msg) = await _stockmoveService.AddAsync(viewModel,CurrentUser);
+             var (id, msg) = await _dispatchlistService.AddAsync(viewModel,CurrentUser);
              if (id > 0)
              {
                  return ResultModel<int>.Success(id);
@@ -121,14 +105,14 @@
          }
  
          /// <summary>
-         /// confirm move
+         /// update a record
          /// </summary>
-         /// <param name="id">id</param>
+         /// <param name="viewModel">args</param>
          /// <returns></returns>
          [HttpPut]
-         public async Task<ResultModel<bool>> UpdateAsync(int id)
+         public async Task<ResultModel<bool>> UpdateAsync(DispatchlistViewModel viewModel)
          {
-             var (flag, msg) = await _stockmoveService.Confirm(id);
+             var (flag, msg) = await _dispatchlistService.UpdateAsync(viewModel);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);
@@ -147,7 +131,7 @@
          [HttpDelete]
          public async Task<ResultModel<string>> DeleteAsync(int id)
          {
-             var (flag, msg) = await _stockmoveService.DeleteAsync(id);
+             var (flag, msg) = await _dispatchlistService.DeleteAsync(id);
              if (flag)
              {
                  return ResultModel<string>.Success(msg);

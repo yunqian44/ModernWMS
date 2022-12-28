@@ -98,6 +98,23 @@
                 Totals = totals
             });
         }
+
+        /// <summary>
+        /// sku page search select
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("sku-select")]
+        public async Task<ResultModel<PageData<SkuSelectViewModel>>> SkuSelectPageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _stockService.SkuSelectPageAsync(pageSearch, CurrentUser);
+
+            return ResultModel<PageData<SkuSelectViewModel>>.Success(new PageData<SkuSelectViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
         #endregion
 
     }

@@ -82,7 +82,8 @@ namespace ModernWMS.WMS.Services
                                stockprocess_id = ag.Key
                            };
             var query = from m in DbSet.AsNoTracking()
-                        join a in adjusted on m.id equals a.stockprocess_id
+                        join a in adjusted on m.id equals a.stockprocess_id into a_left
+                        from a in a_left.DefaultIfEmpty()
                         select new StockprocessGetViewModel
                         {
                             id = m.id,
@@ -157,7 +158,7 @@ namespace ModernWMS.WMS.Services
                                   where a.job_type == 2
                                   select a
                            ).AnyAsync();
-            res.adjust_status = adjusted;        
+            res.adjust_status = adjusted;
             res.source_detail_list = details.Where(t => t.is_source == true).ToList();
             res.target_detail_list = details.Where(t => t.is_source == false).ToList();
             return res;
@@ -172,41 +173,33 @@ namespace ModernWMS.WMS.Services
         {
             var DbSet = _dBContext.GetDbSet<StockprocessEntity>();
             var entity = viewModel.Adapt<StockprocessEntity>();
-            var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
+            var stock_DBSet = _dBContext.GetDbSet<StockEntity>().AsNoTracking();
 
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(StockEntity), "c");
-            ConstantExpression constan_location = Expression.Constant(entity.detailList[0].goods_location_id);
-            PropertyInfo prop_location = typeof(StockEntity).GetProperty("goods_location_id");
-            MemberExpression location_exp = Expression.Property(parameterExpression, prop_location);
-            BinaryExpression location_full_exp = Expression.Equal(location_exp, constan_location);
-            ConstantExpression constan_sku = Expression.Constant(entity.detailList[0].sku_id);
-            PropertyInfo prop_sku = typeof(StockEntity).GetProperty("sku_id");
-            MemberExpression sku_exp = Expression.Property(parameterExpression, prop_sku);
-            BinaryExpression sku_full_exp = Expression.Equal(sku_exp, constan_sku);
-            var exp = Expression.And(location_full_exp, sku_full_exp);
-
-            if (entity.detailList.Count > 1)
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(StockEntity), "m");
+            Expression exp = null;
+            for (int i = 0; i < entity.detailList.Count; i++)
             {
-                for (int i = 1; i <= entity.detailList.Count; i++)
-                {
-                    ParameterExpression t_parameterExpression = Expression.Parameter(typeof(StockEntity), "c");
-                    ConstantExpression t_constan_location = Expression.Constant(entity.detailList[i].goods_location_id);
-                    PropertyInfo t_prop_location = typeof(StockEntity).GetProperty("goods_location_id");
-                    MemberExpression t_location_exp = Expression.Property(t_parameterExpression, t_prop_location);
-                    BinaryExpression t_location_full_exp = Expression.Equal(t_location_exp, t_constan_location);
-                    ConstantExpression t_constan_sku = Expression.Constant(entity.detailList[i].sku_id);
-                    PropertyInfo t_prop_sku = typeof(StockEntity).GetProperty("sku_id");
-                    MemberExpression t_sku_exp = Expression.Property(parameterExpression, t_prop_sku);
-                    BinaryExpression t_sku_full_exp = Expression.Equal(t_sku_exp, t_constan_sku);
-                    var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
-                    exp = Expression.Or(t_exp, exp);
-                }
+                ConstantExpression t_constan_location = Expression.Constant(entity.detailList[i].goods_location_id);
+                PropertyInfo t_prop_location = typeof(StockEntity).GetProperty("goods_location_id");
+                MemberExpression t_location_exp = Expression.Property(parameterExpression, t_prop_location);
+                BinaryExpression t_location_full_exp = Expression.Equal(t_location_exp, t_constan_location);
+                ConstantExpression t_constan_sku = Expression.Constant(entity.detailList[i].sku_id);
+                PropertyInfo t_prop_sku = typeof(StockEntity).GetProperty("sku_id");
+                MemberExpression t_sku_exp = Expression.Property(parameterExpression, t_prop_sku);
+                BinaryExpression t_sku_full_exp = Expression.Equal(t_sku_exp, t_constan_sku);
+                var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
+                if (exp != null)
+                    exp = Expression.Or(exp, t_exp);
+                else
+                    exp = t_exp;
             }
-            Expression<Func<StockEntity, bool>> predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1] { parameterExpression });
-            var stocks = await stock_DBSet.AsNoTracking().Where(predicate_res).ToListAsync();
+            var predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1] { parameterExpression });
+            var stocks = await stock_DBSet.Where(predicate_res).ToListAsync();
+            var goods_location_id_list = viewModel.detailList.Where(t => t.is_source == true).Select(t => t.goods_location_id).ToList();
+            var sku_id_list = viewModel.detailList.Where(t => t.is_source == true).Select(t => t.sku_id).ToList();
             var lockeds = await (from d in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking()
-                                 where d.is_update_stock == false && entity.detailList.Where(t => t.is_source == true).Select(t => t.goods_location_id).Contains(d.goods_location_id)
-                                 && entity.detailList.Where(t => t.is_source == true).Select(t => t.sku_id).Contains(d.sku_id)
+                                 where d.is_update_stock == false && goods_location_id_list.Contains(d.goods_location_id)
+                                 && sku_id_list.Contains(d.sku_id)
                                  group d by new { d.goods_location_id, d.sku_id } into lg
                                  select new
                                  {
@@ -219,22 +212,28 @@ namespace ModernWMS.WMS.Services
             entity.creator = currentUser.user_name;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
+            entity.job_code = await GetOrderCode();
             await DbSet.AddAsync(entity);
             foreach (var d in entity.detailList)
             {
+                d.last_update_time = DateTime.Now;
+                d.id = 0;
                 var s = stocks.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
-                if (s == null)
+                if (d.is_source == true)
                 {
-                    return (0, _stringLocalizer["data_changed"]);
-                }
-                else if (s.is_freeze == true)
-                {
-                    return (0, _stringLocalizer["stock_frozen"]);
-                }
-                var locked = lockeds.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
-                if ((s.qty - (locked == null ? 0 : locked.qty_locked)) < d.qty)
-                {
-                    return (0, _stringLocalizer["data_changed"]);
+                    if (s == null)
+                    {
+                        return (0, _stringLocalizer["data_changed"]);
+                    }
+                    var locked = lockeds.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
+                    if ((s.qty - (locked == null ? 0 : locked.qty_locked)) < d.qty)
+                    {
+                        return (0, _stringLocalizer["data_changed"]);
+                    }
+                    if (s.is_freeze == true)
+                    {
+                        return (0, _stringLocalizer["stock_frozen"]);
+                    }
                 }
             }
             await _dBContext.SaveChangesAsync();
@@ -344,7 +343,7 @@ namespace ModernWMS.WMS.Services
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> ConfirmProcess(int id)
+        public async Task<(bool flag, string msg)> ConfirmProcess(int id, CurrentUser currentUser)
         {
             var DBSet = _dBContext.GetDbSet<StockprocessEntity>();
             var entity = await DBSet.FirstOrDefaultAsync(t => t.id == id);
@@ -353,6 +352,8 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
             entity.process_status = true;
+            entity.processor = currentUser.user_name;
+            entity.process_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
             var res = await _dBContext.SaveChangesAsync();
             if (res > 0)
@@ -360,6 +361,38 @@ namespace ModernWMS.WMS.Services
                 return (true, _stringLocalizer["operation_success"]);
             }
             return (false, _stringLocalizer["operation_failed"]);
+        }
+
+        /// <summary>
+        /// get next order code number
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetOrderCode()
+        {
+            string code;
+            string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
+            string maxNo = await _dBContext.GetDbSet<StockprocessEntity>().MaxAsync(t => t.job_code);
+            if (maxNo == null) 
+            {
+                code = date + "-0001";
+            }
+            else
+            {
+                string maxDate = maxNo.Substring(0, 8);
+                string maxDateNo = maxNo.Substring(9, 4);
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
+            }
+            
+            return code;
         }
         #endregion
     }

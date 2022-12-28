@@ -105,6 +105,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string sku_name { get; set; } = string.Empty;
 
         /// <summary>
+        /// unit
+        /// </summary>
+        public string unit { get; set; } = string.Empty;
+
+        /// <summary>
         /// qty_available
         /// </summary>
         [Display(Name = "qty_available")]

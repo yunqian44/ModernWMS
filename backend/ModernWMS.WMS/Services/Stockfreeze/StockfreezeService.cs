@@ -166,6 +166,7 @@ namespace ModernWMS.WMS.Services
             entity.handler = currentUser.user_name;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
+            entity.job_code = await GetOrderCode();
             var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
             var stocks = await stock_DBSet.AsNoTracking().Where(t => t.goods_location_id == entity.goods_location_id && t.sku_id == entity.sku_id).ToListAsync();
             foreach (var stock in stocks)
@@ -240,6 +241,36 @@ namespace ModernWMS.WMS.Services
             }
         }
 
+        /// <summary>
+        /// get next order code number
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetOrderCode()
+        {
+            string code;
+            string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
+            string maxNo = await _dBContext.GetDbSet<StockfreezeEntity>().MaxAsync(t => t.job_code);
+            if (maxNo == null)
+            {
+                code = date + "-0001";
+            }
+            else
+            {
+                string maxDate = maxNo.Substring(0, 8);
+                string maxDateNo = maxNo.Substring(9, 4);
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
+            }
+            return code;
+        }
         #endregion
     }
 }
