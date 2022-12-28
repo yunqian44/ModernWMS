@@ -202,7 +202,7 @@ namespace ModernWMS.WMS.Services
                         join dp in dispatch_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { dp.sku_id, dp.goods_location_id } into dp_left
                         from dp in dp_left.DefaultIfEmpty()
                         join pl in process_locked_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { pl.sku_id, pl.goods_location_id } into pl_left
-                        from pl in pl_left
+                        from pl in pl_left.DefaultIfEmpty()
                         join sku in sku_DBSet on sg.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         join gl in location_DBSet on sg.goods_location_id equals gl.id
@@ -276,7 +276,7 @@ namespace ModernWMS.WMS.Services
                         join dp in dispatch_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { dp.sku_id, dp.goods_location_id } into dp_left
                         from dp in dp_left.DefaultIfEmpty()
                         join pl in process_locked_group_datas on new { sg.sku_id, sg.goods_location_id } equals new { pl.sku_id, pl.goods_location_id } into pl_left
-                        from pl in pl_left
+                        from pl in pl_left.DefaultIfEmpty()
                         join sku in sku_DBSet on sg.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         join gl in location_DBSet on sg.goods_location_id equals gl.id
