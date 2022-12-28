@@ -82,7 +82,8 @@ namespace ModernWMS.WMS.Services
                                stockprocess_id = ag.Key
                            };
             var query = from m in DbSet.AsNoTracking()
-                        join a in adjusted on m.id equals a.stockprocess_id
+                        join a in adjusted on m.id equals a.stockprocess_id into a_left
+                        from a in a_left.DefaultIfEmpty()
                         select new StockprocessGetViewModel
                         {
                             id = m.id,
@@ -216,6 +217,7 @@ namespace ModernWMS.WMS.Services
             foreach (var d in entity.detailList)
             {
                 d.last_update_time = DateTime.Now;
+                d.id = 0;
                 var s = stocks.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
                 if (d.is_source == true)
                 {
