@@ -1,3 +1,4 @@
+import XEUtils from 'xe-utils'
 import { SearchObject, SearchOperator } from '@/types/System/Form'
 
 export const setSearchObject = (searchForm: any) => {
@@ -20,4 +21,32 @@ export const setSearchObject = (searchForm: any) => {
   } catch (error) {
     return searchObjects
   }
+}
+
+// 移除数组为null,''的属性
+export const removeArrayNull = (array: any) => {
+  for (const obj of array) {
+    Object.keys(obj).forEach((item) => {
+      if (XEUtils.isString(obj[item])) {
+        obj[item] = obj[item].replace(/(^\s*)|(\s*$)/g, '')
+      }
+      if (obj[item] === '') {
+        delete obj[item]
+      }
+    })
+  }
+  return array
+}
+// 移除对象为null,''的属性
+export const removeObjectNull = (obj: any) => {
+  const copy = JSON.parse(JSON.stringify(obj))
+  Object.keys(copy).forEach((item) => {
+    if (XEUtils.isString(copy[item])) {
+      copy[item] = copy[item].replace(/(^\s*)|(\s*$)/g, '')
+    }
+    if (copy[item] === '') {
+      delete copy[item]
+    }
+  })
+  return copy
 }
