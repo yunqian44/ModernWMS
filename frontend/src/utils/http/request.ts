@@ -156,7 +156,6 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => {
     closeLoading()
-
     // TODO 根据实际业务修改
     if (response.data.code === 0 || response.headers.success === 'true') {
       if (response.headers.msg) {
@@ -176,7 +175,6 @@ http.interceptors.response.use(
   },
   (error) => {
     closeLoading()
-
     // 1.There isn't 'error.response' object when request timeout
     if (!error.response) {
       console.log('请求超时', error.message)

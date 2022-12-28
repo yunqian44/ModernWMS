@@ -94,6 +94,8 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.roleMenu')
     case 'stockManagement':
       return i18n.global.t('router.sideBar.stockManagement')
+    case 'warehouseProcessing':
+      return i18n.global.t('router.sideBar.warehouseProcessing')
     default:
       return ''
   }
@@ -106,6 +108,8 @@ function GetModuleAndIcon(name: string) {
       return 'home'
     case 'stockManagement':
       return 'warehouse'
+    case 'warehouseWorkingModule':
+      return 'account-hard-hat-outline '
     default:
       return ''
   }

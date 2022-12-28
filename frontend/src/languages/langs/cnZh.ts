@@ -19,7 +19,8 @@ export default {
       submit: '提交',
       reset: '重置',
       confirm: '确认',
-      insertOneRow: '新增一行'
+      insertOneRow: '新增一行',
+      view: '查看'
     },
     tips: {
       success: '成功!',
@@ -64,7 +65,9 @@ export default {
       customer: '客户信息',
       supplier: '供应商信息',
       roleMenu: '角色菜单设置',
-      stockManagement: '库存管理'
+      stockManagement: '库存管理',
+      warehouseWorkingModule: '仓内作业',
+      warehouseProcessing: '仓内加工'
     }
   },
   login: {
@@ -87,7 +90,7 @@ export default {
       creator: '创建人',
       create_time: '创建时间',
       last_update_time: '最后更新时间',
-      is_valid: '是否有效',
+      is_valid: '是否有效'
     },
     userManagement: {
       user_num: '员工编号',
@@ -133,7 +136,7 @@ export default {
       inventory_area: '存货区',
       creator: '创建人',
       create_time: '创建时间',
-      last_update_time: '最后更新时间',
+      last_update_time: '最后更新时间'
     },
     customer: {
       customer_name: '客户名称',
@@ -205,8 +208,36 @@ export default {
       origin: '产地',
       length_unit: '长度单位',
       volume_unit: '体积单位',
-      weight_unit: '重量单位',
+      weight_unit: '重量单位'
     }
   },
-  wms: { stock: {} }
+  wms: {
+    stock: {},
+    warehouseWorking: {
+      warehouseProcessing: {
+        job_code: '作业单号',
+        job_type: '作业类型',
+        process_status: '加工状态',
+        processor: '操作人',
+        process_time: '操作时间',
+        qty: '数量',
+        is_source: '是否来源商品',
+        spu_code: '商品编码',
+        spu_name: '商品名称',
+        sku_code: '规格编码',
+        unit: '商品单位',
+        is_update_stock: '是否已更新库存',
+        creator: '创建人',
+        create_time: '创建时间',
+        last_update_time: '最后更新时间',
+        adjust_status: '是否已调整',
+        source: '来源',
+        target: '目标',
+        process_split: '拆分加工',
+        process_combine: '组合加工',
+        confirmProcess: '确认加工',
+        confirmAdjust: '确认调整',
+      }
+    }
+  }
 }
