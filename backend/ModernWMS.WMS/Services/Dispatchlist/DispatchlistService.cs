@@ -79,7 +79,7 @@ namespace ModernWMS.WMS.Services
              return (list.Adapt<List<DispatchlistViewModel>>(), totals);
          }
         /// <summary>
-        /// advanced dispatch order page search
+        /// advanced dispatch order page search 
         /// </summary>
         /// <param name="pageSearch">args</param>
         /// <param name="currentUser">currentUser</param>
@@ -225,7 +225,9 @@ namespace ModernWMS.WMS.Services
          /// <returns></returns>
          public async Task<(bool flag, string msg)> DeleteAsync(int id)
          {
-             var qty = await _dBContext.GetDbSet<DispatchlistEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
+            var entity = await _dBContext.GetDbSet<DispatchlistEntity>().Where(t => t.id.Equals(id)).Include(e => e.detailList).FirstOrDefaultAsync();
+             _dBContext.GetDbSet<DispatchlistEntity>().Remove(entity);
+            var qty = await _dBContext.SaveChangesAsync();
              if (qty > 0)
              {
                  return (true, _stringLocalizer["delete_success"]);
