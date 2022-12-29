@@ -255,10 +255,10 @@ export default {
       sku_id: 'Sku Id',
       sku_code: 'Specification code',
       sku_name: 'Form Name',
-      qty: 0,
-      qty_available: 0,
-      qty_locked: 0,
-      qty_frozen: 0
+      qty: 'Quantity',
+      qty_available: 'Available Quantity',
+      qty_locked: 'Locked Quantity',
+      qty_frozen: 'Frozen Quantity'
     }
   }
 }
