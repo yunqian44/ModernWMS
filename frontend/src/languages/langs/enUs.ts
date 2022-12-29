@@ -67,7 +67,8 @@ export default {
       roleMenu: 'Role Menu Settings',
       stockManagement: 'Stock Management',
       warehouseWorkingModule: 'Warehouse Working',
-      warehouseProcessing: 'Warehouse Processing'
+      warehouseProcessing: 'Warehouse Processing',
+      warehouseMove: 'Inventory Move'
     }
   },
   login: {
@@ -246,6 +247,20 @@ export default {
         alreadyProcess: 'The data can\'t delete because it had been processed',
         alreadyAdjust: 'The data can\'t delete because it had been adjusted'
       }
+    },
+    warehouseMove: {
+      move_status: 'Move Status',
+      qty: 'Qty',
+      handler: 'handler',
+      handle_time: 'Handle Time',
+      orig_goods_warehouse: 'Origin Warehouse',
+      orig_goods_location_name: 'Origin Location',
+      dest_googs_warehouse: 'Target Warehouse',
+      dest_googs_location_name: 'Target Location',
+      confirmMove: 'Confirm Move',
+      beforeConfirmMove: 'Are you sure to move this data?',
+      unadjust: 'Unadjust',
+      adjusted: 'Adjusted'
     }
   }
 }

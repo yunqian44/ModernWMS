@@ -67,7 +67,8 @@ export default {
       roleMenu: '角色菜单设置',
       stockManagement: '库存管理',
       warehouseWorkingModule: '仓内作业',
-      warehouseProcessing: '仓内加工'
+      warehouseProcessing: '仓内加工',
+      warehouseMove: '库存移动'
     }
   },
   login: {
@@ -196,11 +197,11 @@ export default {
     commodityManagement: {
       spu_code: '商品编码',
       spu_name: '商品名称',
+      sku_code: '规格编码',
+      sku_name: '规格名称',
       category_name: '商品类别',
       spu_description: '商品描述',
       bar_code: '商品条码',
-      sku_code: '规格编码',
-      sku_name: '规格编码',
       supplier_name: '供应商名称',
       brand: '品牌',
       unit: '商品单位',
@@ -218,7 +219,7 @@ export default {
       skuSelectModal: '商品选择框',
       warehouse: '仓库名称',
       location_name: '库位编码',
-      qty_available: '可用数量',
+      qty_available: '可用数量'
     },
     warehouseWorking: {
       warehouseProcessing: {
@@ -252,7 +253,24 @@ export default {
         beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
         alreadyProcess: '该数据已完成加工，不可删除',
         alreadyAdjust: '该数据已完成调整，不可删除'
+      },
+      warehouseMove: {
+        job_code: '作业单号',
+        move_status: '作业状态',
+        qty: '数量',
+        handler: '操作人',
+        handle_time: '操作时间',
+        orig_goods_warehouse: '来源仓库',
+        orig_goods_location_name: '来源库位',
+        dest_googs_warehouse: '目标仓库',
+        dest_googs_location_name: '目标库位',
+        confirmMove: '确认移库',
+        creator: '创建人',
+        create_time: '创建时间',
+        beforeConfirmMove: '您确认对该条数据进行移库吗？',
+        unadjust: '未调整',
+        adjusted: '已调整'
       }
-    }
+    },
   }
 }
