@@ -247,6 +247,9 @@ export default {
         alreadyAdjust: 'The data can\'t delete because it had been adjusted'
       }
     },
+    stockManagement: {
+      stockLocation: 'Stock Location',
+    },
     stockLocation: {
       warehouse: 'Warehouse',
       location_name: 'Location Name',

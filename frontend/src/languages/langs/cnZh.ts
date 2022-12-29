@@ -254,6 +254,9 @@ export default {
         alreadyAdjust: '该数据已完成调整，不可删除'
       }
     },
+    stockManagement: {
+      stockLocation: '库区库存',
+    },
     stockLocation: {
       warehouse: '仓库名称',
       location_name: '库位名称',
