@@ -261,6 +261,22 @@ export default {
       beforeConfirmMove: 'Are you sure to move this data?',
       unadjust: 'Unadjust',
       adjusted: 'Adjusted'
+    },
+    stockManagement: {
+      stockLocation: 'Stock Location',
+    },
+    stockLocation: {
+      warehouse: 'Warehouse',
+      location_name: 'Location Name',
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      sku_id: 'Sku Id',
+      sku_code: 'Specification code',
+      sku_name: 'Form Name',
+      qty: 'Quantity',
+      qty_available: 'Available Quantity',
+      qty_locked: 'Locked Quantity',
+      qty_frozen: 'Frozen Quantity'
     }
   }
 }
