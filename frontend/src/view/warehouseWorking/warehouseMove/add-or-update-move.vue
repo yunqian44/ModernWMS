@@ -227,7 +227,6 @@ const method = reactive({
       data.form.sku_code = selectRecords[0].sku_code
       data.form.sku_name = selectRecords[0].sku_name
 
-      // TODO 校验数量不能超过可用数量
       data.curAvailableQty = selectRecords[0].qty_available
     } catch (error) {
       console.error(error)

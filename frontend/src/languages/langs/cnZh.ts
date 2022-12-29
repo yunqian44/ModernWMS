@@ -68,7 +68,8 @@ export default {
       stockManagement: '库存管理',
       warehouseWorkingModule: '仓内作业',
       warehouseProcessing: '仓内加工',
-      warehouseMove: '库存移动'
+      warehouseMove: '库存移动',
+      warehouseFreeze: '库存冻结'
     }
   },
   login: {
@@ -270,10 +271,22 @@ export default {
         beforeConfirmMove: '您确认对该条数据进行移库吗？',
         unadjust: '未调整',
         adjusted: '已调整'
+      },
+      warehouseFreeze: {
+        job_code: '作业单号',
+        job_type: '作业类型',
+        handler: '操作人',
+        handle_time: '操作时间',
+        creator: '创建人',
+        create_time: '创建时间',
+        warehouse: '所在仓库',
+        location_name: '所在库位',
+        freeze: '冻结',
+        unfreeze: '解冻'
       }
     },
     stockManagement: {
-      stockLocation: '库区库存',
+      stockLocation: '库区库存'
     },
     stockLocation: {
       warehouse: '仓库名称',
