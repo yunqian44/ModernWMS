@@ -246,6 +246,19 @@ export default {
         alreadyProcess: 'The data can\'t delete because it had been processed',
         alreadyAdjust: 'The data can\'t delete because it had been adjusted'
       }
+    },
+    stockLocation: {
+      warehouse: 'Warehouse',
+      location_name: 'Location Name',
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      sku_id: 'Sku Id',
+      sku_code: 'Specification code',
+      sku_name: 'Form Name',
+      qty: 0,
+      qty_available: 0,
+      qty_locked: 0,
+      qty_frozen: 0
     }
   }
 }
