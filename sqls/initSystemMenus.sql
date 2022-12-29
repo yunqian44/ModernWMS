@@ -11,5 +11,7 @@ VALUES
 ('ownerOfCargo', 'baseModule', 'ownerOfCargo', 'base/ownerOfCargo', 1, 9),
 ('freightSetting', 'baseModule', 'freightSetting', 'base/freightSetting', 1, 10),
 ('customer', 'baseModule', 'customer', 'base/customer', 1, 11),
-('stockManagement', '', 'stockManagement', 'wms/stockManagement', 1, 12)
-('warehouseProcessing', 'warehouseWorkingModule', 'warehouseProcessing', 'warehouseWorking/warehouseProcessing', 1, 13)
+('stockManagement', '', 'stockManagement', 'wms/stockManagement', 1, 12),
+('warehouseProcessing', 'warehouseWorkingModule', 'warehouseProcessing', 'warehouseWorking/warehouseProcessing', 1, 13),
+('warehouseMove', 'warehouseWorkingModule', 'warehouseMove', 'warehouseWorking/warehouseMove', 1, 14)
+('warehouseFreeze', 'warehouseWorkingModule', 'warehouseFreeze', 'warehouseWorking/warehouseFreeze', 1, 15)

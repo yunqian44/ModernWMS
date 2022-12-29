@@ -67,7 +67,9 @@ export default {
       roleMenu: 'Role Menu Settings',
       stockManagement: 'Stock Management',
       warehouseWorkingModule: 'Warehouse Working',
-      warehouseProcessing: 'Warehouse Processing'
+      warehouseProcessing: 'Warehouse Processing',
+      warehouseMove: 'Inventory Move',
+      warehouseFreeze: 'Inventory freeze'
     }
   },
   login: {
@@ -114,7 +116,7 @@ export default {
       is_valid: 'Valid',
       area_name: 'Reservoir Name',
       area_property: 'Reservoir Category',
-      location_name: 'Location Coding',
+      location_name: 'Location Code',
       location_length: 'Location Length(m)',
       location_width: 'Location Width(m)',
       location_heigth: 'Location Height(m)',
@@ -210,8 +212,8 @@ export default {
       stockSelectModal: 'Stock Select Modal',
       skuSelectModal: 'Commodity Select Modal',
       warehouse: 'Warehouse Name',
-      location_name: 'Location Name',
-      qty_available: 'Available Qty',
+      location_name: 'Location Code',
+      qty_available: 'Available Qty'
     },
     warehouseWorking: {
       warehouseProcessing: {
@@ -245,11 +247,42 @@ export default {
         beforeConfirmAdjust: 'Are you sure to adjust this data?',
         alreadyProcess: 'The data can\'t delete because it had been processed',
         alreadyAdjust: 'The data can\'t delete because it had been adjusted'
+      },
+      warehouseMove: {
+        move_status: 'Move Status',
+        qty: 'Qty',
+        handler: 'Handler',
+        handle_time: 'Handle Time',
+        orig_goods_warehouse: 'Origin Warehouse',
+        orig_goods_location_name: 'Origin Location',
+        dest_googs_warehouse: 'Target Warehouse',
+        dest_googs_location_name: 'Target Location',
+        confirmMove: 'Confirm Move',
+        creator: 'Creator',
+        create_time: 'Create Time',
+        beforeConfirmMove: 'Are you sure to move this data?',
+        unadjust: 'Unadjust',
+        adjusted: 'Adjusted'
+      },
+      warehouseFreeze: {
+        job_code: 'Job Code',
+        job_type: 'Job Type',
+        handler: 'Handler',
+        handle_time: 'Handle Time',
+        creator: 'Creator',
+        create_time: 'Create Time',
+        warehouse: 'Warehouse',
+        location_name: 'Location Code',
+        freeze: 'Freeze',
+        unfreeze: 'Unfreeze'
       }
+    },
+    stockManagement: {
+      stockLocation: 'Stock Location'
     },
     stockLocation: {
       warehouse: 'Warehouse',
-      location_name: 'Location Name',
+      location_name: 'Location Code',
       spu_code: 'Commodity code',
       spu_name: 'Trade name',
       sku_id: 'Sku Id',

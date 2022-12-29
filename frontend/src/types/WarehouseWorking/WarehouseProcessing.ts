@@ -29,13 +29,3 @@ export interface WarehouseProcessingDetailVO extends UniformFileNaming {
   qty_available?: number
   location_name?: string
 }
-
-// export enum JobType {
-//   SPLIT = false,
-//   COMBINE = true
-// }
-
-// export enum ProcessStatus {
-//   UNFINISH = false,
-//   FINISH = true
-// }
