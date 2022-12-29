@@ -161,6 +161,46 @@ namespace ModernWMS.WMS.Controllers
 
         #endregion
 
+        #region Flow Api
+        /// <summary>
+        /// Confirm Delivery
+        /// change the asn_status from 0 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("confirm/{id}")]
+        public async Task<ResultModel<string>> ConfirmAsync(int id)
+        {
+            var (flag, msg) = await _asnService.ConfirmAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        /// Unload
+        /// change the asn_status from 1 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("unload/{id}")]
+        public async Task<ResultModel<string>> UnloadAsync(int id)
+        {
+            var (flag, msg) = await _asnService.UnloadAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
     }
 }
  

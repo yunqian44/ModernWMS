@@ -2,6 +2,7 @@
  * date：2022-12-22
  * developer：AMo
  */
+using Microsoft.EntityFrameworkCore;
 using ModernWMS.Core.JWT;
 using ModernWMS.Core.Models;
 using ModernWMS.Core.Services;
@@ -57,6 +58,23 @@ namespace ModernWMS.WMS.IServices
         /// <param name="viewModel">args</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> BulkModifyGoodsownerAsync(AsnBulkModifyGoodsOwnerViewModel viewModel);
+        #endregion
+
+        #region Flow Api
+        /// <summary>
+        /// Confirm Delivery
+        /// change the asn_status from 0 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmAsync(int id);
+        /// <summary>
+        /// Unload
+        /// change the asn_status from 1 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> UnloadAsync(int id);
         #endregion
     }
 }

@@ -209,7 +209,6 @@ namespace ModernWMS.WMS.Services
             }
             entity.id = viewModel.id;
             entity.asn_no = viewModel.asn_no;
-            entity.asn_status = viewModel.asn_status;
             entity.spu_id = viewModel.spu_id;
             entity.sku_id = viewModel.sku_id;
             entity.asn_qty = viewModel.asn_qty;
@@ -296,8 +295,64 @@ namespace ModernWMS.WMS.Services
         #endregion
 
         #region Flow Api
-
-
+        /// <summary>
+        /// Confirm Delivery
+        /// change the asn_status from 0 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status > 0)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Delivery"]}");
+            }
+            entity.asn_status = 1;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["confirm_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["confirm_failed"]);
+            }
+        }
+        /// <summary>
+        /// Unload
+        /// change the asn_status from 1 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> UnloadAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status > 1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Load"]}");
+            }
+            entity.asn_status = 2;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["confirm_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["confirm_failed"]);
+            }
+        }
 
         #endregion
     }
