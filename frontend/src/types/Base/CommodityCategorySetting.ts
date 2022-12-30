@@ -5,6 +5,7 @@ export interface CategoryVO extends UniformFileNaming {
   id: number
   parent_id?: number
   category_name: string
+  is_valid?: boolean
 }
 
 export interface DataProps {

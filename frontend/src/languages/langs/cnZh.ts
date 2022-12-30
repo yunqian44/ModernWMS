@@ -211,7 +211,12 @@ export default {
       origin: '产地',
       length_unit: '长度单位',
       volume_unit: '体积单位',
-      weight_unit: '重量单位'
+      weight_unit: '重量单位',
+      weight: '商品重量',
+      lenght: '商品长度',
+      width: '商品宽度',
+      height: '商品高度',
+      volume: '商品体积'
     }
   },
   wms: {
