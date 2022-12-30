@@ -15,3 +15,4 @@ VALUES
 ('warehouseProcessing', 'warehouseWorkingModule', 'warehouseProcessing', 'warehouseWorking/warehouseProcessing', 1, 13),
 ('warehouseMove', 'warehouseWorkingModule', 'warehouseMove', 'warehouseWorking/warehouseMove', 1, 14)
 ('warehouseFreeze', 'warehouseWorkingModule', 'warehouseFreeze', 'warehouseWorking/warehouseFreeze', 1, 15)
+('warehouseAdjust', 'warehouseWorkingModule', 'warehouseAdjust', 'warehouseWorking/warehouseAdjust', 1, 16)

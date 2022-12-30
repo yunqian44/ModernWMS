@@ -69,7 +69,8 @@ export default {
       warehouseWorkingModule: 'Warehouse Working',
       warehouseProcessing: 'Warehouse Processing',
       warehouseMove: 'Inventory Move',
-      warehouseFreeze: 'Inventory freeze'
+      warehouseFreeze: 'Inventory freeze',
+      warehouseAdjust: 'Inventory Adjust'
     }
   },
   login: {
@@ -275,6 +276,23 @@ export default {
         location_name: 'Location Code',
         freeze: 'Freeze',
         unfreeze: 'Unfreeze'
+      },
+      warehouseAdjust: {
+        job_code: 'Job Code',
+        job_type: 'Job Type',
+        warehouse: 'Warehouse',
+        location_name: 'Location Code',
+        handler: 'Handler',
+        handle_time: 'Handle Time',
+        creator: 'Creator',
+        create_time: 'Create Time',
+        qty: 'Difference Qty',
+        warehouseTake: 'Warehouse Take',
+        processCombine: 'Warehouse Process(Combine)',
+        processSplit: 'Warehouse Process(Split)',
+        warehouseMove: 'Warehouse Move',
+        confirmAdjust: 'Confirm Adjust',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?',
       }
     },
     stockManagement: {
