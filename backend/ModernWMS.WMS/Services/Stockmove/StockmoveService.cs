@@ -288,8 +288,9 @@ namespace ModernWMS.WMS.Services
         /// confirm move
         /// </summary>
         /// <param name="id">id</param>
+        /// <param name="currentUser">current user</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> Confirm(int id)
+        public async Task<(bool flag, string msg)> Confirm(int id,CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<StockmoveEntity>();
             var stock_DBSet  = _dBContext.GetDbSet<StockEntity>();
@@ -298,6 +299,8 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
+            entity.handler = currentUser.user_name;
+            entity.handle_time = DateTime.Now;
             entity.move_status = 1;
             entity.last_update_time = DateTime.Now;
             var orig_stock = await stock_DBSet.FirstOrDefaultAsync(t => t.goods_location_id == entity.goods_owner_id && t.sku_id == entity.sku_id);

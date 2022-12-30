@@ -46,7 +46,7 @@
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> Confirm(int id);
+        Task<(bool flag, string msg)> Confirm(int id, CurrentUser currentUser);
  
          /// <summary>
          /// delete a record

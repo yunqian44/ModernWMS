@@ -68,19 +68,29 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int picked_qty { get; set; }  = 0;
 
         /// <summary>
-        /// is_update_stock
+        /// spu_code
         /// </summary>
-        [Display(Name = "is_update_stock")]
-        public bool is_update_stock { get; set; } =true;
+        public string spu_code { get; set; } = string.Empty;
 
         /// <summary>
-        /// last_update_time
+        /// spu_name
         /// </summary>
-        [Display(Name = "last_update_time")]
-         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime last_update_time { get; set; }  = UtilConvert.MinDate;
+        public string spu_name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// spu_description
+        /// </summary>
+        public string spu_description { get; set; } = string.Empty;
 
+        /// <summary>
+        /// bar_code
+        /// </summary>
+        public string bar_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// sku_code
+        /// </summary>
+        public string sku_code { get; set; } = string.Empty;
         #endregion
 
     }

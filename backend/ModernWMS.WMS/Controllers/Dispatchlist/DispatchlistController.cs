@@ -65,73 +65,60 @@
                  Totals = totals
              });
          }
- 
-       
- 
-         /// <summary>
-         /// get a record by id
-         /// </summary>
-         /// <returns>args</returns>
-         [HttpGet]
-         public async Task<ResultModel<DispatchlistViewModel>> GetAsync(int id)
+        /// <summary>
+        /// advanced dispatch order page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <returns></returns>
+        [HttpPost("advanced-list")]
+        public async Task<ResultModel<PageData<PreDispatchlistViewModel>>> AdvancedDispatchlistPageAsync(PageSearch pageSearch)
+        {
+            var (data, totals) = await _dispatchlistService.AdvancedDispatchlistPageAsync(pageSearch, CurrentUser);
+
+            return ResultModel<PageData<PreDispatchlistViewModel>>.Success(new PageData<PreDispatchlistViewModel>
+            {
+                Rows = data,
+                Totals = totals
+            });
+        }
+        /// <summary>
+        /// add a new record
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPost]
+         public async Task<ResultModel<string>> AddAsync(List<DispatchlistAddViewModel> viewModel)
          {
-             var data = await _dispatchlistService.GetAsync(id);
-             if (data!=null)
-             {
-                 return ResultModel<DispatchlistViewModel>.Success(data);
-             }
-             else
-             {
-                 return ResultModel<DispatchlistViewModel>.Error(_stringLocalizer["not_exists_entity"]);
-             }
-         }
-         /// <summary>
-         /// add a new record
-         /// </summary>
-         /// <param name="viewModel">args</param>
-         /// <returns></returns>
-         [HttpPost]
-         public async Task<ResultModel<int>> AddAsync(DispatchlistViewModel viewModel)
-         {
-             var (id, msg) = await _dispatchlistService.AddAsync(viewModel,CurrentUser);
-             if (id > 0)
-             {
-                 return ResultModel<int>.Success(id);
-             }
-             else
-             {
-                 return ResultModel<int>.Error(msg);
-             }
-         }
- 
-         /// <summary>
-         /// update a record
-         /// </summary>
-         /// <param name="viewModel">args</param>
-         /// <returns></returns>
-         [HttpPut]
-         public async Task<ResultModel<bool>> UpdateAsync(DispatchlistViewModel viewModel)
-         {
-             var (flag, msg) = await _dispatchlistService.UpdateAsync(viewModel);
+             var (flag, msg) = await _dispatchlistService.AddAsync(viewModel,CurrentUser);
              if (flag)
              {
-                 return ResultModel<bool>.Success(flag);
+                 return ResultModel<string>.Success(msg);
              }
              else
              {
-                 return ResultModel<bool>.Error(msg, 400, flag);
+                 return ResultModel<string>.Error(msg);
              }
          }
- 
-         /// <summary>
-         /// delete a record
-         /// </summary>
-         /// <param name="id">id</param>
-         /// <returns></returns>
-         [HttpDelete]
-         public async Task<ResultModel<string>> DeleteAsync(int id)
+        /// <summary>
+        /// get Dispatchlist details with available stock
+        /// </summary>
+        /// <param name="dispatch_no">dispatch_no</param>
+        /// <returns></returns>
+        [HttpGet("confirm-check")]
+        public async Task<ResultModel<List<DispatchlistConfirmDetailViewModel>>> ConfirmOrderCheck(string dispatch_no)
+        {
+            var datas  = await _dispatchlistService.ConfirmOrderCheck(dispatch_no, CurrentUser);
+            return ResultModel<List<DispatchlistConfirmDetailViewModel>>.Success(datas);
+        }
+        /// <summary>
+        /// delete a record
+        /// </summary>
+        /// <param name="dispatch_no">dispatch_no</param>
+        /// <returns></returns>
+        [HttpDelete]
+         public async Task<ResultModel<string>> DeleteAsync(string dispatch_no)
          {
-             var (flag, msg) = await _dispatchlistService.DeleteAsync(id);
+             var (flag, msg) = await _dispatchlistService.DeleteAsync(dispatch_no,CurrentUser);
              if (flag)
              {
                  return ResultModel<string>.Success(msg);

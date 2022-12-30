@@ -1,4 +1,5 @@
-﻿using ModernWMS.Core.Utility;
+﻿
+using ModernWMS.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,19 +10,25 @@ using System.Xml.Linq;
 
 namespace ModernWMS.WMS.Entities.ViewModels
 {
-    /// <summary>
-    ///   Advance Dispatchlist viewModel
-    /// </summary>
-    public class PreDispatchlistViewModel
+    public class DispatchlistConfirmDetailViewModel
     {
         #region constructor
         /// <summary>
         /// constructor
         /// </summary>
-        public PreDispatchlistViewModel()
+        public DispatchlistConfirmDetailViewModel()
         {
 
         }
+        #endregion
+        #region Property
+
+        /// <summary>
+        /// id
+        /// </summary>
+        [Display(Name = "id")]
+        public int dispatchlist_id { get; set; } = 0;
+
         /// <summary>
         /// dispatch_no
         /// </summary>
@@ -49,42 +56,56 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string customer_name { get; set; } = string.Empty;
 
         /// <summary>
+        /// sku_id
+        /// </summary>
+        [Display(Name = "sku_id")]
+        public int sku_id { get; set; } = 0;
+
+        /// <summary>
         /// qty
         /// </summary>
         [Display(Name = "qty")]
         public int qty { get; set; } = 0;
 
         /// <summary>
-        /// weight
+        /// spu_code
         /// </summary>
-        [Display(Name = "weight")]
-        public decimal weight { get; set; } = 0;
+        public string spu_code { get; set; } = string.Empty;
 
         /// <summary>
-        /// volume
+        /// spu_name
         /// </summary>
-        [Display(Name = "volume")]
-        public decimal volume { get; set; } = 0;
+        public string spu_name { get; set; } = string.Empty;
 
         /// <summary>
-        /// tenant_id
+        /// spu_description
         /// </summary>
-        public byte tenant_id { get; set; } = 0;
+        public string spu_description { get; set; } = string.Empty;
 
         /// <summary>
-        /// creator
+        /// bar_code
         /// </summary>
-        [Display(Name = "creator")]
-        [MaxLength(64, ErrorMessage = "MaxLength")]
-        public string creator { get; set; } = string.Empty;
+        public string bar_code { get; set; } = string.Empty;
 
         /// <summary>
-        /// create_time
+        /// sku_code
         /// </summary>
-        [Display(Name = "create_time")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime create_time { get; set; } = UtilConvert.MinDate;
+        public string sku_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// quantity available
+        /// </summary>
+        public int qty_available { get; set; } = 0;
+
+        /// <summary>
+        /// confirm order
+        /// </summary>
+        public bool confirm { get; set; } = false;
+
+        /// <summary>
+        /// pick list
+        /// </summary>
+        public List<DispatchlistConfirmPickDetailViewModel> pick_list { get; set; } = new List<DispatchlistConfirmPickDetailViewModel>();
         #endregion
-
     }
 }
