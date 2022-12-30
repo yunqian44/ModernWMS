@@ -100,6 +100,10 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.warehouseMove')
     case 'warehouseFreeze':
       return i18n.global.t('router.sideBar.warehouseFreeze')
+    case 'warehouseAdjust':
+      return i18n.global.t('router.sideBar.warehouseAdjust')
+    case 'warehouseTaking':
+      return i18n.global.t('router.sideBar.warehouseTaking')
     default:
       return ''
   }

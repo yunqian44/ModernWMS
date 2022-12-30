@@ -75,6 +75,29 @@ namespace ModernWMS.WMS.IServices
         /// <param name="id">id</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> UnloadAsync(int id);
+
+        /// <summary>
+        /// sorting， add a new asnsort record and update asn sorted_qty
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> SortingAsync(AsnsortInputViewModel viewModel, CurrentUser currentUser);
+        /// <summary>
+        /// Sorted
+        /// change the asn_status from 2 to 3
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> SortedAsync(int id);
+
+        /// <summary>
+        /// PutAway
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> PutAwayAsync(AsnPutAwayInputViewModel viewModel, CurrentUser currentUser);
         #endregion
     }
 }

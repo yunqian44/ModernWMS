@@ -44,7 +44,7 @@ export const removeObjectNull = (obj: any) => {
     if (XEUtils.isString(copy[item])) {
       copy[item] = copy[item].replace(/(^\s*)|(\s*$)/g, '')
     }
-    if (copy[item] === '' || copy[item] === null) {
+    if (copy[item] === '' || copy[item] == null) {
       delete copy[item]
     }
   })
