@@ -342,7 +342,8 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Load"]}");
             }
-            entity.asn_status = 2;
+            entity.asn_status = 2; 
+            entity.last_update_time = DateTime.Now;
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
@@ -353,7 +354,86 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["confirm_failed"]);
             }
         }
+        /// <summary>
+        /// sorting， add a new asnsort record and update asn sorted_qty
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SortingAsync(AsnsortInputViewModel viewModel, CurrentUser currentUser)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var Asnsorts = _dBContext.GetDbSet<AsnsortEntity>();
 
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == viewModel.asn_id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != 2)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Sort"]}");
+            }
+            await Asnsorts.AddAsync(new AsnsortEntity
+            {
+                id = 0,
+                asn_id = viewModel.asn_id,
+                sorted_qty = viewModel.sorted_qty,
+                create_time = DateTime.Now,
+                creator = currentUser.user_name,
+                is_valid = true,
+                last_update_time = DateTime.Now, tenant_id = currentUser.tenant_id
+            });
+            entity.sorted_qty += viewModel.sorted_qty;
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["sorting_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["sorting_failed"]);
+            }
+        }
+        /// <summary>
+        /// Sorted
+        /// change the asn_status from 2 to 3
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SortedAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.sorted_qty < 1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Sorting"]}");
+            }
+            entity.asn_status = 3;
+            if (entity.sorted_qty > entity.asn_qty)
+            {
+                entity.more_qty = entity.sorted_qty - entity.asn_qty;
+            }
+            else if (entity.sorted_qty < entity.asn_qty)
+            {
+                entity.shortage_qty = entity.asn_qty - entity.sorted_qty;
+            }
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["sorted_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["sorted_failed"]);
+            }
+        }
         #endregion
     }
 }

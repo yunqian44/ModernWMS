@@ -8,6 +8,7 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
+using ModernWMS.Core.JWT;
 
 namespace ModernWMS.WMS.Controllers
 {
@@ -191,6 +192,45 @@ namespace ModernWMS.WMS.Controllers
         public async Task<ResultModel<string>> UnloadAsync(int id)
         {
             var (flag, msg) = await _asnService.UnloadAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        /// sorting， add a new asnsort record and update asn sorted_qty
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPut("sorting")]
+        public async Task<ResultModel<string>> SortingAsync(AsnsortInputViewModel viewModel)
+        {
+            var (flag, msg) = await _asnService.SortingAsync(viewModel, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        
+        /// <summary>
+        /// Sorted
+        /// change the asn_status from 2 to 3
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("sorted/{id}")]
+        public async Task<ResultModel<string>> SortedAsync(int id)
+        {
+            var (flag, msg) = await _asnService.SortedAsync(id);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);
