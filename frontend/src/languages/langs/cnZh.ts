@@ -69,7 +69,8 @@ export default {
       warehouseWorkingModule: '仓内作业',
       warehouseProcessing: '仓内加工',
       warehouseMove: '库存移动',
-      warehouseFreeze: '库存冻结'
+      warehouseFreeze: '库存冻结',
+      warehouseAdjust: '库存调整'
     }
   },
   login: {
@@ -283,6 +284,23 @@ export default {
         location_name: '所在库位',
         freeze: '冻结',
         unfreeze: '解冻'
+      },
+      warehouseAdjust: {
+        job_code: '作业单号',
+        job_type: '作业类型',
+        warehouse: '所在仓库',
+        location_name: '所在库位',
+        handler: '操作人',
+        handle_time: '操作时间',
+        creator: '创建人',
+        create_time: '创建时间',
+        qty: '调整差异数量',
+        warehouseTake: '盘点',
+        processCombine: '仓内加工（组合）',
+        processSplit: '仓内加工（拆分）',
+        warehouseMove: '移库',
+        confirmAdjust: '确认调整',
+        beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
       }
     },
     stockManagement: {

@@ -1,4 +1,4 @@
-<!-- Warehouse Freeze -->
+<!-- Warehouse Adjust -->
 <template>
   <div class="container">
     <div>
@@ -11,16 +11,7 @@
                 <v-row no-gutters>
                   <!-- Operate Btn -->
                   <v-col cols="3" class="col">
-                    <tooltip-btn
-                      icon="mdi-lock-open-outline"
-                      :tooltip-text="$t('wms.warehouseWorking.warehouseFreeze.freeze')"
-                      @click="method.add(FREEZE_JOB_FREEZE)"
-                    ></tooltip-btn>
-                    <tooltip-btn
-                      icon="mdi-lock-open-variant-outline"
-                      :tooltip-text="$t('wms.warehouseWorking.warehouseFreeze.unfreeze')"
-                      @click="method.add(FREEZE_JOB_UNFREEZE)"
-                    ></tooltip-btn>
+                    <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
                     <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
@@ -46,32 +37,33 @@
                 <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="job_code" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.job_code')"></vxe-column>
-                  <vxe-column field="job_type" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.job_type')">
+                  <vxe-column field="job_code" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.job_code')"></vxe-column>
+                  <vxe-column field="job_type" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.job_type')">
                     <template #default="{ row, column }">
-                      <span>{{ formatFreezeJobType(row[column.property]) }}</span>
+                      <span>{{ formatAdjustJobType(row[column.property]) }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
-                  <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.location_name')"></vxe-column>
                   <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" width="150px" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
-                  <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.handler')"></vxe-column>
+                  <vxe-column field="qty" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.qty')"></vxe-column>
+                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
+                  <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.location_name')"></vxe-column>
+                  <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.handler')"></vxe-column>
                   <vxe-column
                     field="handle_time"
                     width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseFreeze.handle_time')"
+                    :title="$t('wms.warehouseWorking.warehouseAdjust.handle_time')"
                     :formatter="['formatDate']"
                   ></vxe-column>
-                  <!-- <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseFreeze.creator')"></vxe-column>
+                  <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseAdjust.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
                     width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseFreeze.create_time')"
+                    :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"
                     :formatter="['formatDate']"
-                  ></vxe-column> -->
-                  <vxe-column field="operate" :title="$t('system.page.operate')" width="100" :resizable="false" show-overflow>
+                  ></vxe-column>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -79,19 +71,21 @@
                         :tooltip-text="$t('system.page.view')"
                         @click="method.viewRow(row)"
                       ></tooltip-btn>
-                      <!-- <tooltip-btn
+                      <tooltip-btn
                         :flat="true"
                         icon="mdi-book-open-outline"
-                        :tooltip-text="$t('wms.warehouseWorking.warehouseMove.confirmMove')"
-                        @click="method.confirmMove(row)"
-                      ></tooltip-btn> -->
-                      <!-- <tooltip-btn
+                        :tooltip-text="$t('wms.warehouseWorking.warehouseAdjust.confirmAdjust')"
+                        :disabled="method.confirmAdjustBtnDisabled(row)"
+                        @click="method.confirmAdjust(row)"
+                      ></tooltip-btn>
+                      <tooltip-btn
                         :flat="true"
                         icon="mdi-delete-outline"
                         :tooltip-text="$t('system.page.delete')"
                         :icon-color="errorColor"
+                        :disabled="method.confirmAdjustBtnDisabled(row)"
                         @click="method.deleteRow(row)"
-                      ></tooltip-btn> -->
+                      ></tooltip-btn>
                     </template>
                   </vxe-column>
                 </vxe-table>
@@ -113,7 +107,7 @@
       <addOrUpdateDialog
         :show-dialog="data.showDialog"
         :form="data.dialogForm"
-        :freeze-type="data.freezeType"
+        :process-type="data.processType"
         @close="method.closeDialog"
         @saveSuccess="method.saveSuccess"
       />
@@ -125,46 +119,43 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseFreezeVO } from '@/types/warehouseWorking/WarehouseFreeze'
+import { WarehouseAdjustVO, AdjustJobType } from '@/types/warehouseWorking/WarehouseAdjust'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
-import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system'
-import { formatFreezeJobType } from '@/utils/format/formatWarehouseWorking'
-import { deleteStockFreeze, getStockFreezeList, getStockFreezeOne } from '@/api/wms/warehouseFreeze'
+import { deleteStockAdjust, getStockAdjustList, getStockAdjustOne, confirmStockAdjust } from '@/api/wms/warehouseAdjust'
+import { PROCESS_JOB_COMBINE } from '@/constant/warehouseWorking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
+import { formatAdjustJobType } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import addOrUpdateDialog from './add-or-update-freeze.vue'
+import addOrUpdateDialog from './add-or-update-adjust.vue'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  freezeType: FREEZE_JOB_FREEZE,
+  processType: PROCESS_JOB_COMBINE,
   timer: ref<any>(null),
   activeTab: null,
   searchForm: {},
-  tableData: ref<WarehouseFreezeVO[]>([]),
+  tableData: ref<WarehouseAdjustVO[]>([]),
   dialogForm: {
     id: 0,
+    // job_type: AdjustJobType.TAKE,
     job_code: '',
-    job_type: FREEZE_JOB_FREEZE,
     sku_id: 0,
     goods_owner_id: 0,
     goods_location_id: 0,
-    handler: '',
-    handle_time: '',
-    last_update_time: '',
-    tenant_id: 0,
-    warehouse: '',
-    location_name: '',
+    qty: 0,
+    is_update_stock: false,
+    source_table_id: 0,
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    creator: '',
-    create_time: ''
+    warehouse: '',
+    location_name: ''
   },
   tablePage: reactive({
     total: 0,
@@ -176,26 +167,22 @@ const data = reactive({
 
 const method = reactive({
   // Open a dialog to add
-  add: (jobType: boolean) => {
-    data.freezeType = jobType
+  add: () => {
     data.dialogForm = {
       id: 0,
+      // job_type: AdjustJobType.TAKE,
       job_code: '',
-      job_type: FREEZE_JOB_FREEZE,
       sku_id: 0,
       goods_owner_id: 0,
       goods_location_id: 0,
-      handler: '',
-      handle_time: '',
-      last_update_time: '',
-      tenant_id: 0,
-      warehouse: '',
-      location_name: '',
+      qty: 0,
+      is_update_stock: false,
+      source_table_id: 0,
       spu_code: '',
       spu_name: '',
       sku_code: '',
-      creator: '',
-      create_time: ''
+      warehouse: '',
+      location_name: ''
     }
     nextTick(() => {
       data.showDialog = true
@@ -219,7 +206,7 @@ const method = reactive({
   },
 
   getStockProcessList: async () => {
-    const { data: res } = await getStockFreezeList(data.tablePage)
+    const { data: res } = await getStockAdjustList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -231,7 +218,7 @@ const method = reactive({
     data.tablePage.total = res.data.totals
   },
 
-  viewRow: async (row: WarehouseFreezeVO) => {
+  viewRow: async (row: WarehouseAdjustVO) => {
     await method.getOne(row.id)
     nextTick(() => {
       data.showDialog = true
@@ -239,7 +226,7 @@ const method = reactive({
   },
 
   getOne: async (id: number) => {
-    const { data: res } = await getStockFreezeOne(id)
+    const { data: res } = await getStockAdjustOne(id)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -251,29 +238,29 @@ const method = reactive({
     data.dialogForm = res.data
   },
 
-  // deleteRow(row: WarehouseFreezeVO) {
-  //   hookComponent.$dialog({
-  //     content: i18n.global.t('system.tips.beforeDeleteMessage'),
-  //     handleConfirm: async () => {
-  //       if (row.id) {
-  //         const { data: res } = await deleteStockFreeze(row.id)
-  //         if (!res.isSuccess) {
-  //           hookComponent.$message({
-  //             type: 'error',
-  //             content: res.errorMessage
-  //           })
-  //           return
-  //         }
+  deleteRow(row: WarehouseAdjustVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteStockAdjust(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
 
-  //         hookComponent.$message({
-  //           type: 'success',
-  //           content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
-  //         })
-  //         method.refresh()
-  //       }
-  //     }
-  //   })
-  // },
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
 
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
@@ -286,7 +273,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('router.sideBar.warehouseFreeze'),
+        filename: i18n.global.t('router.sideBar.warehouseAdjust'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -302,6 +289,32 @@ const method = reactive({
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
     method.refresh()
+  },
+
+  // The btn will become disabled when the 'process_status' is false
+  confirmAdjustBtnDisabled: (row: WarehouseAdjustVO) => row.is_update_stock === true,
+
+  confirmAdjust: async (row: WarehouseAdjustVO) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('wms.warehouseWorking.warehouseAdjust.beforeConfirmAdjust'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await confirmStockAdjust(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
   }
 })
 
