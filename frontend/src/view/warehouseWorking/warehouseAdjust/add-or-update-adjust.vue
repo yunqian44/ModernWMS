@@ -200,7 +200,7 @@ const method = reactive({
       data.form.spu_name = selectRecords[0].spu_name
       data.form.sku_code = selectRecords[0].sku_code
     } catch (error) {
-      console.error(error)
+      // console.error(error)
     }
   },
 

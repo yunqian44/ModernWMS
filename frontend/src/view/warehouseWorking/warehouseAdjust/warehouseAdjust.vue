@@ -119,7 +119,7 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseAdjustVO, AdjustJobType } from '@/types/warehouseWorking/WarehouseAdjust'
+import { WarehouseAdjustVO } from '@/types/warehouseWorking/WarehouseAdjust'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockAdjust, getStockAdjustList, getStockAdjustOne, confirmStockAdjust } from '@/api/wms/warehouseAdjust'
