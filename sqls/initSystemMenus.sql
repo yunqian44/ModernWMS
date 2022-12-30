@@ -13,6 +13,7 @@ VALUES
 ('customer', 'baseModule', 'customer', 'base/customer', 1, 11),
 ('stockManagement', '', 'stockManagement', 'wms/stockManagement', 1, 12),
 ('warehouseProcessing', 'warehouseWorkingModule', 'warehouseProcessing', 'warehouseWorking/warehouseProcessing', 1, 13),
-('warehouseMove', 'warehouseWorkingModule', 'warehouseMove', 'warehouseWorking/warehouseMove', 1, 14)
-('warehouseFreeze', 'warehouseWorkingModule', 'warehouseFreeze', 'warehouseWorking/warehouseFreeze', 1, 15)
-('warehouseAdjust', 'warehouseWorkingModule', 'warehouseAdjust', 'warehouseWorking/warehouseAdjust', 1, 16)
+('warehouseMove', 'warehouseWorkingModule', 'warehouseMove', 'warehouseWorking/warehouseMove', 1, 14),
+('warehouseFreeze', 'warehouseWorkingModule', 'warehouseFreeze', 'warehouseWorking/warehouseFreeze', 1, 15),
+('warehouseAdjust', 'warehouseWorkingModule', 'warehouseAdjust', 'warehouseWorking/warehouseAdjust', 1, 16),
+('warehouseTaking', 'warehouseWorkingModule', 'warehouseTaking', 'warehouseWorking/warehouseTaking', 1, 17)
