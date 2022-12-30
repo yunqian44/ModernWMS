@@ -240,6 +240,26 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<string>.Error(msg);
             }
         }
+
+        /// <summary>
+        /// PutAway
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPut("putaway")]
+        public async Task<ResultModel<string>> PutAwayAsync(AsnPutAwayInputViewModel viewModel)
+        {
+            var (flag, msg) = await _asnService.PutAwayAsync(viewModel, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
         #endregion
     }
 }

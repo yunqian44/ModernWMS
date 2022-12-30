@@ -434,6 +434,67 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["sorted_failed"]);
             }
         }
+
+        /// <summary>
+        /// PutAway
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> PutAwayAsync(AsnPutAwayInputViewModel viewModel, CurrentUser currentUser)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == viewModel.asn_id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != 3)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Sorted"]}");
+            }
+            else if (entity.actual_qty + viewModel.putaway_qty > entity.sorted_qty)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Total_PutAway_Qty_Greater_Than_Sorted_Qty"]}");
+            }
+            entity.actual_qty += viewModel.putaway_qty;
+            if (entity.actual_qty.Equals(entity.sorted_qty))
+            {
+                entity.asn_status = 4;
+            }
+            entity.last_update_time = DateTime.Now;
+            var Stocks = _dBContext.GetDbSet<StockEntity>();
+            var stockEntity = await Stocks.FirstOrDefaultAsync(t => t.sku_id.Equals(entity.sku_id) && t.goods_location_id.Equals(viewModel.goods_location_id));
+            if (stockEntity == null)
+            {
+                stockEntity = new StockEntity
+                {
+                    sku_id = entity.sku_id,
+                    goods_location_id = viewModel.goods_location_id,
+                    goods_owner_id = entity.goods_owner_id,
+                    qty = viewModel.putaway_qty,
+                    is_freeze = false,
+                    last_update_time = DateTime.Now,
+                    tenant_id = currentUser.tenant_id,
+                    id = 0
+                };
+                await Stocks.AddAsync(stockEntity);
+            }
+            else
+            {
+                stockEntity.qty += viewModel.putaway_qty;
+                stockEntity.last_update_time = DateTime.Now;
+            }
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["putaway_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["putaway_failed"]);
+            }
+        }
         #endregion
     }
 }

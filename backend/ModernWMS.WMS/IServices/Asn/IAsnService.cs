@@ -90,6 +90,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="id">id</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> SortedAsync(int id);
+
+        /// <summary>
+        /// PutAway
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> PutAwayAsync(AsnPutAwayInputViewModel viewModel, CurrentUser currentUser);
         #endregion
     }
 }
