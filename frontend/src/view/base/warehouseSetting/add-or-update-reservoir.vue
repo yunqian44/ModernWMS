@@ -53,7 +53,6 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { number } from '@intlify/core-base'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addWarehouseArea, updateWarehouseArea, getWarehouseSelect } from '@/api/base/warehouseSetting'

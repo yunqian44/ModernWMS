@@ -80,10 +80,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, onMounted } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseVO, WarehouseAreaVO, GoodsLocationVO, AreaProperty } from '@/types/Base/Warehouse'
+import { WarehouseAreaVO, AreaProperty } from '@/types/Base/Warehouse'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteWarehouseArea, getWarehouseAreaList } from '@/api/base/warehouseSetting'
@@ -206,7 +206,7 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    // console.log(data.searchForm)
   }
 })
 

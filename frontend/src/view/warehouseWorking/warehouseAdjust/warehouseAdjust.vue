@@ -11,7 +11,7 @@
                 <v-row no-gutters>
                   <!-- Operate Btn -->
                   <v-col cols="3" class="col">
-                    <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
+                    <!-- <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn> -->
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
                     <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
@@ -49,13 +49,13 @@
                   <vxe-column field="qty" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.qty')"></vxe-column>
                   <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.location_name')"></vxe-column>
-                  <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.handler')"></vxe-column>
+                  <!-- <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.handler')"></vxe-column>
                   <vxe-column
                     field="handle_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseAdjust.handle_time')"
                     :formatter="['formatDate']"
-                  ></vxe-column>
+                  ></vxe-column> -->
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseAdjust.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
@@ -63,7 +63,7 @@
                     :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"
                     :formatter="['formatDate']"
                   ></vxe-column>
-                  <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
+                  <!-- <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -87,7 +87,7 @@
                         @click="method.deleteRow(row)"
                       ></tooltip-btn>
                     </template>
-                  </vxe-column>
+                  </vxe-column> -->
                 </vxe-table>
                 <vxe-pager
                   :current-page="data.tablePage.pageIndex"
@@ -119,7 +119,7 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseAdjustVO, AdjustJobType } from '@/types/warehouseWorking/WarehouseAdjust'
+import { WarehouseAdjustVO } from '@/types/warehouseWorking/WarehouseAdjust'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockAdjust, getStockAdjustList, getStockAdjustOne, confirmStockAdjust } from '@/api/wms/warehouseAdjust'

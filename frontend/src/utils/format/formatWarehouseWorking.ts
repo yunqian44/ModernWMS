@@ -1,5 +1,5 @@
 import i18n from '@/languages/i18n'
-import { PROCESS_JOB_COMBINE, PROCESS_JOB_SPLIT, FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
+import { PROCESS_JOB_COMBINE, FREEZE_JOB_FREEZE, TAKING_JOB_FINISH, TAKING_JOB_UNFINISH } from '@/constant/warehouseWorking'
 import { MoveStatus } from '@/types/WarehouseWorking/WarehouseMove'
 import { AdjustJobType } from '@/types/WarehouseWorking/WarehouseAdjust'
 
@@ -14,6 +14,10 @@ export const formatFreezeJobType = (value: boolean) => (value === FREEZE_JOB_FRE
 export const formatMoveStatus = (value: number) => (value === MoveStatus.UNADJUST
     ? i18n.global.t('wms.warehouseWorking.warehouseMove.unadjust')
     : i18n.global.t('wms.warehouseWorking.warehouseMove.adjusted'))
+
+export const formatTakingJobStatus = (value: boolean) => (value === TAKING_JOB_FINISH
+    ? i18n.global.t('wms.warehouseWorking.warehouseTaking.finish')
+    : i18n.global.t('wms.warehouseWorking.warehouseTaking.unfinish'))
 
 export const formatAdjustJobType = (value: number) => {
   switch (value) {

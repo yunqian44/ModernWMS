@@ -1,22 +1,11 @@
-<!-- Warehouse Adjust Operate Dialog -->
+<!-- Warehouse Taking Operate Dialog -->
 <template>
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar class="" color="white" :title="`${$t('router.sideBar.warehouseAdjust')}`"></v-toolbar>
+        <v-toolbar class="" color="white" :title="`${$t('router.sideBar.warehouseTaking')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-select
-              v-model="data.form.job_type"
-              :items="data.combobox.job_type"
-              item-title="label"
-              item-value="value"
-              :rules="data.rules.job_type"
-              :label="$t('wms.warehouseWorking.warehouseAdjust.job_type')"
-              variant="outlined"
-              clearable
-              @update:model-value="method.changeJobType"
-            ></v-select>
             <v-text-field
               v-model="data.form.spu_code"
               :label="$t('base.commodityManagement.spu_code')"
@@ -43,23 +32,24 @@
             ></v-text-field>
             <v-text-field
               v-model="data.form.warehouse"
-              :label="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"
+              :label="$t('wms.warehouseWorking.warehouseTaking.warehouse')"
               :rules="data.rules.warehouse"
               variant="outlined"
               disabled
             ></v-text-field>
             <v-text-field
               v-model="data.form.location_name"
-              :label="$t('wms.warehouseWorking.warehouseAdjust.location_name')"
+              :label="$t('wms.warehouseWorking.warehouseTaking.location_name')"
               :rules="data.rules.location_name"
               variant="outlined"
               disabled
             ></v-text-field>
             <v-text-field
-              v-model="data.form.qty"
-              :label="$t('wms.warehouseWorking.warehouseAdjust.qty')"
-              :rules="data.rules.qty"
+              v-model="data.form.book_qty"
+              :label="$t('wms.warehouseWorking.warehouseTaking.book_qty')"
+              :rules="data.rules.book_qty"
               variant="outlined"
+              disabled
             ></v-text-field>
           </v-form>
         </v-card-text>
@@ -80,11 +70,12 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addStockAdjust } from '@/api/wms/warehouseAdjust'
-import { WarehouseAdjustVO, AdjustJobType } from '@/types/WarehouseWorking/WarehouseAdjust'
+import { addStockTaking } from '@/api/wms/warehouseTaking'
+import { WarehouseTakingVO } from '@/types/WarehouseWorking/WarehouseTaking'
 import { removeObjectNull } from '@/utils/common'
+import { TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
+import i18n from '@/languages/i18n'
 import commoditySelect from '@/components/select/commodity-select.vue'
 
 const formRef = ref()
@@ -94,7 +85,7 @@ const operateDisabled = computed(() => !!isUpdate.value)
 
 const props = defineProps<{
   showDialog: boolean
-  form: WarehouseAdjustVO
+  form: WarehouseTakingVO
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -103,63 +94,38 @@ const data = reactive({
   showCommodityDialogSelect: false,
   showLocationDialogSelect: false,
 
-  form: ref<WarehouseAdjustVO>({
+  form: ref<WarehouseTakingVO>({
     id: 0,
-    // job_type: AdjustJobType.UNKNOW,
     job_code: '',
+    job_status: TAKING_JOB_FINISH,
     sku_id: 0,
     goods_owner_id: 0,
     goods_location_id: 0,
-    qty: 0,
-    is_update_stock: false,
-    source_table_id: 0,
+    book_qty: 0,
+    counted_qty: 0,
+    difference_qty: 0,
     spu_code: '',
     spu_name: '',
     sku_code: '',
     warehouse: '',
-    location_name: '',
-    creator: '',
-    create_time: ''
+    location_name: ''
   }),
   rules: {
     job_type: [],
-    qty: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.qty') }!`],
+    book_qty: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.book_qty') }!`
+    ],
     warehouse: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouse') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.warehouse') }!`
     ],
     location_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.location_name') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.location_name') }!`
     ],
     spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_code') }!`],
     spu_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_name') }!`],
     sku_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_code') }!`],
     sku_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_name') }!`]
-  },
-  combobox: ref<{
-    job_type: {
-      label: string
-      value: AdjustJobType
-    }[]
-  }>({
-    job_type: [
-      {
-        label: i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouseTake'),
-        value: AdjustJobType.TAKE
-      },
-      {
-        label: i18n.global.t('wms.warehouseWorking.warehouseAdjust.processCombine'),
-        value: AdjustJobType.PROCESS_COMBINE
-      },
-      {
-        label: i18n.global.t('wms.warehouseWorking.warehouseAdjust.processSplit'),
-        value: AdjustJobType.PROCESS_SPLIT
-      },
-      {
-        label: i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouseMove'),
-        value: AdjustJobType.MOVE
-      },
-    ]
-  })
+  }
 })
 
 const method = reactive({
@@ -169,14 +135,6 @@ const method = reactive({
 
   initForm: () => {
     data.form = props.form
-  },
-
-  changeJobType: (value: any) => {
-    // Find the ID corresponding value
-    const jobType = data.combobox.job_type.find((item) => item.value === value)
-    if (jobType) {
-      data.form.job_type = jobType.value
-    }
   },
 
   openCommoditySelect: () => {
@@ -199,6 +157,7 @@ const method = reactive({
       data.form.spu_code = selectRecords[0].spu_code
       data.form.spu_name = selectRecords[0].spu_name
       data.form.sku_code = selectRecords[0].sku_code
+      data.form.book_qty = selectRecords[0].qty_available
     } catch (error) {
       // console.error(error)
     }
@@ -212,6 +171,7 @@ const method = reactive({
     data.form.spu_code = ''
     data.form.spu_name = ''
     data.form.sku_code = ''
+    data.form.book_qty = 0
   },
 
   submit: async () => {
@@ -220,7 +180,7 @@ const method = reactive({
     const form = method.constructFormBody()
 
     if (valid) {
-      const { data: res } = await addStockAdjust(form)
+      const { data: res } = await addStockTaking(form)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',

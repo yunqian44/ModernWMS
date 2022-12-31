@@ -64,37 +64,102 @@
               height: cardHeight
             }"
           >
-            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center" :tree-config="data.tableTreeConfig">
               <vxe-column type="seq" width="60"></vxe-column>
-              <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
-              <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
-              <vxe-column field="category_name" :title="$t('base.commodityManagement.category_name')"></vxe-column>
-              <vxe-column field="spu_description" :title="$t('base.commodityManagement.spu_description')"></vxe-column>
-              <vxe-column field="bar_code" :title="$t('base.commodityManagement.bar_code')"></vxe-column>
-              <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column>
-              <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"></vxe-column>
+              <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')" tree-node>
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ row.sku_code }}</span>
+                  <span v-else>{{ row.spu_code }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ row.sku_name }}</span>
+                  <span v-else>{{ row.spu_name }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="category_name" :title="$t('base.commodityManagement.category_name')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ row.unit }}</span>
+                  <span v-else>{{ row.bar_code }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="spu_description" :title="$t('base.commodityManagement.spu_description')"> </vxe-column>
+              <vxe-column field="bar_code" :title="$t('base.commodityManagement.bar_code')"> </vxe-column>
+              <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"> </vxe-column>
+              <vxe-column field="brand" :title="$t('base.commodityManagement.brand')"> </vxe-column>
+
+              <vxe-column field="weight" :title="$t('base.commodityManagement.weight')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ `${row.weight} ${method.GetUnit('weight', row.weight_unit)}` }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="lenght" :title="$t('base.commodityManagement.lenght')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ `${row.lenght} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="width" :title="$t('base.commodityManagement.width')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ `${row.width} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="height" :title="$t('base.commodityManagement.height')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ `${row.height} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="volume" :title="$t('base.commodityManagement.volume')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ `${row.volume} ${method.GetUnit('volume', row.volume_unit)}` }}</span>
+                </template>
+              </vxe-column>
+
+              <vxe-column field="cost" :title="$t('base.commodityManagement.cost')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ row.cost }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="price" :title="$t('base.commodityManagement.price')">
+                <template #default="{ row }">
+                  <span v-if="row.parent_id > 0">{{ row.price }}</span>
+                </template>
+              </vxe-column>
+              <!-- <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column> -->
+              <!-- <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"></vxe-column>
               <vxe-column field="brand" :title="$t('base.commodityManagement.brand')"></vxe-column>
               <vxe-column field="unit" :title="$t('base.commodityManagement.unit')"></vxe-column>
-              <vxe-column field="cost" :title="$t('base.commodityManagement.cost')"></vxe-column>
-              <vxe-column field="price" :title="$t('base.commodityManagement.price')"></vxe-column>
+              <vxe-column field="cost" :title="$t('base.commodityManagement.cost')"></vxe-column> -->
               <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                 <template #default="{ row }">
-                  <tooltip-btn
-                    :flat="true"
-                    icon="mdi-pencil-outline"
-                    :tooltip-text="$t('system.page.edit')"
-                    @click="method.editRow(row)"
-                  ></tooltip-btn>
-                  <tooltip-btn
-                    :flat="true"
-                    icon="mdi-delete-outline"
-                    :tooltip-text="$t('system.page.delete')"
-                    :icon-color="errorColor"
-                    @click="method.deleteRow(row)"
-                  ></tooltip-btn>
+                  <div v-if="!row.parent_id || row.parent_id <= 0">
+                    <tooltip-btn
+                      :flat="true"
+                      icon="mdi-pencil-outline"
+                      :tooltip-text="$t('system.page.edit')"
+                      @click="method.editRow(row)"
+                    ></tooltip-btn>
+                    <tooltip-btn
+                      :flat="true"
+                      icon="mdi-delete-outline"
+                      :tooltip-text="$t('system.page.delete')"
+                      :icon-color="errorColor"
+                      @click="method.deleteRow(row)"
+                    ></tooltip-btn>
+                  </div>
                 </template>
               </vxe-column>
             </vxe-table>
+            <vxe-pager
+              :current-page="data.tablePage.pageIndex"
+              :page-size="data.tablePage.pageSize"
+              perfect
+              :total="data.tablePage.total"
+              :page-sizes="PAGE_SIZE"
+              :layouts="PAGE_LAYOUT"
+              @page-change="method.handlePageChange"
+            >
+            </vxe-pager>
           </div>
         </v-card-text>
       </v-card>
@@ -106,12 +171,14 @@
 
 <script lang="ts" setup>
 import { computed, reactive, onMounted, ref } from 'vue'
+import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { CommodityVO, DataProps } from '@/types/Base/CommodityManagement'
-import { getCompanyAll, deleteCompany } from '@/api/base/companySetting'
+import { getSpuList, deleteSpu } from '@/api/base/commodityManagementSetting'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'
+import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
@@ -123,35 +190,55 @@ const data: DataProps = reactive({
   //   userName2: ''
   // },
   tableData: [],
+  tablePage: {
+    total: 0,
+    pageIndex: 1,
+    pageSize: 10
+  },
+  tableTreeConfig: {
+    transform: true,
+    rowField: 'tree_id',
+    parentField: 'parent_id'
+  },
   // Dialog info
   showDialog: false,
   dialogForm: {
     id: 0,
     spu_code: '',
     spu_name: '',
+    category_id: 0,
     category_name: '',
     spu_description: '',
     bar_code: '',
-    sku_name: '',
+    supplier_id: 0,
     supplier_name: '',
     brand: '',
-    unit: '',
-    cost: '',
-    price: '',
     origin: '',
-    length_unit: 0,
+    length_unit: 1,
     volume_unit: 0,
-    weight_unit: 0
+    weight_unit: 1,
+    detailList: []
   }
 })
 
 const method = reactive({
+  // 获取单位
+  GetUnit(type: 'weight' | 'length' | 'volume', val: number) {
+    switch (type) {
+      case 'length':
+        return ['mm', 'cm', 'dm', 'm'][val]
+      case 'volume':
+        return ['cm³', 'dm³', 'm³'][val]
+      case 'weight':
+        return ['mg', 'g', 'kg'][val]
+    }
+  },
   sureSearch: () => {
     // console.log(data.searchForm)
   },
   // Find Data by Pagination
   getCompanyList: async () => {
-    const { data: res } = await getCompanyAll()
+    const { data: res } = await getSpuList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -159,7 +246,20 @@ const method = reactive({
       })
       return
     }
-    data.tableData = res.data
+    data.tableData = []
+    for (const item of res.data.rows) {
+      item.tree_id = item.id
+      data.tableData.push(item)
+      for (const ditem of item.detailList) {
+        ditem.tree_id = 0
+        ditem.parent_id = item.id
+        ditem.length_unit = item.length_unit
+        ditem.volume_unit = item.volume_unit
+        ditem.weight_unit = item.weight_unit
+        data.tableData.push(ditem)
+      }
+    }
+    data.tablePage.total = res.data.totals
   },
   // Add user
   add: () => {
@@ -167,19 +267,13 @@ const method = reactive({
       id: 0,
       spu_code: '',
       spu_name: '',
-      category_name: '',
       spu_description: '',
       bar_code: '',
-      sku_name: '',
-      supplier_name: '',
       brand: '',
-      unit: '',
-      cost: '',
-      price: '',
-      origin: '',
-      length_unit: 0,
+      length_unit: 1,
       volume_unit: 0,
-      weight_unit: 0
+      weight_unit: 1,
+      detailList: []
     }
     data.showDialog = true
   },
@@ -205,7 +299,7 @@ const method = reactive({
       content: i18n.global.t('system.tips.beforeDeleteMessage'),
       handleConfirm: async () => {
         if (row.id) {
-          const { data: res } = await deleteCompany(row.id)
+          const { data: res } = await deleteSpu(row.id)
           if (!res.isSuccess) {
             hookComponent.$message({
               type: 'error',
@@ -239,7 +333,13 @@ const method = reactive({
         content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
-  }
+  },
+  // When change paging
+  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
+    data.tablePage.pageIndex = currentPage
+    data.tablePage.pageSize = pageSize
+    method.refresh()
+  })
 })
 
 onMounted(async () => {
@@ -248,7 +348,7 @@ onMounted(async () => {
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 
-const tableHeight = computed(() => computedTableHeight({ hasTab: false, hasPager: false }))
+const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
 </script>
 
 <style scoped lang="less">

@@ -126,9 +126,9 @@
          /// <param name="id">id</param>
          /// <returns></returns>
          [HttpPut]
-         public async Task<ResultModel<bool>> UpdateAsync(int id)
+         public async Task<ResultModel<bool>> Confirm(int id)
          {
-             var (flag, msg) = await _stockmoveService.Confirm(id);
+             var (flag, msg) = await _stockmoveService.Confirm(id,CurrentUser);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);

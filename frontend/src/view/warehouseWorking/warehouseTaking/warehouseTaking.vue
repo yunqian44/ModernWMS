@@ -1,4 +1,4 @@
-<!-- Warehouse Freeze -->
+<!-- Warehouse Taking -->
 <template>
   <div class="container">
     <div>
@@ -11,16 +11,7 @@
                 <v-row no-gutters>
                   <!-- Operate Btn -->
                   <v-col cols="3" class="col">
-                    <tooltip-btn
-                      icon="mdi-lock-open-outline"
-                      :tooltip-text="$t('wms.warehouseWorking.warehouseFreeze.freeze')"
-                      @click="method.add(FREEZE_JOB_FREEZE)"
-                    ></tooltip-btn>
-                    <tooltip-btn
-                      icon="mdi-lock-open-variant-outline"
-                      :tooltip-text="$t('wms.warehouseWorking.warehouseFreeze.unfreeze')"
-                      @click="method.add(FREEZE_JOB_UNFREEZE)"
-                    ></tooltip-btn>
+                    <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
                     <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
@@ -46,32 +37,35 @@
                 <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="job_code" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.job_code')"></vxe-column>
-                  <vxe-column field="job_type" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.job_type')">
+                  <vxe-column field="job_code" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.job_code')"></vxe-column>
+                  <vxe-column field="job_status" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.job_status')">
                     <template #default="{ row, column }">
-                      <span>{{ formatFreezeJobType(row[column.property]) }}</span>
+                      <span>{{ formatTakingJobStatus(row[column.property]) }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
-                  <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.location_name')"></vxe-column>
                   <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" width="150px" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
-                  <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.handler')"></vxe-column>
+                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.warehouse')"></vxe-column>
+                  <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.location_name')"></vxe-column>
+                  <vxe-column field="book_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.book_qty')"></vxe-column>
+                  <vxe-column field="counted_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.counted_qty')"></vxe-column>
+                  <vxe-column field="difference_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.difference_qty')"></vxe-column>
+                  <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.handler')"></vxe-column>
                   <vxe-column
                     field="handle_time"
                     width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseFreeze.handle_time')"
+                    :title="$t('wms.warehouseWorking.warehouseTaking.handle_time')"
                     :formatter="['formatDate']"
                   ></vxe-column>
-                  <!-- <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseFreeze.creator')"></vxe-column>
+                  <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseTaking.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
                     width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseFreeze.create_time')"
+                    :title="$t('wms.warehouseWorking.warehouseTaking.create_time')"
                     :formatter="['formatDate']"
-                  ></vxe-column> -->
-                  <vxe-column field="operate" :title="$t('system.page.operate')" width="100" :resizable="false" show-overflow>
+                  ></vxe-column>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -79,19 +73,21 @@
                         :tooltip-text="$t('system.page.view')"
                         @click="method.viewRow(row)"
                       ></tooltip-btn>
-                      <!-- <tooltip-btn
+                      <tooltip-btn
                         :flat="true"
                         icon="mdi-book-open-outline"
-                        :tooltip-text="$t('wms.warehouseWorking.warehouseMove.confirmMove')"
-                        @click="method.confirmMove(row)"
-                      ></tooltip-btn> -->
-                      <!-- <tooltip-btn
+                        :tooltip-text="$t('wms.warehouseWorking.warehouseTaking.confirmTaking')"
+                        @click="method.confirmTaking(row)"
+                      ></tooltip-btn>
+                      <tooltip-btn
                         :flat="true"
                         icon="mdi-delete-outline"
                         :tooltip-text="$t('system.page.delete')"
                         :icon-color="errorColor"
                         @click="method.deleteRow(row)"
-                      ></tooltip-btn> -->
+                      ></tooltip-btn>
+                      <!-- TODO 盘点确认后，不可删除 -->
+                      <!-- :disabled="method.confirmAdjustBtnDisabled(row)" -->
                     </template>
                   </vxe-column>
                 </vxe-table>
@@ -110,13 +106,7 @@
           </v-window>
         </v-card-text>
       </v-card>
-      <addOrUpdateDialog
-        :show-dialog="data.showDialog"
-        :form="data.dialogForm"
-        :freeze-type="data.freezeType"
-        @close="method.closeDialog"
-        @saveSuccess="method.saveSuccess"
-      />
+      <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
     </div>
   </div>
 </template>
@@ -124,47 +114,43 @@
 <script lang="ts" setup>
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight, computedTableHeight } from '@/constant/style'
-import { WarehouseFreezeVO } from '@/types/warehouseWorking/WarehouseFreeze'
+import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
+import { WarehouseTakingVO } from '@/types/warehouseWorking/WarehouseTaking'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
-import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system'
-import { formatFreezeJobType } from '@/utils/format/formatWarehouseWorking'
-import { getStockFreezeList, getStockFreezeOne } from '@/api/wms/warehouseFreeze'
+import { TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
+import { deleteStockTaking, getStockTakingList, getStockTakingOne, confirmStockTaking } from '@/api/wms/warehouseTaking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
+import { formatTakingJobStatus } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import addOrUpdateDialog from './add-or-update-freeze.vue'
+import addOrUpdateDialog from './add-or-update-taking.vue'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  freezeType: FREEZE_JOB_FREEZE,
   timer: ref<any>(null),
   activeTab: null,
   searchForm: {},
-  tableData: ref<WarehouseFreezeVO[]>([]),
+  tableData: ref<WarehouseTakingVO[]>([]),
   dialogForm: {
     id: 0,
     job_code: '',
-    job_type: FREEZE_JOB_FREEZE,
+    job_status: TAKING_JOB_FINISH,
     sku_id: 0,
     goods_owner_id: 0,
     goods_location_id: 0,
-    handler: '',
-    handle_time: '',
-    last_update_time: '',
-    tenant_id: 0,
-    warehouse: '',
-    location_name: '',
+    book_qty: 0,
+    counted_qty: 0,
+    difference_qty: 0,
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    creator: '',
-    create_time: ''
+    warehouse: '',
+    location_name: ''
   },
   tablePage: reactive({
     total: 0,
@@ -176,26 +162,22 @@ const data = reactive({
 
 const method = reactive({
   // Open a dialog to add
-  add: (jobType: boolean) => {
-    data.freezeType = jobType
+  add: () => {
     data.dialogForm = {
       id: 0,
       job_code: '',
-      job_type: FREEZE_JOB_FREEZE,
+      job_status: TAKING_JOB_FINISH,
       sku_id: 0,
       goods_owner_id: 0,
       goods_location_id: 0,
-      handler: '',
-      handle_time: '',
-      last_update_time: '',
-      tenant_id: 0,
-      warehouse: '',
-      location_name: '',
+      book_qty: 0,
+      counted_qty: 0,
+      difference_qty: 0,
       spu_code: '',
       spu_name: '',
       sku_code: '',
-      creator: '',
-      create_time: ''
+      warehouse: '',
+      location_name: ''
     }
     nextTick(() => {
       data.showDialog = true
@@ -219,7 +201,7 @@ const method = reactive({
   },
 
   getStockProcessList: async () => {
-    const { data: res } = await getStockFreezeList(data.tablePage)
+    const { data: res } = await getStockTakingList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -231,7 +213,7 @@ const method = reactive({
     data.tablePage.total = res.data.totals
   },
 
-  viewRow: async (row: WarehouseFreezeVO) => {
+  viewRow: async (row: WarehouseTakingVO) => {
     await method.getOne(row.id)
     nextTick(() => {
       data.showDialog = true
@@ -239,7 +221,7 @@ const method = reactive({
   },
 
   getOne: async (id: number) => {
-    const { data: res } = await getStockFreezeOne(id)
+    const { data: res } = await getStockTakingOne(id)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -251,29 +233,29 @@ const method = reactive({
     data.dialogForm = res.data
   },
 
-  // deleteRow(row: WarehouseFreezeVO) {
-  //   hookComponent.$dialog({
-  //     content: i18n.global.t('system.tips.beforeDeleteMessage'),
-  //     handleConfirm: async () => {
-  //       if (row.id) {
-  //         const { data: res } = await deleteStockFreeze(row.id)
-  //         if (!res.isSuccess) {
-  //           hookComponent.$message({
-  //             type: 'error',
-  //             content: res.errorMessage
-  //           })
-  //           return
-  //         }
+  deleteRow(row: WarehouseTakingVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteStockTaking(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
 
-  //         hookComponent.$message({
-  //           type: 'success',
-  //           content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
-  //         })
-  //         method.refresh()
-  //       }
-  //     }
-  //   })
-  // },
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
 
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
     data.tablePage.pageIndex = currentPage
@@ -286,7 +268,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('router.sideBar.warehouseFreeze'),
+        filename: i18n.global.t('router.sideBar.warehouseTaking'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -302,6 +284,33 @@ const method = reactive({
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
     method.refresh()
+  },
+
+  // The btn will become disabled when the 'process_status' is false
+  // confirmAdjustBtnDisabled: (row: WarehouseTakingVO) => row.is_update_stock === true,
+
+  // TODO 确认盘点时，要弹窗出来输入数量
+  confirmTaking: async (row: WarehouseTakingVO) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('wms.warehouseWorking.warehouseTaking.beforeConfirmAdjust'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await confirmStockTaking(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('wms.warehouseWorking.warehouseTaking.confirmTaking') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
   }
 })
 

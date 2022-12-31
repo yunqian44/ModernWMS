@@ -70,7 +70,8 @@ export default {
       warehouseProcessing: 'Warehouse Processing',
       warehouseMove: 'Inventory Move',
       warehouseFreeze: 'Inventory freeze',
-      warehouseAdjust: 'Inventory Adjust'
+      warehouseAdjust: 'Inventory Adjust',
+      warehouseTaking: 'Inventory Take'
     }
   },
   login: {
@@ -205,7 +206,12 @@ export default {
       origin: 'origin',
       length_unit: 'Length Unit',
       volume_unit: 'Volume Unit',
-      weight_unit: 'Weight Unit'
+      weight_unit: 'Weight Unit',
+      weight: 'Commodity Weight',
+      lenght: 'Commodity Length',
+      width: 'Commodity Width',
+      height: 'Commodity Height',
+      volume: 'Commodity Volume'
     }
   },
   wms: {
@@ -288,11 +294,27 @@ export default {
         create_time: 'Create Time',
         qty: 'Difference Qty',
         warehouseTake: 'Warehouse Take',
-        processCombine: 'Warehouse Process(Combine)',
-        processSplit: 'Warehouse Process(Split)',
+        processCombine: 'Warehouse Process',
+        processSplit: 'Warehouse Process',
         warehouseMove: 'Warehouse Move',
         confirmAdjust: 'Confirm Adjust',
         beforeConfirmAdjust: 'Are you sure to adjust this data?',
+      },
+      warehouseTaking: {
+        job_code: 'Job Code',
+        job_status: 'Job Status',
+        warehouse: 'Warehouse',
+        location_name: 'Location Code',
+        book_qty: 'Book Qty',
+        counted_qty: 'Actual Qty',
+        difference_qty: 'Difference Qty',
+        handler: 'Handler',
+        handle_time: 'Handle Time',
+        creator: 'Creator',
+        create_time: 'Create Time',
+        confirmTaking: 'Confirm Taking',
+        unfinish: 'Unfinish',
+        finish: 'Finish'
       }
     },
     stockManagement: {

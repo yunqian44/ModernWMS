@@ -187,7 +187,12 @@ namespace ModernWMS.WMS.Services
                 PropertyInfo t_prop_sku = typeof(StockEntity).GetProperty("sku_id");
                 MemberExpression t_sku_exp = Expression.Property(parameterExpression, t_prop_sku);
                 BinaryExpression t_sku_full_exp = Expression.Equal(t_sku_exp, t_constan_sku);
+                ConstantExpression t_constan_owner = Expression.Constant(entity.detailList[i].goods_owner_id);
+                PropertyInfo t_prop_owner = typeof(StockEntity).GetProperty("goods_owner_id");
+                MemberExpression t_owner_exp = Expression.Property(parameterExpression, t_prop_owner);
+                BinaryExpression t_owner_full_exp = Expression.Equal(t_sku_exp, t_constan_owner);
                 var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
+                t_exp = Expression.And(t_exp, t_owner_exp);
                 if (exp != null)
                     exp = Expression.Or(exp, t_exp);
                 else
@@ -312,13 +317,13 @@ namespace ModernWMS.WMS.Services
             }
             var detail_DBSet = _dBContext.GetDbSet<StockprocessdetailEntity>();
             var adjust_DBset = _dBContext.GetDbSet<StockadjustEntity>();
-            var details = await detail_DBSet.AsNoTracking().Where(t => t.stock_process_id == id).ToListAsync();
+            var details = await detail_DBSet.Where(t => t.stock_process_id == id).ToListAsync();
             var adjusts = (from d in details
                            select new StockadjustEntity
                            {
                                sku_id = d.sku_id,
                                source_table_id = d.id,
-                               is_update_stock = false,
+                               is_update_stock = true,
                                goods_location_id = d.goods_location_id,
                                job_type = 2,
                                goods_owner_id = d.goods_owner_id,

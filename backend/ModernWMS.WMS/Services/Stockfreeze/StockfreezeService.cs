@@ -168,7 +168,7 @@ namespace ModernWMS.WMS.Services
             entity.tenant_id = currentUser.tenant_id;
             entity.job_code = await GetOrderCode();
             var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
-            var stocks = await stock_DBSet.AsNoTracking().Where(t => t.goods_location_id == entity.goods_location_id && t.sku_id == entity.sku_id).ToListAsync();
+            var stocks = await stock_DBSet.Where(t => t.goods_location_id == entity.goods_location_id && t.sku_id == entity.sku_id).ToListAsync();
             foreach (var stock in stocks)
             {
                 if (entity.job_type == true)
