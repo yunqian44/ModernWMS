@@ -334,6 +334,71 @@ namespace ModernWMS.WMS.Services
                                tenant_id = currentUser.tenant_id,
                            }).ToList();
             entity.last_update_time = DateTime.Now;
+            var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(StockEntity), "m");
+            Expression exp = null;
+            for (int i = 0; i < details.Count; i++)
+            {
+                ConstantExpression t_constan_location = Expression.Constant(entity.detailList[i].goods_location_id);
+                PropertyInfo t_prop_location = typeof(StockEntity).GetProperty("goods_location_id");
+                MemberExpression t_location_exp = Expression.Property(parameterExpression, t_prop_location);
+                BinaryExpression t_location_full_exp = Expression.Equal(t_location_exp, t_constan_location);
+                ConstantExpression t_constan_sku = Expression.Constant(entity.detailList[i].sku_id);
+                PropertyInfo t_prop_sku = typeof(StockEntity).GetProperty("sku_id");
+                MemberExpression t_sku_exp = Expression.Property(parameterExpression, t_prop_sku);
+                BinaryExpression t_sku_full_exp = Expression.Equal(t_sku_exp, t_constan_sku);
+                ConstantExpression t_constan_owner = Expression.Constant(entity.detailList[i].goods_owner_id);
+                PropertyInfo t_prop_owner = typeof(StockEntity).GetProperty("goods_owner_id");
+                MemberExpression t_owner_exp = Expression.Property(parameterExpression, t_prop_owner);
+                BinaryExpression t_owner_full_exp = Expression.Equal(t_sku_exp, t_constan_owner);
+                var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
+                t_exp = Expression.And(t_exp, t_owner_exp);
+                if (exp != null)
+                    exp = Expression.Or(exp, t_exp);
+                else
+                    exp = t_exp;
+            }
+            var predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1] { parameterExpression });
+            var stocks = await stock_DBSet.Where(predicate_res).ToListAsync();
+            foreach (var d in details)
+            {
+                var stock = stocks.FirstOrDefault(t => t.goods_location_id == d.goods_location_id && t.sku_id == d.sku_id && t.goods_owner_id == d.goods_owner_id);
+
+                if (d.is_source)
+                {
+                    if (stock == null)
+                    {
+                        return (false, _stringLocalizer["data_changed"]);
+                    }
+                    stock.qty -= d.qty;
+                    stock.last_update_time = DateTime.Now;
+                }
+                else
+                {
+                    if(stock == null)
+                    {
+                        await stock_DBSet.AddAsync(new StockEntity
+                        {
+                            sku_id= d.sku_id,
+                            goods_location_id= d.goods_location_id,
+                            goods_owner_id= d.goods_owner_id,
+                            is_freeze =false,
+                            last_update_time =DateTime.Now,
+                            qty= d.qty,
+                            tenant_id = currentUser.tenant_id
+                        });
+                    }
+                    else
+                    {
+                        stock.qty += d.qty;
+                        stock.last_update_time = DateTime.Now;
+                    }
+                }
+            }
             await adjust_DBset.AddRangeAsync(adjusts);
             var res = await _dBContext.SaveChangesAsync();
             if (res > 0)
@@ -352,10 +417,6 @@ namespace ModernWMS.WMS.Services
         {
             var DBSet = _dBContext.GetDbSet<StockprocessEntity>();
             var entity = await DBSet.FirstOrDefaultAsync(t => t.id == id);
-            if (entity == null)
-            {
-                return (false, _stringLocalizer["not_exists_entity"]);
-            }
             entity.process_status = true;
             entity.processor = currentUser.user_name;
             entity.process_time = DateTime.Now;

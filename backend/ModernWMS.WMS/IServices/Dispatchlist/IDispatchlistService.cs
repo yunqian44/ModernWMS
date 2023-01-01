@@ -50,6 +50,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> DeleteAsync(string dispatch_no, CurrentUser currentUser);
+
+        /// <summary>
+        ///  Confirm orders and create  dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmOrder(List<DispatchlistConfirmDetailViewModel> viewModels, CurrentUser currentUser);
          #endregion
      }
  }

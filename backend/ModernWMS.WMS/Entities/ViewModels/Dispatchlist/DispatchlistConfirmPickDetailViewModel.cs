@@ -19,6 +19,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         #endregion
         #region Property
         /// <summary>
+        /// stock_id        
+        /// </summary>
+        public int stock_id { get; set; } = 0;
+
+        /// <summary>
         /// dispatchlist_id
         /// </summary>
         public int dispatchlist_id { get; set; } = 0;

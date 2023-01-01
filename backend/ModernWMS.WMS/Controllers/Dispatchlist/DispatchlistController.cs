@@ -8,12 +8,11 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// dispatchlist controller
-     /// </summary>
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// dispatchlist controller
+    /// </summary>
      [Route("dispatchlist")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "WMS")]
@@ -128,8 +127,26 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-         #endregion
- 
-     }
+        /// <summary>
+        ///  Confirm orders and create  dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("confirm-order")]
+        public async Task<ResultModel<string >> ConfirmOrder(List<DispatchlistConfirmDetailViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.ConfirmOrder(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
+
+    }
  }
  
