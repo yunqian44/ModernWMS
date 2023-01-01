@@ -326,7 +326,8 @@ export default {
       }
     },
     stockManagement: {
-      stockLocation: '库区库存'
+      stockLocation: '库位列表',
+      stock: '库存列表',
     },
     stockLocation: {
       warehouse: '仓库名称',

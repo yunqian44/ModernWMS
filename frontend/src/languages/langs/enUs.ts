@@ -318,7 +318,8 @@ export default {
       }
     },
     stockManagement: {
-      stockLocation: 'Stock Location'
+      stockLocation: 'Stock Location',
+      stock: 'Stock'
     },
     stockLocation: {
       warehouse: 'Warehouse',
