@@ -145,6 +145,64 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<string>.Error(msg);
             }
         }
+        /// <summary>
+        ///  confirm dispatchpicklist picked by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no">viewModels</param>
+        /// <returns></returns>
+        [HttpPut("confirm-pick-dispatchlistno")]
+        public async Task<ResultModel<string>> ConfirmPickByDispatchNo(string dispatch_no)
+        {
+            var (flag, msg) = await _dispatchlistService.ConfirmPickByDispatchNo(dispatch_no, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  package dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("package")]
+        public async Task<ResultModel<string>> Package(List<DispatchlistPackageViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Package(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  weight dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("weight")]
+        public async Task<ResultModel<string>> Weight(List<DispatchlistWeightViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Weight(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+
         #endregion
 
     }

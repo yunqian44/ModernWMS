@@ -114,6 +114,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int picked_qty { get; set; }  = 0;
 
         /// <summary>
+        /// unpicked_qty
+        /// </summary>
+        [Display(Name = "unpicked_qty")]
+        public int unpicked_qty { get; set; } = 0;
+
+        /// <summary>
         /// intrasit_qty
         /// </summary>
         [Display(Name = "intrasit_qty")]
@@ -126,10 +132,22 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int package_qty { get; set; }  = 0;
 
         /// <summary>
+        /// unpackage_qty
+        /// </summary>
+        [Display(Name = "unpackage_qty")]
+        public int unpackage_qty { get; set; } = 0;
+
+        /// <summary>
         /// weighing_qty
         /// </summary>
         [Display(Name = "weighing_qty")]
         public int weighing_qty { get; set; }  = 0;
+
+        /// <summary>
+        /// weighing_qty
+        /// </summary>
+        [Display(Name = "unweighing_qty")]
+        public int unweighing_qty { get; set; } = 0;
 
         /// <summary>
         /// actual_qty
