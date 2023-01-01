@@ -67,17 +67,49 @@ namespace ModernWMS.WMS.Services
                      queries.Add(s);
                  });
              }
-             var DbSet = _dBContext.GetDbSet<StockadjustEntity>();
-             var query = DbSet.AsNoTracking()
-                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                 .Where(queries.AsExpression<StockadjustEntity>());
-             int totals = await query.CountAsync();
-             var list = await query.OrderByDescending(t => t.create_time)
-                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
-                        .Take(pageSearch.pageSize)
-                        .ToListAsync();
-             return (list.Adapt<List<StockadjustViewModel>>(), totals);
-         }
+             var Stockadjusts = _dBContext.GetDbSet<StockadjustEntity>();
+            var Spus = _dBContext.GetDbSet<SpuEntity>();
+            var Skus = _dBContext.GetDbSet<SkuEntity>();
+            var Goodsowners = _dBContext.GetDbSet<GoodsownerEntity>();
+            var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var query = from sj in Stockadjusts.AsNoTracking()
+                        join sku in Skus.AsNoTracking() on sj.sku_id equals sku.id
+                        join spu in Spus.AsNoTracking() on sku.spu_id equals spu.id
+                        join gsl in Goodslocations.AsNoTracking() on sj.goods_location_id equals gsl.id
+                        join gso in Goodsowners.AsNoTracking() on sj.goods_owner_id equals gso.id into gsoJoin
+                        from gso in gsoJoin.DefaultIfEmpty()
+                        where sj.tenant_id == currentUser.tenant_id
+                        select new StockadjustViewModel
+                        {
+                            id = sj.id,
+                            job_code = sj.job_code,
+                            is_update_stock = sj.is_update_stock,
+                            job_type = sj.job_type,
+                            qty = sj.qty,
+                            source_table_id = sj.source_table_id,
+                            tenant_id = sj.tenant_id,
+                            sku_id = sku.id,
+                            sku_code = sku.sku_code,
+                            sku_name = sku.sku_name,
+                            spu_code = spu.spu_code,
+                            spu_name = spu.spu_name,
+                            goods_location_id = sj.goods_location_id,
+                            warehouse_name = gsl.warehouse_name,
+                            location_name = gsl.location_name,
+                            goods_owner_id = sj.goods_owner_id,
+                            goods_owner_name = gso.goods_owner_name == null ? string.Empty : gso.goods_owner_name,
+                            creator = sj.creator,
+                            create_time = sj.create_time, 
+                            last_update_time = sj.last_update_time
+                        };
+            query = query.Where(queries.AsExpression<StockadjustViewModel>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderByDescending(t => t.create_time)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list, totals);
+        }
  
          /// <summary>
          /// Get all records

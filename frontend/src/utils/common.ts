@@ -30,7 +30,7 @@ export const removeArrayNull = (array: any) => {
       if (XEUtils.isString(obj[item])) {
         obj[item] = obj[item].replace(/(^\s*)|(\s*$)/g, '')
       }
-      if (obj[item] === '') {
+      if (obj[item] === '' || obj[item] === null) {
         delete obj[item]
       }
     })

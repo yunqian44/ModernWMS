@@ -206,7 +206,12 @@ export default {
       origin: 'origin',
       length_unit: 'Length Unit',
       volume_unit: 'Volume Unit',
-      weight_unit: 'Weight Unit'
+      weight_unit: 'Weight Unit',
+      weight: 'Commodity Weight',
+      lenght: 'Commodity Length',
+      width: 'Commodity Width',
+      height: 'Commodity Height',
+      volume: 'Commodity Volume'
     }
   },
   wms: {
@@ -313,7 +318,8 @@ export default {
       }
     },
     stockManagement: {
-      stockLocation: 'Stock Location'
+      stockLocation: 'Stock Location',
+      stock: 'Stock'
     },
     stockLocation: {
       warehouse: 'Warehouse',
