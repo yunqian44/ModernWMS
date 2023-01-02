@@ -71,7 +71,8 @@ export default {
       warehouseMove: '库存移动',
       warehouseFreeze: '库存冻结',
       warehouseAdjust: '库存调整',
-      warehouseTaking: '库存盘点'
+      warehouseTaking: '库存盘点',
+      deliveryManagement: '发货管理'
     }
   },
   login: {
@@ -327,7 +328,7 @@ export default {
     },
     stockManagement: {
       stockLocation: '库位列表',
-      stock: '库存列表',
+      stock: '库存列表'
     },
     stockLocation: {
       warehouse: '仓库名称',
@@ -341,6 +342,29 @@ export default {
       qty_available: '可用数量',
       qty_locked: '锁定数量',
       qty_frozen: '冻结数量'
+    },
+    deliveryManagement: {
+      shipment: '发货单',
+      preShipment: '预发货',
+      newShipment: '新发货',
+      goodsToBePicked: '待拣货',
+      picked: '已拣货',
+      packaged: '已打包',
+      weighed: '已称重',
+      outOfWarehouse: '已出库',
+      signedIn: '已签收',
+      dispatch_no: '发货单号',
+      dispatch_status: '发货单状态',
+      qty: '总数量',
+      detailQty: '数量',
+      weight: '总重量',
+      volume: '总体积',
+      customer_name: '客户名称',
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      sku_code: '规格编码',
+      creator: '创建人',
+      create_time: '创建时间'
     }
   }
 }
