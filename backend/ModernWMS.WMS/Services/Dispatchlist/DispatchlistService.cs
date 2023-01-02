@@ -4,22 +4,16 @@
  */
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DBContext;
+using ModernWMS.Core.DynamicSearch;
+using ModernWMS.Core.JWT;
+using ModernWMS.Core.Models;
 using ModernWMS.Core.Services;
+using ModernWMS.Core.Utility;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
-using ModernWMS.Core.Models;
-using ModernWMS.Core.JWT;
-using Microsoft.Extensions.Localization;
-using ModernWMS.Core.DynamicSearch;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Net.WebSockets;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System;
-using ModernWMS.Core.Utility;
 
 namespace ModernWMS.WMS.Services
 {
@@ -699,7 +693,7 @@ namespace ModernWMS.WMS.Services
                 entity.package_qty += vm.package_qty;
                 entity.package_time = time;
                 entity.package_no = code;
-                if(entity.package_qty == entity.picked_qty)
+                if (entity.package_qty == entity.picked_qty)
                 {
                     entity.dispatch_status = 4;
                 }
@@ -718,7 +712,7 @@ namespace ModernWMS.WMS.Services
                 {
                     foreach (var entry in ex.Entries)
                     {
-                        if (entry.Entity is StockEntity)
+                        if (entry.Entity is DispatchlistEntity)
                         {
                             var proposedValues = entry.CurrentValues;
                             var databaseValues = entry.GetDatabaseValues();
@@ -759,6 +753,7 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["operation_failed"]);
             }
         }
+
         /// <summary>
         ///  weight
         /// </summary>
@@ -785,7 +780,7 @@ namespace ModernWMS.WMS.Services
                 entity.weighing_qty += vm.weighing_qty;
                 entity.weighing_weight += vm.weighing_weight;
                 entity.weighing_no = code;
-                if(entity.picked_qty == entity.weighing_qty)
+                if (entity.picked_qty == entity.weighing_qty)
                 {
                     entity.dispatch_status = 5;
                 }
@@ -808,7 +803,7 @@ namespace ModernWMS.WMS.Services
                         {
                             var proposedValues = entry.CurrentValues;
                             var databaseValues = entry.GetDatabaseValues();
-                            
+
                             var t_vm = viewModels.FirstOrDefault(t => t.id == UtilConvert.ObjToInt(databaseValues["id"]));
                             if (t_vm == null)
                             {
@@ -822,7 +817,7 @@ namespace ModernWMS.WMS.Services
                             {
                                 proposedValues["weighing_qty"] = UtilConvert.ObjToInt(databaseValues["weighing_qty"]) + t_vm.weighing_qty;
                                 proposedValues["weighing_weight"] = UtilConvert.ObjToInt(databaseValues["weighing_weight"]) + t_vm.weighing_weight;
-                                if(UtilConvert.ObjToInt(databaseValues["weighing_qty"]) + t_vm.weighing_qty == UtilConvert.ObjToInt(databaseValues["picked_qty"]))
+                                if (UtilConvert.ObjToInt(databaseValues["weighing_qty"]) + t_vm.weighing_qty == UtilConvert.ObjToInt(databaseValues["picked_qty"]))
                                 {
                                     proposedValues["dispatch_status"] = 5;
                                 }
@@ -838,6 +833,180 @@ namespace ModernWMS.WMS.Services
                     }
                 }
             }
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["operation_failed"]);
+            }
+        }
+
+        /// <summary>
+        /// dispatchpicklist outbound delivery
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<(bool flag, string msg)> Delivery(List<DispatchlistDeliveryViewModel> viewModels, CurrentUser currentUser)
+        {
+            var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var dispatchlist_id_list = viewModels.Select(t => t.id).ToList();
+            var pick_DBSet = _dBContext.GetDbSet<DispatchpicklistEntity>();
+            var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
+            var entities = await DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).ToListAsync();
+            var time = DateTime.Now;
+            foreach (var entity in entities)
+            {
+                if (entity.dispatch_status != 3 && entity.dispatch_status != 4 && entity.dispatch_status != 5)
+                {
+                    return (false, _stringLocalizer["data_changed"]);
+                }
+                entity.last_update_time = time;
+                entity.dispatch_status = 6;
+                entity.lock_qty = 0;
+                entity.actual_qty = entity.picked_qty;
+                entity.intrasit_qty = entity.picked_qty;
+                entity.weighing_person = currentUser.user_name;
+            }
+            var picks_g = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).GroupBy(e => new { e.goods_location_id, e.sku_id, e.goods_owner_id }).Select(c => new { c.Key.goods_location_id, c.Key.sku_id, c.Key.goods_owner_id, picked_qty = c.Sum(t => t.picked_qty) });
+            var picks = await picks_g.ToListAsync();
+            var stocks = await (from stock in stock_DBSet
+                                where picks_g.Any(t => t.goods_location_id == stock.goods_location_id && t.sku_id == stock.sku_id && t.goods_owner_id == stock.goods_owner_id)
+                                select stock).ToListAsync();
+            foreach (var pick in picks)
+            {
+                var s = stocks.FirstOrDefault(t => t.goods_location_id == pick.goods_location_id && t.sku_id == pick.sku_id && t.goods_owner_id == pick.goods_owner_id);
+                if (s == null)
+                {
+                    return (false, _stringLocalizer["data_changed"]);
+                }
+                s.qty -= pick.picked_qty;
+                s.last_update_time = time;
+            }
+            var saved = false;
+            int res = 0;
+            while (!saved)
+            {
+                try
+                {
+                    // Attempt to save changes to the database
+                    res = await _dBContext.SaveChangesAsync();
+                    saved = true;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        if (entry.Entity is DispatchlistEntity)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+                            if (UtilConvert.ObjToInt(databaseValues["dispatch_status"]) != 3 && UtilConvert.ObjToInt(databaseValues["dispatch_status"]) != 4 && UtilConvert.ObjToInt(databaseValues["dispatch_status"]) != 5)
+                            {
+                                return (false, _stringLocalizer["data_changed"]);
+                            }
+                            proposedValues["last_update_time"] = DateTime.Now;
+                        }
+                        else if (entry.Entity is StockEntity)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+                            var t_p = picks.FirstOrDefault(t => t.goods_location_id == UtilConvert.ObjToInt(databaseValues["goods_location_id"]) && t.sku_id == UtilConvert.ObjToInt(databaseValues["sku_id"]) && t.goods_owner_id == UtilConvert.ObjToInt(databaseValues["goods_owner_id"]));
+                            if (t_p == null)
+                            {
+                                return (false, _stringLocalizer["data_changed"]);
+                            }
+                            proposedValues["qty"] = UtilConvert.ObjToInt(databaseValues["qty"]) - t_p.picked_qty;
+                            proposedValues["last_update_time"] = DateTime.Now;
+                            // Refresh original values to bypass next concurrency check
+                            entry.OriginalValues.SetValues(databaseValues);
+                        }
+                        else
+                        {
+                            throw new NotSupportedException(_stringLocalizer["try_agin"]);
+                        }
+                    }
+                }
+            }
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["operation_failed"]);
+            }
+        }
+        /// <summary>
+        ///  set dispatchlist freightfee
+        /// </summary>
+        /// <param name="viewModels"></param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SetFreightfee(List<DispatchlistFreightfeeViewModel> viewModels)
+        {
+            var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var dispatchlist_id_list = viewModels.Select(t => t.id).ToList();
+            var freightfee_id_list = viewModels.Select(t => t.freightfee_id).Distinct().ToList();
+            var entities = await DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).ToListAsync();
+            var freightfees = await _dBContext.GetDbSet<FreightfeeEntity>().Where(t => freightfee_id_list.Contains(t.id)).ToListAsync();
+            var time = DateTime.Now;
+            foreach (var entity in entities)
+            {
+                var vm = viewModels.FirstOrDefault(t => t.id == entity.id);
+                if (vm != null)
+                {
+                    var freightfee = freightfees.FirstOrDefault(t => t.id == vm.freightfee_id);
+                    if (freightfee != null)
+                    {
+                        entity.last_update_time = time;
+                        entity.carrier = freightfee.carrier;
+                        if (entity.weighing_no != "")
+                        {
+                            entity.freightfee = entity.weighing_weight * freightfee.price_per_weight > freightfee.min_payment ? entity.weighing_weight * freightfee.price_per_weight : freightfee.min_payment;
+                        }
+                        else
+                        {
+                            entity.freightfee = Math.Max(Math.Max(entity.weight * freightfee.price_per_weight, entity.volume * freightfee.price_per_volume), freightfee.min_payment);
+                        }
+                    }
+                }
+            }
+            var res = await _dBContext.SaveChangesAsync();
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["operation_failed"]);
+            }
+        }
+        /// <summary>
+        /// sign for arrival
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SignForArrival(List<DispatchlistSignViewModel> viewModels)
+        {
+            var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var dispatchlist_id_list = viewModels.Select(t => t.id).ToList();
+            var entities = await DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).ToListAsync();
+            foreach (var entity in entities)
+            {
+                var vm = viewModels.FirstOrDefault(t => t.id == t.id && t.dispatch_status ==entity.dispatch_status );
+                if(vm == null)
+                {
+                    return (false, _stringLocalizer["data_changed"]);
+                }
+                entity.sign_qty = entity.actual_qty-vm.damage_qty;
+                entity.damage_qty = vm.damage_qty;
+                entity.last_update_time = DateTime.Now;
+                entity.dispatch_status = 7;
+            }
+            var res = await _dBContext.SaveChangesAsync();
             if (res > 0)
             {
                 return (true, _stringLocalizer["operation_success"]);
