@@ -38,25 +38,18 @@
   >
     <vxe-table ref="xTableWarehouse" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column type="checkbox" width="50"></vxe-column>
-      <vxe-column field="warehouse_name" :title="$t('base.warehouseSetting.warehouse_name')"></vxe-column>
-      <vxe-column field="city" :title="$t('base.warehouseSetting.city')"></vxe-column>
-      <vxe-column field="address" :title="$t('base.warehouseSetting.address')"></vxe-column>
-      <vxe-column field="contact_tel" :title="$t('base.warehouseSetting.contact_tel')"></vxe-column>
-      <vxe-column field="email" :title="$t('base.warehouseSetting.email')"></vxe-column>
-      <vxe-column field="manager" :title="$t('base.warehouseSetting.manager')"></vxe-column>
-      <vxe-column field="creator" :title="$t('base.warehouseSetting.creator')"></vxe-column>
-      <vxe-column
-        field="create_time"
-        width="170px"
-        :title="$t('base.warehouseSetting.create_time')"
-        :formatter="['formatDate']"
-      ></vxe-column>
-      <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
-        <template #default="{ row, column }">
-          <span>{{ formatIsValid(row[column.property]) }}</span>
-        </template>
-      </vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.stockList.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.stockList.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.stockList.sku_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.stockList.qty')"></vxe-column>
+      <vxe-column field="qty_available" :title="$t('wms.stockList.qty_available')"></vxe-column>
+      <vxe-column field="qty_locked" :title="$t('wms.stockList.qty_locked')"></vxe-column>
+      <vxe-column field="qty_frozen" :title="$t('wms.stockList.qty_frozen')"></vxe-column>
+      <vxe-column field="qty_asn" :title="$t('wms.stockList.qty_asn')"></vxe-column>
+      <vxe-column field="qty_to_unload" :title="$t('wms.stockList.qty_to_unload')"></vxe-column>
+      <vxe-column field="qty_to_sort" :title="$t('wms.stockList.qty_to_sort')"></vxe-column>
+      <vxe-column field="qty_sorted" :title="$t('wms.stockList.qty_sorted')"></vxe-column>
+      <vxe-column field="shortage_qty" :title="$t('wms.stockList.shortage_qty')"></vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -75,10 +68,10 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseVO } from '@/types/Base/Warehouse'
+import { StockVO } from '@/types/WMS/StockManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { deleteWarehouse, getWarehouseList } from '@/api/base/warehouseSetting'
+import { getStockList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { formatIsValid } from '@/utils/format/formatSystem'
@@ -87,21 +80,11 @@ const xTableWarehouse = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
-    id: 0,
-    warehouse_name: '',
-    city: '',
-    address: '',
-    contact_tel: '',
-    email: '',
-    manager: '',
-    is_valid: true
-  },
   searchForm: {
-    warehouse_name: ''
+    spu_name: ''
   },
   activeTab: null,
-  tableData: ref<WarehouseVO[]>([]),
+  tableData: ref<StockVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -112,10 +95,10 @@ const data = reactive({
 const method = reactive({
   // Refresh data
   refresh: () => {
-    method.getWarehouseList()
+    method.getStockList()
   },
-  getWarehouseList: async () => {
-    const { data: res } = await getWarehouseList(data.tablePage)
+  getStockList: async () => {
+    const { data: res } = await getStockList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -130,14 +113,14 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getWarehouseList()
+    method.getStockList()
   }),
   exportTable: () => {
     const $table = xTableWarehouse.value
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('base.warehouseSetting.warehouseSetting'),
+        filename: i18n.global.t('wms.stockManagement.stock'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -158,7 +141,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getWarehouseList: method.getWarehouseList
+  getStockList: method.getStockList
 })
 </script>
 

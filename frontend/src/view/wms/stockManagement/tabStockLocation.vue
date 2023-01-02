@@ -14,12 +14,12 @@
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+              v-model="data.searchForm.warehouse"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('base.warehouseSetting.warehouse')"
               variant="solo"
             >
             </v-text-field> -->
@@ -66,7 +66,7 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseVO } from '@/types/Base/Warehouse'
+import { StockLocationVO } from '@/types/WMS/StockManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { getStockLocationList } from '@/api/wms/stockManagement'
@@ -77,21 +77,11 @@ const xTableStockLocation = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
-    id: 0,
-    warehouse_name: '',
-    city: '',
-    address: '',
-    contact_tel: '',
-    email: '',
-    manager: '',
-    is_valid: true
-  },
   searchForm: {
-    warehouse_name: ''
+    warehouse: ''
   },
   activeTab: null,
-  tableData: ref<WarehouseVO[]>([]),
+  tableData: ref<StockLocationVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -102,9 +92,9 @@ const data = reactive({
 const method = reactive({
   // Refresh data
   refresh: () => {
-    method.getWarehouseList()
+    method.getStockLocationList()
   },
-  getWarehouseList: async () => {
+  getStockLocationList: async () => {
     const { data: res } = await getStockLocationList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
@@ -120,7 +110,7 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getWarehouseList()
+    method.getStockLocationList()
   }),
   exportTable: () => {
     const $table = xTableStockLocation.value
@@ -148,7 +138,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getWarehouseList: method.getWarehouseList
+  getStockLocationList: method.getStockLocationList
 })
 </script>
 

@@ -343,6 +343,21 @@ export default {
       qty_locked: '锁定数量',
       qty_frozen: '冻结数量'
     },
+    stockList: {
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      sku_code: '规格编码',
+      sku_id: '规格标识',
+      qty: '数量',
+      qty_available: '可用数量',
+      qty_locked: '锁定数量',
+      qty_frozen: '冻结数量',
+      qty_asn: '到货通知书数量',
+      qty_to_unload: '待卸货数量',
+      qty_to_sort: '待分拣数量',
+      qty_sorted: '已分拣数量',
+      shortage_qty: '欠货数量',
+    },
     deliveryManagement: {
       shipment: '发货单',
       preShipment: '预发货',

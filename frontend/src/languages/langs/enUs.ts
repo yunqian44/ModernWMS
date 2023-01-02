@@ -335,6 +335,21 @@ export default {
       qty_locked: 'Locked Quantity',
       qty_frozen: 'Frozen Quantity'
     },
+    stockList: {
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      sku_code: 'Specification code',
+      sku_id: 'Sku Id',
+      qty: 'Quantity',
+      qty_available: 'Available Quantity',
+      qty_locked: 'Locked Quantity',
+      qty_frozen: 'Frozen Quantity',
+      qty_asn: 'Asn Quantity',
+      qty_to_unload: 'Unload Quantity',
+      qty_to_sort: 'Sort Quantity',
+      qty_sorted: 'Sorted Quantity',
+      shortage_qty: 'Shortage Quantity',
+    },
     deliveryManagement: {
       shipment: 'Invoice',
       preShipment: 'Pre Shipment',
