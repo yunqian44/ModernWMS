@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using System.Linq;
 
 namespace ModernWMS.WMS.Services
 {
@@ -339,31 +340,8 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(StockEntity), "m");
-            Expression exp = null;
-            for (int i = 0; i < details.Count; i++)
-            {
-                ConstantExpression t_constan_location = Expression.Constant(entity.detailList[i].goods_location_id);
-                PropertyInfo t_prop_location = typeof(StockEntity).GetProperty("goods_location_id");
-                MemberExpression t_location_exp = Expression.Property(parameterExpression, t_prop_location);
-                BinaryExpression t_location_full_exp = Expression.Equal(t_location_exp, t_constan_location);
-                ConstantExpression t_constan_sku = Expression.Constant(entity.detailList[i].sku_id);
-                PropertyInfo t_prop_sku = typeof(StockEntity).GetProperty("sku_id");
-                MemberExpression t_sku_exp = Expression.Property(parameterExpression, t_prop_sku);
-                BinaryExpression t_sku_full_exp = Expression.Equal(t_sku_exp, t_constan_sku);
-                ConstantExpression t_constan_owner = Expression.Constant(entity.detailList[i].goods_owner_id);
-                PropertyInfo t_prop_owner = typeof(StockEntity).GetProperty("goods_owner_id");
-                MemberExpression t_owner_exp = Expression.Property(parameterExpression, t_prop_owner);
-                BinaryExpression t_owner_full_exp = Expression.Equal(t_sku_exp, t_constan_owner);
-                var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
-                t_exp = Expression.And(t_exp, t_owner_exp);
-                if (exp != null)
-                    exp = Expression.Or(exp, t_exp);
-                else
-                    exp = t_exp;
-            }
-            var predicate_res = Expression.Lambda<Func<StockEntity, bool>>(exp, new ParameterExpression[1] { parameterExpression });
-            var stocks = await stock_DBSet.Where(predicate_res).ToListAsync();
+
+            var stocks = await stock_DBSet.Where(s => detail_DBSet.Where(t => t.stock_process_id == id).Any(t => t.goods_location_id == s.goods_location_id && t.sku_id == s.sku_id && t.goods_owner_id == s.goods_owner_id)).ToListAsync();
             foreach (var d in details)
             {
                 var stock = stocks.FirstOrDefault(t => t.goods_location_id == d.goods_location_id && t.sku_id == d.sku_id && t.goods_owner_id == d.goods_owner_id);

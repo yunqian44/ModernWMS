@@ -202,7 +202,62 @@ namespace ModernWMS.WMS.Controllers
             }
         }
 
+        /// <summary>
+        ///  dispatchpicklist outbound delivery
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("delivery")]
+        public async Task<ResultModel<string>> Delivery(List<DispatchlistDeliveryViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Delivery(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
 
+        /// <summary>
+        ///  set dispatchlist freightfee
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("freightfee")]
+        public async Task<ResultModel<string>> SetFreightfee(List<DispatchlistFreightfeeViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.SetFreightfee(viewModels);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  sign for arrival
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("sign")]
+        public async Task<ResultModel<string>> SignForArrival(List<DispatchlistSignViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.SignForArrival(viewModels);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
         #endregion
 
     }
