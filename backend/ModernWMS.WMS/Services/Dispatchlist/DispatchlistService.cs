@@ -531,7 +531,7 @@ namespace ModernWMS.WMS.Services
                                where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id
                                select new
                                {
-                                   stock_id = sg.stock_id,
+                                   stock_id = sg.stock_id == null ? 0 : sg.stock_id,
                                    goods_owner_name = owner.goods_owner_name == null ? "" : owner.goods_owner_name,
                                    goods_location_id = sg.goods_location_id == null ? 0 : sg.goods_location_id,
                                    goods_owner_id = sg.goods_owner_id == null ? 0 : sg.goods_owner_id,
@@ -572,7 +572,7 @@ namespace ModernWMS.WMS.Services
                        select new DispatchlistConfirmDetailViewModel
                        {
                            dispatchlist_id = dg.Key.id,
-                           sku_id = dg.Key.id,
+                           sku_id = dg.Key.sku_id,
                            dispatch_no = dg.Key.dispatch_no,
                            sku_code = dg.Key.sku_code,
                            spu_code = dg.Key.spu_code,
@@ -591,7 +591,7 @@ namespace ModernWMS.WMS.Services
                 var picklist = (from d in datas.Where(t => t.sku_id == r.sku_id).OrderBy(o => o.qty_available)
                                 select new DispatchlistConfirmPickDetailViewModel
                                 {
-                                    stock_id = d.sku_id,
+                                    stock_id = d.stock_id,
                                     dispatchlist_id = r.dispatchlist_id,
                                     goods_location_id = d.goods_location_id,
                                     qty_available = d.qty_available,

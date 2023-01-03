@@ -344,7 +344,14 @@ namespace ModernWMS.WMS.Services
                             tenant_id = g.Key.tenant_id,
                             unit = g.Key.unit,
                         };
-            query = query.Where(t => t.qty_available > 0);
+            if(pageSearch.sqlTitle == "")
+            {
+                query = query.Where(t => t.qty_available > 0);
+            }
+            else if(pageSearch.sqlTitle == "all")
+            {
+
+            }
             query = query.Where(queries.AsExpression<StockViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderBy(t => t.sku_code)
