@@ -27,3 +27,8 @@ export const deleteAsn = (id: number) => http({
       id
     }
   })
+
+export const confirmAsn = (id: number) => http({
+    url: `/asn/confirm/${ id }`,
+    method: 'put'
+  })
