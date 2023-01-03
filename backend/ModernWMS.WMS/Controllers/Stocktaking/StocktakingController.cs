@@ -16,7 +16,7 @@
      /// </summary>
      [Route("stocktaking")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "WMS")]
      public class StocktakingController : BaseController
      {
          #region Args
