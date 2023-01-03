@@ -2,33 +2,13 @@
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.supplier')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('wms.stockAsn.tabNotice')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
-              v-model="data.form.supplier_name"
-              :label="$t('base.supplier.supplier_name')"
-              :rules="data.rules.supplier_name"
-              variant="outlined"
-            ></v-text-field>
-            <v-text-field v-model="data.form.city" :label="$t('base.supplier.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
-            <v-text-field v-model="data.form.email" :label="$t('base.supplier.email')" :rules="data.rules.email" variant="outlined"></v-text-field>
-            <v-text-field
-              v-model="data.form.address"
-              :label="$t('base.supplier.address')"
-              :rules="data.rules.address"
-              variant="outlined"
-            ></v-text-field>
-            <v-text-field
-              v-model="data.form.manager"
-              :label="$t('base.supplier.manager')"
-              :rules="data.rules.manager"
-              variant="outlined"
-            ></v-text-field>
-            <v-text-field
-              v-model="data.form.contact_tel"
-              :label="$t('base.supplier.contact_tel')"
-              :rules="data.rules.contact_tel"
+              v-model="data.form.sorted_qty"
+              :label="$t('wms.stockAsnInfo.sorted_qty')"
+              :rules="data.rules.sorted_qty"
               variant="outlined"
             ></v-text-field>
           </v-form>
@@ -44,47 +24,58 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { SupplierVO } from '@/types/Base/Supplier'
+import { StockAsnVO, SortingVo } from '@/types/WMS/StockAsn'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addSupplier, updateSupplier } from '@/api/base/supplier'
+import { sortingAsn } from '@/api/wms/stockAsn'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 
 const props = defineProps<{
   showDialog: boolean
-  form: SupplierVO
+  form: StockAsnVO
 }>()
 
 const isShow = computed(() => props.showDialog)
 
-const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
+const dialogTitle = computed(() => 'update')
 
 const data = reactive({
-  form: ref<SupplierVO>({
+  form: ref<StockAsnVO>({
     id: 0,
+    asn_no: '',
+    asn_status: 0,
+    spu_id: 0,
+    spu_code: '',
+    spu_name: '',
+    sku_id: 0,
+    sku_code: '',
+    sku_name: '',
+    origin: '',
+    length_unit: 0,
+    volume_unit: 0,
+    weight_unit: 0,
+    asn_qty: 0,
+    actual_qty: 0,
+    sorted_qty: 0,
+    shortage_qty: 0,
+    more_qty: 0,
+    damage_qty: 0,
+    weight: 0,
+    volume: 0,
+    supplier_id: 0,
     supplier_name: '',
-    city: '',
-    address: '',
-    manager: '',
-    email: '',
-    contact_tel: '',
+    goods_owner_id: 0,
+    goods_owner_name: '',
     is_valid: true
   }),
+  formSorting: ref<SortingVo>({
+    asn_id: 0,
+    sorted_qty: 0
+  }),
   rules: {
-    supplier_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.supplier.supplier_name') }!`],
-    city: [],
-    address: [],
-    manager: [],
-    email: [],
-    contact_tel: [],
-    is_valid: []
+    sorted_qty: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.stockAsnInfo.sorted_qty') }!`]
   }
 })
 
@@ -95,7 +86,9 @@ const method = reactive({
   submit: async () => {
     const { valid } = await formRef.value.validate()
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add' ? await addSupplier(data.form) : await updateSupplier(data.form)
+      data.formSorting.asn_id = data.form.id
+      data.formSorting.sorted_qty = data.form.sorted_qty
+      const { data: res } = await sortingAsn(data.formSorting)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
