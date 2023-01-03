@@ -37,13 +37,22 @@ using ModernWMS.Core.Services;
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
         Task<(int id, string msg)> AddAsync(StocktakingBasicViewModel viewModel, CurrentUser currentUser);
+
         /// <summary>
-        /// update a record
+        /// update  counted_qty
         /// </summary>
-        /// <param name="viewModel">viewmodel</param>
+        /// <param name="viewModel">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<(bool flag, string msg)> ConfirmAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser);
+        Task<(bool flag, string msg)> PutAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser);
+
+        /// <summary>
+        /// confrim a record and change stock and add to stockadjust
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmAsync(int id, CurrentUser currentUser);
  
          /// <summary>
          /// delete a record
