@@ -306,7 +306,7 @@ namespace ModernWMS.WMS.Services
             var query = from d in DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                         join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on d.sku_id equals sku.id
                         join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
-                        group new { sku, spu, d } by new { sku.sku_code, spu.spu_code, spu.spu_name, d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name, d.create_time, d.creator }
+                        group new { sku, spu, d } by new { sku.sku_code, spu.spu_code, spu.spu_name, d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name,d.creator }
                         into dg
                         select new PreDispatchlistViewModel
                         {
@@ -320,6 +320,7 @@ namespace ModernWMS.WMS.Services
                             qty = dg.Sum(t => t.d.qty),
                             volume = dg.Sum(t => t.d.volume),
                             weight = dg.Sum(t => t.d.weight),
+                            creator = dg.Key.creator,
                         };
             query = query.Where(queries.AsExpression<PreDispatchlistViewModel>());
             if (pageSearch.sqlTitle.Contains("dispatch_status"))
@@ -328,7 +329,7 @@ namespace ModernWMS.WMS.Services
                 query = query.Where(t => t.dispatch_status.Equals(dispatch_status));
             }
             int totals = await query.CountAsync();
-            var list = await query.OrderByDescending(t => t.create_time)
+            var list = await query.OrderByDescending(t => t.dispatch_no)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
                        .Take(pageSearch.pageSize)
                        .ToListAsync();
@@ -678,6 +679,7 @@ namespace ModernWMS.WMS.Services
                             sku_id = vm.sku_id,
                             dispatch_status = 1,
                             qty = d.qty - d.lock_qty,
+                            tenant_id = currentUser.tenant_id
                         });
                     }
                 }
@@ -688,6 +690,7 @@ namespace ModernWMS.WMS.Services
                         sku_id = vm.sku_id,
                         dispatch_status = 1,
                         qty = vm.qty,
+                        tenant_id = currentUser.tenant_id
                     });
                     DBSet.Remove(d);
                 }

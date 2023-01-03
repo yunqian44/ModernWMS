@@ -79,13 +79,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string creator { get; set; } = string.Empty;
 
         /// <summary>
-        /// create_time
-        /// </summary>
-        [Display(Name = "create_time")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime create_time { get; set; } = UtilConvert.MinDate;
-
-        /// <summary>
         /// spu_code
         /// </summary>
         public string spu_code { get; set; } = string.Empty;

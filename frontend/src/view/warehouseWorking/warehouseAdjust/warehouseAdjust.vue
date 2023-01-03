@@ -118,7 +118,7 @@
 <script lang="ts" setup>
 import { computed, ref, reactive, watch, nextTick, onActivated } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
+import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { WarehouseAdjustVO } from '@/types/WarehouseWorking/WarehouseAdjust'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'

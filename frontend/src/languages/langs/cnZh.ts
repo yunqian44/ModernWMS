@@ -326,10 +326,13 @@ export default {
         handle_time: '操作时间',
         creator: '创建人',
         create_time: '创建时间',
-        unfinish: '待作业',
+        unfinish: '待作业', 
         finish: '已完成',
         confirmAdjust: '确认调整',
-        beforeConfirmAdjust: '您确认对该条数据进行调整吗？'
+        beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
+        addFromCommodity: '选择商品',
+        addFromStock: '选择库存',
+        addTips: '当目标库存不存在时，可通过手动选择商品和库位来新增记录'
       }
     },
     stockManagement: {
