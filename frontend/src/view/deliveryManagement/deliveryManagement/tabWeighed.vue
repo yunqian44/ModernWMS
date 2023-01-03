@@ -40,18 +40,20 @@
       <vxe-column type="seq" width="60"></vxe-column>
       <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
-      <!-- <vxe-column field="dispatch_status" :title="$t('wms.deliveryManagement.dispatch_status')"></vxe-column> -->
+      <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
       <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
       <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
       <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
-      <!-- <vxe-column
+      <vxe-column
         field="create_time"
         width="170px"
         :title="$t('wms.deliveryManagement.create_time')"
         :formatter="['formatDate']"
-      ></vxe-column> -->
+      ></vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -70,10 +72,10 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getNewShipment } from '@/api/wms/deliveryManagement'
+import { getWeighed } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 
@@ -87,7 +89,7 @@ const data = reactive({
   searchForm: {
   },
   activeTab: null,
-  tableData: ref<DeliveryManagementVO[]>([]),
+  tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -98,10 +100,10 @@ const data = reactive({
 const method = reactive({
   // Refresh data
   refresh: () => {
-    method.getNewShipment()
+    method.getWeighed()
   },
-  getNewShipment: async () => {
-    const { data: res } = await getNewShipment(data.tablePage)
+  getWeighed: async () => {
+    const { data: res } = await getWeighed(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -116,14 +118,14 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getNewShipment()
+    method.getWeighed()
   }),
   exportTable: () => {
     const $table = xTable.value
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.deliveryManagement.newShipment'),
+        filename: i18n.global.t('wms.deliveryManagement.weighed'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -144,7 +146,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getNewShipment: method.getNewShipment
+  getWeighed: method.getWeighed
 })
 </script>
 

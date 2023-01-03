@@ -401,9 +401,16 @@ export default {
       newShipment: '新发货',
       goodsToBePicked: '待拣货',
       picked: '已拣货',
+      toBePackaged: '待打包',
+      package: '打包',
       packaged: '已打包',
+      toBeWeighed: '待称重',
+      weigh: '称重',
       weighed: '已称重',
+      delivery: '出库',
+      toBeDelivered: '待出库',
       outOfWarehouse: '已出库',
+      signIn: '签收',
       signedIn: '已签收',
       dispatch_no: '发货单号',
       dispatch_status: '发货单状态',
@@ -416,7 +423,14 @@ export default {
       spu_name: '商品名称',
       sku_code: '规格编码',
       creator: '创建人',
-      create_time: '创建时间'
+      create_time: '创建时间',
+      confirmOrder: '确认发货单',
+      orderDetail: '发货单商品详情',
+      quantityOverflow: '发货数量之和不能超出发货单数量',
+      quantityIsZero: '请保证选择的商品至少有一项出库数量大于0!',
+      NoItemSelected: '请至少选中一项商品进行出库!',
+      confirmSuccess: '确认发货单成功!',
+      confirmPicking: '确认拣货'
     }
   }
 }

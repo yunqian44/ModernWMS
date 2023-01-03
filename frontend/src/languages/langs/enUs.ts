@@ -393,9 +393,16 @@ export default {
       newShipment: 'New Shipment',
       goodsToBePicked: 'Goods To Be Picked',
       picked: 'Picked',
+      toBePackaged: 'To Be Packaged',
+      package: 'Pack',
       packaged: 'Packaged',
+      toBeWeighed: 'To Be Weighed',
+      weigh: 'Weigh',
       weighed: 'Weighed',
+      delivery: 'Delivery',
+      toBeDelivered: 'To Be Delivered',
       outOfWarehouse: 'Out Of Warehouse',
+      signIn: 'Sign In',
       signedIn: 'Signed In',
       dispatch_no: 'Shipment No',
       dispatch_status: 'Shipment Doc Status',
@@ -408,7 +415,14 @@ export default {
       spu_name: 'Commodity Name',
       sku_code: 'Specification Code',
       creator: 'Created By',
-      create_time: 'Creation Time'
+      create_time: 'Creation Time',
+      confirmOrder: 'Confirm Shipment Doc',
+      orderDetail: 'Shipment Order Product Details',
+      quantityOverflow: 'The sum of shipment quantity cannot exceed the shipment document quantity',
+      quantityIsZero: 'Please ensure that at least one of the selected goods has an issue quantity greater than 0!',
+      NoItemSelected: 'Please select at least one commodity to delivered!',
+      confirmSuccess: 'Confirm the shipment order successfully!',
+      confirmPicking: 'Confirm picking'
     }
   }
 }
