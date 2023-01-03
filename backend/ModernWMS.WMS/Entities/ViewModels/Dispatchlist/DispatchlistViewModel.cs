@@ -262,14 +262,5 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string bar_code { get; set; } = string.Empty;
         #endregion
 
-        #region detail table
-
-        /// <summary>
-        /// detail table
-        /// </summary>
-        public List<DispatchpicklistViewModel> detailList { get; set; } = new List<DispatchpicklistViewModel>(2);
-
-        #endregion
-
     }
 }
