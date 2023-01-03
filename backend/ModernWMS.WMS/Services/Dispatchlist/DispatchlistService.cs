@@ -121,13 +121,17 @@ namespace ModernWMS.WMS.Services
                 var dispatch_status = Convert.ToByte(pageSearch.sqlTitle.Trim().ToLower().Replace("dispatch_status", "").Replace("：", "").Replace(":", "").Replace("=", ""));
                 query = query.Where(t => t.dispatch_status.Equals(dispatch_status));
             }
-            else if (pageSearch.sqlTitle.Contains("to_package"))
+            else if (pageSearch.sqlTitle.Equals("to_package"))
             {
-                query = query.Where(t => t.picked_qty == t.qty && t.dispatch_status.Equals(3) || (t.package_qty == 0 && t.dispatch_status.Equals(5)));
+                query = query.Where(t => (t.picked_qty == t.qty &&( t.dispatch_status.Equals(3)) || (t.package_qty == 0 && t.dispatch_status.Equals(5))) );
             }
-            else if (pageSearch.sqlTitle.Contains("to_weight"))
+            else if (pageSearch.sqlTitle.Equals("to_weight"))
             {
-                query = query.Where(t => t.picked_qty == t.qty && t.dispatch_status.Equals(3) || (t.weighing_qty == 0 && t.dispatch_status.Equals(4)));
+                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || (t.weighing_qty == 0 && t.dispatch_status.Equals(4))) );
+            }
+            else if (pageSearch.sqlTitle.Equals("to_delivery"))
+            {
+                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || t.dispatch_status.Equals(4)|| t.dispatch_status.Equals(5)) );
             }
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
@@ -304,9 +308,7 @@ namespace ModernWMS.WMS.Services
             }
             var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
             var query = from d in DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                        join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on d.sku_id equals sku.id
-                        join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
-                        group new { sku, spu, d } by new { sku.sku_code, spu.spu_code, spu.spu_name, d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name,d.creator }
+                        group  d  by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name,d.creator }
                         into dg
                         select new PreDispatchlistViewModel
                         {
@@ -314,12 +316,9 @@ namespace ModernWMS.WMS.Services
                             dispatch_status = dg.Key.dispatch_status,
                             customer_id = dg.Key.customer_id,
                             customer_name = dg.Key.customer_name,
-                            spu_name = dg.Key.spu_name,
-                            spu_code = dg.Key.spu_code,
-                            sku_code = dg.Key.sku_code,
-                            qty = dg.Sum(t => t.d.qty),
-                            volume = dg.Sum(t => t.d.volume),
-                            weight = dg.Sum(t => t.d.weight),
+                            qty = dg.Sum(t => t.qty),
+                            volume = dg.Sum(t => t.volume),
+                            weight = dg.Sum(t => t.weight),
                             creator = dg.Key.creator,
                         };
             query = query.Where(queries.AsExpression<PreDispatchlistViewModel>());
@@ -529,7 +528,7 @@ namespace ModernWMS.WMS.Services
                                from owner in owner_left.DefaultIfEmpty()
                                join gl in location_DBSet.AsNoTracking() on sg.goods_location_id equals gl.id into gl_left
                                from gl in gl_left.DefaultIfEmpty()
-                               where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id
+                               where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id && (dl.dispatch_status == 0 || dl.dispatch_status==1)
                                select new
                                {
                                    stock_id = sg.stock_id == null ? 0 : sg.stock_id,
@@ -784,6 +783,8 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["operation_failed"]);
             }
         }
+
+
 
         /// <summary>
         /// confirm dispatchpicklist picked by dispatch_no

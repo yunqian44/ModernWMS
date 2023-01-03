@@ -78,20 +78,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [MaxLength(64, ErrorMessage = "MaxLength")]
         public string creator { get; set; } = string.Empty;
 
-        /// <summary>
-        /// spu_code
-        /// </summary>
-        public string spu_code { get; set; } = string.Empty;
-
-        /// <summary>
-        /// spu_name
-        /// </summary>
-        public string spu_name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// sku_code
-        /// </summary>
-        public string sku_code { get; set; } = string.Empty;
         #endregion
 
     }
