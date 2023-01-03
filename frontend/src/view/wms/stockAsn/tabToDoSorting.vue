@@ -36,18 +36,24 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableStockLocation" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
-      <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
-      <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockLocation.sku_code')"></vxe-column>
-      <vxe-column field="sku_name" :title="$t('wms.stockLocation.sku_name')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.stockLocation.qty')"></vxe-column>
-      <vxe-column field="qty_available" :title="$t('wms.stockLocation.qty_available')"></vxe-column>
-      <vxe-column field="qty_locked" :title="$t('wms.stockLocation.qty_locked')"></vxe-column>
-      <vxe-column field="qty_frozen" :title="$t('wms.stockLocation.qty_frozen')"></vxe-column>
+      <vxe-column field="asn_no" :title="$t('wms.stockAsnInfo.asn_no')"></vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.stockAsnInfo.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.stockAsnInfo.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')"></vxe-column>
+      <vxe-column field="sku_name" :title="$t('wms.stockAsnInfo.sku_name')"></vxe-column>
+      <vxe-column field="goods_owner_name" :title="$t('wms.stockAsnInfo.goods_owner_name')"></vxe-column>
+      <vxe-column field="supplier_name" :title="$t('wms.stockAsnInfo.supplier_name')"></vxe-column>
+      <vxe-column field="asn_qty" :title="$t('wms.stockAsnInfo.asn_qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.stockAsnInfo.weight')"></vxe-column>
+      <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
+      <vxe-column field="sorted_qty" :title="$t('wms.stockAsnInfo.sorted_qty')"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+        </template>
+      </vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -66,10 +72,10 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { StockLocationVO } from '@/types/WMS/StockManagement'
+import { StockAsnVO } from '@/types/WMS/StockAsn'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockAsnList } from '@/api/wms/stockAsn'
+import { getStockAsnList, sortedAsn } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 
@@ -81,15 +87,38 @@ const data = reactive({
     warehouse: ''
   },
   activeTab: null,
-  tableData: ref<StockLocationVO[]>([]),
+  tableData: ref<StockAsnVO[]>([]),
   tablePage: reactive({
     total: 0,
+    sqlTitle: 'asn_status:2',
     pageIndex: 1,
     pageSize: 10
   })
 })
 
 const method = reactive({
+  editRow(row: StockAsnVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeAsnSorted'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await sortedAsn(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.confirm') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
   // Refresh data
   refresh: () => {
     method.getStockAsnList()
