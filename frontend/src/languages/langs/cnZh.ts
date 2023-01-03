@@ -31,7 +31,8 @@ export default {
       detailHasItemRepeat: '明细中含有重复项目!',
       noData: '暂无数据',
       beforeAsnConfirm: '确认到货？',
-      beforeAsnUnload: '确认卸货？'
+      beforeAsnUnload: '确认卸货？',
+      beforeAsnSorted: '确认分拣完成？'
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',

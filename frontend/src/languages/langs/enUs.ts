@@ -31,7 +31,8 @@ export default {
       detailHasItemRepeat: 'The details contain duplicate items!',
       noData: 'no data',
       beforeAsnConfirm: 'Confirm Arrival?',
-      beforeAsnUnload: 'Confirm Unload?'
+      beforeAsnUnload: 'Confirm Unload?',
+      beforeAsnSorted: 'Confirm Sorted?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
