@@ -69,7 +69,7 @@ import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/
 import { StockLocationVO } from '@/types/WMS/StockManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockLocationList } from '@/api/wms/stockManagement'
+import { getStockAsnList } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 
@@ -92,10 +92,10 @@ const data = reactive({
 const method = reactive({
   // Refresh data
   refresh: () => {
-    method.getStockLocationList()
+    method.getStockAsnList()
   },
-  getStockLocationList: async () => {
-    const { data: res } = await getStockLocationList(data.tablePage)
+  getStockAsnList: async () => {
+    const { data: res } = await getStockAsnList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -110,7 +110,7 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getStockLocationList()
+    method.getStockAsnList()
   }),
   exportTable: () => {
     const $table = xTableStockLocation.value
@@ -138,7 +138,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getStockLocationList: method.getStockLocationList
+  getStockAsnList: method.getStockAsnList
 })
 </script>
 

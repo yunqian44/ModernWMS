@@ -17,7 +17,7 @@
               <tabStockLocation ref="tabStockLocationRef" />
             </v-window-item>
             <v-window-item value="tabStock">
-              <tab-stock ref="tabStockRef" />
+              <tabStock ref="tabStockRef" />
             </v-window-item>
           </v-window>
         </v-card-text>
@@ -60,13 +60,13 @@ const method = reactive({
       switch (e) {
         case 'tabStockLocation':
           // Tips：Must be write the nextTick so that can get DOM!!
-          if (tabStockLocationRef?.value?.getWarehouseList) {
-            tabStockLocationRef.value.getWarehouseList()
+          if (tabStockLocationRef?.value?.getStockLocationList) {
+            tabStockLocationRef.value.getStockLocationList()
           }
           break
         case 'tabStock':
-          if (tabStockRef?.value?.getWarehouseAreaList) {
-            tabStockRef.value.getWarehouseAreaList()
+          if (tabStockRef?.value?.getStockList) {
+            tabStockRef.value.getStockList()
           }
           break
       }

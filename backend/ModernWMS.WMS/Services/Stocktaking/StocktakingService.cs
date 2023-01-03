@@ -178,6 +178,7 @@ namespace ModernWMS.WMS.Services
             var entity = viewModel.Adapt<StocktakingEntity>();
             entity.id = 0;
             entity.job_code = await GetOrderCode();
+            entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
@@ -226,12 +227,12 @@ namespace ModernWMS.WMS.Services
             return code;
         }
         /// <summary>
-        /// Confirm a record
+        /// update  counted_qty
         /// </summary>
         /// <param name="viewModel">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> ConfirmAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser)
+        public async Task<(bool flag, string msg)> PutAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
@@ -244,13 +245,38 @@ namespace ModernWMS.WMS.Services
             entity.last_update_time = DateTime.Now;
             entity.handler = currentUser.user_name;
             entity.handle_time = DateTime.Now;
-            entity.job_status = true;
+            entity.job_status = true;            
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
+
+        /// <summary>
+        /// Confirm a record
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmAsync(int id, CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
+            var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(id));
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
             // change stock sku qty
             var Stocks = _dBContext.GetDbSet<StockEntity>();
             var stockEntity = await Stocks.FirstOrDefaultAsync(t => t.sku_id.Equals(entity.sku_id)
                                                                  && t.goods_owner_id.Equals(entity.goods_owner_id)
                                                                  && t.goods_location_id.Equals(entity.goods_location_id));
-            if (stockEntity != null)
+            if (stockEntity == null)
             {
                 await Stocks.AddAsync(new StockEntity
                 {

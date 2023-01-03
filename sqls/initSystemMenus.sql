@@ -16,4 +16,6 @@ VALUES
 ('warehouseMove', 'warehouseWorkingModule', 'warehouseMove', 'warehouseWorking/warehouseMove', 1, 14),
 ('warehouseFreeze', 'warehouseWorkingModule', 'warehouseFreeze', 'warehouseWorking/warehouseFreeze', 1, 15),
 ('warehouseAdjust', 'warehouseWorkingModule', 'warehouseAdjust', 'warehouseWorking/warehouseAdjust', 1, 16),
-('warehouseTaking', 'warehouseWorkingModule', 'warehouseTaking', 'warehouseWorking/warehouseTaking', 1, 17)
+('warehouseTaking', 'warehouseWorkingModule', 'warehouseTaking', 'warehouseWorking/warehouseTaking', 1, 17),
+('deliveryManagement', '', 'deliveryManagement', 'deliveryManagement/deliveryManagement', 1, 18),
+('stockAsn', '', 'stockAsn', 'wms/stockAsn', 1, 19),

@@ -16,7 +16,7 @@
      /// </summary>
      [Route("stocktaking")]
      [ApiController]
-     [ApiExplorerSettings(GroupName = "wms")]
+     [ApiExplorerSettings(GroupName = "WMS")]
      public class StocktakingController : BaseController
      {
          #region Args
@@ -108,9 +108,9 @@
         /// <param name="viewModel">args</param>
         /// <returns></returns>
         [HttpPut]
-         public async Task<ResultModel<bool>> ConfirmAsync(StocktakingConfirmViewModel viewModel)
+         public async Task<ResultModel<bool>> PutAsync(StocktakingConfirmViewModel viewModel)
          {
-             var (flag, msg) = await _stocktakingService.ConfirmAsync(viewModel, CurrentUser);
+             var (flag, msg) = await _stocktakingService.PutAsync(viewModel, CurrentUser);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);
@@ -120,13 +120,32 @@
                  return ResultModel<bool>.Error(msg, 400, flag);
              }
          }
- 
-         /// <summary>
-         /// delete a record
-         /// </summary>
-         /// <param name="id">id</param>
-         /// <returns></returns>
-         [HttpDelete]
+
+        /// <summary>
+        /// confrim a record and change stock and add to stockadjust
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("adjustment-confirm")]
+        public async Task<ResultModel<bool>> ConfirmAsync(int id)
+        {
+            var (flag, msg) = await _stocktakingService.ConfirmAsync(id, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<bool>.Success(flag);
+            }
+            else
+            {
+                return ResultModel<bool>.Error(msg, 400, flag);
+            }
+        }
+
+        /// <summary>
+        /// delete a record
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpDelete]
          public async Task<ResultModel<string>> DeleteAsync(int id)
          {
              var (flag, msg) = await _stocktakingService.DeleteAsync(id);

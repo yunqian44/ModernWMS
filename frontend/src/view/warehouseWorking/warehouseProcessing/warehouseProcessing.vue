@@ -119,7 +119,13 @@
           </v-window>
         </v-card-text>
       </v-card>
-      <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" :process-type="data.processType" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+      <addOrUpdateDialog
+        :show-dialog="data.showDialog"
+        :form="data.dialogForm"
+        :process-type="data.processType"
+        @close="method.closeDialog"
+        @saveSuccess="method.saveSuccess"
+      />
     </div>
   </div>
 </template>
@@ -128,11 +134,11 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/warehouseWorking/WarehouseProcessing'
+import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/WarehouseWorking/WarehouseProcessing'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockProcess, getStockProcessList, getStockProcessOne, confirmAdjustment, confirmProcess } from '@/api/wms/warehouseProcessing'
-import { PROCESS_JOB_COMBINE,PROCESS_JOB_SPLIT } from '@/constant/warehouseWorking'
+import { PROCESS_JOB_COMBINE, PROCESS_JOB_SPLIT } from '@/constant/warehouseWorking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'

@@ -71,7 +71,9 @@ export default {
       warehouseMove: '库存移动',
       warehouseFreeze: '库存冻结',
       warehouseAdjust: '库存调整',
-      warehouseTaking: '库存盘点'
+      warehouseTaking: '库存盘点',
+      deliveryManagement: '发货管理',
+      stockAsn: '收货管理'
     }
   },
   login: {
@@ -327,7 +329,7 @@ export default {
     },
     stockManagement: {
       stockLocation: '库位列表',
-      stock: '库存列表',
+      stock: '库存列表'
     },
     stockLocation: {
       warehouse: '仓库名称',
@@ -341,6 +343,80 @@ export default {
       qty_available: '可用数量',
       qty_locked: '锁定数量',
       qty_frozen: '冻结数量'
+    },
+    stockList: {
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      sku_code: '规格编码',
+      sku_id: '规格标识',
+      qty: '数量',
+      qty_available: '可用数量',
+      qty_locked: '锁定数量',
+      qty_frozen: '冻结数量',
+      qty_asn: '到货通知书数量',
+      qty_to_unload: '待卸货数量',
+      qty_to_sort: '待分拣数量',
+      qty_sorted: '已分拣数量',
+      shortage_qty: '欠货数量'
+    },
+    stockAsn: {
+      tabNotice: '到货通知',
+      tabToDoArrival: '待到货',
+      tabToDoUnload: '待卸货',
+      tabToDoSorting: '待分拣',
+      tabToDoGrounding: '待上架',
+      tabReceiptDetails: '收货明细'
+    },
+    stockAsnInfo: {
+      id: '标识',
+      asn_no: '到货通知书编号',
+      asn_status: '到货通知书状态',
+      spu_id: '商品spu标识',
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      sku_id: '商品sku标识',
+      sku_code: '规格编码',
+      sku_name: '规格名称',
+      origin: '源标识',
+      length_unit: '长度单位',
+      volume_unit: '体积单位',
+      weight_unit: '重量单位',
+      asn_qty: '到货通知书数据',
+      actual_qty: '上架数量',
+      sorted_qty: '分拣数量',
+      shortage_qty: '短少数量',
+      more_qty: '超量数量',
+      damage_qty: '破损数量',
+      weight: '总重量',
+      volume: '总体积',
+      supplier_id: '供应商标识',
+      supplier_name: '供应商名称',
+      goods_owner_id: '货主标识',
+      goods_owner_name: '货主名称',
+      is_valid: '是否有效'
+    },
+    deliveryManagement: {
+      shipment: '发货单',
+      preShipment: '预发货',
+      newShipment: '新发货',
+      goodsToBePicked: '待拣货',
+      picked: '已拣货',
+      packaged: '已打包',
+      weighed: '已称重',
+      outOfWarehouse: '已出库',
+      signedIn: '已签收',
+      dispatch_no: '发货单号',
+      dispatch_status: '发货单状态',
+      qty: '总数量',
+      detailQty: '数量',
+      weight: '总重量',
+      volume: '总体积',
+      customer_name: '客户名称',
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      sku_code: '规格编码',
+      creator: '创建人',
+      create_time: '创建时间'
     }
   }
 }

@@ -14,12 +14,12 @@
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <!-- <v-text-field
-              v-model="data.searchForm.warehouse"
+              v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse')"
+              :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
             </v-text-field> -->
@@ -36,18 +36,24 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableStockLocation" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTable" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
-      <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
-      <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockLocation.sku_code')"></vxe-column>
-      <vxe-column field="sku_name" :title="$t('wms.stockLocation.sku_name')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.stockLocation.qty')"></vxe-column>
-      <vxe-column field="qty_available" :title="$t('wms.stockLocation.qty_available')"></vxe-column>
-      <vxe-column field="qty_locked" :title="$t('wms.stockLocation.qty_locked')"></vxe-column>
-      <vxe-column field="qty_frozen" :title="$t('wms.stockLocation.qty_frozen')"></vxe-column>
+      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
+      <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
+      <vxe-column
+        field="create_time"
+        width="170px"
+        :title="$t('wms.deliveryManagement.create_time')"
+        :formatter="['formatDate']"
+      ></vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -66,22 +72,24 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { StockLocationVO } from '@/types/WMS/StockManagement'
+import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockLocationList } from '@/api/wms/stockManagement'
+import { getGoodsToBePicked } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 
-const xTableStockLocation = ref()
+const xTable = ref()
 
 const data = reactive({
   showDialog: false,
+  dialogForm: {
+    id: 0
+  },
   searchForm: {
-    warehouse: ''
   },
   activeTab: null,
-  tableData: ref<StockLocationVO[]>([]),
+  tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -92,10 +100,10 @@ const data = reactive({
 const method = reactive({
   // Refresh data
   refresh: () => {
-    method.getStockLocationList()
+    method.getGoodsToBePicked()
   },
-  getStockLocationList: async () => {
-    const { data: res } = await getStockLocationList(data.tablePage)
+  getGoodsToBePicked: async () => {
+    const { data: res } = await getGoodsToBePicked(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -110,14 +118,14 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getStockLocationList()
+    method.getGoodsToBePicked()
   }),
   exportTable: () => {
-    const $table = xTableStockLocation.value
+    const $table = xTable.value
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockManagement.stockLocation'),
+        filename: i18n.global.t('wms.deliveryManagement.goodsToBePicked'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -138,7 +146,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getStockLocationList: method.getStockLocationList
+  getGoodsToBePicked: method.getGoodsToBePicked
 })
 </script>
 

@@ -3,6 +3,7 @@
     <v-row no-gutters>
       <!-- Operate Btn -->
       <v-col cols="3" class="col">
+        <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
       </v-col>
@@ -14,12 +15,12 @@
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <!-- <v-text-field
-              v-model="data.searchForm.warehouse"
+              v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse')"
+              :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
             </v-text-field> -->
@@ -36,18 +37,29 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableStockLocation" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
-      <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
-      <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockLocation.sku_code')"></vxe-column>
-      <vxe-column field="sku_name" :title="$t('wms.stockLocation.sku_name')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.stockLocation.qty')"></vxe-column>
-      <vxe-column field="qty_available" :title="$t('wms.stockLocation.qty_available')"></vxe-column>
-      <vxe-column field="qty_locked" :title="$t('wms.stockLocation.qty_locked')"></vxe-column>
-      <vxe-column field="qty_frozen" :title="$t('wms.stockLocation.qty_frozen')"></vxe-column>
+      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
+      <vxe-column field="dispatch_status" :title="$t('wms.deliveryManagement.dispatch_status')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
+      <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
+      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-delete-outline"
+            :tooltip-text="$t('system.page.delete')"
+            :icon-color="errorColor"
+            @click="method.deleteRow(row)"
+          ></tooltip-btn>
+        </template>
+      </vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -59,6 +71,8 @@
       @page-change="method.handlePageChange"
     >
     </vxe-pager>
+    <!-- Add or modify data mode window -->
+    <addOrUpdateShipment :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
   </div>
 </template>
 
@@ -66,22 +80,25 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { StockLocationVO } from '@/types/WMS/StockManagement'
+import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockLocationList } from '@/api/wms/stockManagement'
+import { getShipment } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import addOrUpdateShipment from './add-or-update-shipment.vue'
 
-const xTableStockLocation = ref()
+const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  searchForm: {
-    warehouse: ''
+  dialogForm: {
+    id: 0,
+    detailList: []
   },
+  searchForm: {},
   activeTab: null,
-  tableData: ref<StockLocationVO[]>([]),
+  tableData: ref<DeliveryManagementVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -90,12 +107,38 @@ const data = reactive({
 })
 
 const method = reactive({
+  // after Add or update success.
+  saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // Refresh dialog data
+  clearDialogForm: () => {
+    data.dialogForm = {
+      id: 0,
+      detailList: []
+    }
+  },
+  add: () => {
+    method.clearDialogForm()
+    data.showDialog = true
+  },
+  editRow: (row: DeliveryManagementVO) => {
+    console.log(row)
+  },
+  deleteRow: (row: DeliveryManagementVO) => {
+    console.log(row)
+  },
   // Refresh data
   refresh: () => {
-    method.getStockLocationList()
+    method.getShipment()
   },
-  getStockLocationList: async () => {
-    const { data: res } = await getStockLocationList(data.tablePage)
+  getShipment: async () => {
+    const { data: res } = await getShipment(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -110,14 +153,14 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getStockLocationList()
+    method.getShipment()
   }),
   exportTable: () => {
-    const $table = xTableStockLocation.value
+    const $table = xTable.value
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockManagement.stockLocation'),
+        filename: i18n.global.t('wms.deliveryManagement.shipment'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -138,7 +181,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getStockLocationList: method.getStockLocationList
+  getShipment: method.getShipment
 })
 </script>
 
