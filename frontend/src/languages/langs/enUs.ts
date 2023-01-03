@@ -29,7 +29,9 @@ export default {
       beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
       detailLengthIsZero: 'Details verification before document submission!',
       detailHasItemRepeat: 'The details contain duplicate items!',
-      noData: 'no data'
+      noData: 'no data',
+      beforeAsnConfirm: 'Confirm Arrival?',
+      beforeAsnUnload: 'Confirm Unload?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
