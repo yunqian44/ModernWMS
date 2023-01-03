@@ -99,6 +99,35 @@ namespace ModernWMS.WMS.Controllers
              }
          }
         /// <summary>
+        /// update dispatchlist with same dispatch_no
+        /// </summary>
+        /// <param name="viewModel">viewModel</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ResultModel<string>> UpdateAsycn(List<DispatchlistViewModel> viewModel)
+        {
+            var (flag, msg) = await _dispatchlistService.UpdateAsycn(viewModel, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        /// get dispatchlist by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no">dispatch_no</param>
+        /// <returns></returns>
+        [HttpGet("by-dispatch_no")]
+        public async Task<ResultModel<List<DispatchlistViewModel>>> GetByDispatchlistNo(string dispatch_no)
+        {
+            var datas = await _dispatchlistService.GetByDispatchlistNo(dispatch_no, CurrentUser);
+            return ResultModel<List<DispatchlistViewModel>>.Success(datas);
+        }
+        /// <summary>
         /// get Dispatchlist details with available stock
         /// </summary>
         /// <param name="dispatch_no">dispatch_no</param>
