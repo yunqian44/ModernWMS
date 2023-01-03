@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
+import { computed, ref, reactive, watch, nextTick, onActivated } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { WarehouseAdjustVO } from '@/types/WarehouseWorking/WarehouseAdjust'
@@ -292,7 +292,7 @@ const method = reactive({
   },
 
   // The btn will become disabled when the 'process_status' is false
-  confirmAdjustBtnDisabled: (row: WarehouseAdjustVO) => row.is_update_stock === true,
+  // confirmAdjustBtnDisabled: (row: WarehouseAdjustVO) => row.is_update_stock === true,
 
   confirmAdjust: async (row: WarehouseAdjustVO) => {
     hookComponent.$dialog({
@@ -318,7 +318,7 @@ const method = reactive({
   }
 })
 
-onMounted(() => {
+onActivated(() => {
   method.refresh()
 })
 

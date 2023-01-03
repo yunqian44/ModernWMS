@@ -131,7 +131,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
+import { computed, ref, reactive, onActivated, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/WarehouseWorking/WarehouseProcessing'
@@ -356,7 +356,7 @@ const method = reactive({
   }
 })
 
-onMounted(() => {
+onActivated(() => {
   method.refresh()
 })
 

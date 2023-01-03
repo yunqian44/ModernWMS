@@ -316,7 +316,9 @@ export default {
         create_time: 'Create Time',
         confirmTaking: 'Confirm Taking',
         unfinish: 'Unfinish',
-        finish: 'Finish'
+        finish: 'Finish',
+        confirmAdjust: 'Confirm Adjust',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?'
       }
     },
     stockManagement: {

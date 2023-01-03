@@ -80,7 +80,6 @@
                         :disabled="method.isConfirmTaking(row)"
                         @click="method.confirmTaking(row)"
                       ></tooltip-btn>
-                      <!-- 盘点确认后，才可以点击进行调整 -->
                       <tooltip-btn
                         :flat="true"
                         icon="mdi-book-open-outline"
@@ -126,14 +125,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
+import { computed, ref, reactive, onActivated, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { WarehouseTakingVO } from '@/types/WarehouseWorking/WarehouseTaking'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { TAKING_JOB_FINISH, TAKING_JOB_UNFINISH } from '@/constant/warehouseWorking'
-import { deleteStockTaking, getStockTakingList, getStockTakingOne } from '@/api/wms/warehouseTaking'
+import { deleteStockTaking, getStockTakingList, getStockTakingOne, confirmAdjustment } from '@/api/wms/warehouseTaking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
@@ -152,7 +151,7 @@ const data = reactive({
   activeTab: null,
   searchForm: {},
   tableData: ref<WarehouseTakingVO[]>([]),
-  dialogForm: {
+  dialogForm: ref<WarehouseTakingVO>({
     id: 0,
     job_code: '',
     job_status: TAKING_JOB_FINISH,
@@ -168,8 +167,11 @@ const data = reactive({
     warehouse: '',
     location_name: '',
     handler: '',
-    handle_time: ''
-  },
+    handle_time: '',
+    adjust_status: false,
+    creator: '',
+    create_time: ''
+  }),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
@@ -197,7 +199,10 @@ const method = reactive({
       warehouse: '',
       location_name: '',
       handler: '',
-      handle_time: ''
+      handle_time: '',
+      adjust_status: false,
+      creator: '',
+      create_time: ''
     }
     nextTick(() => {
       data.showDialog = true
@@ -318,66 +323,43 @@ const method = reactive({
   },
 
   // The btn will become disabled when the 'job_status' is false
-  confirmAdjustBtnDisabled: (row: WarehouseTakingVO) => row.job_status === TAKING_JOB_UNFINISH,
+  confirmAdjustBtnDisabled: (row: WarehouseTakingVO) => row.job_status === TAKING_JOB_UNFINISH || !!row.adjust_status,
 
   // The btn will become disabled when the 'job_status' is true
   isConfirmTaking: (row: WarehouseTakingVO) => row.job_status === TAKING_JOB_FINISH,
 
-  // TODO 确认盘点时，要弹窗出来输入数量
   confirmTaking: async (row: WarehouseTakingVO) => {
     data.dialogForm = row
     nextTick(() => {
       data.showDialogNumberInput = true
     })
-
-    // hookComponent.$dialog({
-    //   content: i18n.global.t('wms.warehouseWorking.warehouseTaking.beforeConfirmAdjust'),
-    //   handleConfirm: async () => {
-    // if (row.id) {
-    //   const { data: res } = await confirmStockTaking(row.id)
-    //   if (!res.isSuccess) {
-    //     hookComponent.$message({
-    //       type: 'error',
-    //       content: res.errorMessage
-    //     })
-    //     return
-    //   }
-    //   hookComponent.$message({
-    //     type: 'success',
-    //     content: `${ i18n.global.t('wms.warehouseWorking.warehouseTaking.confirmTaking') }${ i18n.global.t('system.tips.success') }`
-    //   })
-    //   method.refresh()
-    // }
-    //   }
-    // })
   },
 
   confirmAdjust: async (row: WarehouseTakingVO) => {
     hookComponent.$dialog({
-      content: i18n.global.t('wms.warehouseWorking.warehouseProcessing.beforeConfirmAdjust'),
+      content: i18n.global.t('wms.warehouseWorking.warehouseTaking.beforeConfirmAdjust'),
       handleConfirm: async () => {
         if (row.id) {
-          // TODO 弹窗制单调整单
-          // const { data: res } = await confirmAdjustment(row.id)
-          // if (!res.isSuccess) {
-          //   hookComponent.$message({
-          //     type: 'error',
-          //     content: res.errorMessage
-          //   })
-          //   return
-          // }
-          // hookComponent.$message({
-          //   type: 'success',
-          //   content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
-          // })
-          // method.refresh()
+          const { data: res } = await confirmAdjustment(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('wms.warehouseWorking.warehouseTaking.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
         }
       }
     })
   }
 })
 
-onMounted(() => {
+onActivated(() => {
   method.refresh()
 })
 

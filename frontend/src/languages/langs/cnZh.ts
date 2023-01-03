@@ -324,7 +324,9 @@ export default {
         creator: '创建人',
         create_time: '创建时间',
         unfinish: '待作业',
-        finish: '已完成'
+        finish: '已完成',
+        confirmAdjust: '确认调整',
+        beforeConfirmAdjust: '您确认对该条数据进行调整吗？'
       }
     },
     stockManagement: {

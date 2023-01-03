@@ -110,7 +110,10 @@ const data = reactive({
     warehouse: '',
     location_name: '',
     handler: '',
-    handle_time: ''
+    handle_time: '',
+    adjust_status: false,
+    creator: '',
+    create_time: ''
   }),
   rules: {
     job_type: [],
