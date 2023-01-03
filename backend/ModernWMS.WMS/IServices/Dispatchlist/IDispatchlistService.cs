@@ -22,6 +22,7 @@ namespace ModernWMS.WMS.IServices
          /// <param name="currentUser">current user</param>
          /// <returns></returns>
          Task<(List<DispatchlistViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
+
         /// <summary>
         /// advanced dispatch order page search 
         /// </summary>
@@ -29,6 +30,7 @@ namespace ModernWMS.WMS.IServices
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
         Task<(List<PreDispatchlistViewModel> data, int totals)> AdvancedDispatchlistPageAsync(PageSearch pageSearch, CurrentUser currentUser);
+
          /// <summary>
          /// add a new record
          /// </summary>
@@ -36,6 +38,7 @@ namespace ModernWMS.WMS.IServices
          /// <param name="currentUser">current user</param>
          /// <returns></returns>
          Task<(bool flag, string msg)> AddAsync(List<DispatchlistAddViewModel> viewModel, CurrentUser currentUser);
+
         /// <summary>
         /// Dispatchlist details with available stock
         /// </summary>
@@ -43,6 +46,15 @@ namespace ModernWMS.WMS.IServices
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
         Task<List<DispatchlistConfirmDetailViewModel>> ConfirmOrderCheck(string dispatch_no, CurrentUser currentUser);
+
+        /// <summary>
+        /// get dispatchlist by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no"></param>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        Task<List<DispatchlistViewModel>> GetByDispatchlistNo(string dispatch_no, CurrentUser currentUser);
+
         /// <summary>
         /// delete a record
         /// </summary>
@@ -50,6 +62,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> DeleteAsync(string dispatch_no, CurrentUser currentUser);
+
+        /// <summary>
+        /// update dispatchlist with same dispatch_no
+        /// </summary>
+        /// <param name="viewModels"></param>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> UpdateAsycn(List<DispatchlistViewModel> viewModels, CurrentUser currentUser);
 
         /// <summary>
         ///  Confirm orders and create  dispatchpicklist
@@ -107,6 +127,13 @@ namespace ModernWMS.WMS.IServices
         /// <param name="viewModels">viewModels</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> SignForArrival(List<DispatchlistSignViewModel> viewModels);
+
+        /// <summary>
+        /// get pick list by dispatch_id
+        /// </summary>
+        /// <param name="dispatch_id">dispatch_id</param>
+        /// <returns></returns>
+        Task<List<DispatchpicklistViewModel>> GetPickListByDispatchID(int dispatch_id);
          #endregion
      }
  }

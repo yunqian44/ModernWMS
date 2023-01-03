@@ -15,6 +15,7 @@
               :label="$t('wms.warehouseWorking.warehouseAdjust.job_type')"
               variant="outlined"
               clearable
+              :disabled="isAssociatedJobType"
               @update:model-value="method.changeJobType"
             ></v-select>
             <v-text-field
@@ -24,6 +25,7 @@
               variant="outlined"
               readonly
               clearable
+              :disabled="isAssociatedJobType"
               @click="method.openCommoditySelect"
               @click:clear="method.clearCommodity"
             ></v-text-field>
@@ -95,9 +97,12 @@ const operateDisabled = computed(() => !!isUpdate.value)
 const props = defineProps<{
   showDialog: boolean
   form: WarehouseAdjustVO
+  // If 'associatedJobType' has value, the 'job_type' and 'sku' should be disabled.
+  associatedJobType?: AdjustJobType
 }>()
 
 const isShow = computed(() => props.showDialog)
+const isAssociatedJobType = computed(() => !!(props.associatedJobType && props.associatedJobType > 0))
 
 const data = reactive({
   showCommodityDialogSelect: false,
@@ -157,7 +162,7 @@ const data = reactive({
       {
         label: i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouseMove'),
         value: AdjustJobType.MOVE
-      },
+      }
     ]
   })
 })
@@ -169,6 +174,10 @@ const method = reactive({
 
   initForm: () => {
     data.form = props.form
+
+    if (isAssociatedJobType.value) {
+      data.form.job_type = props.associatedJobType
+    }
   },
 
   changeJobType: (value: any) => {

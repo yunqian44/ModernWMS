@@ -45,6 +45,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public bool job_status { get; set; } = false;
 
         /// <summary>
+        /// adjust_status
+        /// </summary>
+        public bool adjust_status { get; set; } = false;
+
+        /// <summary>
         /// counted_qty
         /// </summary>
         [Display(Name = "counted_qty")]

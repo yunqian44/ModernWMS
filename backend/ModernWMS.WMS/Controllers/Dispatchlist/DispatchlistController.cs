@@ -99,6 +99,35 @@ namespace ModernWMS.WMS.Controllers
              }
          }
         /// <summary>
+        /// update dispatchlist with same dispatch_no
+        /// </summary>
+        /// <param name="viewModel">viewModel</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ResultModel<string>> UpdateAsycn(List<DispatchlistViewModel> viewModel)
+        {
+            var (flag, msg) = await _dispatchlistService.UpdateAsycn(viewModel, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        /// get dispatchlist by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no">dispatch_no</param>
+        /// <returns></returns>
+        [HttpGet("by-dispatch_no")]
+        public async Task<ResultModel<List<DispatchlistViewModel>>> GetByDispatchlistNo(string dispatch_no)
+        {
+            var datas = await _dispatchlistService.GetByDispatchlistNo(dispatch_no, CurrentUser);
+            return ResultModel<List<DispatchlistViewModel>>.Success(datas);
+        }
+        /// <summary>
         /// get Dispatchlist details with available stock
         /// </summary>
         /// <param name="dispatch_no">dispatch_no</param>
@@ -108,6 +137,18 @@ namespace ModernWMS.WMS.Controllers
         {
             var datas  = await _dispatchlistService.ConfirmOrderCheck(dispatch_no, CurrentUser);
             return ResultModel<List<DispatchlistConfirmDetailViewModel>>.Success(datas);
+        }
+
+        /// <summary>
+        ///  get pick list by dispatch_id
+        /// </summary>
+        /// <param name="dispatch_id">dispatch_id</param>
+        /// <returns></returns>
+        [HttpGet("pick-list")]
+        public async Task<ResultModel<List<DispatchpicklistViewModel>>> GetPickListByDispatchID(int dispatch_id)
+        {
+            var datas = await _dispatchlistService.GetPickListByDispatchID(dispatch_id);
+            return ResultModel<List<DispatchpicklistViewModel>>.Success(datas);
         }
         /// <summary>
         /// delete a record

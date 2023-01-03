@@ -78,27 +78,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [MaxLength(64, ErrorMessage = "MaxLength")]
         public string creator { get; set; } = string.Empty;
 
-        /// <summary>
-        /// create_time
-        /// </summary>
-        [Display(Name = "create_time")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime create_time { get; set; } = UtilConvert.MinDate;
-
-        /// <summary>
-        /// spu_code
-        /// </summary>
-        public string spu_code { get; set; } = string.Empty;
-
-        /// <summary>
-        /// spu_name
-        /// </summary>
-        public string spu_name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// sku_code
-        /// </summary>
-        public string sku_code { get; set; } = string.Empty;
         #endregion
 
     }

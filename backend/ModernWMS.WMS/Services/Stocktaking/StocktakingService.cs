@@ -72,6 +72,8 @@ namespace ModernWMS.WMS.Services
             var Skus = _dBContext.GetDbSet<SkuEntity>();
             var Goodsowners = _dBContext.GetDbSet<GoodsownerEntity>();
             var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var Stockadjusts = _dBContext.GetDbSet<StockadjustEntity>();
+            var queryAdjust = Stockadjusts.AsNoTracking().Where(t => t.job_type == 1).Select(t => new { t.id, t.source_table_id });
 
             var query = from st in Stocktakings.AsNoTracking()
                         join sku in Skus.AsNoTracking() on st.sku_id equals sku.id
@@ -79,12 +81,15 @@ namespace ModernWMS.WMS.Services
                         join gsl in Goodslocations.AsNoTracking() on st.goods_location_id equals gsl.id
                         join gso in Goodsowners.AsNoTracking() on st.goods_owner_id equals gso.id into gsoJoin
                         from gso in gsoJoin.DefaultIfEmpty()
+                        join adj in queryAdjust on st.id equals adj.source_table_id into adjJoin
+                        from adj in adjJoin.DefaultIfEmpty()
                         where st.tenant_id == currentUser.tenant_id
                         select new StocktakingViewModel
                         {
                             id = st.id,
                             job_code = st.job_code,
                             job_status = st.job_status,
+                            adjust_status = adj.id == null  ? false : true,
                             sku_id = sku.id,
                             sku_code = sku.sku_code,
                             sku_name = sku.sku_name,
@@ -124,6 +129,8 @@ namespace ModernWMS.WMS.Services
             var Skus = _dBContext.GetDbSet<SkuEntity>();
             var Goodsowners = _dBContext.GetDbSet<GoodsownerEntity>();
             var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var Stockadjusts = _dBContext.GetDbSet<StockadjustEntity>();
+            var queryAdjust = Stockadjusts.AsNoTracking().Where(t => t.job_type == 1).Select(t => new { t.id, t.source_table_id });
 
             var query = from st in Stocktakings.AsNoTracking()
                         join sku in Skus.AsNoTracking() on st.sku_id equals sku.id
@@ -131,12 +138,15 @@ namespace ModernWMS.WMS.Services
                         join gsl in Goodslocations.AsNoTracking() on st.goods_location_id equals gsl.id
                         join gso in Goodsowners.AsNoTracking() on st.goods_owner_id equals gso.id into gsoJoin
                         from gso in gsoJoin.DefaultIfEmpty()
+                        join adj in queryAdjust on st.id equals adj.source_table_id into adjJoin
+                        from adj in adjJoin.DefaultIfEmpty()
                         where st.id == id
                         select new StocktakingViewModel
                         {
                             id = st.id,
                             job_code = st.job_code,
                             job_status = st.job_status,
+                            adjust_status = adj.id == null ? false : true,
                             sku_id = sku.id,
                             sku_code = sku.sku_code,
                             sku_name = sku.sku_name,
@@ -227,12 +237,12 @@ namespace ModernWMS.WMS.Services
             return code;
         }
         /// <summary>
-        /// Confirm a record
+        /// update  counted_qty
         /// </summary>
         /// <param name="viewModel">args</param>
         /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> ConfirmAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser)
+        public async Task<(bool flag, string msg)> PutAsync(StocktakingConfirmViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
@@ -241,17 +251,42 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
             entity.counted_qty = viewModel.counted_qty;
-            entity.difference_qty = entity.book_qty - viewModel.counted_qty;
+            entity.difference_qty =  viewModel.counted_qty - entity.book_qty;
             entity.last_update_time = DateTime.Now;
             entity.handler = currentUser.user_name;
             entity.handle_time = DateTime.Now;
-            entity.job_status = true;
+            entity.job_status = true;            
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
+
+        /// <summary>
+        /// Confirm a record
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmAsync(int id, CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
+            var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(id));
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
             // change stock sku qty
             var Stocks = _dBContext.GetDbSet<StockEntity>();
             var stockEntity = await Stocks.FirstOrDefaultAsync(t => t.sku_id.Equals(entity.sku_id)
                                                                  && t.goods_owner_id.Equals(entity.goods_owner_id)
                                                                  && t.goods_location_id.Equals(entity.goods_location_id));
-            if (stockEntity != null)
+            if (stockEntity == null)
             {
                 await Stocks.AddAsync(new StockEntity
                 {

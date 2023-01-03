@@ -158,6 +158,7 @@ namespace ModernWMS.WMS.Entities.Models
         /// <summary>
         /// last_update_time
         /// </summary>
+        [ConcurrencyCheck]
         public DateTime last_update_time { get; set; }  = UtilConvert.MinDate;
 
         /// <summary>

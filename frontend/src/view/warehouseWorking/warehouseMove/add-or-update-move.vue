@@ -94,7 +94,6 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { v } from 'vxe-table'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addStockMove } from '@/api/wms/warehouseMove'
@@ -114,13 +113,6 @@ const props = defineProps<{
 }>()
 
 const isShow = computed(() => props.showDialog)
-
-const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
 
 const data = reactive({
   showCommodityDialogSelect: false,

@@ -3,6 +3,7 @@
     <v-row no-gutters>
       <!-- Operate Btn -->
       <v-col cols="3" class="col">
+        <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add"></tooltip-btn>
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
       </v-col>
@@ -38,16 +39,28 @@
   >
     <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
-      <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
-      <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockLocation.sku_code')"></vxe-column>
-      <vxe-column field="sku_name" :title="$t('wms.stockLocation.sku_name')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.stockLocation.qty')"></vxe-column>
-      <vxe-column field="qty_available" :title="$t('wms.stockLocation.qty_available')"></vxe-column>
-      <vxe-column field="qty_locked" :title="$t('wms.stockLocation.qty_locked')"></vxe-column>
-      <vxe-column field="qty_frozen" :title="$t('wms.stockLocation.qty_frozen')"></vxe-column>
+      <vxe-column field="asn_no" :title="$t('wms.stockAsnInfo.asn_no')"></vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.stockAsnInfo.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.stockAsnInfo.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')"></vxe-column>
+      <vxe-column field="sku_name" :title="$t('wms.stockAsnInfo.sku_name')"></vxe-column>
+      <vxe-column field="goods_owner_name" :title="$t('wms.stockAsnInfo.goods_owner_name')"></vxe-column>
+      <vxe-column field="supplier_name" :title="$t('wms.stockAsnInfo.supplier_name')"></vxe-column>
+      <vxe-column field="asn_qty" :title="$t('wms.stockAsnInfo.asn_qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.stockAsnInfo.weight')"></vxe-column>
+      <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-delete-outline"
+            :tooltip-text="$t('system.page.delete')"
+            :icon-color="errorColor"
+            @click="method.deleteRow(row)"
+          ></tooltip-btn>
+        </template>
+      </vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -60,6 +73,7 @@
     >
     </vxe-pager>
   </div>
+  <addOrUpdateNotice :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
 </template>
 
 <script lang="ts" setup>
@@ -69,9 +83,10 @@ import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/
 import { StockAsnVO } from '@/types/WMS/StockAsn'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockAsnList } from '@/api/wms/stockAsn'
+import { getStockAsnList, deleteAsn } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import addOrUpdateNotice from './add-or-update-notice.vue'
 
 const xTableStockLocation = ref()
 
@@ -80,6 +95,34 @@ const data = reactive({
   searchForm: {
     warehouse: ''
   },
+  dialogForm: ref<StockAsnVO>({
+    id: 0,
+    asn_no: '',
+    asn_status: 0,
+    spu_id: 0,
+    spu_code: '',
+    spu_name: '',
+    sku_id: 0,
+    sku_code: '',
+    sku_name: '',
+    origin: '',
+    length_unit: 0,
+    volume_unit: 0,
+    weight_unit: 0,
+    asn_qty: 0,
+    actual_qty: 0,
+    sorted_qty: 0,
+    shortage_qty: 0,
+    more_qty: 0,
+    damage_qty: 0,
+    weight: 0,
+    volume: 0,
+    supplier_id: 0,
+    supplier_name: '',
+    goods_owner_id: 0,
+    goods_owner_name: '',
+    is_valid: true
+  }),
   activeTab: null,
   tableData: ref<StockAsnVO[]>([]),
   tablePage: reactive({
@@ -91,6 +134,73 @@ const data = reactive({
 })
 
 const method = reactive({
+  // Open a dialog to add
+  add: () => {
+    data.dialogForm = {
+      id: 0,
+      asn_no: '',
+      asn_status: 0,
+      spu_id: 0,
+      spu_code: '',
+      spu_name: '',
+      sku_id: 0,
+      sku_code: '',
+      sku_name: '',
+      origin: '',
+      length_unit: 0,
+      volume_unit: 0,
+      weight_unit: 0,
+      asn_qty: 0,
+      actual_qty: 0,
+      sorted_qty: 0,
+      shortage_qty: 0,
+      more_qty: 0,
+      damage_qty: 0,
+      weight: 0,
+      volume: 0,
+      supplier_id: 0,
+      supplier_name: '',
+      goods_owner_id: 0,
+      goods_owner_name: '',
+      is_valid: true
+    }
+    data.showDialog = true
+  },
+  editRow(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialog = true
+  },
+  deleteRow(row: StockAsnVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteAsn(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // After add or update success.
+  saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
   // Refresh data
   refresh: () => {
     method.getStockAsnList()
@@ -118,7 +228,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockManagement.stockLocation'),
+        filename: i18n.global.t('wms.stockAsn.tabNotice'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
