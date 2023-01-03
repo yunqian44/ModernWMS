@@ -30,7 +30,8 @@ export default {
       detailLengthIsZero: 'Details verification before document submission!',
       detailHasItemRepeat: 'The details contain duplicate items!',
       noData: 'no data',
-      beforeAsnConfirm: 'Confirm Arrival?'
+      beforeAsnConfirm: 'Confirm Arrival?',
+      beforeAsnUnload: 'Confirm Unload?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',

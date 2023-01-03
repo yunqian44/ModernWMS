@@ -30,7 +30,8 @@ export default {
       detailLengthIsZero: '请添加明细数据!',
       detailHasItemRepeat: '明细中含有重复项目!',
       noData: '暂无数据',
-      beforeAsnConfirm: '确认到货？'
+      beforeAsnConfirm: '确认到货？',
+      beforeAsnUnload: '确认卸货？'
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',

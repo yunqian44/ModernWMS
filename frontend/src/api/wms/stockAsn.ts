@@ -32,3 +32,8 @@ export const confirmAsn = (id: number) => http({
     url: `/asn/confirm/${ id }`,
     method: 'put'
   })
+
+  export const unloadAsn = (id: number) => http({
+    url: `/asn/unload/${ id }`,
+    method: 'put'
+  })
