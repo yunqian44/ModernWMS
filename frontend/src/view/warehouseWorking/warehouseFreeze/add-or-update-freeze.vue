@@ -122,9 +122,9 @@ const data = reactive({
   rules: {
     warehouse: [],
     location_name: [],
-    spu_code: [(val: string) => !!val || `${i18n.global.t('system.checkText.mustInput')}${i18n.global.t('base.commodityManagement.spu_code')}!`],
-    spu_name: [(val: string) => !!val || `${i18n.global.t('system.checkText.mustInput')}${i18n.global.t('base.commodityManagement.spu_name')}!`],
-    sku_code: [(val: string) => !!val || `${i18n.global.t('system.checkText.mustInput')}${i18n.global.t('base.commodityManagement.sku_code')}!`]
+    spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_code') }!`],
+    spu_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_name') }!`],
+    sku_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_code') }!`]
   }
 })
 
@@ -212,7 +212,7 @@ const method = reactive({
       }
       hookComponent.$message({
         type: 'success',
-        content: `${i18n.global.t('system.page.submit')}${i18n.global.t('system.tips.success')}`
+        content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
       })
       emit('saveSuccess')
     } else {

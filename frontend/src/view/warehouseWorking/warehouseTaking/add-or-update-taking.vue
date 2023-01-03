@@ -108,7 +108,9 @@ const data = reactive({
     spu_name: '',
     sku_code: '',
     warehouse: '',
-    location_name: ''
+    location_name: '',
+    handler: '',
+    handle_time: ''
   }),
   rules: {
     job_type: [],
