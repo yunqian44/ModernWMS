@@ -104,33 +104,33 @@ const method = reactive({
       switch (e) {
         case 'tabNotice':
           // Tips：Must be write the nextTick so that can get DOM!!
-          if (tabNoticeRef?.value?.getStockLocationList) {
-            tabNoticeRef.value.getStockLocationList()
+          if (tabNoticeRef?.value?.getStockAsnList) {
+            tabNoticeRef.value.getStockAsnList()
           }
           break
         case 'tabToDoArrival':
-          if (tabToDoArrivalRef?.value?.getStockLocationList) {
-            tabToDoArrivalRef.value.getStockLocationList()
+          if (tabToDoArrivalRef?.value?.getStockAsnList) {
+            tabToDoArrivalRef.value.getStockAsnList()
           }
           break
         case 'tabToDoUnload':
-          if (tabToDoUnloadRef?.value?.getStockLocationList) {
-            tabToDoUnloadRef.value.getStockLocationList()
+          if (tabToDoUnloadRef?.value?.getStockAsnList) {
+            tabToDoUnloadRef.value.getStockAsnList()
           }
           break
         case 'tabToDoSorting':
-          if (tabToDoSortingRef?.value?.getStockLocationList) {
-            tabToDoSortingRef.value.getStockLocationList()
+          if (tabToDoSortingRef?.value?.getStockAsnList) {
+            tabToDoSortingRef.value.getStockAsnList()
           }
           break
         case 'tabToDoGrounding':
-          if (tabToDoGroundingRef?.value?.getStockLocationList) {
-            tabToDoGroundingRef.value.getStockLocationList()
+          if (tabToDoGroundingRef?.value?.getStockAsnList) {
+            tabToDoGroundingRef.value.getStockAsnList()
           }
           break
         case 'tabReceiptDetails':
-          if (tabReceiptDetailsRef?.value?.getStockLocationList) {
-            tabReceiptDetailsRef.value.getStockLocationList()
+          if (tabReceiptDetailsRef?.value?.getStockAsnList) {
+            tabReceiptDetailsRef.value.getStockAsnList()
           }
           break
       }
