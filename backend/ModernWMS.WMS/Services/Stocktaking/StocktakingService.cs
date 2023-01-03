@@ -251,7 +251,7 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
             entity.counted_qty = viewModel.counted_qty;
-            entity.difference_qty = entity.book_qty - viewModel.counted_qty;
+            entity.difference_qty =  viewModel.counted_qty - entity.book_qty;
             entity.last_update_time = DateTime.Now;
             entity.handler = currentUser.user_name;
             entity.handle_time = DateTime.Now;
