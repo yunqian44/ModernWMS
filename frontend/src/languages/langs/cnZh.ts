@@ -72,7 +72,8 @@ export default {
       warehouseFreeze: '库存冻结',
       warehouseAdjust: '库存调整',
       warehouseTaking: '库存盘点',
-      deliveryManagement: '发货管理'
+      deliveryManagement: '发货管理',
+      stockAsn: '收货管理'
     }
   },
   login: {
@@ -356,7 +357,15 @@ export default {
       qty_to_unload: '待卸货数量',
       qty_to_sort: '待分拣数量',
       qty_sorted: '已分拣数量',
-      shortage_qty: '欠货数量',
+      shortage_qty: '欠货数量'
+    },
+    stockAsn: {
+      tabNotice: '到货通知',
+      tabToDoArrival: '待到货',
+      tabToDoUnload: '待卸货',
+      tabToDoSorting: '待分拣',
+      tabToDoGrounding: '待上架',
+      tabReceiptDetails: '收货明细'
     },
     deliveryManagement: {
       shipment: '发货单',

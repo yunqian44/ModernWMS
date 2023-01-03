@@ -72,7 +72,8 @@ export default {
       warehouseFreeze: 'Inventory freeze',
       warehouseAdjust: 'Inventory Adjust',
       warehouseTaking: 'Inventory Take',
-      deliveryManagement: 'Delivery Management'
+      deliveryManagement: 'Delivery Management',
+      stockAsn: 'Receiving Management'
     }
   },
   login: {
@@ -299,7 +300,7 @@ export default {
         processSplit: 'Warehouse Process',
         warehouseMove: 'Warehouse Move',
         confirmAdjust: 'Confirm Adjust',
-        beforeConfirmAdjust: 'Are you sure to adjust this data?',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?'
       },
       warehouseTaking: {
         job_code: 'Job Code',
@@ -348,7 +349,15 @@ export default {
       qty_to_unload: 'Unload Quantity',
       qty_to_sort: 'Sort Quantity',
       qty_sorted: 'Sorted Quantity',
-      shortage_qty: 'Shortage Quantity',
+      shortage_qty: 'Shortage Quantity'
+    },
+    stockAsn: {
+      tabNotice: 'Notice Of Arrival',
+      tabToDoArrival: 'To Be Delivered',
+      tabToDoUnload: 'To Be Unloaded',
+      tabToDoSorting: 'To Be Sorted',
+      tabToDoGrounding: 'To Be Put On The Shelf',
+      tabReceiptDetails: 'Receipt Details'
     },
     deliveryManagement: {
       shipment: 'Invoice',

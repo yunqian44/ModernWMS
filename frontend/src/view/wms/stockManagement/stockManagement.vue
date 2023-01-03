@@ -17,7 +17,7 @@
               <tabStockLocation ref="tabStockLocationRef" />
             </v-window-item>
             <v-window-item value="tabStock">
-              <tab-stock ref="tabStockRef" />
+              <tabStock ref="tabStockRef" />
             </v-window-item>
           </v-window>
         </v-card-text>
