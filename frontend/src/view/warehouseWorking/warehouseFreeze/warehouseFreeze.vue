@@ -125,7 +125,7 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
-import { WarehouseFreezeVO } from '@/types/warehouseWorking/WarehouseFreeze'
+import { WarehouseFreezeVO } from '@/types/WarehouseWorking/WarehouseFreeze'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system'

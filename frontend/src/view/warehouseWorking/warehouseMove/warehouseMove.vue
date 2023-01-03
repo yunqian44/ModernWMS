@@ -138,7 +138,7 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseMoveVO, MoveStatus } from '@/types/warehouseWorking/WarehouseMove'
+import { WarehouseMoveVO, MoveStatus } from '@/types/WarehouseWorking/WarehouseMove'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockMove, getStockMoveList, getStockMoveOne, confirmMove } from '@/api/wms/warehouseMove'

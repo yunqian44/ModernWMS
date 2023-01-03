@@ -359,6 +359,14 @@ export default {
       qty_sorted: '已分拣数量',
       shortage_qty: '欠货数量'
     },
+    stockAsn: {
+      tabNotice: '到货通知',
+      tabToDoArrival: '待到货',
+      tabToDoUnload: '待卸货',
+      tabToDoSorting: '待分拣',
+      tabToDoGrounding: '待上架',
+      tabReceiptDetails: '收货明细'
+    },
     deliveryManagement: {
       shipment: '发货单',
       preShipment: '预发货',
