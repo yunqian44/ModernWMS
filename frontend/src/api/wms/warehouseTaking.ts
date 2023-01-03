@@ -45,10 +45,10 @@ export const confirmStockTaking = (data: WarehouseTakingVO) => http({
   })
 
 // Confirm stock adjust
-// export const confirmAdjustment = (id: number) => http({
-//     url: '/stocktaking/adjust',
-//     method: 'put',
-//     params: {
-//       id
-//     }
-//   })
+export const confirmAdjustment = (id: number) => http({
+    url: '/stocktaking/adjustment-confirm',
+    method: 'put',
+    params: {
+      id
+    }
+  })

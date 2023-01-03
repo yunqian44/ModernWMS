@@ -63,6 +63,7 @@ const data = reactive({
     sku_code: '',
     warehouse: '',
     location_name: '',
+    adjust_status: false,
     handler: '',
     handle_time: ''
   }),

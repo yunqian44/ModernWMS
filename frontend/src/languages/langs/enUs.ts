@@ -29,7 +29,9 @@ export default {
       beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
       detailLengthIsZero: 'Details verification before document submission!',
       detailHasItemRepeat: 'The details contain duplicate items!',
-      noData: 'no data'
+      noData: 'no data',
+      beforeAsnConfirm: 'Confirm Arrival?',
+      beforeAsnUnload: 'Confirm Unload?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
@@ -316,7 +318,12 @@ export default {
         create_time: 'Create Time',
         confirmTaking: 'Confirm Taking',
         unfinish: 'Unfinish',
-        finish: 'Finish'
+        finish: 'Finish',
+        confirmAdjust: 'Confirm Adjust',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?',
+        addFromCommodity: 'Choose From Commodity',
+        addFromStock: 'Choose From Inventory',
+        addTips: 'You can choose goods and the location to add a new record when there is no target inventory'
       }
     },
     stockManagement: {
