@@ -18,3 +18,4 @@ VALUES
 ('warehouseAdjust', 'warehouseWorkingModule', 'warehouseAdjust', 'warehouseWorking/warehouseAdjust', 1, 16),
 ('warehouseTaking', 'warehouseWorkingModule', 'warehouseTaking', 'warehouseWorking/warehouseTaking', 1, 17),
 ('deliveryManagement', '', 'deliveryManagement', 'deliveryManagement/deliveryManagement', 1, 18),
+('stockAsn', '', 'stockAsn', 'wms/stockAsn', 1, 19),

@@ -72,7 +72,8 @@ export default {
       warehouseFreeze: '库存冻结',
       warehouseAdjust: '库存调整',
       warehouseTaking: '库存盘点',
-      deliveryManagement: '发货管理'
+      deliveryManagement: '发货管理',
+      stockAsn: '收货管理'
     }
   },
   login: {
@@ -356,7 +357,7 @@ export default {
       qty_to_unload: '待卸货数量',
       qty_to_sort: '待分拣数量',
       qty_sorted: '已分拣数量',
-      shortage_qty: '欠货数量',
+      shortage_qty: '欠货数量'
     },
     deliveryManagement: {
       shipment: '发货单',
