@@ -13,6 +13,12 @@
             ></v-text-field>
             <v-text-field v-model="data.form.city" :label="$t('base.customer.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
             <v-text-field
+              v-model="data.form.email"
+              :label="$t('base.customer.email')"
+              :rules="data.rules.email"
+              variant="outlined"
+            ></v-text-field>
+            <v-text-field
               v-model="data.form.address"
               :label="$t('base.customer.address')"
               :rules="data.rules.address"

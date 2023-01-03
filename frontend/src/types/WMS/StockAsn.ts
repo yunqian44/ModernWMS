@@ -33,6 +33,7 @@ export interface PutawayVo {
   asn_id: number
   goods_location_id: number
   putaway_qty: number
+  location_name: string
 }
 
 export interface SortingVo {

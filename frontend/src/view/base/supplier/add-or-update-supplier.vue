@@ -12,6 +12,7 @@
               variant="outlined"
             ></v-text-field>
             <v-text-field v-model="data.form.city" :label="$t('base.supplier.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
+            <v-text-field v-model="data.form.email" :label="$t('base.supplier.email')" :rules="data.rules.email" variant="outlined"></v-text-field>
             <v-text-field
               v-model="data.form.address"
               :label="$t('base.supplier.address')"

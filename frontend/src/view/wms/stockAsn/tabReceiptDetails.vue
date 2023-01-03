@@ -123,7 +123,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockManagement.stockLocation'),
+        filename: i18n.global.t('wms.stockAsn.tabReceiptDetails'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }

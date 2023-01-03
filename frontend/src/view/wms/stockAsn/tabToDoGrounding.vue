@@ -50,6 +50,11 @@
       <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
       <vxe-column field="sorted_qty" :title="$t('wms.stockAsnInfo.sorted_qty')"></vxe-column>
       <vxe-column field="actual_qty" :title="$t('wms.stockAsnInfo.actual_qty')"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+        </template>
+      </vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -62,6 +67,7 @@
     >
     </vxe-pager>
   </div>
+  <updateGrounding :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
 </template>
 
 <script lang="ts" setup>
@@ -74,6 +80,7 @@ import { hookComponent } from '@/components/system'
 import { getStockAsnList } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import updateGrounding from './update-grounding.vue'
 
 const xTableStockLocation = ref()
 
@@ -83,6 +90,34 @@ const data = reactive({
     warehouse: ''
   },
   activeTab: null,
+  dialogForm: ref<StockAsnVO>({
+    id: 0,
+    asn_no: '',
+    asn_status: 0,
+    spu_id: 0,
+    spu_code: '',
+    spu_name: '',
+    sku_id: 0,
+    sku_code: '',
+    sku_name: '',
+    origin: '',
+    length_unit: 0,
+    volume_unit: 0,
+    weight_unit: 0,
+    asn_qty: 0,
+    actual_qty: 0,
+    sorted_qty: 0,
+    shortage_qty: 0,
+    more_qty: 0,
+    damage_qty: 0,
+    weight: 0,
+    volume: 0,
+    supplier_id: 0,
+    supplier_name: '',
+    goods_owner_id: 0,
+    goods_owner_name: '',
+    is_valid: true
+  }),
   tableData: ref<StockAsnVO[]>([]),
   tablePage: reactive({
     total: 0,
@@ -93,6 +128,19 @@ const data = reactive({
 })
 
 const method = reactive({
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // After add or update success.
+  saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
+  editRow(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialog = true
+  },
   // Refresh data
   refresh: () => {
     method.getStockAsnList()
@@ -120,7 +168,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockManagement.stockLocation'),
+        filename: i18n.global.t('wms.stockAsn.tabToDoGrounding'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
