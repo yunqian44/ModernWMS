@@ -351,6 +351,14 @@ export default {
       qty_sorted: 'Sorted Quantity',
       shortage_qty: 'Shortage Quantity'
     },
+    stockAsn: {
+      tabNotice: 'Notice Of Arrival',
+      tabToDoArrival: 'To Be Delivered',
+      tabToDoUnload: 'To Be Unloaded',
+      tabToDoSorting: 'To Be Sorted',
+      tabToDoGrounding: 'To Be Put On The Shelf',
+      tabReceiptDetails: 'Receipt Details'
+    },
     deliveryManagement: {
       shipment: 'Invoice',
       preShipment: 'Pre Shipment',
