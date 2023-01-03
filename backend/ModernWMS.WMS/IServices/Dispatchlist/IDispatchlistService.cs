@@ -50,6 +50,63 @@ namespace ModernWMS.WMS.IServices
         /// <param name="currentUser">current user</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> DeleteAsync(string dispatch_no, CurrentUser currentUser);
+
+        /// <summary>
+        ///  Confirm orders and create  dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmOrder(List<DispatchlistConfirmDetailViewModel> viewModels, CurrentUser currentUser);
+
+        /// <summary>
+        /// confirm dispatchpicklist picked by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no">dispatch_no</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmPickByDispatchNo(string dispatch_no, CurrentUser currentUser);
+
+        /// <summary>
+        ///  package
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        Task<(bool flag, string msg)> Package(List<DispatchlistPackageViewModel> viewModels, CurrentUser currentUser);
+
+        /// <summary>
+        ///  weight
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        Task<(bool flag, string msg)> Weight(List<DispatchlistWeightViewModel> viewModels, CurrentUser currentUser);
+
+        /// <summary>
+        /// dispatchpicklist outbound delivery
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        Task<(bool flag, string msg)> Delivery(List<DispatchlistDeliveryViewModel> viewModels, CurrentUser currentUser);
+
+        /// <summary>
+        ///  set dispatchlist freightfee
+        /// </summary>
+        /// <param name="viewModels"></param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> SetFreightfee(List<DispatchlistFreightfeeViewModel> viewModels);
+
+        /// <summary>
+        /// sign for arrival
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> SignForArrival(List<DispatchlistSignViewModel> viewModels);
          #endregion
      }
  }

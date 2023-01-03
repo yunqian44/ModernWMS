@@ -114,6 +114,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int picked_qty { get; set; }  = 0;
 
         /// <summary>
+        /// unpicked_qty
+        /// </summary>
+        [Display(Name = "unpicked_qty")]
+        public int unpicked_qty { get; set; } = 0;
+
+        /// <summary>
         /// intrasit_qty
         /// </summary>
         [Display(Name = "intrasit_qty")]
@@ -126,10 +132,22 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int package_qty { get; set; }  = 0;
 
         /// <summary>
+        /// unpackage_qty
+        /// </summary>
+        [Display(Name = "unpackage_qty")]
+        public int unpackage_qty { get; set; } = 0;
+
+        /// <summary>
         /// weighing_qty
         /// </summary>
         [Display(Name = "weighing_qty")]
         public int weighing_qty { get; set; }  = 0;
+
+        /// <summary>
+        /// weighing_qty
+        /// </summary>
+        [Display(Name = "unweighing_qty")]
+        public int unweighing_qty { get; set; } = 0;
 
         /// <summary>
         /// actual_qty
@@ -216,6 +234,32 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         [Display(Name = "tenant_id")]
         public byte tenant_id { get; set; }  = 0;
+
+
+        /// <summary>
+        /// spu_code
+        /// </summary>
+        public string spu_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// spu_name
+        /// </summary>
+        public string spu_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// sku_code
+        /// </summary>
+        public string sku_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// spu_description
+        /// </summary>
+        public string spu_description { get; set; } = string.Empty;
+
+        /// <summary>
+        /// bar_code
+        /// </summary>
+        public string bar_code { get; set; } = string.Empty;
         #endregion
 
         #region detail table

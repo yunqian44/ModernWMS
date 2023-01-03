@@ -8,12 +8,11 @@
  using ModernWMS.WMS.Entities.ViewModels;
  using ModernWMS.WMS.IServices;
  using Microsoft.Extensions.Localization;
- 
- namespace ModernWMS.WMS.Controllers
- {
-     /// <summary>
-     /// dispatchlist controller
-     /// </summary>
+namespace ModernWMS.WMS.Controllers
+{
+    /// <summary>
+    /// dispatchlist controller
+    /// </summary>
      [Route("dispatchlist")]
      [ApiController]
      [ApiExplorerSettings(GroupName = "WMS")]
@@ -128,8 +127,139 @@
                  return ResultModel<string>.Error(msg);
              }
          }
-         #endregion
- 
-     }
+        /// <summary>
+        ///  Confirm orders and create  dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("confirm-order")]
+        public async Task<ResultModel<string >> ConfirmOrder(List<DispatchlistConfirmDetailViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.ConfirmOrder(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        ///  confirm dispatchpicklist picked by dispatch_no
+        /// </summary>
+        /// <param name="dispatch_no">viewModels</param>
+        /// <returns></returns>
+        [HttpPut("confirm-pick-dispatchlistno")]
+        public async Task<ResultModel<string>> ConfirmPickByDispatchNo(string dispatch_no)
+        {
+            var (flag, msg) = await _dispatchlistService.ConfirmPickByDispatchNo(dispatch_no, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  package dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("package")]
+        public async Task<ResultModel<string>> Package(List<DispatchlistPackageViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Package(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  weight dispatchpicklist
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("weight")]
+        public async Task<ResultModel<string>> Weight(List<DispatchlistWeightViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Weight(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  dispatchpicklist outbound delivery
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("delivery")]
+        public async Task<ResultModel<string>> Delivery(List<DispatchlistDeliveryViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.Delivery(viewModels, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  set dispatchlist freightfee
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("freightfee")]
+        public async Task<ResultModel<string>> SetFreightfee(List<DispatchlistFreightfeeViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.SetFreightfee(viewModels);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        ///  sign for arrival
+        /// </summary>
+        /// <param name="viewModels">viewModels</param>
+        /// <returns></returns>
+        [HttpPost("sign")]
+        public async Task<ResultModel<string>> SignForArrival(List<DispatchlistSignViewModel> viewModels)
+        {
+            var (flag, msg) = await _dispatchlistService.SignForArrival(viewModels);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        #endregion
+
+    }
  }
  

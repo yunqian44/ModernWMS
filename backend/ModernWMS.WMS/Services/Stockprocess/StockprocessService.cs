@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using System.Linq;
 
 namespace ModernWMS.WMS.Services
 {
@@ -334,6 +335,48 @@ namespace ModernWMS.WMS.Services
                                tenant_id = currentUser.tenant_id,
                            }).ToList();
             entity.last_update_time = DateTime.Now;
+            var stock_DBSet = _dBContext.GetDbSet<StockEntity>();
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+
+            var stocks = await stock_DBSet.Where(s => detail_DBSet.Where(t => t.stock_process_id == id).Any(t => t.goods_location_id == s.goods_location_id && t.sku_id == s.sku_id && t.goods_owner_id == s.goods_owner_id)).ToListAsync();
+            foreach (var d in details)
+            {
+                var stock = stocks.FirstOrDefault(t => t.goods_location_id == d.goods_location_id && t.sku_id == d.sku_id && t.goods_owner_id == d.goods_owner_id);
+
+                if (d.is_source)
+                {
+                    if (stock == null)
+                    {
+                        return (false, _stringLocalizer["data_changed"]);
+                    }
+                    stock.qty -= d.qty;
+                    stock.last_update_time = DateTime.Now;
+                }
+                else
+                {
+                    if(stock == null)
+                    {
+                        await stock_DBSet.AddAsync(new StockEntity
+                        {
+                            sku_id= d.sku_id,
+                            goods_location_id= d.goods_location_id,
+                            goods_owner_id= d.goods_owner_id,
+                            is_freeze =false,
+                            last_update_time =DateTime.Now,
+                            qty= d.qty,
+                            tenant_id = currentUser.tenant_id
+                        });
+                    }
+                    else
+                    {
+                        stock.qty += d.qty;
+                        stock.last_update_time = DateTime.Now;
+                    }
+                }
+            }
             await adjust_DBset.AddRangeAsync(adjusts);
             var res = await _dBContext.SaveChangesAsync();
             if (res > 0)
@@ -352,10 +395,6 @@ namespace ModernWMS.WMS.Services
         {
             var DBSet = _dBContext.GetDbSet<StockprocessEntity>();
             var entity = await DBSet.FirstOrDefaultAsync(t => t.id == id);
-            if (entity == null)
-            {
-                return (false, _stringLocalizer["not_exists_entity"]);
-            }
             entity.process_status = true;
             entity.processor = currentUser.user_name;
             entity.process_time = DateTime.Now;

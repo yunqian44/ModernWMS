@@ -1,243 +1,80 @@
-<!-- supplier Setting -->
+<!-- Warehouse Setting -->
 <template>
   <div class="container">
     <div>
+      <v-tabs v-model="data.activeTab" stacked @update:model-value="method.changeTabs">
+        <v-tab v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
+          <v-icon>{{ item.icon }}</v-icon>
+          <p class="tabItemTitle">{{ item.tabName }}</p>
+        </v-tab>
+      </v-tabs>
+
       <!-- Main Content -->
       <v-card class="mt-5">
         <v-card-text>
-          <!-- <v-window v-model="data.activeTab">
-            <v-window-item> -->
-          <div class="operateArea">
-            <v-row no-gutters>
-              <!-- Operate Btn -->
-              <v-col cols="12" sm="3" class="col">
-                <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
-                <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
-                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
-              </v-col>
-
-              <!-- Search Input -->
-              <v-col cols="12" sm="9">
-                <!-- <v-row no-gutters @keyup.enter="method.sureSearch">
-                      <v-col cols="12" sm="4"></v-col>
-                      <v-col cols="12" sm="4"></v-col>
-                      <v-col cols="12" sm="4">
-                        <v-text-field
-                          v-model="data.searchForm.supplier_name"
-                          clearable
-                          hide-details
-                          density="comfortable"
-                          class="searchInput ml-5 mt-1"
-                          :label="$t('base.supplier.supplier_name')"
-                          variant="solo"
-                        >
-                        </v-text-field>
-                      </v-col>
-                    </v-row> -->
-              </v-col>
-            </v-row>
-          </div>
-
-          <!-- Table -->
-          <div
-            class="mt-5"
-            :style="{
-              height: cardHeight
-            }"
-          >
-            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
-              <vxe-column type="seq" width="60"></vxe-column>
-              <vxe-column type="checkbox" width="50"></vxe-column>
-              <vxe-column field="supplier_name" :title="$t('base.supplier.supplier_name')"></vxe-column>
-              <vxe-column field="city" :title="$t('base.supplier.city')"></vxe-column>
-              <vxe-column field="address" :title="$t('base.supplier.address')"></vxe-column>
-              <vxe-column field="manager" :title="$t('base.supplier.manager')"></vxe-column>
-              <vxe-column field="email" :title="$t('base.supplier.email')"></vxe-column>
-              <vxe-column field="contact_tel" :title="$t('base.supplier.contact_tel')"></vxe-column>
-              <vxe-column field="creater" :title="$t('base.supplier.creator')"></vxe-column>
-              <vxe-column
-                field="create_time"
-                :title="$t('base.supplier.create_time')"
-                :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
-              ></vxe-column>
-              <vxe-column
-                field="last_update_time"
-                :title="$t('base.supplier.last_update_time')"
-                :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
-              ></vxe-column>
-              <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
-                <template #default="{ row }">
-                  <tooltip-btn
-                    :flat="true"
-                    icon="mdi-pencil-outline"
-                    :tooltip-text="$t('system.page.edit')"
-                    @click="method.editRow(row)"
-                  ></tooltip-btn>
-                  <tooltip-btn
-                    :flat="true"
-                    icon="mdi-delete-outline"
-                    :tooltip-text="$t('system.page.delete')"
-                    :icon-color="errorColor"
-                    @click="method.deleteRow(row)"
-                  ></tooltip-btn>
-                </template>
-              </vxe-column>
-            </vxe-table>
-            <vxe-pager
-              :current-page="data.tablePage.pageIndex"
-              :page-size="data.tablePage.pageSize"
-              perfect
-              :total="data.tablePage.total"
-              :page-sizes="PAGE_SIZE"
-              :layouts="PAGE_LAYOUT"
-              @page-change="method.handlePageChange"
-            >
-            </vxe-pager>
-          </div>
-          <!-- </v-window-item>
-          </v-window> -->
+          <v-window v-model="data.activeTab">
+            <v-window-item value="tabStockLocation">
+              <tabStockLocation ref="tabStockLocationRef" />
+            </v-window-item>
+            <v-window-item value="tabStock">
+              <tab-stock ref="tabStockRef" />
+            </v-window-item>
+          </v-window>
         </v-card-text>
       </v-card>
     </div>
   </div>
-  <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
 </template>
 
-<script lang="tsx" setup>
-import { computed, ref, reactive, onMounted } from 'vue'
-import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { SupplierVO, DataProps } from '@/types/Base/Supplier'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
-import tooltipBtn from '@/components/tooltip-btn.vue'
-import addOrUpdateDialog from './add-or-update-supplier.vue'
-import { hookComponent } from '@/components/system'
+<script lang="ts" setup>
+import { ref, reactive, onMounted, watch, nextTick } from 'vue'
 import i18n from '@/languages/i18n'
-import { getSupplierAll, deleteSupplier } from '@/api/base/supplier'
+import tabStockLocation from './tabStockLocation.vue'
+import tabStock from './tabStock.vue'
 
-const xTable = ref()
+const tabStockLocationRef = ref()
+const tabStockRef = ref()
 
-const data: DataProps = reactive({
-  // searchForm: {
-  //   supplier_name: ''
-  // },
-  tableData: [],
-  // activeTab: null,
-  showDialog: false,
-  dialogForm: {
-    id: 0,
-    supplier_name: '',
-    city: '',
-    address: '',
-    manager: '',
-    email: '',
-    contact_tel: '',
-    is_valid: true
+const tabsConfig = [
+  {
+    value: 'tabStockLocation',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.stockManagement.stockLocation')
   },
-  tablePage: {
-    total: 0,
-    pageIndex: 1,
-    pageSize: 10
+  {
+    value: 'tabStock',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.stockManagement.stock')
   }
+]
+
+const data = reactive({
+  activeTab: '',
+  isLoadstockLocation: false,
+  isLoadstock: false
 })
 
 const method = reactive({
-  sureSearch: () => {
-    // console.log(data.searchForm)
-  },
-  // Add user
-  add: () => {
-    data.dialogForm = {
-      id: 0,
-      supplier_name: '',
-      city: '',
-      address: '',
-      manager: '',
-      email: '',
-      contact_tel: '',
-      is_valid: true
-    }
-    data.showDialog = true
-  },
-  // Shut add or update dialog
-  closeDialog: () => {
-    data.showDialog = false
-  },
-  // after Add or update success.
-  saveSuccess: () => {
-    method.refresh()
-    method.closeDialog()
-  },
-  // Refresh data
-  refresh: () => {
-    method.getData()
-  },
-  editRow(row: SupplierVO) {
-    data.dialogForm = JSON.parse(JSON.stringify(row))
-    data.showDialog = true
-  },
-  deleteRow(row: SupplierVO) {
-    hookComponent.$dialog({
-      content: i18n.global.t('system.tips.beforeDeleteMessage'),
-      handleConfirm: async () => {
-        if (row.id) {
-          const { data: res } = await deleteSupplier(row.id)
-          if (!res.isSuccess) {
-            hookComponent.$message({
-              type: 'error',
-              content: res.errorMessage
-            })
-            return
+  changeTabs: (e: any): void => {
+    nextTick(() => {
+      switch (e) {
+        case 'tabStockLocation':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabStockLocationRef?.value?.getStockLocationList) {
+            tabStockLocationRef.value.getStockLocationList()
           }
-          hookComponent.$message({
-            type: 'success',
-            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
-          })
-          method.refresh()
-        }
+          break
+        case 'tabStock':
+          if (tabStockRef?.value?.getStockList) {
+            tabStockRef.value.getStockList()
+          }
+          break
       }
     })
-  },
-  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
-    data.tablePage.pageIndex = currentPage
-    data.tablePage.pageSize = pageSize
-    method.getData()
-  }),
-  exportTable: () => {
-    const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('router.sideBar.supplier'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
-  },
-  getData: async () => {
-    const { data: res } = await getSupplierAll()
-    if (!res.isSuccess) {
-      hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
-      })
-      return
-    }
-    data.tableData = res.data
   }
 })
-onMounted(() => {
-  method.getData()
-})
 
-const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
-const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+onMounted(() => { })
 </script>
 
 <style scoped lang="less">

@@ -1,0 +1,152 @@
+<!-- Warehouse Setting -->
+<template>
+  <div class="container">
+    <div>
+      <v-tabs v-model="data.activeTab" stacked @update:model-value="method.changeTabs">
+        <v-tab v-for="(item, index) of tabsConfig" :key="index" :value="item.value">
+          <v-icon>{{ item.icon }}</v-icon>
+          <p class="tabItemTitle">{{ item.tabName }}</p>
+        </v-tab>
+      </v-tabs>
+
+      <!-- Main Content -->
+      <v-card class="mt-5">
+        <v-card-text>
+          <v-window v-model="data.activeTab">
+            <v-window-item value="tabShipment">
+              <tabShipment ref="tabShipmentRef" />
+            </v-window-item>
+            <v-window-item value="tabPreShipment">
+              <tabPreShipment ref="tabPreShipmentRef" />
+            </v-window-item>
+            <v-window-item value="tabNewShipment">
+              <tabNewShipment ref="tabNewShipmentRef" />
+            </v-window-item>
+            <v-window-item value="tabGoodsToBePicked">
+              <tabGoodsToBePicked ref="tabGoodsToBePickedRef" />
+            </v-window-item>
+          </v-window>
+        </v-card-text>
+      </v-card>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, reactive, onMounted, watch, nextTick } from 'vue'
+import i18n from '@/languages/i18n'
+import tabShipment from './tabShipment.vue'
+import tabPreShipment from './tabPreShipment.vue'
+import tabNewShipment from './tabNewShipment.vue'
+import tabGoodsToBePicked from './tabGoodsToBePicked.vue'
+
+const tabShipmentRef = ref()
+const tabPreShipmentRef = ref()
+const tabNewShipmentRef = ref()
+const tabGoodsToBePickedRef = ref()
+
+const tabsConfig = [
+  {
+    value: 'tabShipment',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.shipment')
+  },
+  {
+    value: 'tabPreShipment',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.preShipment')
+  },
+  {
+    value: 'tabNewShipment',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.newShipment')
+  },
+  {
+    value: 'tabGoodsToBePicked',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.goodsToBePicked')
+  },
+  {
+    value: 'tabPicked',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.picked')
+  },
+  {
+    value: 'tabPackaged',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.packaged')
+  },
+  {
+    value: 'tabWeighed',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.weighed')
+  },
+  {
+    value: 'tabOutOfWarehouse',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.outOfWarehouse')
+  },
+  {
+    value: 'tabSignedIn',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.signedIn')
+  },
+]
+
+const data = reactive({
+  activeTab: '',
+  isLoadstockLocation: false,
+  isLoadstock: false
+})
+
+const method = reactive({
+  changeTabs: (e: any): void => {
+    nextTick(() => {
+      switch (e) {
+        case 'tabShipment':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabShipmentRef?.value?.getShipment) {
+            tabShipmentRef.value.getShipment()
+          }
+          break
+        case 'tabPreShipment':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabPreShipmentRef?.value?.getPreShipment) {
+            tabPreShipmentRef.value.getPreShipment()
+          }
+          break
+        case 'tabNewShipment':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabNewShipmentRef?.value?.getNewShipment) {
+            tabNewShipmentRef.value.getNewShipment()
+          }
+          break
+        case 'tabGoodsToBePicked':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabGoodsToBePickedRef?.value?.getGoodsToBePicked) {
+            tabGoodsToBePickedRef.value.getGoodsToBePicked()
+          }
+          break
+      }
+    })
+  }
+})
+
+onMounted(() => { })
+</script>
+
+<style scoped lang="less">
+.operateArea {
+  width: 100%;
+  min-width: 760px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+.col {
+  display: flex;
+  align-items: center;
+}
+</style>

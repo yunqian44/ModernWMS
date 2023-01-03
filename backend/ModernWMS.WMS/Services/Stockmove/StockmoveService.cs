@@ -303,8 +303,8 @@ namespace ModernWMS.WMS.Services
             entity.handle_time = DateTime.Now;
             entity.move_status = 1;
             entity.last_update_time = DateTime.Now;
-            var orig_stock = await stock_DBSet.FirstOrDefaultAsync(t => t.goods_location_id == entity.goods_owner_id && t.sku_id == entity.sku_id);
-            var dest_stock = await stock_DBSet.FirstOrDefaultAsync(t=>t.goods_location_id == entity.goods_owner_id && t.sku_id!= entity.sku_id);
+            var orig_stock = await stock_DBSet.FirstOrDefaultAsync(t => t.goods_location_id == entity.orig_goods_location_id && t.sku_id == entity.sku_id) ;
+            var dest_stock = await stock_DBSet.FirstOrDefaultAsync(t=>t.goods_location_id == entity.dest_googs_location_id && t.sku_id!= entity.sku_id);
             if (orig_stock != null)
             {
                 if(orig_stock.qty == entity.qty)

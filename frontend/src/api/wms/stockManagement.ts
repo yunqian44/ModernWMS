@@ -14,3 +14,16 @@ export const getSkuSelectList = (data: PageConfigProps) => http({
     method: 'post',
     data
   })
+
+  // Get stock location
+export const getStockLocationList = (data: PageConfigProps) => http({
+  url: '/stock/location-list',
+  method: 'post',
+  data
+})
+// Get stock
+export const getStockList = (data: PageConfigProps) => http({
+  url: '/stock/stock-list',
+  method: 'post',
+  data
+})

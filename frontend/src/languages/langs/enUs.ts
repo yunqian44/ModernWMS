@@ -71,7 +71,8 @@ export default {
       warehouseMove: 'Inventory Move',
       warehouseFreeze: 'Inventory freeze',
       warehouseAdjust: 'Inventory Adjust',
-      warehouseTaking: 'Inventory Take'
+      warehouseTaking: 'Inventory Take',
+      deliveryManagement: 'Delivery Management'
     }
   },
   login: {
@@ -318,7 +319,8 @@ export default {
       }
     },
     stockManagement: {
-      stockLocation: 'Stock Location'
+      stockLocation: 'Stock Location',
+      stock: 'Stock'
     },
     stockLocation: {
       warehouse: 'Warehouse',
@@ -332,6 +334,44 @@ export default {
       qty_available: 'Available Quantity',
       qty_locked: 'Locked Quantity',
       qty_frozen: 'Frozen Quantity'
+    },
+    stockList: {
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      sku_code: 'Specification code',
+      sku_id: 'Sku Id',
+      qty: 'Quantity',
+      qty_available: 'Available Quantity',
+      qty_locked: 'Locked Quantity',
+      qty_frozen: 'Frozen Quantity',
+      qty_asn: 'Asn Quantity',
+      qty_to_unload: 'Unload Quantity',
+      qty_to_sort: 'Sort Quantity',
+      qty_sorted: 'Sorted Quantity',
+      shortage_qty: 'Shortage Quantity',
+    },
+    deliveryManagement: {
+      shipment: 'Invoice',
+      preShipment: 'Pre Shipment',
+      newShipment: 'New Shipment',
+      goodsToBePicked: 'Goods To Be Picked',
+      picked: 'Picked',
+      packaged: 'Packaged',
+      weighed: 'Weighed',
+      outOfWarehouse: 'Out Of Warehouse',
+      signedIn: 'Signed In',
+      dispatch_no: 'Shipment No',
+      dispatch_status: 'Shipment Doc Status',
+      qty: 'Total Quantity',
+      detailQty: 'Quantity',
+      weight: 'Total Weight',
+      volume: 'Total Volume',
+      customer_name: 'Customer Name',
+      spu_code: 'Commodity Code',
+      spu_name: 'Commodity Name',
+      sku_code: 'Specification Code',
+      creator: 'Created By',
+      create_time: 'Creation Time'
     }
   }
 }

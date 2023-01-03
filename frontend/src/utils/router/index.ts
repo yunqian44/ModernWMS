@@ -104,6 +104,8 @@ function GetMenuNameAndModule(path: string): string {
       return i18n.global.t('router.sideBar.warehouseAdjust')
     case 'warehouseTaking':
       return i18n.global.t('router.sideBar.warehouseTaking')
+    case 'deliveryManagement':
+      return i18n.global.t('router.sideBar.deliveryManagement')
     default:
       return ''
   }
@@ -118,6 +120,8 @@ function GetModuleAndIcon(name: string) {
       return 'warehouse'
     case 'warehouseWorkingModule':
       return 'account-hard-hat-outline '
+    case 'deliveryManagement':
+      return 'cube-send'
     default:
       return ''
   }
