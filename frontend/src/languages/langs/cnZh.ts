@@ -379,7 +379,7 @@ export default {
       sku_id: '商品sku标识',
       sku_code: '规格编码',
       sku_name: '规格名称',
-      origin: '源标识',
+      origin: '产地',
       length_unit: '长度单位',
       volume_unit: '体积单位',
       weight_unit: '重量单位',
