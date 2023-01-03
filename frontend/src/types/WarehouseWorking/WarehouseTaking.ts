@@ -15,4 +15,6 @@ export interface WarehouseTakingVO extends UniformFileNaming {
   sku_code: string
   warehouse: string
   location_name: string
+  handler: string
+  handle_time: string
 }

@@ -65,7 +65,7 @@
                     :title="$t('wms.warehouseWorking.warehouseTaking.create_time')"
                     :formatter="['formatDate']"
                   ></vxe-column>
-                  <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="250" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -75,19 +75,27 @@
                       ></tooltip-btn>
                       <tooltip-btn
                         :flat="true"
-                        icon="mdi-book-open-outline"
+                        icon="mdi-book-check-outline"
                         :tooltip-text="$t('wms.warehouseWorking.warehouseTaking.confirmTaking')"
+                        :disabled="method.isConfirmTaking(row)"
                         @click="method.confirmTaking(row)"
+                      ></tooltip-btn>
+                      <!-- 盘点确认后，才可以点击进行调整 -->
+                      <tooltip-btn
+                        :flat="true"
+                        icon="mdi-book-open-outline"
+                        :tooltip-text="$t('wms.warehouseWorking.warehouseProcessing.confirmAdjust')"
+                        :disabled="method.confirmAdjustBtnDisabled(row)"
+                        @click="method.confirmAdjust(row)"
                       ></tooltip-btn>
                       <tooltip-btn
                         :flat="true"
                         icon="mdi-delete-outline"
                         :tooltip-text="$t('system.page.delete')"
                         :icon-color="errorColor"
+                        :disabled="method.isConfirmTaking(row)"
                         @click="method.deleteRow(row)"
                       ></tooltip-btn>
-                      <!-- TODO 盘点确认后，不可删除 -->
-                      <!-- :disabled="method.confirmAdjustBtnDisabled(row)" -->
                     </template>
                   </vxe-column>
                 </vxe-table>
@@ -107,6 +115,12 @@
         </v-card-text>
       </v-card>
       <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+      <number-input
+        :show-dialog="data.showDialogNumberInput"
+        :form="data.dialogForm"
+        @close="method.closeDialogNumberInput"
+        @saveSuccess="method.saveSuccessNumberInput"
+      />
     </div>
   </div>
 </template>
@@ -115,23 +129,25 @@
 import { computed, ref, reactive, onMounted, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { WarehouseTakingVO } from '@/types/warehouseWorking/WarehouseTaking'
+import { WarehouseTakingVO } from '@/types/WarehouseWorking/WarehouseTaking'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
-import { deleteStockTaking, getStockTakingList, getStockTakingOne, confirmStockTaking } from '@/api/wms/warehouseTaking'
+import { TAKING_JOB_FINISH, TAKING_JOB_UNFINISH } from '@/constant/warehouseWorking'
+import { deleteStockTaking, getStockTakingList, getStockTakingOne } from '@/api/wms/warehouseTaking'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import { formatTakingJobStatus } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-taking.vue'
+import numberInput from './number-input.vue'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
+  showDialogNumberInput: false,
   timer: ref<any>(null),
   activeTab: null,
   searchForm: {},
@@ -150,7 +166,9 @@ const data = reactive({
     spu_name: '',
     sku_code: '',
     warehouse: '',
-    location_name: ''
+    location_name: '',
+    handler: '',
+    handle_time: ''
   },
   tablePage: reactive({
     total: 0,
@@ -177,7 +195,9 @@ const method = reactive({
       spu_name: '',
       sku_code: '',
       warehouse: '',
-      location_name: ''
+      location_name: '',
+      handler: '',
+      handle_time: ''
     }
     nextTick(() => {
       data.showDialog = true
@@ -190,6 +210,12 @@ const method = reactive({
     method.closeDialog()
   },
 
+  // After confirm taking.
+  saveSuccessNumberInput: () => {
+    method.refresh()
+    method.closeDialogNumberInput()
+  },
+
   // Refresh data
   refresh: () => {
     method.getStockProcessList()
@@ -198,6 +224,11 @@ const method = reactive({
   // Shut add or update dialog
   closeDialog: () => {
     data.showDialog = false
+  },
+
+  // Shut number input dialog
+  closeDialogNumberInput: () => {
+    data.showDialogNumberInput = false
   },
 
   getStockProcessList: async () => {
@@ -286,28 +317,60 @@ const method = reactive({
     method.refresh()
   },
 
-  // The btn will become disabled when the 'process_status' is false
-  // confirmAdjustBtnDisabled: (row: WarehouseTakingVO) => row.is_update_stock === true,
+  // The btn will become disabled when the 'job_status' is false
+  confirmAdjustBtnDisabled: (row: WarehouseTakingVO) => row.job_status === TAKING_JOB_UNFINISH,
+
+  // The btn will become disabled when the 'job_status' is true
+  isConfirmTaking: (row: WarehouseTakingVO) => row.job_status === TAKING_JOB_FINISH,
 
   // TODO 确认盘点时，要弹窗出来输入数量
   confirmTaking: async (row: WarehouseTakingVO) => {
+    data.dialogForm = row
+    nextTick(() => {
+      data.showDialogNumberInput = true
+    })
+
+    // hookComponent.$dialog({
+    //   content: i18n.global.t('wms.warehouseWorking.warehouseTaking.beforeConfirmAdjust'),
+    //   handleConfirm: async () => {
+    // if (row.id) {
+    //   const { data: res } = await confirmStockTaking(row.id)
+    //   if (!res.isSuccess) {
+    //     hookComponent.$message({
+    //       type: 'error',
+    //       content: res.errorMessage
+    //     })
+    //     return
+    //   }
+    //   hookComponent.$message({
+    //     type: 'success',
+    //     content: `${ i18n.global.t('wms.warehouseWorking.warehouseTaking.confirmTaking') }${ i18n.global.t('system.tips.success') }`
+    //   })
+    //   method.refresh()
+    // }
+    //   }
+    // })
+  },
+
+  confirmAdjust: async (row: WarehouseTakingVO) => {
     hookComponent.$dialog({
-      content: i18n.global.t('wms.warehouseWorking.warehouseTaking.beforeConfirmAdjust'),
+      content: i18n.global.t('wms.warehouseWorking.warehouseProcessing.beforeConfirmAdjust'),
       handleConfirm: async () => {
         if (row.id) {
-          const { data: res } = await confirmStockTaking(row.id)
-          if (!res.isSuccess) {
-            hookComponent.$message({
-              type: 'error',
-              content: res.errorMessage
-            })
-            return
-          }
-          hookComponent.$message({
-            type: 'success',
-            content: `${ i18n.global.t('wms.warehouseWorking.warehouseTaking.confirmTaking') }${ i18n.global.t('system.tips.success') }`
-          })
-          method.refresh()
+          // TODO 弹窗制单调整单
+          // const { data: res } = await confirmAdjustment(row.id)
+          // if (!res.isSuccess) {
+          //   hookComponent.$message({
+          //     type: 'error',
+          //     content: res.errorMessage
+          //   })
+          //   return
+          // }
+          // hookComponent.$message({
+          //   type: 'success',
+          //   content: `${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.confirmAdjust') }${ i18n.global.t('system.tips.success') }`
+          // })
+          // method.refresh()
         }
       }
     })

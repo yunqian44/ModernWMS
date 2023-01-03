@@ -9,12 +9,6 @@ export const getStockTakingList = (data: PageConfigProps) => http({
     data
   })
 
-// Get all
-export const getStockTakingAll = () => http({
-    url: '/stocktaking/all',
-    method: 'get'
-  })
-
 // Get one
 export const getStockTakingOne = (id: number) => http({
     url: '/stocktaking',
@@ -40,11 +34,21 @@ export const deleteStockTaking = (id: number) => http({
     }
   })
 
-  // Delete form
-export const confirmStockTaking = (id: number) => http({
-    url: '/stocktaking/confirm',
+// Confirm stock taking
+export const confirmStockTaking = (data: WarehouseTakingVO) => http({
+    url: '/stocktaking',
     method: 'put',
-    params: {
-      id
+    data: {
+      id: data.id,
+      counted_qty: data.counted_qty
     }
   })
+
+// Confirm stock adjust
+// export const confirmAdjustment = (id: number) => http({
+//     url: '/stocktaking/adjust',
+//     method: 'put',
+//     params: {
+//       id
+//     }
+//   })
