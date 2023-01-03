@@ -192,7 +192,7 @@ const method = reactive({
     if (!goodsOwnerRes.isSuccess) {
       return
     }
-    for (const item of goodsOwnerRes.data.rows) {
+    for (const item of goodsOwnerRes.data) {
       if (item.is_valid) {
         data.combobox.goods_owner_name.push({
           label: item.goods_owner_name,

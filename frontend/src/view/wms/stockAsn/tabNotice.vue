@@ -49,6 +49,18 @@
       <vxe-column field="asn_qty" :title="$t('wms.stockAsnInfo.asn_qty')"></vxe-column>
       <vxe-column field="weight" :title="$t('wms.stockAsnInfo.weight')"></vxe-column>
       <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-delete-outline"
+            :tooltip-text="$t('system.page.delete')"
+            :icon-color="errorColor"
+            @click="method.deleteRow(row)"
+          ></tooltip-btn>
+        </template>
+      </vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -71,7 +83,7 @@ import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/
 import { StockAsnVO } from '@/types/WMS/StockAsn'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockAsnList } from '@/api/wms/stockAsn'
+import { getStockAsnList, deleteAsn } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import addOrUpdateNotice from './add-or-update-notice.vue'
@@ -153,6 +165,32 @@ const method = reactive({
       is_valid: true
     }
     data.showDialog = true
+  },
+  editRow(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialog = true
+  },
+  deleteRow(row: StockAsnVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await deleteAsn(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
   },
   // Shut add or update dialog
   closeDialog: () => {

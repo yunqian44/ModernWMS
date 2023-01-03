@@ -19,3 +19,11 @@ export const updateAsn = (data: StockAsnVO) => http({
     method: 'put',
     data
   })
+
+export const deleteAsn = (id: number) => http({
+    url: '/asn',
+    method: 'delete',
+    params: {
+      id
+    }
+  })
