@@ -51,6 +51,7 @@
       <vxe-column field="sorted_qty" :title="$t('wms.stockAsnInfo.sorted_qty')"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
         <template #default="{ row }">
+          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRowEdit(row)"></tooltip-btn>
           <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
         </template>
       </vxe-column>
@@ -135,6 +136,10 @@ const method = reactive({
   saveSuccess: () => {
     method.refresh()
     method.closeDialog()
+  },
+  editRowEdit(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialog = true
   },
   editRow(row: StockAsnVO) {
     hookComponent.$dialog({
