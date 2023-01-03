@@ -288,7 +288,41 @@ namespace ModernWMS.WMS.Services
                 return (false, _stringLocalizer["save_failed"]);
             }
         }
-
+        /// <summary>
+        /// get pick list by dispatch_id
+        /// </summary>
+        /// <param name="dispatch_id">dispatch_id</param>
+        /// <returns></returns>
+        public async Task<List<DispatchpicklistViewModel>> GetPickListByDispatchID(int dispatch_id)
+        {
+            var datas = await (from dpl in _dBContext.GetDbSet<DispatchpicklistEntity>().AsNoTracking()
+                               join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on dpl.sku_id equals sku.id
+                               join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
+                               join owner in _dBContext.GetDbSet<GoodsownerEntity>().AsNoTracking() on dpl.goods_owner_id equals owner.id
+                               join location in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on dpl.goods_location_id equals location.id
+                               where dpl.dispatchlist_id == dispatch_id
+                               select new DispatchpicklistViewModel
+                               {
+                                   id = dpl.id,
+                                   dispatchlist_id = dpl.dispatchlist_id,
+                                   goods_owner_id = dpl.goods_owner_id,
+                                   goods_location_id = dpl.goods_location_id,
+                                   sku_id = dpl.sku_id,
+                                   pick_qty = dpl.pick_qty,
+                                   picked_qty = dpl.picked_qty,
+                                   goods_owner_name = owner.goods_owner_name,
+                                   sku_code = sku.sku_code,
+                                   spu_code = spu.spu_code,
+                                   spu_description = spu.spu_description,
+                                   spu_name = spu.spu_name,
+                                   bar_code = spu.bar_code,
+                                   location_name = location.location_name,
+                                   warehouse_area_name = location.warehouse_area_name,
+                                   warehouse_area_property = location.warehouse_area_property,
+                                   warehouse_name = location.warehouse_name,
+                               }).ToListAsync();
+            return datas;
+        }
 
         /// <summary>
         /// advanced dispatch order page search 
@@ -1025,7 +1059,9 @@ namespace ModernWMS.WMS.Services
                 entity.intrasit_qty = entity.picked_qty;
                 entity.weighing_person = currentUser.user_name;
             }
-            var picks_g = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).GroupBy(e => new { e.goods_location_id, e.sku_id, e.goods_owner_id }).Select(c => new { c.Key.goods_location_id, c.Key.sku_id, c.Key.goods_owner_id, picked_qty = c.Sum(t => t.picked_qty) });
+            var pick_sql = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.id));
+            var pick_datas =await pick_sql.ToListAsync();
+            var picks_g = pick_sql.AsNoTracking().GroupBy(e => new { e.goods_location_id, e.sku_id, e.goods_owner_id }).Select(c => new { c.Key.goods_location_id, c.Key.sku_id, c.Key.goods_owner_id, picked_qty = c.Sum(t => t.picked_qty) });
             var picks = await picks_g.ToListAsync();
             var stocks = await (from stock in stock_DBSet
                                 where picks_g.Any(t => t.goods_location_id == stock.goods_location_id && t.sku_id == stock.sku_id && t.goods_owner_id == stock.goods_owner_id)
@@ -1039,6 +1075,11 @@ namespace ModernWMS.WMS.Services
                 }
                 s.qty -= pick.picked_qty;
                 s.last_update_time = time;
+            }
+            foreach(var pick in pick_datas)
+            {
+                pick.is_update_stock = true;
+                pick.last_update_time = DateTime.Now;
             }
             var saved = false;
             int res = 0;
