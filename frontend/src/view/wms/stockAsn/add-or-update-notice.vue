@@ -5,6 +5,28 @@
         <v-toolbar color="white" :title="`${$t('wms.stockAsn.tabNotice')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
+            <v-select
+              v-model="data.form.supplier_name"
+              :items="data.combobox.supplier_name"
+              item-title="label"
+              item-value="label"
+              :rules="data.rules.supplier_name"
+              :label="$t('wms.stockAsnInfo.supplier_name')"
+              variant="outlined"
+              clearable
+              @update:model-value="method.supplierNameChange"
+            ></v-select>
+            <v-select
+              v-model="data.form.goods_owner_name"
+              :items="data.combobox.goods_owner_name"
+              item-title="label"
+              item-value="label"
+              :rules="data.rules.goods_owner_name"
+              :label="$t('wms.stockAsnInfo.goods_owner_name')"
+              variant="outlined"
+              clearable
+              @update:model-value="method.goodsOwnerNameChange"
+            ></v-select>
             <v-text-field
               v-model="data.form.spu_code"
               :label="$t('wms.stockAsnInfo.spu_code')"
@@ -60,6 +82,8 @@ import { StockAsnVO } from '@/types/WMS/StockAsn'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addAsn, updateAsn } from '@/api/wms/stockAsn'
+import { getSupplierAll } from '@/api/base/supplier'
+import { getOwnerOfCargoAll } from '@/api/base/ownerOfCargo'
 import skuSelect from '@/components/select/sku-select.vue'
 
 const formRef = ref()
@@ -118,10 +142,65 @@ const data = reactive({
     sku_name: []
   },
   showSkuDialogSelect: false,
-  curSelectType: ''
+  curSelectType: '',
+  combobox: ref<{
+    supplier_name: {
+      label: string
+      value: number
+    }[]
+    goods_owner_name: {
+      label: string
+      value: number
+    }[]
+  }>({
+    supplier_name: [],
+    goods_owner_name: []
+  })
 })
 
 const method = reactive({
+  supplierNameChange: (val: string) => {
+    if (!val) {
+      data.form.supplier_id = 0
+    } else {
+      data.form.supplier_id = data.combobox.supplier_name.filter((item) => item.label === val)[0].value
+    }
+  },
+  goodsOwnerNameChange: (val: string) => {
+    if (!val) {
+      data.form.goods_owner_id = 0
+    } else {
+      data.form.goods_owner_id = data.combobox.goods_owner_name.filter((item) => item.label === val)[0].value
+    }
+  },
+  getCombobox: async () => {
+    data.combobox.supplier_name = []
+    data.combobox.goods_owner_name = []
+    const { data: supplierRes } = await getSupplierAll()
+    if (!supplierRes.isSuccess) {
+      return
+    }
+    for (const item of supplierRes.data) {
+      if (item.is_valid) {
+        data.combobox.supplier_name.push({
+          label: item.supplier_name,
+          value: item.id
+        })
+      }
+    }
+    const { data: goodsOwnerRes } = await getOwnerOfCargoAll()
+    if (!goodsOwnerRes.isSuccess) {
+      return
+    }
+    for (const item of goodsOwnerRes.data.rows) {
+      if (item.is_valid) {
+        data.combobox.goods_owner_name.push({
+          label: item.goods_owner_name,
+          value: item.id
+        })
+      }
+    }
+  },
   closeDialog: () => {
     emit('close')
   },
@@ -150,9 +229,10 @@ const method = reactive({
   },
 
   clearCommodity: () => {
-    data.form.sku_id = 0
+    data.form.spu_id = 0
     data.form.spu_code = ''
     data.form.spu_name = ''
+    data.form.spu_id = 0
     data.form.sku_code = ''
     data.form.sku_name = ''
   },
@@ -170,9 +250,10 @@ const method = reactive({
   },
   sureSelect: (selectRecords: any) => {
     if (data.curSelectType === 'target') {
-      data.form.sku_id = selectRecords[0].sku_id
+      data.form.spu_id = selectRecords[0].spu_id
       data.form.spu_code = selectRecords[0].spu_code
       data.form.spu_name = selectRecords[0].spu_name
+      data.form.sku_id = selectRecords[0].sku_id
       data.form.sku_code = selectRecords[0].sku_code
       data.form.sku_name = selectRecords[0].sku_name
     }
@@ -183,6 +264,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
+      method.getCombobox()
       data.form = props.form
     }
   }
