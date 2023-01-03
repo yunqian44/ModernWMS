@@ -178,6 +178,7 @@ namespace ModernWMS.WMS.Services
             var entity = viewModel.Adapt<StocktakingEntity>();
             entity.id = 0;
             entity.job_code = await GetOrderCode();
+            entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
