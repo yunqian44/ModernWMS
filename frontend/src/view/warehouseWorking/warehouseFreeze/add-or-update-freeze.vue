@@ -64,13 +64,12 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
+import { FREEZE_JOB_FREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system/index'
 import { addStockFreeze } from '@/api/wms/warehouseFreeze'
 import { WarehouseFreezeVO } from '@/types/WarehouseWorking/WarehouseFreeze'
 import { removeObjectNull } from '@/utils/common'
 import commoditySelect from '@/components/select/commodity-select.vue'
-import locationSelect from '@/components/select/location-select.vue'
 import i18n from '@/languages/i18n'
 
 const formRef = ref()

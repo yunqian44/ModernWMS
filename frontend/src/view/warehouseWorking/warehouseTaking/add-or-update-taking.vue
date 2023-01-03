@@ -3,8 +3,32 @@
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar class="" color="white" :title="`${$t('router.sideBar.warehouseTaking')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.warehouseTaking')}`"></v-toolbar>
         <v-card-text>
+          <div class="header">
+            <div class="headerBtn">
+              <tooltip-btn
+                size="x-small"
+                icon="mdi-home-plus-outline"
+                :tooltip-text="$t('wms.warehouseWorking.warehouseTaking.addFromStock')"
+                @click="method.openCommoditySelect()"
+              ></tooltip-btn>
+              <tooltip-btn
+                size="x-small"
+                icon="mdi-store-plus-outline"
+                :tooltip-text="$t('wms.warehouseWorking.warehouseTaking.addFromCommodity')"
+                :disabled="isFromStock"
+                @click="method.openSkuSelect()"
+              ></tooltip-btn>
+            </div>
+            <div class="headerTips">
+              <v-tooltip :text="$t('wms.warehouseWorking.warehouseTaking.addTips')">
+                <template #activator="{ props }">
+                  <v-btn v-bind="props" size="x-small" variant="text" icon="mdi-help-circle" color="blue-lighten-2"></v-btn>
+                </template>
+              </v-tooltip>
+            </div>
+          </div>
           <v-form ref="formRef">
             <v-text-field
               v-model="data.form.spu_code"
@@ -13,7 +37,6 @@
               variant="outlined"
               readonly
               clearable
-              @click="method.openCommoditySelect"
               @click:clear="method.clearCommodity"
             ></v-text-field>
             <v-text-field
@@ -42,7 +65,9 @@
               :label="$t('wms.warehouseWorking.warehouseTaking.location_name')"
               :rules="data.rules.location_name"
               variant="outlined"
-              disabled
+              :disabled="isFromStock"
+              @click="method.openLocationSelect"
+              @click:clear="method.clearLocation"
             ></v-text-field>
             <v-text-field
               v-model="data.form.book_qty"
@@ -66,6 +91,8 @@
     @close="method.closeCommodityDialogSelect"
     @sureSelect="method.sureSelectCommodity"
   />
+  <sku-select :show-dialog="data.showSkuDialogSelect" @close="method.closeDialogSelectSku" @sureSelect="method.sureSelectSku" />
+  <location-select :show-dialog="data.showLocationDialogSelect" @close="method.closeDialogSelectLocation" @sureSelect="method.sureSelectLocation" />
 </template>
 
 <script lang="ts" setup>
@@ -77,11 +104,15 @@ import { removeObjectNull } from '@/utils/common'
 import { TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
 import i18n from '@/languages/i18n'
 import commoditySelect from '@/components/select/commodity-select.vue'
+import tooltipBtn from '@/components/tooltip-btn.vue'
+import locationSelect from '@/components/select/location-select.vue'
+import skuSelect from '@/components/select/sku-select.vue'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 const isUpdate = computed(() => props.form.id && props.form.id > 0)
 const operateDisabled = computed(() => !!isUpdate.value)
+const isFromStock = computed(() => data.curStockID > 0)
 
 const props = defineProps<{
   showDialog: boolean
@@ -93,6 +124,10 @@ const isShow = computed(() => props.showDialog)
 const data = reactive({
   showCommodityDialogSelect: false,
   showLocationDialogSelect: false,
+  showSkuDialogSelect: false,
+
+  // There has value when choose from stock.
+  curStockID: 0,
 
   form: ref<WarehouseTakingVO>({
     id: 0,
@@ -117,9 +152,7 @@ const data = reactive({
   }),
   rules: {
     job_type: [],
-    book_qty: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.book_qty') }!`
-    ],
+    book_qty: [],
     warehouse: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.warehouse') }!`
     ],
@@ -143,10 +176,7 @@ const method = reactive({
   },
 
   openCommoditySelect: () => {
-    // Open select modal after UI rendered.
-    setTimeout(() => {
-      data.showCommodityDialogSelect = true
-    }, 100)
+    data.showCommodityDialogSelect = true
   },
 
   closeCommodityDialogSelect: () => {
@@ -155,6 +185,7 @@ const method = reactive({
 
   sureSelectCommodity: (selectRecords: any) => {
     try {
+      data.curStockID = selectRecords[0].id
       data.form.sku_id = selectRecords[0].sku_id
       data.form.goods_location_id = selectRecords[0].goods_location_id
       data.form.warehouse = selectRecords[0].warehouse
@@ -169,6 +200,7 @@ const method = reactive({
   },
 
   clearCommodity: () => {
+    data.curStockID = 0
     data.form.sku_id = 0
     data.form.goods_location_id = 0
     data.form.warehouse = ''
@@ -177,6 +209,49 @@ const method = reactive({
     data.form.spu_name = ''
     data.form.sku_code = ''
     data.form.book_qty = 0
+  },
+
+  openSkuSelect: () => {
+    data.showSkuDialogSelect = true
+  },
+
+  closeDialogSelectSku: () => {
+    data.showSkuDialogSelect = false
+  },
+
+  sureSelectSku: (selectRecords: any) => {
+    if (selectRecords.length > 0) {
+      data.form.sku_id = selectRecords[0].sku_id
+      data.form.goods_owner_id = selectRecords[0].goods_owner_id
+      data.form.goods_location_id = selectRecords[0].goods_location_id
+      // The book qty should zero when the data from commodity.
+      data.form.book_qty = 0
+      data.form.spu_code = selectRecords[0].spu_code
+      data.form.spu_name = selectRecords[0].spu_name
+      data.form.sku_code = selectRecords[0].sku_code
+    }
+  },
+
+  openLocationSelect: () => {
+    data.showLocationDialogSelect = true
+  },
+
+  closeDialogSelectLocation: () => {
+    data.showLocationDialogSelect = false
+  },
+
+  sureSelectLocation: (selectRecords: any) => {
+    if (selectRecords.length > 0) {
+      data.form.goods_location_id = selectRecords[0].id
+      data.form.warehouse = selectRecords[0].warehouse_name
+      data.form.location_name = selectRecords[0].location_name
+    }
+  },
+
+  clearLocation: () => {
+    data.form.goods_location_id = 0
+    data.form.warehouse = ''
+    data.form.location_name = ''
   },
 
   submit: async () => {
@@ -229,5 +304,18 @@ watch(
   div {
     margin-bottom: 7px;
   }
+}
+
+.header {
+  display: flex;
+  margin-bottom: 15px;
+  justify-content: space-between;
+}
+
+.headerBtn {
+}
+.headerTips {
+  display: flex;
+  align-items: center;
 }
 </style>

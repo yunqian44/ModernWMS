@@ -318,7 +318,10 @@ export default {
         unfinish: 'Unfinish',
         finish: 'Finish',
         confirmAdjust: 'Confirm Adjust',
-        beforeConfirmAdjust: 'Are you sure to adjust this data?'
+        beforeConfirmAdjust: 'Are you sure to adjust this data?',
+        addFromCommodity: 'Choose From Commodity',
+        addFromStock: 'Choose From Inventory',
+        addTips: 'You can choose goods and the location to add a new record when there is no target inventory'
       }
     },
     stockManagement: {
