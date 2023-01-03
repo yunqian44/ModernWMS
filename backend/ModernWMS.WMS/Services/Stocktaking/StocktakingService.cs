@@ -72,6 +72,8 @@ namespace ModernWMS.WMS.Services
             var Skus = _dBContext.GetDbSet<SkuEntity>();
             var Goodsowners = _dBContext.GetDbSet<GoodsownerEntity>();
             var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var Stockadjusts = _dBContext.GetDbSet<StockadjustEntity>();
+            var queryAdjust = Stockadjusts.AsNoTracking().Where(t => t.job_type == 1).Select(t => new { t.id, t.source_table_id });
 
             var query = from st in Stocktakings.AsNoTracking()
                         join sku in Skus.AsNoTracking() on st.sku_id equals sku.id
@@ -79,12 +81,15 @@ namespace ModernWMS.WMS.Services
                         join gsl in Goodslocations.AsNoTracking() on st.goods_location_id equals gsl.id
                         join gso in Goodsowners.AsNoTracking() on st.goods_owner_id equals gso.id into gsoJoin
                         from gso in gsoJoin.DefaultIfEmpty()
+                        join adj in queryAdjust on st.id equals adj.source_table_id into adjJoin
+                        from adj in adjJoin.DefaultIfEmpty()
                         where st.tenant_id == currentUser.tenant_id
                         select new StocktakingViewModel
                         {
                             id = st.id,
                             job_code = st.job_code,
                             job_status = st.job_status,
+                            adjust_status = adj.id == null  ? false : true,
                             sku_id = sku.id,
                             sku_code = sku.sku_code,
                             sku_name = sku.sku_name,
@@ -124,6 +129,8 @@ namespace ModernWMS.WMS.Services
             var Skus = _dBContext.GetDbSet<SkuEntity>();
             var Goodsowners = _dBContext.GetDbSet<GoodsownerEntity>();
             var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var Stockadjusts = _dBContext.GetDbSet<StockadjustEntity>();
+            var queryAdjust = Stockadjusts.AsNoTracking().Where(t => t.job_type == 1).Select(t => new { t.id, t.source_table_id });
 
             var query = from st in Stocktakings.AsNoTracking()
                         join sku in Skus.AsNoTracking() on st.sku_id equals sku.id
@@ -131,12 +138,15 @@ namespace ModernWMS.WMS.Services
                         join gsl in Goodslocations.AsNoTracking() on st.goods_location_id equals gsl.id
                         join gso in Goodsowners.AsNoTracking() on st.goods_owner_id equals gso.id into gsoJoin
                         from gso in gsoJoin.DefaultIfEmpty()
+                        join adj in queryAdjust on st.id equals adj.source_table_id into adjJoin
+                        from adj in adjJoin.DefaultIfEmpty()
                         where st.id == id
                         select new StocktakingViewModel
                         {
                             id = st.id,
                             job_code = st.job_code,
                             job_status = st.job_status,
+                            adjust_status = adj.id == null ? false : true,
                             sku_id = sku.id,
                             sku_code = sku.sku_code,
                             sku_name = sku.sku_name,
