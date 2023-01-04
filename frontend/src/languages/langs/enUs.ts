@@ -94,7 +94,11 @@ export default {
       arrival_city: 'Arrival City',
       price_per_weight: 'Weight Fee',
       price_per_volume: 'Volume Fee',
-      min_payment: 'Min Payment'
+      min_payment: 'Min Payment',
+      creator: 'Creator',
+      create_time: 'Create Time',
+      last_update_time: 'Last Update Time',
+      is_valid: 'Valid'
     },
     userManagement: {
       user_num: 'User Num',
@@ -146,7 +150,7 @@ export default {
       manager: 'Manager',
       email: 'Email',
       contact_tel: 'Contact Tel',
-      creator: 'Creater',
+      creator: 'Creator',
       create_time: 'Create Time',
       last_update_time: 'Last Update Time',
       is_valid: 'Valid'
@@ -180,14 +184,14 @@ export default {
       address: 'Detailed Address',
       manager: 'Person In Charge',
       contact_tel: 'Contact Information',
-      creator: 'Creater',
-      create_time: 'Creation Time'
+      creator: 'Creator',
+      create_time: 'Create Time'
     },
     commodityCategorySetting: {
       category_name: 'Commodity category',
       parent_name: 'Parent Category',
-      creator: 'Creater',
-      create_time: 'Creation Time'
+      creator: 'Creator',
+      create_time: 'Create Time'
     },
     roleMenu: {
       role_name: 'Role Name',
@@ -415,7 +419,7 @@ export default {
       spu_name: 'Commodity Name',
       sku_code: 'Specification Code',
       creator: 'Created By',
-      create_time: 'Creation Time'
+      create_time: 'Create Time'
     }
   }
 }
