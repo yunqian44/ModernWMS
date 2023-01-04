@@ -215,21 +215,28 @@ namespace ModernWMS.WMS.Services
             string code = "";
             string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
             string maxNo = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).MaxAsync(t => t.job_code);
-            if (maxNo == null)
+            if (string.IsNullOrEmpty(maxNo))
             {
                 code = date + "-0001";
             }
             else
             {
-                string maxDate = maxNo[..8];
-                string maxDateNo = maxNo[9..];
-                if (date == maxDate)
+                try
                 {
-                    int.TryParse(maxDateNo, out int dd);
-                    int newDateNo = dd + 1;
-                    code = date + "-" + newDateNo.ToString("0000");
+                    string maxDate = maxNo[..8];
+                    string maxDateNo = maxNo[9..];
+                    if (date == maxDate)
+                    {
+                        int.TryParse(maxDateNo, out int dd);
+                        int newDateNo = dd + 1;
+                        code = date + "-" + newDateNo.ToString("0000");
+                    }
+                    else
+                    {
+                        code = date + "-0001";
+                    }
                 }
-                else
+                catch
                 {
                     code = date + "-0001";
                 }
