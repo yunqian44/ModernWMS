@@ -7,27 +7,22 @@ using System.ComponentModel.DataAnnotations;
 namespace ModernWMS.WMS.Entities.ViewModels
 {
     /// <summary>
-    /// customer view model
+    /// customer import view model
     /// </summary>
-    public class CustomerViewModel
+    public class CustomerImportViewModel
     {
         #region constructor
         /// <summary>
         /// constructor
         /// </summary>
-        public CustomerViewModel()
+        public CustomerImportViewModel()
         {
 
         }
         #endregion
 
         #region Property
-
-        /// <summary>
-        /// primary key
-        /// </summary>
-        public int id { get; set; } = 0;
-
+         
         /// <summary>
         /// customer's name
         /// </summary>
@@ -72,31 +67,14 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string contact_tel { get; set; } = string.Empty;
 
         /// <summary>
-        /// creator
+        /// _XID
         /// </summary>
-        [Display(Name = "creator")]
-        [MaxLength(64, ErrorMessage = "MaxLength")]
-        public string creator { get; set; } = string.Empty;
+        public string _XID { get; set; } = string.Empty;
 
         /// <summary>
-        /// create time
+        /// error message
         /// </summary>
-        [Display(Name = "create_time")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime create_time { get; set; } = DateTime.Now;
-
-        /// <summary>
-        /// last update time
-        /// </summary>
-        [Display(Name = "last_update_time")]
-        [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime last_update_time { get; set; } = DateTime.Now;
-
-        /// <summary>
-        /// valid
-        /// </summary>
-        [Display(Name = "is_valid")]
-        public bool is_valid { get; set; } = true;
+        public string errorMsg { get; set; } = string.Empty;
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using ModernWMS.Core.Controller;
+using ModernWMS.Core.JWT;
 using ModernWMS.Core.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
@@ -154,5 +155,25 @@ namespace ModernWMS.WMS.Controllers
         }
         #endregion
 
+        #region Import
+        /// <summary>
+        /// import customers by excel
+        /// </summary>
+        /// <param name="input">excel data</param>
+        /// <returns></returns>
+        [HttpPost("excel")]
+        public async Task<ResultModel<List<CustomerImportViewModel>>> ExcelAsync(List<CustomerImportViewModel> input)
+        {
+            var (flag, errorData) = await _customerService.ExcelAsync(input, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<List<CustomerImportViewModel>>.Success(errorData);
+            }
+            else
+            {
+                return ResultModel<List<CustomerImportViewModel>>.Error("", 400, errorData);
+            }
+        }
+        #endregion
     }
 }

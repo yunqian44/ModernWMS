@@ -4,6 +4,7 @@ using ModernWMS.Core.Controller;
 using ModernWMS.Core.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
+using ModernWMS.WMS.Services;
 
 namespace ModernWMS.WMS.Controllers
 {
@@ -138,5 +139,25 @@ namespace ModernWMS.WMS.Controllers
         }
         #endregion
 
+        #region Import
+        /// <summary>
+        /// import goodsowners by excel
+        /// </summary>
+        /// <param name="input">excel data</param>
+        /// <returns></returns>
+        [HttpPost("excel")]
+        public async Task<ResultModel<List<GoodsownerImportViewModel>>> ExcelAsync(List<GoodsownerImportViewModel> input)
+        {
+            var (flag, errorData) = await _goodsownerService.ExcelAsync(input, CurrentUser);
+            if (flag)
+            {
+                return ResultModel<List<GoodsownerImportViewModel>>.Success(errorData);
+            }
+            else
+            {
+                return ResultModel<List<GoodsownerImportViewModel>>.Error("", 400, errorData);
+            }
+        }
+        #endregion
     }
 }

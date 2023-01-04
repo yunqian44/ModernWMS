@@ -154,5 +154,57 @@ namespace ModernWMS.WMS.Services
             }
         }
         #endregion
+
+
+        #region Import
+        /// <summary>
+        /// import goodsowners by excel
+        /// </summary>
+        /// <param name="input">excel data</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, List<GoodsownerImportViewModel> errorData)> ExcelAsync(List<GoodsownerImportViewModel> input, CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<GoodsownerEntity>();
+            var existsDatas = await DbSet.AsNoTracking().Select(t => new { t.goods_owner_name }).ToListAsync();
+            input.ForEach(async t =>
+            {
+                if (existsDatas.Any(d => d.goods_owner_name.Equals(t.goods_owner_name)))
+                {
+                    t.errorMsg = string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["goods_owner_name"], t.goods_owner_name);
+                }
+                else
+                {
+                    await DbSet.AddAsync(new GoodsownerEntity
+                    {
+                        goods_owner_name = t.goods_owner_name,
+                        city = t.city,
+                        address = t.address,
+                        manager = t.manager,
+                        contact_tel = t.contact_tel,
+                        creator = currentUser.user_name,
+                        create_time = DateTime.Now,
+                        last_update_time = DateTime.Now,
+                        is_valid = true,
+                        tenant_id = currentUser.tenant_id
+                    });
+                }
+            });
+            if (input.Any(t => t.errorMsg.Length > 0))
+            {
+                return (false, input.Where(t => t.errorMsg.Length > 0).ToList());
+            }
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, new List<GoodsownerImportViewModel>());
+            }
+            else
+            {
+                return (false, new List<GoodsownerImportViewModel>());
+            }
+        }
+
+        #endregion
     }
 }

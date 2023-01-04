@@ -191,5 +191,57 @@ namespace ModernWMS.WMS.Services
             }
         }
         #endregion
+
+        #region Import
+        /// <summary>
+        /// import customers by excel
+        /// </summary>
+        /// <param name="input">excel data</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, List<CustomerImportViewModel> errorData)> ExcelAsync(List<CustomerImportViewModel> input, CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<CustomerEntity>();
+            var existsDatas = await DbSet.AsNoTracking().Select(t => new { t.customer_name}).ToListAsync();
+            input.ForEach(async t =>
+            {
+                if (existsDatas.Any(d => d.customer_name.Equals(t.customer_name)))
+                {
+                    t.errorMsg = string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["customer_name"], t.customer_name);
+                }
+                else
+                {
+                    await DbSet.AddAsync(new CustomerEntity
+                    {
+                        customer_name = t.customer_name,
+                        city = t.city,
+                        address = t.address,
+                        email = t.email,
+                        manager = t.manager,
+                        contact_tel = t.contact_tel,
+                        creator = currentUser.user_name,
+                        create_time = DateTime.Now,
+                        last_update_time = DateTime.Now,
+                        is_valid = true,
+                        tenant_id = currentUser.tenant_id
+                    });
+                }
+            });
+            if (input.Any(t => t.errorMsg.Length > 0))
+            {
+                return (false, input.Where(t => t.errorMsg.Length > 0).ToList());
+            }
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, new List<CustomerImportViewModel>());
+            }
+            else
+            {
+                return (false, new List<CustomerImportViewModel>());
+            }
+        }
+
+        #endregion
     }
 }

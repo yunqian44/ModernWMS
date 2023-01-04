@@ -43,5 +43,15 @@ namespace ModernWMS.WMS.IServices
         /// <returns></returns>
         Task<(bool flag, string msg)> DeleteAsync(int id);
         #endregion
+
+        #region Import
+        /// <summary>
+        /// import goodsowners by excel
+        /// </summary>
+        /// <param name="input">excel data</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, List<GoodsownerImportViewModel> errorData)> ExcelAsync(List<GoodsownerImportViewModel> input, CurrentUser currentUser);
+        #endregion
     }
 }
