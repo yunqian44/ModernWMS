@@ -68,6 +68,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="id">id</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> ConfirmAsync(int id);
+
+        /// <summary>
+        /// Cancel confirm, change asn_status 1 to 0
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> ConfirmCancelAsync(int id);
+
         /// <summary>
         /// Unload
         /// change the asn_status from 1 to 2
@@ -75,6 +83,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="id">id</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> UnloadAsync(int id);
+
+        /// <summary>
+        /// Cancel unload
+        /// change the asn_status from 2 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> UnloadCancelAsync(int id);
 
         /// <summary>
         /// sorting， add a new asnsort record and update asn sorted_qty
@@ -90,6 +106,14 @@ namespace ModernWMS.WMS.IServices
         /// <param name="id">id</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> SortedAsync(int id);
+
+        /// <summary>
+        /// Cancel sorted
+        /// change the asn_status from 3 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> SortedCancelAsync(int id);
 
         /// <summary>
         /// PutAway

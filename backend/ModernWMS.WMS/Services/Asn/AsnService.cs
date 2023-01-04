@@ -368,6 +368,35 @@ namespace ModernWMS.WMS.Services
             }
         }
         /// <summary>
+        /// Cancel confirm, change asn_status 1 to 0
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != (byte)1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Delivery"]}");
+            }
+            entity.asn_status = 0;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
+
+        /// <summary>
         /// Unload
         /// change the asn_status from 1 to 2
         /// </summary>
@@ -395,6 +424,37 @@ namespace ModernWMS.WMS.Services
             else
             {
                 return (false, _stringLocalizer["confirm_failed"]);
+            }
+        }
+
+        /// <summary>
+        /// Cancel unload
+        /// change the asn_status from 2 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> UnloadCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != (byte)2)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Load"]}");
+            }
+            entity.asn_status = 1;
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
             }
         }
         /// <summary>
@@ -478,6 +538,45 @@ namespace ModernWMS.WMS.Services
             }
         }
 
+        /// <summary>
+        /// Cancel sorted
+        /// change the asn_status from 3 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SortedCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.actual_qty > 0)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Putaway"]}");
+            }
+            else if (entity.sorted_qty < 1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Sorting"]}");
+            }
+            entity.asn_status = 2;
+            entity.sorted_qty = 0;
+            entity.more_qty = 0;
+            entity.shortage_qty = 0;
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                var Asnsorts = _dBContext.GetDbSet<AsnsortEntity>();
+                await Asnsorts.Where(t => t.asn_id.Equals(id)).ExecuteDeleteAsync();
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
         /// <summary>
         /// PutAway
         /// </summary>

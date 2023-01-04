@@ -182,6 +182,26 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<string>.Error(msg);
             }
         }
+
+        /// <summary>
+        /// Cancel confirm, change asn_status 1 to 0
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("confirm-cancel/{id}")]
+        public async Task<ResultModel<string>> ConfirmCancelAsync(int id)
+        {
+            var (flag, msg) = await _asnService.ConfirmCancelAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
         /// <summary>
         /// Unload
         /// change the asn_status from 1 to 2
@@ -192,6 +212,26 @@ namespace ModernWMS.WMS.Controllers
         public async Task<ResultModel<string>> UnloadAsync(int id)
         {
             var (flag, msg) = await _asnService.UnloadAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        /// Cancel unload
+        /// change the asn_status from 2 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("unload-cancel/{id}")]
+        public async Task<ResultModel<string>> UnloadCancelAsync(int id)
+        {
+            var (flag, msg) = await _asnService.UnloadCancelAsync(id);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);
@@ -231,6 +271,26 @@ namespace ModernWMS.WMS.Controllers
         public async Task<ResultModel<string>> SortedAsync(int id)
         {
             var (flag, msg) = await _asnService.SortedAsync(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
+        /// <summary>
+        /// Cancel sorted
+        /// change the asn_status from 3 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("sorted-cancel/{id}")]
+        public async Task<ResultModel<string>> SortedCancelAsync(int id)
+        {
+            var (flag, msg) = await _asnService.SortedCancelAsync(id);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);
