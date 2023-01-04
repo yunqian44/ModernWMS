@@ -46,6 +46,12 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public int parent_id { get; set; } = 0;
 
         /// <summary>
+        /// creator
+        /// </summary>
+        [Display(Name = "creator")]
+        public string creator { get; set; } = string.Empty;
+
+        /// <summary>
         /// create_time
         /// </summary>
         [Display(Name = "create_time")]
