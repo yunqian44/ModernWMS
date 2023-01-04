@@ -187,7 +187,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
             var entity = viewModel.Adapt<StocktakingEntity>();
             entity.id = 0;
-            entity.job_code = await GetOrderCode();
+            entity.job_code = await GetOrderCode(currentUser);
             entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
@@ -205,15 +205,16 @@ namespace ModernWMS.WMS.Services
         }
 
         /// <summary>
-        /// get next order code number
+        /// get next code number
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<string> GetOrderCode()
+        public async Task<string> GetOrderCode(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<StocktakingEntity>();
             string code = "";
             string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
-            string maxNo = await DbSet.AsNoTracking().MaxAsync(t => t.job_code);
+            string maxNo = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).MaxAsync(t => t.job_code);
             if (maxNo == null)
             {
                 code = date + "-0001";

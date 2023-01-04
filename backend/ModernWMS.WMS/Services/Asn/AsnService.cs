@@ -51,7 +51,7 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
-        /// page search, sqlTitle input asn_status:0 ~ 8
+        /// page search, sqlTitle input asn_status:0 ~ 4
         /// </summary>
         /// <param name="pageSearch">args</param>
         /// <param name="currentUser">currentUser</param>
@@ -70,6 +70,7 @@ namespace ModernWMS.WMS.Services
             if (pageSearch.sqlTitle.ToLower().Contains("asn_status"))
             {
                 asn_status = Convert.ToByte(pageSearch.sqlTitle.Trim().ToLower().Replace("asn_status","").Replace("：", "").Replace(":", "").Replace("=", ""));
+                asn_status = asn_status.Equals(4) ? (Byte)255 : asn_status;
             }
             var Spus = _dBContext.GetDbSet<SpuEntity>();
             var Skus = _dBContext.GetDbSet<SkuEntity>();
@@ -100,8 +101,8 @@ namespace ModernWMS.WMS.Services
                             shortage_qty = m.shortage_qty,
                             more_qty = m.more_qty,
                             damage_qty = m.damage_qty,
-                            weight = m.weight,
-                            volume = m.volume,
+                            weight = k.weight * m.asn_qty,
+                            volume = k.volume * m.asn_qty,
                             supplier_id = m.supplier_id,
                             supplier_name = m.supplier_name,
                             goods_owner_id = m.goods_owner_id,
@@ -178,6 +179,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<AsnEntity>();
             var entity = viewModel.Adapt<AsnEntity>();
             entity.id = 0;
+            entity.asn_no = await GetOrderCode(currentUser);
             entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
@@ -193,6 +195,40 @@ namespace ModernWMS.WMS.Services
             {
                 return (0, _stringLocalizer["save_failed"]);
             }
+        }
+
+        /// <summary>
+        /// get next code number
+        /// </summary>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<string> GetOrderCode(CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<AsnEntity>();
+            string code = "";
+            string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
+            string maxNo = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).MaxAsync(t => t.asn_no);
+            if (maxNo == null)
+            {
+                code = date + "-0001";
+            }
+            else
+            {
+                string maxDate = maxNo[..8];
+                string maxDateNo = maxNo[9..];
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
+            }
+
+            return code;
         }
         /// <summary>
         /// update a record

@@ -51,7 +51,7 @@ namespace ModernWMS.WMS.Controllers
 
         #region Api
         /// <summary>
-        /// page search, sqlTitle input asn_status:0 ~ 8
+        /// page search, sqlTitle input asn_status:0 ~ 4
         /// </summary>
         /// <param name="pageSearch">args</param>
         /// <returns></returns>
