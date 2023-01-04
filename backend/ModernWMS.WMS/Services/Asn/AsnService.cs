@@ -492,11 +492,11 @@ namespace ModernWMS.WMS.Services
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
-                return (true, _stringLocalizer["sorting_success"]);
+                return (true, _stringLocalizer["save_success"]);
             }
             else
             {
-                return (false, _stringLocalizer["sorting_failed"]);
+                return (false, _stringLocalizer["save_failed"]);
             }
         }
         /// <summary>
