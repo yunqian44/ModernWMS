@@ -287,6 +287,11 @@ namespace ModernWMS.WMS.Services
         /// <returns></returns>
         public async Task<(bool flag, string msg)> DeleteAsync(int id)
         {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            if(await Asns.AsNoTracking().AnyAsync(t => t.spu_id.Equals(id)))
+            {
+                return (false, _stringLocalizer["delete_referenced"]);
+            }
             var qty = await _dBContext.GetDbSet<SkuEntity>().Where(t => t.spu_id.Equals(id)).ExecuteDeleteAsync();
             qty += await _dBContext.GetDbSet<SpuEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
             if (qty > 0)
