@@ -3,7 +3,7 @@
 <div align="center">
   <img src="/logo.png" alt="ModernWMS logo" width="200" height="auto" />
   <h1>ModernWMS</h1>
-  <p>开源的简易完整的仓库管理系统（支持3PL）</p>
+  <p>开源的简易完整的仓库管理系统</p>
 
 <!-- Badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT/)
@@ -15,7 +15,7 @@
 
 ![repo size](https://img.shields.io/github/repo-size/fjykTec/ModernWMS)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/fjykTec/ModernWMS)
-![Contributors](https://img.shields.io/github/contributors/fjykTec/ModernWMS?color=blue)
+<!--![Contributors](https://img.shields.io/github/contributors/fjykTec/ModernWMS?color=blue) -->
 
 ![GitHub Org's stars](https://img.shields.io/github/stars/ModernWMS?style=social)
 ![GitHub Follows](https://img.shields.io/github/followers/ModernWMS?style=social)
@@ -49,7 +49,7 @@
   - [License - 版权信息](#license---版权信息)
 
 ## Introduction - 介绍
-  该库存管理系统是，我们从多年ERP系统研发中总结出来的一套针对小型物流仓储供应链流程。 在工作过程中我们经常遇到一些小的客户由于种种原因无法投入使用ERP系统，却又实实在在存在仓储管理方面的需求，以此我们开始了这个项目。 为了帮助一些有需要的小组织。
+  该库存管理系统是，我们从多年ERP系统研发中总结出来的一套针对小型物流仓储供应链流程。 在工作过程中我们很多的中小企业，由于IT预算有限，所以无法用上适合他们的系统，却又实实在在存在仓储管理方面的需求，以此我们开始了这个项目。 为了帮助一些有需要的用户。
 
 ## Requirements - 必要条件
 
@@ -88,7 +88,7 @@
   sudo apt install -y nodejs
   ```  
 
-  + 第三步，编译前段和后端
+  + 第三步，编译前端和后端
 
   ```bash
   cd /tmp/ && unzip master.zip && cd ./ModernWMS-master
@@ -97,45 +97,14 @@
   cd ./backend/ && sudo dotnet publish && cp -rf ./backend/ModernWMS/bin/Debug/net7.0/publish/* /ModernWMS/backend/
   ```  
 
-  + 第四步，安装nginx和supervisor
+  + 第四步，安装nginx
 
   ```bash
   cd /tmp/ && wget http://nginx.org/download/nginx-1.18.0.tar.gz 
   tar -zxvf nginx-1.18.0.tar.gz && cd nginx-1.18.0
   ./configure --prefix=/etc/nginx --with-http_secure_link_module --with-http_stub_status_module --with-http_ssl_module --with-http_realip_module
   make && make install
-  apt install supervisor
-  systemctl enable supervisor.service
-  cd /etc/supervisor/conf.d && vi wmsapi.conf
   ```  
-  wmsapi.conf
-  ```shell
-  [program:wmsapi]
-  command=dotnet ModernWMS.dll --urls http://0.0.0.0:20011
-  directory=/ModernWMS/backend/
-  autostart=true
-  autorestart=true
-  startretries=5
-  startsecs=1
-  user=root
-  priority=999
-  stderr_logfile=/var/log/supervisor/wmsapi.err.log
-  stdout_logfile=/var/log/supervisor/wmsapi.out.log
-  stopsignal=INT
-  ```
-  + 第五步，安装mysql
-
-  ```bash
-  sudo apt install mysql-server-8.0
-  sudo mysql -uroot  # 设置password: Modern202301WMS
-  mysql> use mysql;
-  mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Modern202301WMS';
-  mysql> flush privileges;
-  mysql> source /tmp/ModernWMS-master/dump.sql
-  mysql> quit;
-  sudo systemctl restart mysql.service
-  ```
-
 ### Windows
 
 + 下载源码后编译部署
@@ -163,16 +132,14 @@
   yarn && yarn build 
   copy-item -path ".\frontend\dist\" -destination "C:\ModernWMS\frontend\" -recurse
   ```
-  + 第四步，安装nginx
+  + 第四步，安装nginx并启动
   ```
   cd C:\
   wget -Uri http://nginx.org/download/nginx-1.16.1.zip -OutFile nginx-1.16.1.zip
   Expand-Archive -Path C:\nginx-1.16.1.zip -DestinationPath C:\
   start .\nginx-1.16.1\nginx.exe
-  ```
-  + 第五步，安装mysql
-  ```
-
+  cd C:\ModernWMS\backend\
+  dotnet ModernWMS.dll --urls http://0.0.0.0:20011
   ```
 
 ### Docker
@@ -184,6 +151,9 @@
 </h4>
 <h4>
   <a href="https://github.com/fjykTec/ModernWMS/issues/new?template=feature_request.md&title=[FR]">提交一个建议</a>
+</h4>
+<h4>
+  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群聊【ModernWMS共创基地】</a>
 </h4>
 
 ## License - 版权信息

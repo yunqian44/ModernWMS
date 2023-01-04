@@ -28,6 +28,11 @@ namespace ModernWMS.WMS.Entities.Models
         public int parent_id { get; set; } = 0;
 
         /// <summary>
+        /// creator
+        /// </summary>
+        public string creator { get; set; } = string.Empty;
+
+        /// <summary>
         /// create_time
         /// </summary>
         public DateTime create_time { get; set; } = UtilConvert.MinDate;

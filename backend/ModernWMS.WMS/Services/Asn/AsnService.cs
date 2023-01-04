@@ -51,7 +51,7 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
-        /// page search, sqlTitle input asn_status:0 ~ 8
+        /// page search, sqlTitle input asn_status:0 ~ 4
         /// </summary>
         /// <param name="pageSearch">args</param>
         /// <param name="currentUser">currentUser</param>
@@ -70,6 +70,7 @@ namespace ModernWMS.WMS.Services
             if (pageSearch.sqlTitle.ToLower().Contains("asn_status"))
             {
                 asn_status = Convert.ToByte(pageSearch.sqlTitle.Trim().ToLower().Replace("asn_status","").Replace("：", "").Replace(":", "").Replace("=", ""));
+                asn_status = asn_status.Equals(4) ? (Byte)255 : asn_status;
             }
             var Spus = _dBContext.GetDbSet<SpuEntity>();
             var Skus = _dBContext.GetDbSet<SkuEntity>();
@@ -100,8 +101,8 @@ namespace ModernWMS.WMS.Services
                             shortage_qty = m.shortage_qty,
                             more_qty = m.more_qty,
                             damage_qty = m.damage_qty,
-                            weight = m.weight,
-                            volume = m.volume,
+                            weight = k.weight * m.asn_qty,
+                            volume = k.volume * m.asn_qty,
                             supplier_id = m.supplier_id,
                             supplier_name = m.supplier_name,
                             goods_owner_id = m.goods_owner_id,
@@ -178,6 +179,7 @@ namespace ModernWMS.WMS.Services
             var DbSet = _dBContext.GetDbSet<AsnEntity>();
             var entity = viewModel.Adapt<AsnEntity>();
             entity.id = 0;
+            entity.asn_no = await GetOrderCode(currentUser);
             entity.creator = currentUser.user_name;
             entity.create_time = DateTime.Now;
             entity.last_update_time = DateTime.Now;
@@ -193,6 +195,47 @@ namespace ModernWMS.WMS.Services
             {
                 return (0, _stringLocalizer["save_failed"]);
             }
+        }
+
+        /// <summary>
+        /// get next code number
+        /// </summary>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<string> GetOrderCode(CurrentUser currentUser)
+        {
+            var DbSet = _dBContext.GetDbSet<AsnEntity>();
+            string code = "";
+            string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
+            string maxNo = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).MaxAsync(t => t.asn_no);
+            if (string.IsNullOrEmpty(maxNo))
+            {
+                code = date + "-0001";
+            }
+            else
+            {
+                try
+                {
+                    string maxDate = maxNo[..8];
+                    string maxDateNo = maxNo[9..];
+                    if (date == maxDate)
+                    {
+                        int.TryParse(maxDateNo, out int dd);
+                        int newDateNo = dd + 1;
+                        code = date + "-" + newDateNo.ToString("0000");
+                    }
+                    else
+                    {
+                        code = date + "-0001";
+                    }
+                }
+                catch
+                {
+                    code = date + "-0001";
+                }
+            }
+
+            return code;
         }
         /// <summary>
         /// update a record
@@ -325,6 +368,35 @@ namespace ModernWMS.WMS.Services
             }
         }
         /// <summary>
+        /// Cancel confirm, change asn_status 1 to 0
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> ConfirmCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != (byte)1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Delivery"]}");
+            }
+            entity.asn_status = 0;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
+
+        /// <summary>
         /// Unload
         /// change the asn_status from 1 to 2
         /// </summary>
@@ -352,6 +424,37 @@ namespace ModernWMS.WMS.Services
             else
             {
                 return (false, _stringLocalizer["confirm_failed"]);
+            }
+        }
+
+        /// <summary>
+        /// Cancel unload
+        /// change the asn_status from 2 to 1
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> UnloadCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.asn_status != (byte)2)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Pre_Load"]}");
+            }
+            entity.asn_status = 1;
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
             }
         }
         /// <summary>
@@ -435,6 +538,45 @@ namespace ModernWMS.WMS.Services
             }
         }
 
+        /// <summary>
+        /// Cancel sorted
+        /// change the asn_status from 3 to 2
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> SortedCancelAsync(int id)
+        {
+            var Asns = _dBContext.GetDbSet<AsnEntity>();
+            var entity = await Asns.FirstOrDefaultAsync(t => t.id == id);
+            if (entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            else if (entity.actual_qty > 0)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Putaway"]}");
+            }
+            else if (entity.sorted_qty < 1)
+            {
+                return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Status_Is_Not_Sorting"]}");
+            }
+            entity.asn_status = 2;
+            entity.sorted_qty = 0;
+            entity.more_qty = 0;
+            entity.shortage_qty = 0;
+            entity.last_update_time = DateTime.Now;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                var Asnsorts = _dBContext.GetDbSet<AsnsortEntity>();
+                await Asnsorts.Where(t => t.asn_id.Equals(id)).ExecuteDeleteAsync();
+                return (true, _stringLocalizer["save_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["save_failed"]);
+            }
+        }
         /// <summary>
         /// PutAway
         /// </summary>
