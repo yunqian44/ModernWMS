@@ -28,3 +28,15 @@ export interface StockAsnVO extends UniformFileNaming {
   goods_owner_name: string
   is_valid: boolean
 }
+
+export interface PutawayVo {
+  asn_id: number
+  goods_location_id: number
+  putaway_qty: number
+  location_name: string
+}
+
+export interface SortingVo {
+  asn_id: number
+  sorted_qty: number
+}

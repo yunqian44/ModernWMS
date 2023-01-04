@@ -32,6 +32,7 @@
               <v-col :cols="3">
                 <v-text-field
                   v-model="item.qty"
+                  :rules="data.rules.qty"
                   :label="$t('wms.deliveryManagement.detailQty')"
                   variant="outlined"
                   clearable
@@ -109,7 +110,8 @@ const data = reactive({
     customer_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.customer_name') }!`
     ],
-    sku_id: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.sku_code') }!`]
+    sku_id: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.sku_code') }!`],
+    qty: [(val: number) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.detailQty') }!`]
   }
 })
 
