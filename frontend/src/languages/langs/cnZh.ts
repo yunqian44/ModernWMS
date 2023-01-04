@@ -20,7 +20,9 @@ export default {
       reset: '重置',
       confirm: '确认',
       insertOneRow: '新增一行',
-      view: '查看'
+      view: '查看',
+      import: '导入',
+      chooseFile: '选择文件'
     },
     tips: {
       success: '成功!',

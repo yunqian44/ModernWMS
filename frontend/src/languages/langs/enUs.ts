@@ -20,7 +20,9 @@ export default {
       reset: 'Reset',
       confirm: 'Confirm',
       insertOneRow: 'Insert One Row',
-      view: 'View'
+      view: 'View',
+      import: 'Import',
+      chooseFile: 'Choose File'
     },
     tips: {
       success: ' success!',

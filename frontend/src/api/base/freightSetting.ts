@@ -38,3 +38,10 @@ export const deleteFreight = (id: number) => http({
       id
     }
   })
+
+// Excel Import
+export const excelImport = (data: Array<FreightVO>) => http({
+    url: '/freightfee/excel',
+    method: 'post',
+    data
+  })
