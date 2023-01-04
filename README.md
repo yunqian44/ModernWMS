@@ -144,6 +144,29 @@
 
 ### Docker
 
+
++ 下载源码后编译
+  + 第一步，下载源码
+
+  ```bash
+  cd /tmp/ && wget https://github.com/fjykTec/ModernWMS/archive/refs/heads/master.zip
+  ```  
+  
+  + 第二步，编译前端和后端
+
+  ```bash
+  cd /tmp/ && unzip master.zip && cd ./ModernWMS-master
+  cd ./frontend/ && yarn && yarn build && cp -rf ./frontend/dist/* ./docker/frontend/
+  cd ./backend/ && sudo dotnet publish && cp -rf ./backend/ModernWMS/bin/Debug/net7.0/publish/* ./docker/backend/
+  ```  
+  + 第三步，部署
+
+  ```bash
+  cd /tmp//ModernWMS-master/docker/
+  docker build -t modernwms:1.0 .
+  docker run -d -p 8089:80  modernwms:1.0 /bin/bash ./run.sh
+  ```
+
 ## Contact - 联系
 
 <h4>
