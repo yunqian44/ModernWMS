@@ -299,6 +299,43 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<string>.Error(msg);
             }
         }
+        /// <summary>
+        /// cancel order opration 
+        /// </summary>
+        /// <param name="viewModel">viewModel</param>
+        /// <returns></returns>
+        [HttpPost("cancel-order")]
+        public async Task<ResultModel<string>> CancelOrderOpration(CancelOrderOprationViewModel viewModel)
+        {
+            var (flag, msg) = await _dispatchlistService.CancelOrderOpration(viewModel,CurrentUser);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
+        /// cancel dispatchlist detail opration
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpPut("cancel-order")]
+        public async Task<ResultModel<string>> CancelDispatchlistDetailOpration(int id)
+        {
+            var (flag, msg) = await _dispatchlistService.CancelDispatchlistDetailOpration(id);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+
         #endregion
 
     }

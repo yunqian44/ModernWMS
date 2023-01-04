@@ -123,15 +123,15 @@ namespace ModernWMS.WMS.Services
             }
             else if (pageSearch.sqlTitle.Equals("to_package"))
             {
-                query = query.Where(t => (t.picked_qty == t.qty &&( t.dispatch_status.Equals(3)) || (t.package_qty == 0 && t.dispatch_status.Equals(5))) );
+                query = query.Where(t => (t.picked_qty == t.qty && (t.dispatch_status.Equals(3)) || (t.package_qty == 0 && t.dispatch_status.Equals(5))));
             }
             else if (pageSearch.sqlTitle.Equals("to_weight"))
             {
-                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || (t.weighing_qty == 0 && t.dispatch_status.Equals(4))) );
+                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || (t.weighing_qty == 0 && t.dispatch_status.Equals(4))));
             }
             else if (pageSearch.sqlTitle.Equals("to_delivery"))
             {
-                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || t.dispatch_status.Equals(4)|| t.dispatch_status.Equals(5)) );
+                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || t.dispatch_status.Equals(4) || t.dispatch_status.Equals(5)));
             }
             int totals = await query.CountAsync();
             var list = await query.OrderByDescending(t => t.create_time)
@@ -146,54 +146,54 @@ namespace ModernWMS.WMS.Services
         /// <param name="dispatch_no"></param>
         /// <param name="currentUser"></param>
         /// <returns></returns>
-        public async Task<List<DispatchlistViewModel>> GetByDispatchlistNo( string dispatch_no, CurrentUser currentUser)
+        public async Task<List<DispatchlistViewModel>> GetByDispatchlistNo(string dispatch_no, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
-            var datas =await( from d in DbSet.AsNoTracking()
-                        join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on d.sku_id equals sku.id
-                        join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
-                       where d.dispatch_no == dispatch_no && d.tenant_id == currentUser.tenant_id
-                        select new DispatchlistViewModel
-                        {
-                            id = d.id,
-                            dispatch_no = d.dispatch_no,
-                            dispatch_status = d.dispatch_status,
-                            customer_id = d.customer_id,
-                            customer_name = d.customer_name,
-                            sku_id = d.sku_id,
-                            qty = d.qty,
-                            weight = d.weight,
-                            volume = d.volume,
-                            creator = d.creator,
-                            create_time = d.create_time,
-                            damage_qty = d.damage_qty,
-                            lock_qty = d.lock_qty,
-                            picked_qty = d.picked_qty,
-                            intrasit_qty = d.intrasit_qty,
-                            package_qty = d.package_qty,
-                            unpackage_qty = d.picked_qty - d.package_qty,
-                            weighing_qty = d.weighing_qty,
-                            unweighing_qty = d.picked_qty - d.weighing_qty,
-                            actual_qty = d.actual_qty,
-                            sign_qty = d.sign_qty,
-                            package_no = d.package_no,
-                            package_person = d.package_person,
-                            package_time = d.package_time,
-                            weighing_no = d.weighing_no,
-                            weighing_person = d.weighing_person,
-                            weighing_weight = d.weighing_weight,
-                            waybill_no = d.waybill_no,
-                            carrier = d.carrier,
-                            freightfee = d.freightfee,
-                            last_update_time = d.last_update_time,
-                            tenant_id = d.tenant_id,
-                            sku_code = sku.sku_code,
-                            spu_code = spu.spu_code,
-                            spu_description = spu.spu_description,
-                            spu_name = spu.spu_name,
-                            bar_code = spu.bar_code,
-                            unpicked_qty = d.qty - d.picked_qty
-                        }).ToListAsync();
+            var datas = await (from d in DbSet.AsNoTracking()
+                               join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on d.sku_id equals sku.id
+                               join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
+                               where d.dispatch_no == dispatch_no && d.tenant_id == currentUser.tenant_id
+                               select new DispatchlistViewModel
+                               {
+                                   id = d.id,
+                                   dispatch_no = d.dispatch_no,
+                                   dispatch_status = d.dispatch_status,
+                                   customer_id = d.customer_id,
+                                   customer_name = d.customer_name,
+                                   sku_id = d.sku_id,
+                                   qty = d.qty,
+                                   weight = d.weight,
+                                   volume = d.volume,
+                                   creator = d.creator,
+                                   create_time = d.create_time,
+                                   damage_qty = d.damage_qty,
+                                   lock_qty = d.lock_qty,
+                                   picked_qty = d.picked_qty,
+                                   intrasit_qty = d.intrasit_qty,
+                                   package_qty = d.package_qty,
+                                   unpackage_qty = d.picked_qty - d.package_qty,
+                                   weighing_qty = d.weighing_qty,
+                                   unweighing_qty = d.picked_qty - d.weighing_qty,
+                                   actual_qty = d.actual_qty,
+                                   sign_qty = d.sign_qty,
+                                   package_no = d.package_no,
+                                   package_person = d.package_person,
+                                   package_time = d.package_time,
+                                   weighing_no = d.weighing_no,
+                                   weighing_person = d.weighing_person,
+                                   weighing_weight = d.weighing_weight,
+                                   waybill_no = d.waybill_no,
+                                   carrier = d.carrier,
+                                   freightfee = d.freightfee,
+                                   last_update_time = d.last_update_time,
+                                   tenant_id = d.tenant_id,
+                                   sku_code = sku.sku_code,
+                                   spu_code = spu.spu_code,
+                                   spu_description = spu.spu_description,
+                                   spu_name = spu.spu_name,
+                                   bar_code = spu.bar_code,
+                                   unpicked_qty = d.qty - d.picked_qty
+                               }).ToListAsync();
             return datas;
         }
         /// <summary>
@@ -202,51 +202,52 @@ namespace ModernWMS.WMS.Services
         /// <param name="viewModels"></param>
         /// <param name="currentUser"></param>
         /// <returns></returns>
-        public async Task<(bool flag,string msg)> UpdateAsycn(List<DispatchlistViewModel> viewModels,CurrentUser currentUser)
+        public async Task<(bool flag, string msg)> UpdateAsycn(List<DispatchlistViewModel> viewModels, CurrentUser currentUser)
         {
             var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
             var dispatch_no = viewModels.FirstOrDefault().dispatch_no;
             var dispatch_status = viewModels.FirstOrDefault().dispatch_status;
             var entities = await (DBSet.Where(t => t.dispatch_no == dispatch_no && t.tenant_id == currentUser.tenant_id)).ToListAsync();
             var delete_id_list = new List<int>();
-            var sku_id_list = viewModels.Select(t=>t.sku_id).ToList();
+            var sku_id_list = viewModels.Select(t => t.sku_id).ToList();
             var skus = await (_dBContext.GetDbSet<SkuEntity>().AsNoTracking().Where(t => sku_id_list.Contains(t.id))).ToListAsync();
-            if (entities.Any(t=>t.dispatch_status!=1 && t.dispatch_status != 0)) 
+            if (entities.Any(t => t.dispatch_status != 1 && t.dispatch_status != 0))
             {
                 return (false, _stringLocalizer["data_changed"]);
             }
-            foreach(var vm in viewModels)
+            foreach (var vm in viewModels)
             {
-                if(vm.id < 0)
+                if (vm.id < 0)
                 {
-                    var entity = entities.FirstOrDefault(t=>t.id== -vm.id);
-                    if(entity == null)
+                    var entity = entities.FirstOrDefault(t => t.id == -vm.id);
+                    if (entity == null)
                     {
                         return (false, _stringLocalizer["data_changed"]);
                     }
                     DBSet.Remove(entity);
                     delete_id_list.Add(entity.id);
                 }
-                else if(vm.id >0)
+                else if (vm.id > 0)
                 {
                     var entity = entities.FirstOrDefault(t => t.id == vm.id);
                     if (entity == null)
                     {
                         return (false, _stringLocalizer["data_changed"]);
                     }
-                    entity.sku_id =vm.sku_id;
+                    entity.sku_id = vm.sku_id;
                     entity.qty = vm.qty;
                     entity.last_update_time = DateTime.Now;
                     var sku = skus.FirstOrDefault(t => t.id == entity.sku_id);
-                    if(sku != null)
+                    if (sku != null)
                     {
-                        entity.volume = sku.volume*entity.qty;
+                        entity.volume = sku.volume * entity.qty;
                         entity.weight = sku.weight * entity.qty;
                     }
                 }
-                else if(vm.id == 0)
+                else if (vm.id == 0)
                 {
-                    var entity = new DispatchlistEntity {
+                    var entity = new DispatchlistEntity
+                    {
                         id = 0,
                         dispatch_no = dispatch_no,
                         creator = currentUser.user_name,
@@ -267,16 +268,16 @@ namespace ModernWMS.WMS.Services
                     DBSet.Add(entity);
                 }
             }
-            var repeat_skus_id_list = entities.Where(t=>!delete_id_list.Contains( t.id)).GroupBy(t => t.sku_id).Select(t => new { t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).Select(t=>t.Key).ToList();
-            if (repeat_skus_id_list.Count>0)
+            var repeat_skus_id_list = entities.Where(t => !delete_id_list.Contains(t.id)).GroupBy(t => t.sku_id).Select(t => new { t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).Select(t => t.Key).ToList();
+            if (repeat_skus_id_list.Count > 0)
             {
-                var repeat_skus =  (skus.Where(t=>repeat_skus_id_list.Contains(t.id)).Select(t=>t.sku_code).ToList());
+                var repeat_skus = (skus.Where(t => repeat_skus_id_list.Contains(t.id)).Select(t => t.sku_code).ToList());
                 var msg = "";
-                foreach(var sku in repeat_skus)
+                foreach (var sku in repeat_skus)
                 {
                     msg += string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["sku_code"], sku);
                 }
-                return (false,msg);
+                return (false, msg);
             }
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
@@ -342,7 +343,7 @@ namespace ModernWMS.WMS.Services
             }
             var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
             var query = from d in DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                        group  d  by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name,d.creator }
+                        group d by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name, d.creator }
                         into dg
                         select new PreDispatchlistViewModel
                         {
@@ -562,7 +563,7 @@ namespace ModernWMS.WMS.Services
                                from owner in owner_left.DefaultIfEmpty()
                                join gl in location_DBSet.AsNoTracking() on sg.goods_location_id equals gl.id into gl_left
                                from gl in gl_left.DefaultIfEmpty()
-                               where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id && (dl.dispatch_status == 0 || dl.dispatch_status==1)
+                               where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id && (dl.dispatch_status == 0 || dl.dispatch_status == 1)
                                select new
                                {
                                    stock_id = sg.stock_id == null ? 0 : sg.stock_id,
@@ -818,7 +819,147 @@ namespace ModernWMS.WMS.Services
             }
         }
 
+        /// <summary>
+        ///  cancel order opration 
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> CancelOrderOpration(CancelOrderOprationViewModel viewModel, CurrentUser currentUser)
+        {
+            var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var pick_DBSet = _dBContext.GetDbSet<DispatchpicklistEntity>();
+            var entities = await DBSet.Where(t => t.dispatch_no == viewModel.dispatch_no && t.tenant_id == currentUser.tenant_id && t.dispatch_status == viewModel.dispatch_status).ToListAsync();
+            if (entities.Count == 0)
+            {
+                return (false, _stringLocalizer["status_changed"]);
+            }
+            var time = DateTime.Now;
+            var dispatch_id_list = entities.Select(t => t.id).ToList();
+            var pick_entities = await pick_DBSet.Where(t => dispatch_id_list.Contains(t.dispatchlist_id)).ToListAsync();
+            if (viewModel.dispatch_status == 3)
+            {
+                foreach (var pick in pick_entities)
+                {
+                    pick.picked_qty = 0;
+                    pick.last_update_time = time;
+                }
+                foreach (var entity in entities)
+                {
+                    entity.picked_qty = 0;
+                    entity.last_update_time = time;
+                    entity.dispatch_status = 2;
+                }
+            }
+            else if (viewModel.dispatch_status == 2)
+            {
+                pick_DBSet.RemoveRange(pick_entities);
+                foreach (var entity in entities)
+                {
+                    entity.lock_qty = 0;
+                    entity.last_update_time = time;
+                    entity.dispatch_status = 1;
+                }
+            }
+            var qty = await _dBContext.SaveChangesAsync();
+            var saved = false;
+            int res = 0;
+            while (!saved)
+            {
+                try
+                {
+                    // Attempt to save changes to the database
+                    res = await _dBContext.SaveChangesAsync();
+                    saved = true;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        if (entry.Entity is DispatchlistEntity)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+                            if (UtilConvert.ObjToInt( databaseValues["dispatch_status"]) != viewModel.dispatch_status)
+                                return (false, _stringLocalizer["data_changed"]);
+                            // Refresh original values to bypass next concurrency check
+                            entry.OriginalValues.SetValues(databaseValues);
+                        }
+                        else
+                        {
+                            throw new NotSupportedException(_stringLocalizer["try_agin"]);
+                        }
+                    }
+                }
+            }
+            if (res > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["operation_failed"]);
+            }
+        }
 
+        /// <summary>
+        /// cancel dispatchlist detail opration
+        /// </summary>
+        /// <param name="id">dispatchlist_id</param>
+        /// <returns></returns>
+        public async Task<(bool flag,string msg)> CancelDispatchlistDetailOpration(int id)
+        {
+            var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
+            var entity = await DBSet.Where(t=>t.id==id).FirstOrDefaultAsync();
+            var time = DateTime.Now;
+            if(entity == null)
+            {
+                return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            if(entity.dispatch_status == 4)
+            {
+                if(entity.weighing_no == "")
+                {
+                    entity.dispatch_status = 3;
+                }
+                else 
+                {
+                    entity.dispatch_status = 5;
+                }
+                entity.package_no = "";
+                entity.package_qty = 0;
+                entity.package_time = UtilConvert.MinDate;
+                entity.package_person = "";
+            }
+            else if (entity.dispatch_status == 5)
+            {
+                if(entity.package_no == "")
+                {
+                    entity.dispatch_status = 3;
+                }
+                else
+                {
+                    entity.dispatch_status = 4;
+                }
+                entity.weighing_no = "";
+                entity.weighing_qty = 0;
+                entity.package_person = "";
+            }
+            else
+            {
+                return (false, _stringLocalizer["status_changed"]);
+            }
+            entity.last_update_time = time;
+            var qty = await _dBContext.SaveChangesAsync();
+            if (qty > 0)
+            {
+                return (true, _stringLocalizer["operation_success"]);
+            }
+            else
+            {
+                return (false, _stringLocalizer["operation_failed"]);
+            }
+        }
 
         /// <summary>
         /// confirm dispatchpicklist picked by dispatch_no
@@ -1060,7 +1201,7 @@ namespace ModernWMS.WMS.Services
                 entity.weighing_person = currentUser.user_name;
             }
             var pick_sql = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.id));
-            var pick_datas =await pick_sql.ToListAsync();
+            var pick_datas = await pick_sql.ToListAsync();
             var picks_g = pick_sql.AsNoTracking().GroupBy(e => new { e.goods_location_id, e.sku_id, e.goods_owner_id }).Select(c => new { c.Key.goods_location_id, c.Key.sku_id, c.Key.goods_owner_id, picked_qty = c.Sum(t => t.picked_qty) });
             var picks = await picks_g.ToListAsync();
             var stocks = await (from stock in stock_DBSet
@@ -1076,7 +1217,7 @@ namespace ModernWMS.WMS.Services
                 s.qty -= pick.picked_qty;
                 s.last_update_time = time;
             }
-            foreach(var pick in pick_datas)
+            foreach (var pick in pick_datas)
             {
                 pick.is_update_stock = true;
                 pick.last_update_time = DateTime.Now;
@@ -1191,12 +1332,12 @@ namespace ModernWMS.WMS.Services
             var entities = await DBSet.Where(t => dispatchlist_id_list.Contains(t.id)).ToListAsync();
             foreach (var entity in entities)
             {
-                var vm = viewModels.FirstOrDefault(t => t.id == t.id && t.dispatch_status ==entity.dispatch_status );
-                if(vm == null)
+                var vm = viewModels.FirstOrDefault(t => t.id == t.id && t.dispatch_status == entity.dispatch_status);
+                if (vm == null)
                 {
                     return (false, _stringLocalizer["data_changed"]);
                 }
-                entity.sign_qty = entity.actual_qty-vm.damage_qty;
+                entity.sign_qty = entity.actual_qty - vm.damage_qty;
                 entity.damage_qty = vm.damage_qty;
                 entity.last_update_time = DateTime.Now;
                 entity.dispatch_status = 7;

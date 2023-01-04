@@ -134,6 +134,21 @@ namespace ModernWMS.WMS.IServices
         /// <param name="dispatch_id">dispatch_id</param>
         /// <returns></returns>
         Task<List<DispatchpicklistViewModel>> GetPickListByDispatchID(int dispatch_id);
+
+        /// <summary>
+        ///  cancel order opration 
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">current user</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> CancelOrderOpration(CancelOrderOprationViewModel viewModel, CurrentUser currentUser);
+
+        /// <summary>
+        /// cancel dispatchlist detail opration
+        /// </summary>
+        /// <param name="id">dispatchlist_id</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> CancelDispatchlistDetailOpration(int id);
          #endregion
      }
  }

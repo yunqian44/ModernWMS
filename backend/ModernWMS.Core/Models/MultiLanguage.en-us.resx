@@ -123,6 +123,9 @@
   <data name="customer_name" xml:space="preserve">
     <value>customer's name</value>
   </data>
+  <data name="data_changed" xml:space="preserve">
+    <value>The data has changed,please refresh and retry the operation</value>
+  </data>
   <data name="delete_failed" xml:space="preserve">
     <value>Delete failed</value>
   </data>
@@ -145,16 +148,28 @@
   <data name="not_exists_entity" xml:space="preserve">
     <value>The data does not exist or has been deleted</value>
   </data>
+  <data name="operation_failed" xml:space="preserve">
+    <value>Operation failed</value>
+  </data>
+  <data name="operation_success" xml:space="preserve">
+    <value>Operation succeeded</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>{0} is Required</value>
   </data>
   <data name="save_failed" xml:space="preserve">
-    <value>Save failed</value>
+    <value>Failure</value>
   </data>
   <data name="save_success" xml:space="preserve">
-    <value>Save success</value>
+    <value>Success</value>
+  </data>
+  <data name="status_changed" xml:space="preserve">
+    <value>The status of this data has changed,please refresh and retry the operation</value>
+  </data>
+  <data name="status_not_delete" xml:space="preserve">
+    <value>Current status cannot be deleted</value>
   </data>
   <data name="username" xml:space="preserve">
-    <value>user name</value>
+    <value>user's name</value>
   </data>
 </root>
