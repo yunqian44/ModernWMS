@@ -127,6 +127,13 @@ namespace ModernWMS.WMS.IServices
         /// <param name="viewModels">viewModels</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> SignForArrival(List<DispatchlistSignViewModel> viewModels);
+
+        /// <summary>
+        /// get pick list by dispatch_id
+        /// </summary>
+        /// <param name="dispatch_id">dispatch_id</param>
+        /// <returns></returns>
+        Task<List<DispatchpicklistViewModel>> GetPickListByDispatchID(int dispatch_id);
          #endregion
      }
  }

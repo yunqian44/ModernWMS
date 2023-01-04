@@ -14,12 +14,12 @@
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <!-- <v-text-field
-              v-model="data.searchForm.warehouse"
+              v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse')"
+              :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
             </v-text-field> -->
@@ -36,21 +36,27 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="asn_no" :title="$t('wms.stockAsnInfo.asn_no')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockAsnInfo.spu_code')"></vxe-column>
-      <vxe-column field="spu_name" :title="$t('wms.stockAsnInfo.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')"></vxe-column>
-      <vxe-column field="sku_name" :title="$t('wms.stockAsnInfo.sku_name')"></vxe-column>
-      <vxe-column field="goods_owner_name" :title="$t('wms.stockAsnInfo.goods_owner_name')"></vxe-column>
-      <vxe-column field="supplier_name" :title="$t('wms.stockAsnInfo.supplier_name')"></vxe-column>
-      <vxe-column field="asn_qty" :title="$t('wms.stockAsnInfo.asn_qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.stockAsnInfo.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
-      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
+      <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
+      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="80" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-pencil-outline"
+            :tooltip-text="$t('wms.deliveryManagement.weigh')"
+            @click="method.handleWeigh(row)"
+          ></tooltip-btn>
         </template>
       </vxe-column>
     </vxe-table>
@@ -71,59 +77,61 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { StockAsnVO } from '@/types/WMS/StockAsn'
+import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getStockAsnList, unloadAsn } from '@/api/wms/stockAsn'
+import { getToBeWeighed, handleWeigh } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 
-const xTableStockLocation = ref()
+const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  searchForm: {
-    warehouse: ''
+  dialogForm: {
+    id: 0
   },
+  searchForm: {},
   activeTab: null,
-  tableData: ref<StockAsnVO[]>([]),
+  tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: reactive({
     total: 0,
-    sqlTitle: 'asn_status:1',
     pageIndex: 1,
     pageSize: 10
   })
 })
 
 const method = reactive({
-  editRow(row: StockAsnVO) {
-    hookComponent.$dialog({
-      content: i18n.global.t('system.tips.beforeAsnUnload'),
-      handleConfirm: async () => {
-        if (row.id) {
-          const { data: res } = await unloadAsn(row.id)
-          if (!res.isSuccess) {
-            hookComponent.$message({
-              type: 'error',
-              content: res.errorMessage
-            })
-            return
-          }
-          hookComponent.$message({
-            type: 'success',
-            content: `${ i18n.global.t('system.page.confirm') }${ i18n.global.t('system.tips.success') }`
-          })
-          method.refresh()
-        }
+  handleWeigh: async (row: DeliveryManagementDetailVO) => {
+    const { data: res } = await handleWeigh([
+      {
+        id: row.id,
+        dispatch_no: row.dispatch_no,
+        dispatch_status: row.dispatch_status,
+        weighing_qty: row.picked_qty,
+        weighing_weight: row.weight,
+        picked_qty: row.picked_qty
       }
+    ])
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: res.data
     })
+    method.refresh()
   },
   // Refresh data
   refresh: () => {
-    method.getStockAsnList()
+    method.getToBeWeighed()
   },
-  getStockAsnList: async () => {
-    const { data: res } = await getStockAsnList(data.tablePage)
+  getToBeWeighed: async () => {
+    const { data: res } = await getToBeWeighed(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -138,14 +146,14 @@ const method = reactive({
     data.tablePage.pageIndex = currentPage
     data.tablePage.pageSize = pageSize
 
-    method.getStockAsnList()
+    method.getToBeWeighed()
   }),
   exportTable: () => {
-    const $table = xTableStockLocation.value
+    const $table = xTable.value
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('wms.stockAsn.tabToDoUnload'),
+        filename: i18n.global.t('wms.deliveryManagement.toBeWeighed'),
         columnFilterMethod({ column }: any) {
           return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -166,7 +174,7 @@ const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
 
 defineExpose({
-  getStockAsnList: method.getStockAsnList
+  getToBeWeighed: method.getToBeWeighed
 })
 </script>
 

@@ -138,6 +138,18 @@ namespace ModernWMS.WMS.Controllers
             var datas  = await _dispatchlistService.ConfirmOrderCheck(dispatch_no, CurrentUser);
             return ResultModel<List<DispatchlistConfirmDetailViewModel>>.Success(datas);
         }
+
+        /// <summary>
+        ///  get pick list by dispatch_id
+        /// </summary>
+        /// <param name="dispatch_id">dispatch_id</param>
+        /// <returns></returns>
+        [HttpGet("pick-list")]
+        public async Task<ResultModel<List<DispatchpicklistViewModel>>> GetPickListByDispatchID(int dispatch_id)
+        {
+            var datas = await _dispatchlistService.GetPickListByDispatchID(dispatch_id);
+            return ResultModel<List<DispatchpicklistViewModel>>.Success(datas);
+        }
         /// <summary>
         /// delete a record
         /// </summary>

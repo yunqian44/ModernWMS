@@ -91,6 +91,32 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// sku_code
         /// </summary>
         public string sku_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// goods owner name
+        /// </summary>
+        public string goods_owner_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// warehouse_name
+        /// </summary>
+        public string warehouse_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// warehouse_area_name
+        /// </summary>
+        public string warehouse_area_name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// warehouse_area_property
+        /// </summary>
+        public byte warehouse_area_property { get; set; } = 0;
+
+        /// <summary>
+        /// location_name
+        /// </summary>
+        public string location_name { get; set; } = string.Empty;
+
         #endregion
 
     }

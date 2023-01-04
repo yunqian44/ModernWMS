@@ -25,6 +25,30 @@
             <v-window-item value="tabGoodsToBePicked">
               <tabGoodsToBePicked ref="tabGoodsToBePickedRef" />
             </v-window-item>
+            <v-window-item value="tabPicked">
+              <tabPicked ref="tabPickedRef" />
+            </v-window-item>
+            <v-window-item value="tabToBePackaged">
+              <tabToBePackaged ref="tabToBePackagedRef" />
+            </v-window-item>
+            <v-window-item value="tabPackaged">
+              <tabPackaged ref="tabPackagedRef" />
+            </v-window-item>
+            <v-window-item value="tabToBeWeighed">
+              <tabToBeWeighed ref="tabToBeWeighedRef" />
+            </v-window-item>
+            <v-window-item value="tabWeighed">
+              <tabWeighed ref="tabWeighedRef" />
+            </v-window-item>
+            <v-window-item value="tabToBeDelivered">
+              <tabToBeDelivered ref="tabToBeDeliveredRef" />
+            </v-window-item>
+            <v-window-item value="tabDelivered">
+              <tabDelivered ref="tabDeliveredRef" />
+            </v-window-item>
+            <v-window-item value="tabSignIn">
+              <tabSignIn ref="tabSignInRef" />
+            </v-window-item>
           </v-window>
         </v-card-text>
       </v-card>
@@ -39,11 +63,27 @@ import tabShipment from './tabShipment.vue'
 import tabPreShipment from './tabPreShipment.vue'
 import tabNewShipment from './tabNewShipment.vue'
 import tabGoodsToBePicked from './tabGoodsToBePicked.vue'
+import tabPicked from './tabPicked.vue'
+import tabToBePackaged from './tabToBePackaged.vue'
+import tabPackaged from './tabPackaged.vue'
+import tabToBeWeighed from './tabToBeWeighed.vue'
+import tabWeighed from './tabWeighed.vue'
+import tabToBeDelivered from './tabToBeDelivered.vue'
+import tabDelivered from './tabDelivered.vue'
+import tabSignIn from './tabSignIn.vue'
 
 const tabShipmentRef = ref()
 const tabPreShipmentRef = ref()
 const tabNewShipmentRef = ref()
 const tabGoodsToBePickedRef = ref()
+const tabPickedRef = ref()
+const tabToBePackagedRef = ref()
+const tabPackagedRef = ref()
+const tabToBeWeighedRef = ref()
+const tabWeighedRef = ref()
+const tabToBeDeliveredRef = ref()
+const tabDeliveredRef = ref()
+const tabSignInRef = ref()
 
 const tabsConfig = [
   {
@@ -72,9 +112,19 @@ const tabsConfig = [
     tabName: i18n.global.t('wms.deliveryManagement.picked')
   },
   {
+    value: 'tabToBePackaged',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.toBePackaged')
+  },
+  {
     value: 'tabPackaged',
     icon: 'mdi-warehouse',
     tabName: i18n.global.t('wms.deliveryManagement.packaged')
+  },
+  {
+    value: 'tabToBeWeighed',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.toBeWeighed')
   },
   {
     value: 'tabWeighed',
@@ -82,15 +132,20 @@ const tabsConfig = [
     tabName: i18n.global.t('wms.deliveryManagement.weighed')
   },
   {
-    value: 'tabOutOfWarehouse',
+    value: 'tabToBeDelivered',
+    icon: 'mdi-warehouse',
+    tabName: i18n.global.t('wms.deliveryManagement.toBeDelivered')
+  },
+  {
+    value: 'tabDelivered',
     icon: 'mdi-warehouse',
     tabName: i18n.global.t('wms.deliveryManagement.outOfWarehouse')
   },
   {
-    value: 'tabSignedIn',
+    value: 'tabSignIn',
     icon: 'mdi-warehouse',
     tabName: i18n.global.t('wms.deliveryManagement.signedIn')
-  },
+  }
 ]
 
 const data = reactive({
@@ -127,12 +182,60 @@ const method = reactive({
             tabGoodsToBePickedRef.value.getGoodsToBePicked()
           }
           break
+        case 'tabToBePackaged':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabToBePackagedRef?.value?.getToBePackaged) {
+            tabToBePackagedRef.value.getToBePackaged()
+          }
+          break
+        case 'tabPackaged':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabPackagedRef?.value?.getPackaged) {
+            tabPackagedRef.value.getPackaged()
+          }
+          break
+        case 'tabToBeWeighed':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabToBeWeighedRef?.value?.getToBeWeighed) {
+            tabToBeWeighedRef.value.getToBeWeighed()
+          }
+          break
+        case 'tabWeighed':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabWeighedRef?.value?.getWeighed) {
+            tabWeighedRef.value.getWeighed()
+          }
+          break
+        case 'tabPicked':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabPickedRef?.value?.getPicked) {
+            tabPickedRef.value.getPicked()
+          }
+          break
+        case 'tabToBeDelivered':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabToBeDeliveredRef?.value?.getToBeDelivery) {
+            tabToBeDeliveredRef.value.getToBeDelivery()
+          }
+          break
+        case 'tabDelivered':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabDeliveredRef?.value?.getDelivery) {
+            tabDeliveredRef.value.getDelivery()
+          }
+          break
+        case 'tabSignIn':
+          // Tips：Must be write the nextTick so that can get DOM!!
+          if (tabSignInRef?.value?.getSignIn) {
+            tabSignInRef.value.getSignIn()
+          }
+          break
       }
     })
   }
 })
 
-onMounted(() => { })
+onMounted(() => {})
 </script>
 
 <style scoped lang="less">

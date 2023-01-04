@@ -40,17 +40,33 @@
     <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
-      <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
-      <vxe-column field="dispatch_status" :title="$t('wms.deliveryManagement.dispatch_status')"></vxe-column>
+      <vxe-column field="dispatch_no" width="120" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
+      <vxe-column field="dispatch_status" :title="$t('wms.deliveryManagement.dispatch_status')">
+        <template #default="{ row }">
+          <span>{{ getShipmentState(row.dispatch_status) }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
       <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
       <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
-      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
-      <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+      <!-- <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column> -->
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
         <template #default="{ row }">
           <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-pencil-outline"
+            :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
+            @click="method.confirmOrder(row)"
+          ></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-pencil-outline"
+            :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
+            @click="method.confirmPicking(row)"
+          ></tooltip-btn>
           <tooltip-btn
             :flat="true"
             icon="mdi-delete-outline"
@@ -73,6 +89,13 @@
     </vxe-pager>
     <!-- Add or modify data mode window -->
     <addOrUpdateShipment :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+    <!-- Confirm Order -->
+    <ConfirmOrder
+      :confirm-order-no="data.confirmOrderNo"
+      :show-dialog="data.showConfirmOrder"
+      @close="method.closeConfirmOrder"
+      @save-success="method.confirmSuccess"
+    />
   </div>
 </template>
 
@@ -83,10 +106,12 @@ import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/
 import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getShipment } from '@/api/wms/deliveryManagement'
+import { getShipment, delShipment, confirmPicking } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import addOrUpdateShipment from './add-or-update-shipment.vue'
+import { getShipmentState } from './shipmentFun'
+import ConfirmOrder from './confirm-order.vue'
 
 const xTable = ref()
 
@@ -103,10 +128,39 @@ const data = reactive({
     total: 0,
     pageIndex: 1,
     pageSize: 10
-  })
+  }),
+  showConfirmOrder: false,
+  confirmOrderNo: ''
 })
 
 const method = reactive({
+  // Confirm picking
+  confirmPicking: async (row: DeliveryManagementVO) => {
+    if (row.dispatch_no) {
+      const { data: res } = await confirmPicking(row.dispatch_no)
+      if (!res.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: res.errorMessage
+        })
+        return
+      }
+      hookComponent.$message({
+        type: 'success',
+        content: res.data
+      })
+      method.refresh()
+    }
+  },
+  // Close the order confirmation window
+  closeConfirmOrder: () => {
+    data.showConfirmOrder = false
+  },
+  // After confirming the shipment document
+  confirmSuccess: () => {
+    method.refresh()
+    method.closeConfirmOrder()
+  },
   // after Add or update success.
   saveSuccess: () => {
     method.refresh()
@@ -130,8 +184,33 @@ const method = reactive({
   editRow: (row: DeliveryManagementVO) => {
     console.log(row)
   },
+  confirmOrder: (row: DeliveryManagementVO) => {
+    if (row.dispatch_no) {
+      data.confirmOrderNo = row.dispatch_no
+      data.showConfirmOrder = true
+    }
+  },
   deleteRow: (row: DeliveryManagementVO) => {
-    console.log(row)
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.dispatch_no) {
+          const { data: res } = await delShipment(row.dispatch_no)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
   },
   // Refresh data
   refresh: () => {

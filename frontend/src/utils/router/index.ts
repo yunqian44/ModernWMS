@@ -49,7 +49,7 @@ export function menusToSideBar(): SideBarMenu[] {
         result.push({
           lable: i18n.global.t(`router.sideBar.${ menu.module }`),
           icon: GetModuleAndIcon(menu.module),
-          showDetail: true,
+          showDetail: false,
           children: [
             {
               lable,

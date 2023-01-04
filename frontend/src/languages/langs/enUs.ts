@@ -29,7 +29,10 @@ export default {
       beforeDeleteDetailMessage: 'Are you sure you want to delete this row?',
       detailLengthIsZero: 'Details verification before document submission!',
       detailHasItemRepeat: 'The details contain duplicate items!',
-      noData: 'no data'
+      noData: 'no data',
+      beforeAsnConfirm: 'Confirm Arrival?',
+      beforeAsnUnload: 'Confirm Unload?',
+      beforeAsnSorted: 'Confirm Sorted?'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
@@ -316,7 +319,12 @@ export default {
         create_time: 'Create Time',
         confirmTaking: 'Confirm Taking',
         unfinish: 'Unfinish',
-        finish: 'Finish'
+        finish: 'Finish',
+        confirmAdjust: 'Confirm Adjust',
+        beforeConfirmAdjust: 'Are you sure to adjust this data?',
+        addFromCommodity: 'Choose From Commodity',
+        addFromStock: 'Choose From Inventory',
+        addTips: 'You can choose goods and the location to add a new record when there is no target inventory'
       }
     },
     stockManagement: {
@@ -393,9 +401,16 @@ export default {
       newShipment: 'New Shipment',
       goodsToBePicked: 'Goods To Be Picked',
       picked: 'Picked',
+      toBePackaged: 'To Be Packaged',
+      package: 'Pack',
       packaged: 'Packaged',
+      toBeWeighed: 'To Be Weighed',
+      weigh: 'Weigh',
       weighed: 'Weighed',
+      delivery: 'Delivery',
+      toBeDelivered: 'To Be Delivered',
       outOfWarehouse: 'Out Of Warehouse',
+      signIn: 'Sign In',
       signedIn: 'Signed In',
       dispatch_no: 'Shipment No',
       dispatch_status: 'Shipment Doc Status',
@@ -408,7 +423,14 @@ export default {
       spu_name: 'Commodity Name',
       sku_code: 'Specification Code',
       creator: 'Created By',
-      create_time: 'Creation Time'
+      create_time: 'Creation Time',
+      confirmOrder: 'Confirm Shipment Doc',
+      orderDetail: 'Shipment Order Product Details',
+      quantityOverflow: 'The sum of shipment quantity cannot exceed the shipment document quantity',
+      quantityIsZero: 'Please ensure that at least one of the selected goods has an issue quantity greater than 0!',
+      NoItemSelected: 'Please select at least one commodity to delivered!',
+      confirmSuccess: 'Confirm the shipment order successfully!',
+      confirmPicking: 'Confirm picking'
     }
   }
 }
