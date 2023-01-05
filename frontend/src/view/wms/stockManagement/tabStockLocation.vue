@@ -38,9 +38,14 @@
   >
     <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('wms.stockLocation.warehouse_name')"></vxe-column>
       <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
-      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
+      <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')">
+        <template #default="{ row }">
+          <div :class="'text-decoration-none'" @click="method.showSkuInfo(row)"> {{ row.sku_code }}</div>
+        </template>
+      </vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>
       <vxe-column field="sku_code" :title="$t('wms.stockLocation.sku_code')"></vxe-column>
       <vxe-column field="sku_name" :title="$t('wms.stockLocation.sku_name')"></vxe-column>
@@ -60,6 +65,7 @@
     >
     </custom-pager>
   </div>
+  <skuInfo :show-dialog="data.showDialogShowInfo" :sku_id="data.sku_id" @close="method.closeDialogShowInfo" />
 </template>
 
 <script lang="ts" setup>
@@ -76,11 +82,14 @@ import { getStockLocationList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
+import skuInfo from './sku-info.vue'
 
 const xTableStockLocation = ref()
 
 const data = reactive({
+  sku_id: 0,
   showDialog: false,
+  showDialogShowInfo: false,
   searchForm: {
     location_name: ''
   },
@@ -96,6 +105,13 @@ const data = reactive({
 })
 
 const method = reactive({
+  closeDialogShowInfo: () => {
+    data.showDialogShowInfo = false
+  },
+  showSkuInfo(row: StockLocationVO) {
+    data.sku_id = row.sku_id
+    data.showDialogShowInfo = true
+  },
   // Refresh data
   refresh: () => {
     method.getStockLocationList()
