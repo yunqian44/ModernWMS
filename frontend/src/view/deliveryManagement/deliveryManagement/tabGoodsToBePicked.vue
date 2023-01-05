@@ -36,7 +36,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTable" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
@@ -48,12 +48,7 @@
       <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
-      <vxe-column
-        field="create_time"
-        width="170px"
-        :title="$t('wms.deliveryManagement.create_time')"
-        :formatter="['formatDate']"
-      ></vxe-column>
+      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
     </vxe-table>
     <vxe-pager
       :current-page="data.tablePage.pageIndex"
@@ -72,7 +67,7 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO, DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { getGoodsToBePicked } from '@/api/wms/deliveryManagement'
@@ -86,8 +81,7 @@ const data = reactive({
   dialogForm: {
     id: 0
   },
-  searchForm: {
-  },
+  searchForm: {},
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: reactive({

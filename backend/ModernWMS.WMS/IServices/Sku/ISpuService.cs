@@ -30,6 +30,12 @@ using ModernWMS.WMS.Entities.ViewModels;
         /// <returns></returns>
         Task<SpuBothViewModel> GetAsync(int id);
         /// <summary>
+        /// get sku info by sku_id
+        /// </summary>
+        /// <param name="sku_id">sku_id</param>
+        /// <returns></returns>
+        Task<SkuDetailViewModel> GetSkuAsync(int sku_id);
+        /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">viewmodel</param>

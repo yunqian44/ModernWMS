@@ -36,7 +36,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTable" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
@@ -81,11 +81,7 @@ const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
-    id: 0
-  },
-  searchForm: {
-  },
+  searchForm: {},
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
   tablePage: reactive({

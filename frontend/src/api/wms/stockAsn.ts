@@ -32,14 +32,26 @@ export const confirmAsn = (id: number) => http({
     url: `/asn/confirm/${ id }`,
     method: 'put'
   })
+  export const confirmAsnCancel = (id: number) => http({
+    url: `/asn/confirm-cancel/${ id }`,
+    method: 'put'
+  })
 
 export const unloadAsn = (id: number) => http({
     url: `/asn/unload/${ id }`,
     method: 'put'
   })
+  export const unloadAsnCancel = (id: number) => http({
+    url: `/asn/unload-cancel/${ id }`,
+    method: 'put'
+  })
 
 export const sortedAsn = (id: number) => http({
     url: `/asn/sorted/${ id }`,
+    method: 'put'
+  })
+  export const sortedAsnCancel = (id: number) => http({
+    url: `/asn/sorted-cancel/${ id }`,
     method: 'put'
   })
 

@@ -23,7 +23,7 @@ export default {
       view: 'View',
       import: 'Import',
       chooseFile: 'Choose File',
-      exportTemplate: 'Export Template',
+      exportTemplate: 'Export Template'
     },
     tips: {
       success: ' success!',
@@ -408,6 +408,33 @@ export default {
       goods_owner_name: 'Goods Owner Name',
       is_valid: 'Valid'
     },
+    skuInfo: {
+      spu_id: 'Spu Id',
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      category_id: 'Commodity Category ID',
+      category_name: 'Commodity Category',
+      spu_description: 'Commodity Description',
+      bar_code: 'Specification Code',
+      supplier_id: 'Supplier Id',
+      supplier_name: 'Supplier Name',
+      brand: 'Brand',
+      origin: 'origin',
+      length_unit: 'Length Unit',
+      volume_unit: 'Volume Unit',
+      weight_unit: 'Weight Unit',
+      sku_id: 'Sku Id',
+      sku_code: 'Specification code',
+      sku_name: 'Form Name',
+      weight: 'Commodity Weight',
+      lenght: 'Commodity Length',
+      width: 'Commodity Width',
+      height: 'Commodity Height',
+      volume: 'Commodity Volume',
+      unit: 'Commodity Unit',
+      cost: 'Commodity Cost',
+      price: 'Commodity Price'
+    },
     deliveryManagement: {
       shipment: 'Invoice',
       preShipment: 'Pre Shipment',
@@ -443,7 +470,21 @@ export default {
       quantityIsZero: 'Please ensure that at least one of the selected goods has an issue quantity greater than 0!',
       NoItemSelected: 'Please select at least one commodity to delivered!',
       confirmSuccess: 'Confirm the shipment order successfully!',
-      confirmPicking: 'Confirm picking'
+      confirmPicking: 'Confirm Picking',
+      confirmDelivery: 'Confirm Delivery',
+      confirmSignIn: 'Confirm Signing',
+      detailWeight: 'Weight',
+      unpackage_qty: 'Quantity to be packaged',
+      unweighing_qty: 'Quantity to be weighed',
+      validQtyMsgPackage: 'Please enter a valid value, which cannot exceed the total quantity',
+      validQtyMsgSignIn: 'Please enter a valid value',
+      signInQty: 'Actual signed in quantity',
+      incorrectStatusMsg: 'Operation failed, the status should be',
+      backToThePreviousStep: 'Recall to previous process',
+      confirmBack: 'Confirm withdrawal',
+      or: ' or ',
+      irreversible: 'This operation is irreversible',
+      detailQuantityIsZero: 'Shipment quantity cannot be 0'
     }
   }
 }

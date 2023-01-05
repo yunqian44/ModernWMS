@@ -5,7 +5,7 @@
         <v-toolbar color="white" :title="`${$t('wms.deliveryManagement.confirmOrder')}`"></v-toolbar>
         <v-card-text>
           <v-row>
-            <v-col :cols="4">
+            <v-col :cols="6">
               <vxe-table
                 ref="xTable"
                 keep-source
@@ -13,9 +13,7 @@
                 :data="data.treeData"
                 :height="'500px'"
                 align="center"
-                :cell-style="{
-                  cursor: 'pointer'
-                }"
+                :cell-style="method.cellStyle"
                 @cell-click="method.cellClick"
               >
                 <vxe-column type="seq" width="40"></vxe-column>
@@ -26,6 +24,7 @@
                     </div>
                   </template>
                 </vxe-column>
+                <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"> </vxe-column>
                 <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"> </vxe-column>
                 <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')">
                   <template #default="{ row }">
@@ -44,7 +43,7 @@
                 /> -->
               <!-- </v-card> -->
             </v-col>
-            <v-col :cols="8">
+            <v-col :cols="6">
               <vxe-table
                 ref="detailXTable"
                 keep-source
@@ -134,6 +133,12 @@ const method = reactive({
           msgList.push(`${ item.sku_code } ${ i18n.global.t('wms.deliveryManagement.quantityOverflow') } ${ item.qty }`)
           // flag = false
         }
+        if (count === 0) {
+          if (!data.validList.includes(item.sku_code)) {
+            data.validList.push(item.sku_code)
+          }
+          msgList.push(`${ item.sku_code } ${ i18n.global.t('wms.deliveryManagement.detailQuantityIsZero') }!`)
+        }
       }
     }
     // return flag
@@ -178,6 +183,9 @@ const method = reactive({
     }
     data.treeData = res.data
     data.tableData = []
+    if (data.treeData.length > 0) {
+      method.cellClick({ row: data.treeData[0] })
+    }
   },
   cellClick: ({ row }: { row: ConfirmOrderVO }) => {
     data.navListOptions.indexValue = row.sku_code
@@ -187,6 +195,13 @@ const method = reactive({
   navListClick: (item: ConfirmOrderVO) => {
     data.navListOptions.indexValue = item.sku_code
     data.tableData = item.pick_list
+  },
+  cellStyle: ({ row }: { row: ConfirmOrderVO }) => {
+    const style: any = { cursor: 'pointer' }
+    if (row.sku_code === data.navListOptions.indexValue) {
+      style.backgroundColor = '#e6dafd'
+    }
+    return style
   }
 })
 
@@ -198,8 +213,6 @@ watch(
     }
   }
 )
-
-const tableHeight = computed(() => '500px')
 </script>
 
 <style scoped lang="less">

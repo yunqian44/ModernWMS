@@ -14,9 +14,10 @@ namespace ModernWMS.WMS.Entities.ViewModels
     public class LocationStockManagementViewModel
     {
         /// <summary>
-        /// warehouse
+        /// warehouse_name
         /// </summary>
-        public string warehouse { get; set; } = string.Empty;
+        public string warehouse_name { get; set; } = string.Empty;
+
         /// <summary>
         /// location_name
         /// </summary>

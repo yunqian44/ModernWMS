@@ -103,26 +103,31 @@ const data = reactive({
 
 const method = reactive({
   handleDeliver: async (row: DeliveryManagementDetailVO) => {
-    const { data: res } = await handleDelivery([
-      {
-        id: row.id,
-        dispatch_no: row.dispatch_no,
-        dispatch_status: row.dispatch_status,
-        picked_qty: row.picked_qty
+    hookComponent.$dialog({
+      content: `${ i18n.global.t('wms.deliveryManagement.irreversible') }, ${ i18n.global.t('wms.deliveryManagement.confirmDelivery') }?`,
+      handleConfirm: async () => {
+        const { data: res } = await handleDelivery([
+          {
+            id: row.id,
+            dispatch_no: row.dispatch_no,
+            dispatch_status: row.dispatch_status,
+            picked_qty: row.picked_qty
+          }
+        ])
+        if (!res.isSuccess) {
+          hookComponent.$message({
+            type: 'error',
+            content: res.errorMessage
+          })
+          return
+        }
+        hookComponent.$message({
+          type: 'success',
+          content: res.data
+        })
+        method.refresh()
       }
-    ])
-    if (!res.isSuccess) {
-      hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
-      })
-      return
-    }
-    hookComponent.$message({
-      type: 'success',
-      content: res.data
     })
-    method.refresh()
   },
   // Refresh data
   refresh: () => {

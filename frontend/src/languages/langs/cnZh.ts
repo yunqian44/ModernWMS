@@ -58,7 +58,7 @@ export default {
       pageSizes: '条/页',
       goTo: '前往',
       total: '共',
-      record: '条记录',
+      record: '条记录'
     }
   },
   router: {
@@ -335,7 +335,7 @@ export default {
         handle_time: '操作时间',
         creator: '创建人',
         create_time: '创建时间',
-        unfinish: '待作业', 
+        unfinish: '待作业',
         finish: '已完成',
         confirmAdjust: '确认调整',
         beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
@@ -412,6 +412,33 @@ export default {
       goods_owner_name: '货主名称',
       is_valid: '是否有效'
     },
+    skuInfo: {
+      spu_id: '商品spu标识',
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      category_id: '商品类别标识',
+      category_name: '商品类别',
+      spu_description: '商品描述',
+      bar_code: '商品条码',
+      supplier_id: '供应商标识',
+      supplier_name: '供应商名称',
+      brand: '品牌',
+      origin: '产地',
+      length_unit: '长度单位',
+      volume_unit: '体积单位',
+      weight_unit: '重量单位',
+      sku_id: '规格标识',
+      sku_code: '规格编码',
+      sku_name: '规格名称',
+      weight: '总重量',
+      lenght: '商品长度',
+      width: '商品宽度',
+      height: '商品高度',
+      volume: '商品体积',
+      unit: '商品单位',
+      cost: '商品成本',
+      price: '商品价格'
+    },
     deliveryManagement: {
       shipment: '发货单',
       preShipment: '预发货',
@@ -447,7 +474,21 @@ export default {
       quantityIsZero: '请保证选择的商品至少有一项出库数量大于0!',
       NoItemSelected: '请至少选中一项商品进行出库!',
       confirmSuccess: '确认发货单成功!',
-      confirmPicking: '确认拣货'
+      confirmPicking: '确认拣货',
+      confirmDelivery: '确认出库',
+      confirmSignIn: '确认签收',
+      detailWeight: '重量',
+      unpackage_qty: '待打包数量',
+      unweighing_qty: '待称重数量',
+      validQtyMsgPackage: '请输入有效数值, 且不能超过总数量',
+      validQtyMsgSignIn: '请输入有效数值',
+      signInQty: '实际签收数量',
+      incorrectStatusMsg: '操作失败, 状态应该为',
+      backToThePreviousStep: '撤回到上一个流程',
+      confirmBack: '确认撤回',
+      or: '或',
+      irreversible: '此操作不可逆',
+      detailQuantityIsZero: '发货数量不能为0'
     }
   }
 }
