@@ -100,7 +100,6 @@ const data = reactive({
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.departure_city') }!`
     ],
     arrival_city: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.arrival_city') }!`],
-    // TODO 数字校验
     price_per_weight: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.price_per_weight') }!`
     ],

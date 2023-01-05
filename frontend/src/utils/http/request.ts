@@ -1,6 +1,7 @@
 import axios from 'axios' // 引入axios
 import { store } from '@/store'
 import { emitter } from '@/utils/bus.js'
+import { router } from '@/router'
 
 // Basis of axios
 const SERVER_URL = `${ import.meta.env.VITE_BASE_PATH }:${ import.meta.env.VITE_SERVER_PORT }`
@@ -46,7 +47,10 @@ function isTokenExpired() {
 }
 
 function rediretToLogin() {
-  // TODO 重定向回登录页
+  store.commit('system/clearOpenedMenu')
+  store.commit('system/setCurrentRouterPath', '')
+
+  router.push('/login')
 }
 
 const showLoading = () => {
@@ -156,7 +160,6 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => {
     closeLoading()
-    // TODO 根据实际业务修改
     if (response.data.code === 0 || response.headers.success === 'true') {
       if (response.headers.msg) {
         response.data.msg = decodeURI(response.headers.msg)

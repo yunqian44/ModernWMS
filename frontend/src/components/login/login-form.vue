@@ -61,9 +61,8 @@ const method = reactive({
     })
 
     if (loginRes.isSuccess) {
-      // TODO 把用户权限信息加进来
-      // let expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
-      const expiredTime = new Date().getTime() + 1 * 60 * 1000
+      const expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
+      // const expiredTime = new Date().getTime() + 1 * 60 * 1000
 
       store.commit('user/setToken', loginRes.data.access_token)
       store.commit('user/setRefreshToken', loginRes.data.refresh_token)
