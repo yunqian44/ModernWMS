@@ -28,15 +28,17 @@
               clearable
               @update:model-value="method.changeWarehouseArea"
             ></v-select>
-            <!-- TODO 将数字型转换成文字显示，并且选完库区后联动显示 -->
-            <v-text-field
+            <v-select
               v-model="data.form.warehouse_area_property"
-              :label="$t('base.warehouseSetting.area_property')"
+              :items="data.combobox.area_property"
+              item-title="label"
+              item-value="value"
               :rules="data.rules.warehouse_area_property"
+              :label="$t('base.warehouseSetting.area_property')"
               variant="outlined"
-              clearable
               disabled
-            ></v-text-field>
+              clearable
+            ></v-select>
             <v-text-field
               v-model="data.form.location_name"
               :label="$t('base.warehouseSetting.location_name')"
@@ -128,7 +130,8 @@
 import { reactive, computed, ref, watch } from 'vue'
 import { hookComponent } from '@/components/system/index'
 import { addGoodsLocation, updateGoodsLocation, getWarehouseSelect, getWarehouseAreaSelect } from '@/api/base/warehouseSetting'
-import { GoodsLocationVO } from '@/types/Base/Warehouse'
+import { GoodsLocationVO, AreaProperty } from '@/types/Base/Warehouse'
+import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 import i18n from '@/languages/i18n'
 
 const formRef = ref()
@@ -199,9 +202,39 @@ const data = reactive({
       value: number
       meta: any
     }[]
+    area_property: {
+      label: string
+      value: AreaProperty
+    }[]
   }>({
     warehouse_name: [],
-    warehouse_area_name: []
+    warehouse_area_name: [],
+    area_property: [
+      {
+        label: i18n.global.t('base.warehouseSetting.picking_area'),
+        value: AreaProperty.picking_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.stocking_area'),
+        value: AreaProperty.stocking_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.receiving_area'),
+        value: AreaProperty.receiving_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.return_area'),
+        value: AreaProperty.return_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.defective_area'),
+        value: AreaProperty.defective_area
+      },
+      {
+        label: i18n.global.t('base.warehouseSetting.inventory_area'),
+        value: AreaProperty.inventory_area
+      }
+    ]
   })
 })
 
@@ -213,7 +246,7 @@ const method = reactive({
       method.initWarehouseArea()
       return
     }
-    
+
     // Find the ID corresponding value
     const warehouse = data.combobox.warehouse_name.find((item) => item.value === warehouseID)
     if (warehouse) {

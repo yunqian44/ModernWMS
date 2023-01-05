@@ -115,7 +115,7 @@ namespace ModernWMS.WMS.Services
                             unpicked_qty = d.qty - d.picked_qty,
                             length_unit = spu.length_unit,
                             volume_unit = spu.volume_unit,
-                            weight_unit =spu.weight_unit
+                            weight_unit = spu.weight_unit
                         };
             query = query.Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                  .Where(queries.AsExpression<DispatchlistViewModel>());
@@ -126,7 +126,7 @@ namespace ModernWMS.WMS.Services
             }
             else if (pageSearch.sqlTitle.Equals("to_package"))
             {
-                query = query.Where(t => (t.picked_qty == t.qty && (t.dispatch_status.Equals(3)) || (t.package_qty <t.picked_qty && t.dispatch_status.Equals(5))));
+                query = query.Where(t => (t.picked_qty == t.qty && (t.dispatch_status.Equals(3)) || (t.package_qty < t.picked_qty && t.dispatch_status.Equals(5))));
             }
             else if (pageSearch.sqlTitle.Equals("to_weight"))
             {
@@ -315,7 +315,7 @@ namespace ModernWMS.WMS.Services
                                    sku_id = dpl.sku_id,
                                    pick_qty = dpl.pick_qty,
                                    picked_qty = dpl.picked_qty,
-                                   goods_owner_name = owner.goods_owner_name == null ? "":owner.goods_owner_name,
+                                   goods_owner_name = owner.goods_owner_name == null ? "" : owner.goods_owner_name,
                                    sku_code = sku.sku_code,
                                    spu_code = spu.spu_code,
                                    spu_description = spu.spu_description,
@@ -347,7 +347,9 @@ namespace ModernWMS.WMS.Services
             }
             var DbSet = _dBContext.GetDbSet<DispatchlistEntity>();
             var query = from d in DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id))
-                        group d by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name, d.creator }
+                        join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on d.sku_id equals sku.id
+                        join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
+                        group new { d, spu } by new { d.dispatch_no, d.dispatch_status, d.customer_id, d.customer_name, d.creator }
                         into dg
                         select new PreDispatchlistViewModel
                         {
@@ -355,9 +357,9 @@ namespace ModernWMS.WMS.Services
                             dispatch_status = dg.Key.dispatch_status,
                             customer_id = dg.Key.customer_id,
                             customer_name = dg.Key.customer_name,
-                            qty = dg.Sum(t => t.qty),
-                            volume = dg.Sum(t => t.volume),
-                            weight = dg.Sum(t => t.weight),
+                            qty = dg.Sum(t => t.d.qty),
+                            volume = dg.Sum(t =>t.spu.volume_unit==1?  t.d.volume:(t.spu.volume_unit==0?t.d.volume*1000:t.d.volume/1000)),
+                            weight = dg.Sum(t =>t.spu.weight_unit==0?t.d.weight/1000000:(t.spu.weight_unit==1? t.d.weight/1000:t.d.weight)),
                             creator = dg.Key.creator,
                         };
             query = query.Where(queries.AsExpression<PreDispatchlistViewModel>());
@@ -627,7 +629,7 @@ namespace ModernWMS.WMS.Services
                        }).ToList();
             foreach (var r in res)
             {
-                var picklist = (from d in datas.Where(t => t.sku_id == r.sku_id&&t.stock_id>0).OrderBy(o => o.qty_available)
+                var picklist = (from d in datas.Where(t => t.sku_id == r.sku_id && t.stock_id > 0).OrderBy(o => o.qty_available)
                                 select new DispatchlistConfirmPickDetailViewModel
                                 {
                                     stock_id = d.stock_id,
@@ -883,7 +885,7 @@ namespace ModernWMS.WMS.Services
                         {
                             var proposedValues = entry.CurrentValues;
                             var databaseValues = entry.GetDatabaseValues();
-                            if (UtilConvert.ObjToInt( databaseValues["dispatch_status"]) != viewModel.dispatch_status)
+                            if (UtilConvert.ObjToInt(databaseValues["dispatch_status"]) != viewModel.dispatch_status)
                                 return (false, _stringLocalizer["data_changed"]);
                             // Refresh original values to bypass next concurrency check
                             entry.OriginalValues.SetValues(databaseValues);
@@ -910,22 +912,22 @@ namespace ModernWMS.WMS.Services
         /// </summary>
         /// <param name="id">dispatchlist_id</param>
         /// <returns></returns>
-        public async Task<(bool flag,string msg)> CancelDispatchlistDetailOpration(int id)
+        public async Task<(bool flag, string msg)> CancelDispatchlistDetailOpration(int id)
         {
             var DBSet = _dBContext.GetDbSet<DispatchlistEntity>();
-            var entity = await DBSet.Where(t=>t.id==id).FirstOrDefaultAsync();
+            var entity = await DBSet.Where(t => t.id == id).FirstOrDefaultAsync();
             var time = DateTime.Now;
-            if(entity == null)
+            if (entity == null)
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
-            if(entity.dispatch_status == 4)
+            if (entity.dispatch_status == 4)
             {
-                if(entity.weighing_no == "")
+                if (entity.weighing_no == "")
                 {
                     entity.dispatch_status = 3;
                 }
-                else 
+                else
                 {
                     entity.dispatch_status = 5;
                 }
@@ -936,7 +938,7 @@ namespace ModernWMS.WMS.Services
             }
             else if (entity.dispatch_status == 5)
             {
-                if(entity.package_no == "")
+                if (entity.package_no == "")
                 {
                     entity.dispatch_status = 3;
                 }
@@ -1029,10 +1031,7 @@ namespace ModernWMS.WMS.Services
                 entity.package_qty += vm.package_qty;
                 entity.package_time = time;
                 entity.package_no = code;
-                if (entity.package_qty == entity.picked_qty)
-                {
-                    entity.dispatch_status = 4;
-                }
+                entity.dispatch_status = 4;
             }
             var saved = false;
             int res = 0;
@@ -1120,10 +1119,7 @@ namespace ModernWMS.WMS.Services
                 entity.weighing_qty += vm.weighing_qty;
                 entity.weighing_weight += vm.weighing_weight;
                 entity.weighing_no = code;
-                if (entity.picked_qty == entity.weighing_qty)
-                {
-                    entity.dispatch_status = 5;
-                }
+                entity.dispatch_status = 5;
             }
             var saved = false;
             int res = 0;

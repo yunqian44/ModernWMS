@@ -5,24 +5,47 @@
       <v-col cols="3" class="col">
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
+        <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('wms.deliveryManagement.setFreight')" @click="method.setFreight"> </tooltip-btn>
       </v-col>
 
       <!-- Search Input -->
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
-          <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.dispatch_no"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.customer_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.customer_name')"
+              variant="solo"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.spu_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.spu_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -38,29 +61,48 @@
   >
     <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_description" :title="$t('wms.deliveryManagement.spu_description')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
       <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="bar_code" :title="$t('wms.deliveryManagement.bar_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.order_qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.detailWeight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.detailVolume')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('volume', row.volume_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="package_no" :title="$t('wms.deliveryManagement.package_no')"></vxe-column>
+      <vxe-column field="weighing_weight" :title="$t('wms.deliveryManagement.weighing_weight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weighing_weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="weighing_no" :title="$t('wms.deliveryManagement.weighing_no')"></vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="80" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.signIn')"
-            @click="method.handleSignIn(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.signIn')"
+              @click="method.handleSignIn(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -69,8 +111,14 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
-    <ToBeSignInConfirm :show-dialog="data.showDialog" :dialog-default-qty="data.dialogDefaultQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    </custom-pager>
+    <ToBeSignInConfirm
+      :show-dialog="data.showDialog"
+      :dialog-default-qty="data.dialogDefaultQty"
+      @close="method.dialogClose"
+      @submit="method.dialogSubmit"
+    />
+    <ToBeFreightfee :show-dialog="data.showSetFreight" @close="method.freightfeeClose" @submit="method.freightfeeSubmit" />
   </div>
 </template>
 
@@ -78,31 +126,83 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO, SetCarrierVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getDelivery, handleSignIn } from '@/api/wms/deliveryManagement'
+import { getDelivery, handleSignIn, setCarrier } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import ToBeSignInConfirm from './to-be-sign-in-confirm.vue'
+import { GetUnit } from '@/constant/commodityManagement'
+import ToBeFreightfee from './to-be-freightfee.vue'
+import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { TablePage } from '@/types/System/Form'
 
 const xTable = ref()
 
 const data = reactive({
+  showSetFreight: false,
   showDialog: false,
   dialogDefaultQty: 0,
   packageRow: ref<DeliveryManagementDetailVO>(),
-  searchForm: {},
+  searchForm: {
+    dispatch_no: '',
+    customer_name: '',
+    spu_name: ''
+  },
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
-  tablePage: reactive({
+  tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    searchObjects: []
   })
 })
 
 const method = reactive({
+  setFreight: () => {
+    const $table = xTable.value
+    if ($table.getCheckboxRecords().length > 0) {
+      data.showSetFreight = true
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: `${i18n.global.t('base.userManagement.checkboxIsNull')}`
+      })
+    }
+  },
+  freightfeeClose: () => {
+    data.showSetFreight = false
+  },
+  freightfeeSubmit: async (form: { carrier: string; freightfee_id: number }) => {
+    const reqList: SetCarrierVO[] = []
+    const $table = xTable.value
+    for (let item of $table.getCheckboxRecords()) {
+      reqList.push({
+        id: item.id,
+        dispatch_no: item.dispatch_no,
+        dispatch_status: item.dispatch_status,
+        freightfee_id: form.freightfee_id,
+        carrier: form.carrier
+      })
+    }
+    const { data: res } = await setCarrier(reqList)
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: res.data
+    })
+    method.freightfeeClose()
+    method.refresh()
+  },
   dialogClose: () => {
     data.showDialog = false
   },
@@ -172,12 +272,13 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getDelivery()
   }
 })
 

@@ -15,44 +15,44 @@
 
               <!-- Search Input -->
               <v-col cols="12" sm="9">
-                <!-- <v-row no-gutters @keyup.enter="method.sureSearch">
-                  <v-col cols="12" sm="4">
+                <v-row no-gutters @keyup.enter="method.sureSearch">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName"
+                      v-model="data.searchForm.spu_code"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.commodityManagement.spu_code')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName1"
+                      v-model="data.searchForm.spu_name"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.commodityManagement.spu_name')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName2"
+                      v-model="data.searchForm.category_name"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.commodityManagement.category_name')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                </v-row> -->
+                </v-row>
               </v-col>
             </v-row>
           </div>
@@ -64,9 +64,18 @@
               height: cardHeight
             }"
           >
-            <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center" :tree-config="data.tableTreeConfig">
+            <vxe-table
+              ref="xTable"
+              :data="data.tableData"
+              :column-config="{
+                minWidth: '100px'
+              }"
+              :height="tableHeight"
+              align="center"
+              :tree-config="data.tableTreeConfig"
+            >
               <vxe-column type="seq" width="60"></vxe-column>
-              <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')" tree-node>
+              <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')" tree-node>
                 <template #default="{ row }">
                   <span v-if="row.parent_id > 0">{{ row.sku_code }}</span>
                   <span v-else>{{ row.spu_code }}</span>
@@ -91,27 +100,27 @@
 
               <vxe-column field="weight" :title="$t('base.commodityManagement.weight')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.weight} ${method.GetUnit('weight', row.weight_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="lenght" :title="$t('base.commodityManagement.lenght')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.lenght} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.lenght} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="width" :title="$t('base.commodityManagement.width')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.width} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.width} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="height" :title="$t('base.commodityManagement.height')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.height} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.height} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="volume" :title="$t('base.commodityManagement.volume')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.volume} ${method.GetUnit('volume', row.volume_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.volume} ${GetUnit('volume', row.volume_unit)}` }}</span>
                 </template>
               </vxe-column>
 
@@ -150,7 +159,7 @@
                 </template>
               </vxe-column>
             </vxe-table>
-            <vxe-pager
+            <custom-pager
               :current-page="data.tablePage.pageIndex"
               :page-size="data.tablePage.pageSize"
               perfect
@@ -159,7 +168,7 @@
               :layouts="PAGE_LAYOUT"
               @page-change="method.handlePageChange"
             >
-            </vxe-pager>
+            </custom-pager>
           </div>
         </v-card-text>
       </v-card>
@@ -180,15 +189,18 @@ import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
+import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
-  // searchForm: {
-  //   userName: '',
-  //   userName1: '',
-  //   userName2: ''
-  // },
+  searchForm: {
+    spu_code: '',
+    spu_name: '',
+    category_name: ''
+  },
   tableData: [],
   tablePage: {
     total: 0,
@@ -222,19 +234,9 @@ const data: DataProps = reactive({
 })
 
 const method = reactive({
-  // 获取单位
-  GetUnit(type: 'weight' | 'length' | 'volume', val: number) {
-    switch (type) {
-      case 'length':
-        return ['mm', 'cm', 'dm', 'm'][val]
-      case 'volume':
-        return ['cm³', 'dm³', 'm³'][val]
-      case 'weight':
-        return ['mg', 'g', 'kg'][val]
-    }
-  },
   sureSearch: () => {
-    // console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getCompanyList()
   },
   // Find Data by Pagination
   getCompanyList: async () => {
@@ -309,7 +311,7 @@ const method = reactive({
           }
           hookComponent.$message({
             type: 'success',
-            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+            content: `${i18n.global.t('system.page.delete')}${i18n.global.t('system.tips.success')}`
           })
           method.refresh()
         }
@@ -330,7 +332,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },

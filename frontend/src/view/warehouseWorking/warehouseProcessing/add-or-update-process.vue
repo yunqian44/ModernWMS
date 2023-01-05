@@ -1,8 +1,8 @@
 <template>
-  <v-dialog v-model="isShow" width="70%" transition="dialog-top-transition" :persistent="true">
+  <v-dialog v-model="isShow" width="80%" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.warehouseProcessing')}（${jobTypeComp}）`"></v-toolbar>
+        <v-toolbar color="white" :title="jobTypeComp"></v-toolbar>
         <v-card-text>
           <v-row>
             <!-- Source Table -->
@@ -30,7 +30,7 @@
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
-                  <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
+                  <vxe-column field="operate" width="50" :title="$t('system.page.operate')" :resizable="false">
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -83,7 +83,7 @@
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
-                  <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
+                  <vxe-column field="operate" width="50" :title="$t('system.page.operate')" :resizable="false">
                     <template #default="{ row }">
                       <tooltip-btn
                         :flat="true"
@@ -106,7 +106,7 @@
                       <vxe-input v-model="row.qty" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="unit" :title="$t('wms.warehouseWorking.warehouseProcessing.unit')"></vxe-column>
+                  <vxe-column field="unit" width="60" :title="$t('wms.warehouseWorking.warehouseProcessing.unit')"></vxe-column>
                   <vxe-column field="location_name" :title="$t('wms.warehouseWorking.warehouseProcessing.target_location')" :edit-render="{}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.location_name" readonly type="search" @search-click="method.openLocationSelect(row)"></vxe-input>

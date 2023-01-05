@@ -10,19 +10,41 @@
       <!-- Search Input -->
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
-          <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.dispatch_no"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.customer_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.customer_name')"
+              variant="solo"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.spu_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.spu_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -41,16 +63,28 @@
       <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_description" :title="$t('wms.deliveryManagement.spu_description')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
       <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="bar_code" :title="$t('wms.deliveryManagement.bar_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.order_qty')"></vxe-column>
+      <vxe-column field="unpicked_qty" :title="$t('wms.deliveryManagement.unpicked_qty')"></vxe-column>
+      <vxe-column field="picked_qty" :title="$t('wms.deliveryManagement.picked_qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.detailWeight')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('weight', row.volume_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.detailVolume')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('volume', row.volume_unit)}` }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -59,7 +93,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
 </template>
 
@@ -73,6 +107,10 @@ import { hookComponent } from '@/components/system'
 import { getPicked } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { TablePage } from '@/types/System/Form'
 
 const xTable = ref()
 
@@ -81,13 +119,18 @@ const data = reactive({
   dialogForm: {
     id: 0
   },
-  searchForm: {},
+  searchForm: {
+    dispatch_no: '',
+    customer_name: '',
+    spu_name: ''
+  },
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
-  tablePage: reactive({
+  tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    searchObjects: []
   })
 })
 
@@ -127,12 +170,13 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getPicked()
   }
 })
 

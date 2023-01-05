@@ -5,7 +5,7 @@
         <v-toolbar color="white" :title="`${$t('wms.deliveryManagement.confirmOrder')}`"></v-toolbar>
         <v-card-text>
           <v-row>
-            <v-col :cols="6">
+            <v-col :cols="5">
               <vxe-table
                 ref="xTable"
                 keep-source
@@ -43,7 +43,7 @@
                 /> -->
               <!-- </v-card> -->
             </v-col>
-            <v-col :cols="6">
+            <v-col :cols="7">
               <vxe-table
                 ref="detailXTable"
                 keep-source
@@ -56,6 +56,8 @@
                 <vxe-column type="seq" width="60"></vxe-column>
                 <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"> </vxe-column>
                 <vxe-column field="location_name" :title="$t('wms.stock.location_name')"> </vxe-column>
+                <vxe-column field="goods_owner_name" :title="$t('base.ownerOfCargo.goods_owner_name')"> </vxe-column>
+                <vxe-column field="qty_available" :title="$t('wms.deliveryManagement.qty_available')"></vxe-column>
                 <vxe-column field="pick_qty" :title="$t('wms.deliveryManagement.detailQty')" :edit-render="{}">
                   <template #edit="{ row }">
                     <vxe-input v-model="row.pick_qty" type="text"></vxe-input>
