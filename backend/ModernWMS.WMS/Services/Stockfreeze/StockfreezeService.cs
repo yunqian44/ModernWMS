@@ -91,7 +91,7 @@ namespace ModernWMS.WMS.Services
                             spu_code = spu.spu_code,
                             spu_name = spu.spu_name,
                             location_name = location.location_name,
-                            warehouse = location.warehouse_name
+                            warehouse_name = location.warehouse_name
                         };
             query = query
                 .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
@@ -143,7 +143,7 @@ namespace ModernWMS.WMS.Services
                                   spu_code = spu.spu_code,
                                   spu_name = spu.spu_name,
                                   location_name = location.location_name,
-                                  warehouse = location.warehouse_name
+                                  warehouse_name = location.warehouse_name
                               }).FirstOrDefaultAsync();
             if (data == null)
             {

@@ -245,7 +245,7 @@ namespace ModernWMS.WMS.Services
                             qty_locked = (dp.qty_locked == null ? 0 : dp.qty_locked) + (pl.qty_locked == null ? 0 : pl.qty_locked)+ (m.qty_locked == null ? 0 : m.qty_locked),
                             qty = sg.qty,
                             location_name = gl.location_name,
-                            warehouse = gl.warehouse_name,
+                            warehouse_name = gl.warehouse_name,
                         };
             query = query.Where(queries.AsExpression<LocationStockManagementViewModel>());
             int totals = await query.CountAsync();
@@ -323,8 +323,10 @@ namespace ModernWMS.WMS.Services
                         join sku in sku_DBSet on sg.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         join gl in location_DBSet on sg.goods_location_id equals gl.id
+                        join owner in _dBContext.GetDbSet<GoodsownerEntity>().AsNoTracking() on sg.goods_owner_id equals owner.id into o_left
+                        from owner in o_left.DefaultIfEmpty()
                         where sg.tenant_id == currentUser.tenant_id
-                        group  new {sg,dp,pl,m,sku,spu,gl} by new { sg.sku_id ,spu.spu_name , spu.spu_code, sku.sku_code,sku.sku_name,sg.goods_location_id,sg.goods_owner_id
+                        group  new {sg,dp,pl,m,sku,spu,gl} by new { sg.sku_id ,spu.spu_name , spu.spu_code, sku.sku_code,sku.sku_name,sg.goods_location_id,sg.goods_owner_id,owner.goods_owner_name
                         , sg.qty , gl.location_name, sg.is_freeze, gl.warehouse_name ,sg.id,sku.unit,sg.tenant_id} into g
                         select new StockViewModel
                         {
@@ -338,11 +340,12 @@ namespace ModernWMS.WMS.Services
                             goods_location_id= g.Key.goods_location_id,
                             goods_owner_id = g.Key.goods_owner_id,
                             location_name = g.Key.location_name,
-                            warehouse = g.Key.warehouse_name,
+                            warehouse_name = g.Key.warehouse_name,
                             is_freeze = g.Key.is_freeze,
                             id = g.Key.id,
                             tenant_id = g.Key.tenant_id,
                             unit = g.Key.unit,
+                            goods_owner_name = g.Key.goods_owner_name == null? "":g.Key.goods_owner_name,
                         };
             if(pageSearch.sqlTitle == "")
             {
