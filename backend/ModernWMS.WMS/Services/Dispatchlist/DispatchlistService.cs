@@ -864,7 +864,6 @@ namespace ModernWMS.WMS.Services
                     entity.dispatch_status = 1;
                 }
             }
-            var qty = await _dBContext.SaveChangesAsync();
             var saved = false;
             int res = 0;
             while (!saved)
