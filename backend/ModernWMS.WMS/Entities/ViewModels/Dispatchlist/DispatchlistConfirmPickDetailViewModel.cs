@@ -69,10 +69,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         public int pick_qty { get; set; } = 0;
 
-        /// <summary>
-        /// goods owner name
-        /// </summary>
-        public string goods_owner_name { get; set; } = string.Empty;
         #endregion
     }
 }
