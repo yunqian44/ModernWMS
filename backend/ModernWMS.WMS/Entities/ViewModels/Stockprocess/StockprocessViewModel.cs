@@ -62,7 +62,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         [Display(Name = "process_time")]
         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime process_time { get; set; } = UtilConvert.MinDate;
+        public DateTime process_time { get; set; }
 
         /// <summary>
         /// creator
@@ -89,7 +89,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// tenant_id
         /// </summary>
         [Display(Name = "tenant_id")]
-        public byte tenant_id { get; set; } = 0;
+        public long tenant_id { get; set; }  =  0;
 
 
         #endregion
