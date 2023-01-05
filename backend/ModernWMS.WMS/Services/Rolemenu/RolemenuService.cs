@@ -91,6 +91,7 @@ namespace ModernWMS.WMS.Services
                                   join m in Menus.AsNoTracking() on rm.menu_id equals m.id
                                   join r in Userroles.AsNoTracking() on rm.userrole_id equals r.id
                                   where rm.userrole_id == userrole_id
+                                  orderby r.role_name, m.sort, m.menu_name
                                   select new
                                   {
                                       rm.id,
