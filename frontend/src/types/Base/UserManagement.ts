@@ -11,7 +11,17 @@ export interface UserVO extends UniformFileNaming {
   is_valid: boolean
 }
 
+export interface ImportVO {
+  user_num: string
+  user_name: string
+  contact_tel: string
+  user_role: string
+  sex: string
+  is_valid: boolean
+}
+
 export interface DataProps {
+  showDialogImport: boolean
   tableData: UserVO[]
   searchForm: {
     user_num: string

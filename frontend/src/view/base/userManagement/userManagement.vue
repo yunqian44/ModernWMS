@@ -10,6 +10,8 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
+                <tooltip-btn icon="mdi-database-import-outline" :tooltip-text="$t('system.page.import')" @click="method.openDialogImport">
+                </tooltip-btn>
                 <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
                 <tooltip-btn icon="mdi-lock-reset" :tooltip-text="$t('base.userManagement.restPwd')" @click="method.restPwd"></tooltip-btn>
               </v-col>
@@ -128,6 +130,7 @@
     </div>
     <!-- Add or modify data mode window -->
     <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+    <import-table :show-dialog="data.showDialogImport" @close="method.closeDialogImport" @saveSuccess="method.saveSuccessImport" />
   </div>
 </template>
 
@@ -144,10 +147,12 @@ import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
+import importTable from './import-table.vue'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
+  showDialogImport: false,
   searchForm: {
     user_num: '',
     user_name: '',
@@ -172,6 +177,17 @@ const data: DataProps = reactive({
 })
 
 const method = reactive({
+  // Import Dialog
+  openDialogImport: () => {
+    data.showDialogImport = true
+  },
+  closeDialogImport: () => {
+    data.showDialogImport = false
+  },
+  saveSuccessImport: () => {
+    method.refresh()
+    method.closeDialogImport()
+  },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
     method.getUserList()

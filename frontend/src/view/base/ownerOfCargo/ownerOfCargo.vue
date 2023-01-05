@@ -10,50 +10,13 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
+                <tooltip-btn icon="mdi-database-import-outline" :tooltip-text="$t('system.page.import')" @click="method.openDialogImport">
+                </tooltip-btn>
                 <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
               </v-col>
 
               <!-- Search Input -->
-              <v-col cols="12" sm="9">
-                <!-- <v-row no-gutters @keyup.enter="method.sureSearch">
-                  <v-col cols="12" sm="4">
-                    <v-text-field
-                      v-model="data.searchForm.userName"
-                      clearable
-                      hide-details
-                      density="comfortable"
-                      class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
-                      variant="solo"
-                    >
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="4">
-                    <v-text-field
-                      v-model="data.searchForm.userName1"
-                      clearable
-                      hide-details
-                      density="comfortable"
-                      class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
-                      variant="solo"
-                    >
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="4">
-                    <v-text-field
-                      v-model="data.searchForm.userName2"
-                      clearable
-                      hide-details
-                      density="comfortable"
-                      class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
-                      variant="solo"
-                    >
-                    </v-text-field>
-                  </v-col>
-                </v-row> -->
-              </v-col>
+              <v-col cols="12" sm="9"> </v-col>
             </v-row>
           </div>
 
@@ -97,6 +60,7 @@
     </div>
     <!-- Add or modify data mode window -->
     <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+    <import-table :show-dialog="data.showDialogImport" @close="method.closeDialogImport" @saveSuccess="method.saveSuccessImport" />
   </div>
 </template>
 
@@ -109,15 +73,12 @@ import { getOwnerOfCargoAll, deleteOwnerOfCargo } from '@/api/base/ownerOfCargo'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-owner-of-cargo.vue'
 import i18n from '@/languages/i18n'
+import importTable from './import-table.vue'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
-  // searchForm: {
-  //   userName: '',
-  //   userName1: '',
-  //   userName2: ''
-  // },
+  showDialogImport: false,
   tableData: [],
   // Dialog info
   showDialog: false,
@@ -132,6 +93,17 @@ const data: DataProps = reactive({
 })
 
 const method = reactive({
+  // Import Dialog
+  openDialogImport: () => {
+    data.showDialogImport = true
+  },
+  closeDialogImport: () => {
+    data.showDialogImport = false
+  },
+  saveSuccessImport: () => {
+    method.refresh()
+    method.closeDialogImport()
+  },
   sureSearch: () => {
     // console.log(data.searchForm)
   },
