@@ -34,15 +34,16 @@
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="warehouse" :title="$t('wms.stock.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"></vxe-column>
                   <vxe-column field="location_name" :title="$t('wms.stock.location_name')"></vxe-column>
+                  <vxe-column field="goods_owner_name" :title="$t('base.ownerOfCargo.goods_owner_name')"></vxe-column>
                   <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
                   <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column>
                   <vxe-column field="qty_available" :title="$t('wms.stock.qty_available')"></vxe-column>
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -51,7 +52,7 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pager>
               </div>
             </v-col>
           </v-row>
@@ -84,12 +85,11 @@ import { hookComponent } from '@/components/system/index'
 import { getStockSelectList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
-import { formatIsValid } from '@/utils/format/formatSystem'
-import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 import { SearchObject } from '@/types/System/Form'
 import { computedSelectTableSearchHeight, SYSTEM_HEIGHT } from '@/constant/style'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
+import customPager from '@/components/custom-pager.vue'
 
 const emit = defineEmits(['close', 'sureSelect'])
 const xTable = ref()

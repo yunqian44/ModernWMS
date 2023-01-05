@@ -184,6 +184,60 @@ namespace ModernWMS.WMS.Services
             }
         }
         /// <summary>
+        /// get sku info by sku_id
+        /// </summary>
+        /// <param name="sku_id">sku_id</param>
+        /// <returns></returns>
+        public async Task<SkuDetailViewModel> GetSkuAsync(int sku_id)
+        {
+            var Categorys = _dBContext.GetDbSet<CategoryEntity>();
+            var Spus = _dBContext.GetDbSet<SpuEntity>();
+            var Skus = _dBContext.GetDbSet<SkuEntity>();
+            var query = from m in Spus.AsNoTracking()
+                        join c in Categorys.AsNoTracking() on m.category_id equals c.id
+                        join d in Skus.AsNoTracking() on m.id equals d.spu_id
+                        where d.id == sku_id
+                        select new SkuDetailViewModel
+                        {  
+                            spu_id = m.id,
+                            spu_code = m.spu_code,
+                            spu_name = m.spu_name,
+                            category_id = m.category_id,
+                            category_name = c.category_name,
+                            spu_description = m.spu_description,
+                            bar_code = m.bar_code,
+                            supplier_id = m.supplier_id,
+                            supplier_name = m.supplier_name,
+                            brand = m.brand,
+                            origin = m.origin,
+                            length_unit = m.length_unit,
+                            volume_unit = m.volume_unit,
+                            weight_unit = m.weight_unit,
+                            sku_id = d.id,
+                            sku_code = d.sku_code,
+                            sku_name = d.sku_name,
+                            weight = d.weight,
+                            lenght = d.lenght,
+                            width = d.width,
+                            height = d.height,
+                            volume = d.volume,
+                            unit = d.unit,
+                            cost = d.cost,
+                            price = d.price
+                        };
+            var data = await query.FirstOrDefaultAsync();
+            if (data != null)
+            {
+                return data;
+            }
+            else
+            {
+                return new SkuDetailViewModel();
+            }
+
+        }
+
+        /// <summary>
         /// add a new record
         /// </summary>
         /// <param name="viewModel">viewmodel</param>

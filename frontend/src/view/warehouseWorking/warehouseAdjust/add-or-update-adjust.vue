@@ -44,9 +44,9 @@
               disabled
             ></v-text-field>
             <v-text-field
-              v-model="data.form.warehouse"
+              v-model="data.form.warehouse_name"
               :label="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"
-              :rules="data.rules.warehouse"
+              :rules="data.rules.warehouse_name"
               variant="outlined"
               disabled
             ></v-text-field>
@@ -121,7 +121,7 @@ const data = reactive({
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     creator: '',
     create_time: ''
@@ -129,7 +129,7 @@ const data = reactive({
   rules: {
     job_type: [],
     qty: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.qty') }!`],
-    warehouse: [
+    warehouse_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouse') }!`
     ],
     location_name: [
@@ -202,8 +202,9 @@ const method = reactive({
   sureSelectCommodity: (selectRecords: any) => {
     try {
       data.form.sku_id = selectRecords[0].sku_id
+      data.form.goods_owner_id = selectRecords[0].goods_owner_id
       data.form.goods_location_id = selectRecords[0].goods_location_id
-      data.form.warehouse = selectRecords[0].warehouse
+      data.form.warehouse_name = selectRecords[0].warehouse
       data.form.location_name = selectRecords[0].location_name
       data.form.spu_code = selectRecords[0].spu_code
       data.form.spu_name = selectRecords[0].spu_name
@@ -216,7 +217,7 @@ const method = reactive({
   clearCommodity: () => {
     data.form.sku_id = 0
     data.form.goods_location_id = 0
-    data.form.warehouse = ''
+    data.form.warehouse_name = ''
     data.form.location_name = ''
     data.form.spu_code = ''
     data.form.spu_name = ''

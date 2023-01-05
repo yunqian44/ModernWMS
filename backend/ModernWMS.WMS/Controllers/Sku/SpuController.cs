@@ -82,6 +82,25 @@ namespace ModernWMS.WMS.Controllers
                 return ResultModel<SpuBothViewModel>.Error(_stringLocalizer["not_exists_entity"]);
             }
         }
+
+        /// <summary>
+        /// get sku info by sku_id
+        /// </summary>
+        /// <param name="sku_id">sku_id</param>
+        /// <returns></returns>
+        [HttpGet("sku")]
+        public async Task<ResultModel<SkuDetailViewModel>> GetSkuAsync(int sku_id)
+        {
+            var data = await _spuService.GetSkuAsync(sku_id);
+            if (data != null && data.sku_id > 0)
+            {
+                return ResultModel<SkuDetailViewModel>.Success(data);
+            }
+            else
+            {
+                return ResultModel<SkuDetailViewModel>.Error(_stringLocalizer["not_exists_entity"]);
+            }
+        }
         /// <summary>
         /// add a new record
         /// </summary>

@@ -38,7 +38,7 @@
   >
     <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
+      <vxe-column field="warehouse_name" :title="$t('wms.stockLocation.warehouse_name')"></vxe-column>
       <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.stockLocation.spu_code')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.stockLocation.spu_name')"></vxe-column>

@@ -52,7 +52,7 @@
                       <span>{{ formatFreezeJobType(row[column.property]) }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.location_name')"></vxe-column>
                   <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
@@ -162,7 +162,7 @@ const data = reactive({
     handle_time: '',
     last_update_time: '',
     tenant_id: 0,
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     spu_code: '',
     spu_name: '',
@@ -193,7 +193,7 @@ const method = reactive({
       handle_time: '',
       last_update_time: '',
       tenant_id: 0,
-      warehouse: '',
+      warehouse_name: '',
       location_name: '',
       spu_code: '',
       spu_name: '',
