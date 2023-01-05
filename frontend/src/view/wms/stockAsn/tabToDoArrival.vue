@@ -50,7 +50,7 @@
       <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn :flat="true" icon="mdi-check" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
         </template>
       </vxe-column>
     </vxe-table>

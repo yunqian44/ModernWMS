@@ -345,7 +345,7 @@ export default {
       stock: 'Stock'
     },
     stockLocation: {
-      warehouse: 'Warehouse',
+      warehouse_name: 'Warehouse',
       location_name: 'Location Code',
       spu_code: 'Commodity code',
       spu_name: 'Trade name',
