@@ -56,6 +56,7 @@
                 <vxe-column type="seq" width="60"></vxe-column>
                 <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"> </vxe-column>
                 <vxe-column field="location_name" :title="$t('wms.stock.location_name')"> </vxe-column>
+                <vxe-column field="goods_owner_name" :title="$t('base.ownerOfCargo.goods_owner_name')"> </vxe-column>
                 <vxe-column field="qty_available" :title="$t('wms.deliveryManagement.qty_available')"></vxe-column>
                 <vxe-column field="pick_qty" :title="$t('wms.deliveryManagement.detailQty')" :edit-render="{}">
                   <template #edit="{ row }">

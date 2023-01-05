@@ -65,16 +65,18 @@
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="120" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
-            @click="method.backToThePreviousStep(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
+              @click="method.backToThePreviousStep(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -83,7 +85,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
 </template>
 
@@ -98,6 +100,7 @@ import { getPackaged, cancelOrderByDetail } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -120,7 +123,7 @@ const method = reactive({
   // Back to the previous step
   backToThePreviousStep(row: DeliveryManagementDetailVO) {
     hookComponent.$dialog({
-      content: `${ i18n.global.t('wms.deliveryManagement.confirmBack') }?`,
+      content: `${i18n.global.t('wms.deliveryManagement.confirmBack')}?`,
       handleConfirm: async () => {
         const { data: res } = await cancelOrderByDetail(row.id)
         if (!res.isSuccess) {
@@ -173,7 +176,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },

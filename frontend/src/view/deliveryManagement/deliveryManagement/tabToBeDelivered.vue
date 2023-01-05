@@ -67,16 +67,18 @@
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="80" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.delivery')"
-            @click="method.handleDeliver(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.delivery')"
+              @click="method.handleDeliver(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -85,7 +87,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
 </template>
 
@@ -100,6 +102,7 @@ import { getToBeDelivery, handleDelivery } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

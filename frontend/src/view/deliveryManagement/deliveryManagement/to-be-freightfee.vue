@@ -33,7 +33,7 @@
           <v-btn color="primary" variant="text" @click="method.submit">{{ $t('system.page.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
-      <sku-select :show-dialog="data.dialogSelect" @close="method.closeDialogSelect()" @sureSelect="method.sureSelect" />
+      <freight-select :show-dialog="data.dialogSelect" @close="method.closeDialogSelect()" @sureSelect="method.sureSelect" />
     </template>
   </v-dialog>
 </template>
@@ -42,7 +42,7 @@
 import { reactive, computed, defineEmits, watch } from 'vue'
 import { hookComponent } from '@/components/system/index'
 import i18n from '@/languages/i18n'
-import skuSelect from '@/components/select/sku-select.vue'
+import freightSelect from '@/components/select/freight-select.vue'
 import { FreightVO } from '@/types/Base/Freight'
 
 const emit = defineEmits(['close', 'submit'])

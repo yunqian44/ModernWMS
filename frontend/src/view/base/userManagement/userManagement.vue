@@ -100,7 +100,7 @@
                 </template>
               </vxe-column>
             </vxe-table>
-            <vxe-pager
+            <custom-pager
               :current-page="data.tablePage.pageIndex"
               :page-size="data.tablePage.pageSize"
               perfect
@@ -109,17 +109,17 @@
               :layouts="PAGE_LAYOUT"
               @page-change="method.handlePageChange"
             >
-            </vxe-pager>
+            </custom-pager>
             <!-- <vxe-grid v-bind="data.gridOptions">
               <template #pager>
-                <vxe-pager
+                <custom-pagerr
                   v-model:current-page="data.tablePage.pageIndex"
                   v-model:page-size="data.tablePage.pageSize"
                   :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
                   :total="data.tablePage.total"
                   @page-change="handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pagerr>
               </template>
             </vxe-grid> -->
           </div>
@@ -142,6 +142,7 @@ import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-user.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

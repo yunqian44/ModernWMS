@@ -62,7 +62,7 @@
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -71,7 +71,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
 </template>
 
@@ -86,6 +86,7 @@ import { getGoodsToBePicked } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

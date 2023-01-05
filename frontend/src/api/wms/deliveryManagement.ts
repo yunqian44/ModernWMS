@@ -1,6 +1,6 @@
 import http from '@/utils/http/request'
 import { PageConfigProps } from '@/types/System/Form'
-import { addRequestVO, ConfirmOrderVO, PackageVO, WeighVO, DeliveryVO, SignInVO, CancleOrderVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { addRequestVO, ConfirmOrderVO, PackageVO, WeighVO, DeliveryVO, SignInVO, CancleOrderVO, SetCarrierVO } from '@/types/DeliveryManagement/DeliveryManagement'
 
 // Get Pre shipment
 export const getShipment = (data: PageConfigProps) => http({
@@ -200,6 +200,13 @@ export const cancelOrderByDetail = (id: number) => http({
 // Undo to previous step by dispatch
 export const cancelOrderByDispatch = (data: CancleOrderVO) => http({
     url: '/dispatchlist/cancel-order',
+    method: 'post',
+    data
+  })
+
+// Set carrier
+export const setCarrier = (data: SetCarrierVO[]) => http({
+    url: '/dispatchlist/freightfee',
     method: 'post',
     data
   })
