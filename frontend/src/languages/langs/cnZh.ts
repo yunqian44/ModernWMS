@@ -108,7 +108,8 @@ export default {
       creator: '创建人',
       create_time: '创建时间',
       last_update_time: '最后更新时间',
-      is_valid: '是否有效'
+      is_valid: '是否有效',
+      freightSelectModal: '运费选择框',
     },
     userManagement: {
       user_num: '员工编号',

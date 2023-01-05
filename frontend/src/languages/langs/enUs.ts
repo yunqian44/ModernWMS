@@ -108,7 +108,8 @@ export default {
       creator: 'Creator',
       create_time: 'Create Time',
       last_update_time: 'Last Update Time',
-      is_valid: 'Valid'
+      is_valid: 'Valid',
+      freightSelectModal: 'Freight Select Modal',
     },
     userManagement: {
       user_num: 'User Num',
