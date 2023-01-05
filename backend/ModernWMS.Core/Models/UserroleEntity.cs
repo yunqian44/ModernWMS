@@ -43,7 +43,7 @@ namespace ModernWMS.Core.Models
         /// <summary>
         /// tenant_id
         /// </summary>
-        public byte tenant_id { get; set; }  = 0;
+        public long tenant_id { get; set; }  = 0;
 
 
         #endregion
