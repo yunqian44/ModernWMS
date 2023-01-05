@@ -51,7 +51,6 @@
         field="create_time"
         width="170px"
         :title="$t('base.warehouseSetting.create_time')"
-        :formatter="['formatDate']"
       ></vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">

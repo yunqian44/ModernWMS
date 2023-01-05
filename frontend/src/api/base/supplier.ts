@@ -1,6 +1,6 @@
 import http from '@/utils/http/request'
 import { PageConfigProps } from '@/types/System/Form'
-import { SupplierVO } from '@/types/Base/Supplier'
+import { SupplierVO, SupplierExcelVO } from '@/types/Base/Supplier'
 
 // Get all
 export const getSupplierAll = () => http({
@@ -37,3 +37,10 @@ export const deleteSupplier = (id: number) => http({
       id
     }
   })
+
+// Excel Import
+export const excelImport = (data: Array<SupplierExcelVO>) => http({
+  url: '/supplier/excel',
+  method: 'post',
+  data
+})

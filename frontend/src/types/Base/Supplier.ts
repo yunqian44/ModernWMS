@@ -11,6 +11,15 @@ export interface SupplierVO extends UniformFileNaming {
   is_valid: boolean
 }
 
+export interface SupplierExcelVO {
+  supplier_name: string
+  city: string
+  address: string
+  manager: string
+  email: string
+  contact_tel: string
+}
+
 export interface DataProps {
   tableData: SupplierVO[]
   tablePage: TablePage

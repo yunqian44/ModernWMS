@@ -3,7 +3,6 @@ import { UserStateProps, MenuItem } from '@/types/System/Store'
 export const user = {
   namespaced: true,
   state: {
-    // TODO userInfo 类
     userInfo: {},
     token: '',
     // 用于刷新token用的串

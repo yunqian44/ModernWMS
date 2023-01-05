@@ -37,12 +37,12 @@
                 ></tooltip-btn>
               </template>
             </vxe-column>
-            <vxe-column field="carrier" :title="$t('base.freightSetting.carrier')"></vxe-column>
-            <vxe-column field="departure_city" :title="$t('base.freightSetting.departure_city')"></vxe-column>
-            <vxe-column field="arrival_city" :title="$t('base.freightSetting.arrival_city')"></vxe-column>
-            <vxe-column field="price_per_weight" :title="$t('base.freightSetting.price_per_weight')"></vxe-column>
-            <vxe-column field="price_per_volume" :title="$t('base.freightSetting.price_per_volume')"></vxe-column>
-            <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
+            <vxe-column field="supplier_name" :title="$t('base.supplier.supplier_name')"></vxe-column>
+            <vxe-column field="city" :title="$t('base.supplier.city')"></vxe-column>
+            <vxe-column field="address" :title="$t('base.supplier.address')"></vxe-column>
+            <vxe-column field="manager" :title="$t('base.supplier.manager')"></vxe-column>
+            <vxe-column field="email" :title="$t('base.supplier.email')"></vxe-column>
+            <vxe-column field="contact_tel" :title="$t('base.supplier.contact_tel')"></vxe-column>
           </vxe-table>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -59,11 +59,11 @@ import { reactive, computed, ref, watch } from 'vue'
 import { VxeTablePropTypes } from 'vxe-table'
 import * as XLSX from 'xlsx'
 import i18n from '@/languages/i18n'
-import { excelImport } from '@/api/base/freightSetting'
+import { excelImport } from '@/api/base/supplier'
 import { hookComponent } from '@/components/system/index'
 import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { FreightVO } from '@/types/Base/Freight'
+import { SupplierExcelVO } from '@/types/Base/Supplier'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -76,7 +76,7 @@ const props = defineProps<{
 const isShow = computed(() => props.showDialog)
 
 const data = reactive({
-  importData: ref<Array<FreightVO>>([]),
+  importData: ref<Array<SupplierExcelVO>>([]),
   validRules: ref<VxeTablePropTypes.EditRules>({})
 })
 
@@ -154,12 +154,12 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            carrier: ws[index][i18n.global.t('base.freightSetting.carrier')],
-            departure_city: ws[index][i18n.global.t('base.freightSetting.departure_city')],
-            arrival_city: ws[index][i18n.global.t('base.freightSetting.arrival_city')],
-            price_per_weight: ws[index][i18n.global.t('base.freightSetting.price_per_weight')],
-            price_per_volume: ws[index][i18n.global.t('base.freightSetting.price_per_volume')],
-            min_payment: ws[index][i18n.global.t('base.freightSetting.min_payment')]
+            supplier_name: ws[index][i18n.global.t('base.supplier.supplier_name')],
+            city: ws[index][i18n.global.t('base.supplier.city')],
+            address: ws[index][i18n.global.t('base.supplier.address')],
+            manager: ws[index][i18n.global.t('base.supplier.manager')],
+            email: ws[index][i18n.global.t('base.supplier.email')],
+            contact_tel: ws[index][i18n.global.t('base.supplier.contact_tel')]
           })
         })
       }
@@ -172,7 +172,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'csv',
-        filename: i18n.global.t('router.sideBar.freightSetting'),
+        filename: i18n.global.t('router.sideBar.supplier'),
         columnFilterMethod({ column }: any) {
           return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -185,7 +185,7 @@ const method = reactive({
     }
   },
 
-  deleteRow: (row: FreightVO) => {
+  deleteRow: (row: SupplierExcelVO) => {
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
       handleConfirm: async () => {

@@ -33,7 +33,7 @@ export interface VxeTableRow {
 
 export interface SearchObject {
   name?: string,
-  operators?: SearchOperator,
+  operator?: SearchOperator,
   text?: string,
   value?: string
 }

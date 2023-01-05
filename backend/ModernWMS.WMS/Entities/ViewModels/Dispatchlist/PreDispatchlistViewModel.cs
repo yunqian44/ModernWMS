@@ -69,7 +69,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// <summary>
         /// tenant_id
         /// </summary>
-        public byte tenant_id { get; set; } = 0;
+        public long tenant_id { get; set; }  =  0;
 
         /// <summary>
         /// creator

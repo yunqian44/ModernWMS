@@ -58,19 +58,13 @@
                     </template>
                   </vxe-column>
                   <vxe-column field="processor" :title="$t('wms.warehouseWorking.warehouseProcessing.processor')"></vxe-column>
-                  <vxe-column
-                    field="process_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseProcessing.process_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="process_time" width="170px" :title="$t('wms.warehouseWorking.warehouseProcessing.process_time')">
+                    <template #default="{ row, column }">
+                      <span>{{ formatDate(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseProcessing.creator')"></vxe-column>
-                  <vxe-column
-                    field="create_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseProcessing.create_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('wms.warehouseWorking.warehouseProcessing.create_time')"></vxe-column>
                   <vxe-column field="operate" :title="$t('system.page.operate')" width="250" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -142,7 +136,7 @@ import { PROCESS_JOB_COMBINE, PROCESS_JOB_SPLIT } from '@/constant/warehouseWork
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
-import { formatIsValid } from '@/utils/format/formatSystem'
+import { formatIsValid, formatDate } from '@/utils/format/formatSystem'
 import { formatProcessJobType } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-process.vue'

@@ -22,7 +22,8 @@ export default {
       insertOneRow: 'Insert One Row',
       view: 'View',
       import: 'Import',
-      chooseFile: 'Choose File'
+      chooseFile: 'Choose File',
+      exportTemplate: 'Export Template'
     },
     tips: {
       success: ' success!',
