@@ -53,7 +53,11 @@
       <vxe-column field="asn_no" :title="$t('wms.stockAsnInfo.asn_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.stockAsnInfo.spu_code')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.stockAsnInfo.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')">
+        <template #default="{ row }">
+          <div :class="'text-decoration-none'" @click="method.showSkuInfo(row)"> {{ row.sku_code }}</div>
+        </template>
+      </vxe-column>
       <vxe-column field="sku_name" :title="$t('wms.stockAsnInfo.sku_name')"></vxe-column>
       <vxe-column field="goods_owner_name" :title="$t('wms.stockAsnInfo.goods_owner_name')"></vxe-column>
       <vxe-column field="supplier_name" :title="$t('wms.stockAsnInfo.supplier_name')"></vxe-column>
@@ -85,6 +89,7 @@
     </custom-pager>
   </div>
   <addOrUpdateNotice :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+  <skuInfo :show-dialog="data.showDialogShowInfo" :form="data.dialogForm" @close="method.closeDialogShowInfo" />
 </template>
 
 <script lang="ts" setup>
@@ -102,11 +107,13 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import addOrUpdateNotice from './add-or-update-notice.vue'
 import customPager from '@/components/custom-pager.vue'
+import skuInfo from './sku-info.vue'
 
 const xTableStockLocation = ref()
 
 const data = reactive({
   showDialog: false,
+  showDialogShowInfo: false,
   searchForm: {
     supplier_name: '',
     sku_name: ''
@@ -152,6 +159,13 @@ const data = reactive({
 })
 
 const method = reactive({
+  closeDialogShowInfo: () => {
+    data.showDialogShowInfo = false
+  },
+  showSkuInfo(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialogShowInfo = true
+  },
   // Open a dialog to add
   add: () => {
     data.dialogForm = {

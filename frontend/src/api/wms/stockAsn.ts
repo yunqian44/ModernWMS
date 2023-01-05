@@ -32,7 +32,7 @@ export const confirmAsn = (id: number) => http({
     url: `/asn/confirm/${ id }`,
     method: 'put'
   })
-  export const confirmAsnCancel = (id: number) => http({
+export const confirmAsnCancel = (id: number) => http({
     url: `/asn/confirm-cancel/${ id }`,
     method: 'put'
   })
@@ -41,7 +41,7 @@ export const unloadAsn = (id: number) => http({
     url: `/asn/unload/${ id }`,
     method: 'put'
   })
-  export const unloadAsnCancel = (id: number) => http({
+export const unloadAsnCancel = (id: number) => http({
     url: `/asn/unload-cancel/${ id }`,
     method: 'put'
   })
@@ -50,7 +50,7 @@ export const sortedAsn = (id: number) => http({
     url: `/asn/sorted/${ id }`,
     method: 'put'
   })
-  export const sortedAsnCancel = (id: number) => http({
+export const sortedAsnCancel = (id: number) => http({
     url: `/asn/sorted-cancel/${ id }`,
     method: 'put'
   })
@@ -65,4 +65,12 @@ export const putawayAsn = (data: PutawayVo) => http({
     url: '/asn/putaway',
     method: 'put',
     data
+  })
+
+export const getSkuInfo = (id: number) => http({
+    url: '/spu/sku',
+    method: 'get',
+    params: {
+      sku_id: id
+    }
   })
