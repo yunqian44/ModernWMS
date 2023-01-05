@@ -34,7 +34,7 @@
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="warehouse" :title="$t('wms.stock.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"></vxe-column>
                   <vxe-column field="location_name" :title="$t('wms.stock.location_name')"></vxe-column>
                   <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
