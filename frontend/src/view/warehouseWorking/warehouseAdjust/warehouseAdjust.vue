@@ -21,7 +21,18 @@
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <v-col cols="4"></v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4"></v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.job_code"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('wms.warehouseWorking.warehouseAdjust.job_code')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
@@ -56,11 +67,7 @@
                     :title="$t('wms.warehouseWorking.warehouseAdjust.handle_time')"
                   ></vxe-column> -->
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseAdjust.creator')"></vxe-column>
-                  <vxe-column
-                    field="create_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"
-                  ></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"></vxe-column>
                   <!-- <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -138,7 +145,9 @@ const data = reactive({
   processType: PROCESS_JOB_COMBINE,
   timer: ref<any>(null),
   activeTab: null,
-  searchForm: {},
+  searchForm: {
+    job_code: ''
+  },
   tableData: ref<WarehouseAdjustVO[]>([]),
   dialogForm: {
     id: 0,

@@ -21,7 +21,18 @@
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <v-col cols="4"></v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4"></v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.job_code"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('wms.warehouseWorking.warehouseTaking.job_code')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
@@ -145,7 +156,6 @@ const data = reactive({
   showDialogNumberInput: false,
   timer: ref<any>(null),
   activeTab: null,
-  searchForm: {},
   tableData: ref<WarehouseTakingVO[]>([]),
   dialogForm: ref<WarehouseTakingVO>({
     id: 0,
@@ -168,6 +178,9 @@ const data = reactive({
     creator: '',
     create_time: ''
   }),
+  searchForm: {
+    job_code: '',
+  },
   tablePage: reactive({
     total: 0,
     pageIndex: 1,

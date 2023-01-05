@@ -30,7 +30,18 @@
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <v-col cols="4"></v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4"></v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.job_code"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('wms.warehouseWorking.warehouseProcessing.job_code')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
@@ -150,7 +161,9 @@ const data = reactive({
   processType: PROCESS_JOB_COMBINE,
   timer: ref<any>(null),
   activeTab: null,
-  searchForm: {},
+  searchForm: {
+    job_code: ''
+  },
   tableData: ref<WarehouseProcessingVO[]>([]),
   dialogForm: {
     id: 0,
