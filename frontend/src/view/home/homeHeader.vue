@@ -9,13 +9,14 @@
     </div>
     <div class="toolsBar">
       <LanguagesSwitch />
-      <div class="toolItems bell">
+      <!-- <div class="toolItems bell">
         <v-icon icon="mdi-bell-outline" color="#666666"></v-icon>
         <div class="hasNotify"></div>
-      </div>
+      </div> -->
       <v-menu>
         <template #activator="{ props }">
-          <div class="toolItems headPortrait" v-bind="props">
+          <div class="toolItems headPortrait ml-2" v-bind="props">
+            <v-icon icon="mdi-account" color="#666666"></v-icon>
             <div class="alive"></div>
           </div>
         </template>
