@@ -59,7 +59,7 @@ export default {
       pageSizes: '条/页',
       goTo: '前往',
       total: '共',
-      record: '条记录',
+      record: '条记录'
     }
   },
   router: {
@@ -109,7 +109,8 @@ export default {
       creator: '创建人',
       create_time: '创建时间',
       last_update_time: '最后更新时间',
-      is_valid: '是否有效'
+      is_valid: '是否有效',
+      freightSelectModal: '运费选择框',
     },
     userManagement: {
       user_num: '员工编号',
@@ -336,7 +337,7 @@ export default {
         handle_time: '操作时间',
         creator: '创建人',
         create_time: '创建时间',
-        unfinish: '待作业', 
+        unfinish: '待作业',
         finish: '已完成',
         confirmAdjust: '确认调整',
         beforeConfirmAdjust: '您确认对该条数据进行调整吗？',
@@ -412,6 +413,33 @@ export default {
       goods_owner_id: '货主标识',
       goods_owner_name: '货主名称',
       is_valid: '是否有效'
+    },
+    skuInfo: {
+      spu_id: '商品spu标识',
+      spu_code: '商品编码',
+      spu_name: '商品名称',
+      category_id: '商品类别标识',
+      category_name: '商品类别',
+      spu_description: '商品描述',
+      bar_code: '商品条码',
+      supplier_id: '供应商标识',
+      supplier_name: '供应商名称',
+      brand: '品牌',
+      origin: '产地',
+      length_unit: '长度单位',
+      volume_unit: '体积单位',
+      weight_unit: '重量单位',
+      sku_id: '规格标识',
+      sku_code: '规格编码',
+      sku_name: '规格名称',
+      weight: '总重量',
+      lenght: '商品长度',
+      width: '商品宽度',
+      height: '商品高度',
+      volume: '商品体积',
+      unit: '商品单位',
+      cost: '商品成本',
+      price: '商品价格'
     },
     deliveryManagement: {
       shipment: '发货单',

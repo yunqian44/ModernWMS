@@ -61,7 +61,14 @@
       <vxe-column field="volume" :title="$t('wms.stockAsnInfo.volume')"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn :flat="true" icon="mdi-check" :tooltip-text="$t('system.page.confirm')" @click="method.editRow(row)"></tooltip-btn>
+          <tooltip-btn
+            :flat="true"
+            icon="mdi-delete-outline"
+            :tooltip-text="$t('system.page.delete')"
+            :icon-color="errorColor"
+            @click="method.deleteRow(row)"
+          ></tooltip-btn>
         </template>
       </vxe-column>
     </vxe-table>
@@ -88,7 +95,7 @@ import { hookComponent } from '@/components/system'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
-import { getStockAsnList, unloadAsn } from '@/api/wms/stockAsn'
+import { getStockAsnList, unloadAsn, confirmAsnCancel } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
@@ -130,6 +137,28 @@ const method = reactive({
           hookComponent.$message({
             type: 'success',
             content: `${ i18n.global.t('system.page.confirm') }${ i18n.global.t('system.tips.success') }`
+          })
+          method.refresh()
+        }
+      }
+    })
+  },
+  deleteRow(row: StockAsnVO) {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteMessage'),
+      handleConfirm: async () => {
+        if (row.id) {
+          const { data: res } = await confirmAsnCancel(row.id)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
           })
           method.refresh()
         }

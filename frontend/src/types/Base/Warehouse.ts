@@ -1,14 +1,14 @@
 import { UniformFileNaming } from '../System/Form'
 
 export interface WarehouseVO extends UniformFileNaming {
-  id: number
+  id?: number
   warehouse_name: string
   city: string
   address: string
   contact_tel?: string
   email?: string
   manager?: string
-  is_valid: boolean
+  is_valid?: boolean
 }
 
 export interface WarehouseAreaVO extends UniformFileNaming {

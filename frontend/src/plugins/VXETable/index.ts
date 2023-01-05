@@ -1,5 +1,6 @@
 import VXETable from 'vxe-table'
 import XEUtils from 'xe-utils'
+import VXETablePluginExportXLSX from 'vxe-table-plugin-export-xlsx'
 import 'vxe-table/lib/style.css'
 
 /**
@@ -13,5 +14,7 @@ VXETable.formats.add('formatDate', ({ cellValue }, format) => {
   }
   return XEUtils.toDateString(date, format || 'yyyy-MM-dd HH:mm:ss')
 })
+
+VXETable.use(VXETablePluginExportXLSX)
 
 export { VXETable }

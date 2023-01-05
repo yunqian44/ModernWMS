@@ -3,7 +3,7 @@
   <v-dialog v-model="isShow" width="60%" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('wms.stock.stockSelectModal')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('base.freightSetting.freightSelectModal')}`"></v-toolbar>
         <v-card-text>
           <v-row>
             <v-col cols="3">
@@ -12,8 +12,8 @@
                 <tooltip-btn icon="mdi-magnify" size="x-small" :tooltip-text="$t('system.page.confirm')" @click="method.sureSearch"></tooltip-btn>
                 <v-form ref="formRef" class="mt-4">
                   <v-text-field
-                    v-model="data.searchForm.warehouse_name"
-                    :label="$t('wms.stock.warehouse')"
+                    v-model="data.searchForm.carrier"
+                    :label="$t('base.freightSetting.carrier')"
                     variant="outlined"
                     density="compact"
                     hide-details
@@ -21,8 +21,8 @@
                     class="mb-4"
                   ></v-text-field>
                   <v-text-field
-                    v-model="data.searchForm.location_name"
-                    :label="$t('wms.stock.location_name')"
+                    v-model="data.searchForm.departure_city"
+                    :label="$t('base.freightSetting.departure_city')"
                     variant="outlined"
                     density="compact"
                     hide-details
@@ -30,17 +30,8 @@
                     class="mb-4"
                   ></v-text-field>
                   <v-text-field
-                    v-model="data.searchForm.spu_name"
-                    :label="$t('base.commodityManagement.spu_name')"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    clearable
-                    class="mb-4"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="data.searchForm.sku_code"
-                    :label="$t('base.commodityManagement.sku_code')"
+                    v-model="data.searchForm.arrival_city"
+                    :label="$t('base.freightSetting.arrival_city')"
                     variant="outlined"
                     density="compact"
                     hide-details
@@ -61,14 +52,19 @@
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
-                  <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"></vxe-column>
-                  <vxe-column field="location_name" :title="$t('wms.stock.location_name')"></vxe-column>
-                  <vxe-column field="goods_owner_name" :title="$t('base.ownerOfCargo.goods_owner_name')"></vxe-column>
-                  <vxe-column field="spu_code" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
-                  <vxe-column field="spu_name" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
-                  <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
-                  <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')"></vxe-column>
-                  <vxe-column field="qty_available" :title="$t('wms.stock.qty_available')"></vxe-column>
+                  <vxe-column field="carrier" :title="$t('base.freightSetting.carrier')"></vxe-column>
+                  <vxe-column field="departure_city" :title="$t('base.freightSetting.departure_city')"></vxe-column>
+                  <vxe-column field="arrival_city" :title="$t('base.freightSetting.arrival_city')"></vxe-column>
+                  <vxe-column field="price_per_weight" :title="$t('base.freightSetting.price_per_weight')"></vxe-column>
+                  <vxe-column field="price_per_volume" :title="$t('base.freightSetting.price_per_volume')"></vxe-column>
+                  <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
+                  <vxe-column field="creator" :title="$t('base.freightSetting.creator')"></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('base.freightSetting.create_time')"></vxe-column>
+                  <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
+                    <template #default="{ row, column }">
+                      <span>{{ formatIsValid(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                 </vxe-table>
                 <custom-pager
                   :current-page="data.tablePage.pageIndex"
@@ -109,9 +105,10 @@
 import { reactive, computed, ref, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { hookComponent } from '@/components/system/index'
-import { getStockSelectList } from '@/api/wms/stockManagement'
+import { getFreightList } from '@/api/base/freightSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { formatIsValid } from '@/utils/format/formatSystem'
 import { SearchObject } from '@/types/System/Form'
 import { computedSelectTableSearchHeight, SYSTEM_HEIGHT } from '@/constant/style'
 import { DEBOUNCE_TIME } from '@/constant/system'
@@ -136,10 +133,9 @@ const data = reactive({
     searchObjects: ref<Array<SearchObject>>([])
   }),
   searchForm: {
-    location_name: '',
-    warehouse_name: '',
-    spu_name: '',
-    sku_code: ''
+    carrier: '',
+    departure_city: '',
+    arrival_city: ''
   },
   timer: ref<any>(null)
 })
@@ -158,7 +154,7 @@ const method = reactive({
   },
 
   getList: async () => {
-    const { data: res } = await getStockSelectList(data.tablePage)
+    const { data: res } = await getFreightList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',

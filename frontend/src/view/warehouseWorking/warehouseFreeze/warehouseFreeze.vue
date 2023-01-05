@@ -30,7 +30,18 @@
                     <v-row no-gutters @keyup.enter="method.sureSearch">
                       <v-col cols="4"></v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4"></v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.job_code"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('wms.warehouseWorking.warehouseFreeze.job_code')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
@@ -149,7 +160,9 @@ const data = reactive({
   freezeType: FREEZE_JOB_FREEZE,
   timer: ref<any>(null),
   activeTab: null,
-  searchForm: {},
+  searchForm: {
+    job_code: ''
+  },
   tableData: ref<WarehouseFreezeVO[]>([]),
   dialogForm: {
     id: 0,

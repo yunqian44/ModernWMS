@@ -68,6 +68,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// pick_qty
         /// </summary>
         public int pick_qty { get; set; } = 0;
+
         #endregion
     }
 }
