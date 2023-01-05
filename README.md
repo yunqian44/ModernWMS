@@ -176,7 +176,7 @@
   <a href="https://github.com/fjykTec/ModernWMS/issues/new?template=feature_request.md&title=[FR]">提交一个建议</a>
 </h4>
 <h4>
-  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群聊【ModernWMS共创基地】</a>
+  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群  757128595</a>
 </h4>
 
 ## License - 版权信息
