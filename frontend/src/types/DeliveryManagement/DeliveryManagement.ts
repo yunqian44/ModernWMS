@@ -30,6 +30,14 @@ export interface DeliveryManagementDetailVO extends DeliveryManagementVO {
   sku_code?: string
   unpackage_qty?: number
   unweighing_qty?: number
+  spu_description?: string
+  bar_code?: string
+  qty?: number
+  unpicked_qty?: number
+  picked_qty?: number
+  weight?: number
+  volume?: number
+  weight_unit?: number
 }
 
 export interface addRequestVO {
@@ -87,4 +95,12 @@ export interface SignInVO {
 export interface CancleOrderVO {
   dispatch_no?: string
   dispatch_status?: number
+}
+
+export interface SetCarrierVO {
+  id: number
+  dispatch_no: string
+  dispatch_status: number
+  freightfee_id: number
+  carrier: string
 }

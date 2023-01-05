@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import { SearchObject, SearchOperator } from '@/types/System/Form'
 
-export const setSearchObject = (searchForm: any) => {
+export const setSearchObject = (searchForm: any, operator: number = SearchOperator.INCLUDE) => {
   const searchObjects: Array<SearchObject> = []
   try {
     for (const key in searchForm) {
@@ -11,7 +11,7 @@ export const setSearchObject = (searchForm: any) => {
       if (searchValue && searchValue.trim() !== '') {
         searchObjects.push({
           name: key,
-          operator: SearchOperator.INCLUDE,
+          operator,
           text: searchValue,
           value: searchValue
         })

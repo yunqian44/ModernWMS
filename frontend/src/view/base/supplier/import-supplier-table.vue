@@ -13,7 +13,7 @@
               size="x-small"
               @click="method.exportTemplate"
             ></tooltip-btn>
-            <input v-show="false" id="open" ref="uploadExcel" type="file" accept=".xls, .xlsx, .csv" @change="method.readExcel" />
+            <input v-show="false" id="open" ref="uploadExcel" type="file" accept=".xls, .xlsx" @change="method.readExcel" />
           </div>
           <vxe-table
             ref="xTable"
@@ -171,7 +171,7 @@ const method = reactive({
     const $table = xTable.value
     try {
       $table.exportData({
-        type: 'csv',
+        type: 'xlsx',
         filename: i18n.global.t('router.sideBar.supplier'),
         columnFilterMethod({ column }: any) {
           return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)

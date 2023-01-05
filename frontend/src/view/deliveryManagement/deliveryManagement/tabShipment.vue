@@ -11,19 +11,44 @@
       <!-- Search Input -->
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
-          <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.dispatch_no"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-select
+              v-model="data.searchForm.dispatch_status"
+              :items="data.combobox.dispatch_status"
+              item-title="label"
+              item-value="value"
+              :label="$t('wms.deliveryManagement.dispatch_status')"
+              variant="solo"
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              clearable
+              hide-details
+              @update:model-value="method.sureSearch"
+            ></v-select>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.customer_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.customer_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -47,47 +72,56 @@
         </template>
       </vxe-column>
       <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weight} ${GetUnit('weight', 2)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('volume', 1)}` }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <!-- <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column> -->
       <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
-          <tooltip-btn
-            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
-            @click="method.confirmOrder(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 2"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
-            @click="method.confirmPicking(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 2 || row.dispatch_status === 3"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
-            @click="method.backToThePreviousStep(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
-            :flat="true"
-            icon="mdi-delete-outline"
-            :tooltip-text="$t('system.page.delete')"
-            :icon-color="errorColor"
-            @click="method.deleteRow(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
+              @click="method.confirmOrder(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              :disabled="row.dispatch_status !== 2"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
+              @click="method.confirmPicking(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              :disabled="row.dispatch_status !== 2 && row.dispatch_status !== 3"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
+              @click="method.backToThePreviousStep(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
+              :flat="true"
+              icon="mdi-delete-outline"
+              :tooltip-text="$t('system.page.delete')"
+              :icon-color="errorColor"
+              @click="method.deleteRow(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -96,7 +130,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
     <!-- Add or modify data mode window -->
     <addOrUpdateShipment :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
     <!-- Confirm Order -->
@@ -122,6 +156,10 @@ import i18n from '@/languages/i18n'
 import addOrUpdateShipment from './add-or-update-shipment.vue'
 import { getShipmentState } from './shipmentFun'
 import ConfirmOrder from './confirm-order.vue'
+import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { TablePage } from '@/types/System/Form'
 
 const xTable = ref()
 
@@ -131,16 +169,60 @@ const data = reactive({
     id: 0,
     detailList: []
   },
-  searchForm: {},
+  searchForm: ref<{
+    dispatch_no: string
+    customer_name: string
+    dispatch_status?: string
+  }>({
+    dispatch_no: '',
+    customer_name: ''
+  }),
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
-  tablePage: reactive({
+  tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    searchObjects: []
   }),
   showConfirmOrder: false,
-  confirmOrderNo: ''
+  confirmOrderNo: '',
+  combobox: {
+    dispatch_status: [
+      {
+        label: i18n.global.t('wms.deliveryManagement.preShipment'),
+        value: '0'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.newShipment'),
+        value: '1'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.goodsToBePicked'),
+        value: '2'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.picked'),
+        value: '3'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.packaged'),
+        value: '4'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.weighed'),
+        value: '5'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.outOfWarehouse'),
+        value: '6'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.signedIn'),
+        value: '7'
+      }
+    ]
+  }
 })
 
 const method = reactive({
@@ -220,10 +302,6 @@ const method = reactive({
     method.clearDialogForm()
     data.showDialog = true
   },
-  editRow: (row: DeliveryManagementVO) => {
-    console.log(row)
-    // data.dialogForm = row
-  },
   confirmOrder: (row: DeliveryManagementVO) => {
     if (row.dispatch_status === undefined || ![0, 1].includes(row.dispatch_status)) {
       hookComponent.$message({
@@ -301,7 +379,8 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm, 1)
+    method.getShipment()
   }
 })
 

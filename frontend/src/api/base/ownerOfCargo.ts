@@ -29,3 +29,10 @@ export const deleteOwnerOfCargo = (id: number) => http({
       id
     }
   })
+
+// import form
+export const excelImport = (data: OwnerOfCargoVO[]) => http({
+    url: '/goodsowner/excel',
+    method: 'post',
+    data
+  })

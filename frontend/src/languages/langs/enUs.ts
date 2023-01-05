@@ -39,7 +39,8 @@ export default {
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
-      mustInput: 'Please fill in the '
+      mustInput: 'Please fill in the ',
+      mustSelect: 'Please select '
     },
     homeHeader: {
       logout: 'Logout'
@@ -97,6 +98,9 @@ export default {
     loginSuccess: 'Login succeeded!',
     notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!'
   },
+  homepage: {
+    subTitle: 'Modern Warehouse Management System'
+  },
   base: {
     freightSetting: {
       carrier: 'carrier',
@@ -108,7 +112,8 @@ export default {
       creator: 'Creator',
       create_time: 'Create Time',
       last_update_time: 'Last Update Time',
-      is_valid: 'Valid'
+      is_valid: 'Valid',
+      freightSelectModal: 'Freight Select Modal',
     },
     userManagement: {
       user_num: 'User Num',
@@ -484,7 +489,27 @@ export default {
       confirmBack: 'Confirm withdrawal',
       or: ' or ',
       irreversible: 'This operation is irreversible',
-      detailQuantityIsZero: 'Shipment quantity cannot be 0'
+      detailQuantityIsZero: 'Shipment quantity cannot be 0',
+      qty_available: 'Available Quantity',
+      spu_description: 'Product Description',
+      bar_code: 'Bar Code',
+      order_qty: 'Order Quantity',
+      unpicked_qty: 'Quantity to be picked',
+      picked_qty: 'Picked Quantity',
+      detailVolume: 'Volume',
+      package_qty: 'Packed Quantity',
+      package_person: 'Packer',
+      package_time: 'Packaging Time',
+      weighing_no: 'Weighing sheet No',
+      package_no: 'Packaging serial No',
+      weighing_person: 'Weigher',
+      weighing_weight: 'Weighing Weight',
+      waybill_no: 'Waybill No',
+      carrier: 'Carrier',
+      damagedQuantity: 'Damaged quantity upon arrival',
+      setFreight: 'Set Carrier',
+      departure_city: 'Originating city',
+      arrival_city: 'City of arrival'
     }
   }
 }

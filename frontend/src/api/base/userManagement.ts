@@ -1,6 +1,6 @@
 import http from '@/utils/http/request'
 import { PageConfigProps } from '@/types/System/Form'
-import { UserVO, ChangePwdAPIParams } from '@/types/Base/UserManagement'
+import { UserVO, ChangePwdAPIParams, ImportVO } from '@/types/Base/UserManagement'
 
 // Find Data by Pagination
 export const getSelectItem = () => http({
@@ -50,6 +50,13 @@ export const resetPassword = (id_list: number[]) => http({
 // Change password
 export const changePassword = (data: ChangePwdAPIParams) => http({
     url: '/user/change-pwd',
+    method: 'post',
+    data
+  })
+
+// Import form
+export const excelImport = (data: ImportVO[]) => http({
+    url: '/user/excel',
     method: 'post',
     data
   })

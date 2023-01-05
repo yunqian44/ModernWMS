@@ -53,4 +53,9 @@ export interface DataProps {
   showDialog: boolean
   dialogForm: CommodityVO
   tablePage: TablePage
+  searchForm: {
+    spu_code: string
+    spu_name: string
+    category_name: string
+  }
 }

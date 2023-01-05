@@ -49,10 +49,15 @@
   >
     <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="asn_no" :title="$t('wms.stockAsnInfo.asn_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.stockAsnInfo.spu_code')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.stockAsnInfo.spu_name')"></vxe-column>
-      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')"></vxe-column>
+      <vxe-column field="sku_code" :title="$t('wms.stockAsnInfo.sku_code')">
+        <template #default="{ row }">
+          <div :class="'text-decoration-none'" @click="method.showSkuInfo(row)"> {{ row.sku_code }}</div>
+        </template>
+      </vxe-column>
       <vxe-column field="sku_name" :title="$t('wms.stockAsnInfo.sku_name')"></vxe-column>
       <vxe-column field="goods_owner_name" :title="$t('wms.stockAsnInfo.goods_owner_name')"></vxe-column>
       <vxe-column field="supplier_name" :title="$t('wms.stockAsnInfo.supplier_name')"></vxe-column>
@@ -83,6 +88,7 @@
     >
     </custom-pager>
   </div>
+  <skuInfo :show-dialog="data.showDialogShowInfo" :form="data.dialogForm" @close="method.closeDialogShowInfo" />
 </template>
 
 <script lang="ts" setup>
@@ -99,17 +105,47 @@ import { getStockAsnList, unloadAsn, confirmAsnCancel } from '@/api/wms/stockAsn
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
+import skuInfo from './sku-info.vue'
 
 const xTableStockLocation = ref()
 
 const data = reactive({
   showDialog: false,
+  showDialogShowInfo: false,
   searchForm: {
     supplier_name: '',
     sku_name: ''
   },
   activeTab: null,
   tableData: ref<StockAsnVO[]>([]),
+    dialogForm: ref<StockAsnVO>({
+    id: 0,
+    asn_no: '',
+    asn_status: 0,
+    spu_id: 0,
+    spu_code: '',
+    spu_name: '',
+    sku_id: 0,
+    sku_code: '',
+    sku_name: '',
+    origin: '',
+    length_unit: 0,
+    volume_unit: 0,
+    weight_unit: 0,
+    asn_qty: 0,
+    actual_qty: 0,
+    sorted_qty: 0,
+    shortage_qty: 0,
+    more_qty: 0,
+    damage_qty: 0,
+    weight: 0,
+    volume: 0,
+    supplier_id: 0,
+    supplier_name: '',
+    goods_owner_id: 0,
+    goods_owner_name: '',
+    is_valid: true
+  }),
   tablePage: reactive({
     total: 0,
     sqlTitle: 'asn_status:1',
@@ -121,6 +157,13 @@ const data = reactive({
 })
 
 const method = reactive({
+  closeDialogShowInfo: () => {
+    data.showDialogShowInfo = false
+  },
+  showSkuInfo(row: StockAsnVO) {
+    data.dialogForm = JSON.parse(JSON.stringify(row))
+    data.showDialogShowInfo = true
+  },
   editRow(row: StockAsnVO) {
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeAsnUnload'),

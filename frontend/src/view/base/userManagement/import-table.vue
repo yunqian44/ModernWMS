@@ -37,12 +37,11 @@
                 ></tooltip-btn>
               </template>
             </vxe-column>
-            <vxe-column field="customer_name" :title="$t('base.customer.customer_name')"></vxe-column>
-            <vxe-column field="city" :title="$t('base.customer.city')"></vxe-column>
-            <vxe-column field="address" :title="$t('base.customer.address')"></vxe-column>
-            <vxe-column field="manager" :title="$t('base.customer.manager')"></vxe-column>
-            <vxe-column field="email" :title="$t('base.customer.email')"></vxe-column>
-            <vxe-column field="contact_tel" :title="$t('base.customer.contact_tel')"></vxe-column>
+            <vxe-column field="user_num" :title="$t('base.userManagement.user_num')"></vxe-column>
+            <vxe-column field="user_name" :title="$t('base.userManagement.user_name')"></vxe-column>
+            <vxe-column field="contact_tel" :title="$t('base.userManagement.contact_tel')"></vxe-column>
+            <vxe-column field="user_role" :title="$t('base.userManagement.user_role')"></vxe-column>
+            <vxe-column field="sex" :title="$t('base.userManagement.sex')"></vxe-column>
           </vxe-table>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -59,11 +58,11 @@ import { reactive, computed, ref, watch } from 'vue'
 import { VxeTablePropTypes } from 'vxe-table'
 import * as XLSX from 'xlsx'
 import i18n from '@/languages/i18n'
-import { excelImport } from '@/api/base/customer'
+import { excelImport } from '@/api/base/userManagement'
 import { hookComponent } from '@/components/system/index'
 import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { CustomerExcelVO } from '@/types/Base/Customer'
+import { ImportVO } from '@/types/Base/UserManagement'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -76,7 +75,7 @@ const props = defineProps<{
 const isShow = computed(() => props.showDialog)
 
 const data = reactive({
-  importData: ref<Array<CustomerExcelVO>>([]),
+  importData: ref<Array<ImportVO>>([]),
   validRules: ref<VxeTablePropTypes.EditRules>({})
 })
 
@@ -95,8 +94,23 @@ const method = reactive({
 
     const $table = xTable.value
     // It must be use 'getTableData()' to get all datas with table because it will delete row sometimes.
-    const importData = $table.getTableData().fullData
-
+    const importData = JSON.parse(JSON.stringify($table.getTableData().fullData))
+    for (const item of importData) {
+      let sex = 'Male'
+      if (['男', '女', 'Male', 'Female'].includes(item.sex)) {
+        switch (item.sex) {
+          case '男':
+          case 'Male':
+            sex = 'male'
+            break
+          case '女':
+          case 'Female':
+            sex = 'female'
+            break
+        }
+      }
+      item.sex = sex
+    }
     const { data: res } = await excelImport(importData)
     if (!res.isSuccess) {
       hookComponent.$message({
@@ -154,14 +168,12 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            customer_name: ws[index][i18n.global.t('base.customer.customer_name')],
-            city: ws[index][i18n.global.t('base.customer.city')],
-            address: ws[index][i18n.global.t('base.customer.address')],
-            manager: ws[index][i18n.global.t('base.customer.manager')],
-            email: ws[index][i18n.global.t('base.customer.email')],
-            contact_tel: ws[index][i18n.global.t('base.customer.contact_tel')],
-            _XID: '',
-            errorMsg: ''
+            user_num: ws[index][i18n.global.t('base.userManagement.user_num')],
+            user_name: ws[index][i18n.global.t('base.userManagement.user_name')],
+            contact_tel: ws[index][i18n.global.t('base.userManagement.contact_tel')],
+            user_role: ws[index][i18n.global.t('base.userManagement.user_role')],
+            sex: ws[index][i18n.global.t('base.userManagement.sex')],
+            is_valid: true
           })
         })
       }
@@ -174,7 +186,7 @@ const method = reactive({
     try {
       $table.exportData({
         type: 'xlsx',
-        filename: i18n.global.t('router.sideBar.customer'),
+        filename: i18n.global.t('router.sideBar.userManagement'),
         columnFilterMethod({ column }: any) {
           return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
         }
@@ -187,7 +199,7 @@ const method = reactive({
     }
   },
 
-  deleteRow: (row: CustomerExcelVO) => {
+  deleteRow: (row: ImportVO) => {
     hookComponent.$dialog({
       content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
       handleConfirm: async () => {
