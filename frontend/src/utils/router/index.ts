@@ -121,7 +121,7 @@ function GetModuleAndIcon(name: string) {
     case 'stockManagement':
       return 'warehouse'
     case 'stockAsn':
-      return 'warehouse'
+      return 'home-silo'
     case 'warehouseWorkingModule':
       return 'account-hard-hat-outline '
     case 'deliveryManagement':
