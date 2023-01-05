@@ -11,18 +11,29 @@
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
           <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse"
+            <v-text-field
+              v-model="data.searchForm.supplier_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse')"
+              :label="$t('wms.stockAsnInfo.supplier_name')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.sku_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.stockAsnInfo.sku_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -68,12 +79,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { StockAsnVO } from '@/types/WMS/StockAsn'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
+import { DEBOUNCE_TIME } from '@/constant/system'
+import { setSearchObject } from '@/utils/common'
+import { SearchObject } from '@/types/System/Form'
 import { getStockAsnList, unloadAsn } from '@/api/wms/stockAsn'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
@@ -84,7 +98,8 @@ const xTableStockLocation = ref()
 const data = reactive({
   showDialog: false,
   searchForm: {
-    warehouse: ''
+    supplier_name: '',
+    sku_name: ''
   },
   activeTab: null,
   tableData: ref<StockAsnVO[]>([]),
@@ -92,8 +107,10 @@ const data = reactive({
     total: 0,
     sqlTitle: 'asn_status:1',
     pageIndex: 1,
-    pageSize: 10
-  })
+    pageSize: 10,
+    searchObjects: ref<Array<SearchObject>>([])
+  }),
+  timer: ref<any>(null)
 })
 
 const method = reactive({
@@ -159,7 +176,8 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getStockAsnList()
   }
 })
 
@@ -169,6 +187,23 @@ const tableHeight = computed(() => computedTableHeight({}))
 defineExpose({
   getStockAsnList: method.getStockAsnList
 })
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style lang="less" scoped>
