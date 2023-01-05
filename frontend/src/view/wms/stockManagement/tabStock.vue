@@ -51,7 +51,7 @@
       <vxe-column field="qty_sorted" :title="$t('wms.stockList.qty_sorted')"></vxe-column>
       <vxe-column field="shortage_qty" :title="$t('wms.stockList.shortage_qty')"></vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -60,7 +60,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
 </template>
 
@@ -77,6 +77,7 @@ import { SearchObject } from '@/types/System/Form'
 import { getStockList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import customPager from '@/components/custom-pager.vue'
 
 const xTableWarehouse = ref()
 
