@@ -13,6 +13,8 @@
                   <v-col cols="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
+                    <tooltip-btn icon="mdi-database-import-outline" :tooltip-text="$t('system.page.import')" @click="method.openDialogImport">
+                    </tooltip-btn>
                     <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
                   </v-col>
 
@@ -100,6 +102,7 @@
         </v-card-text>
       </v-card>
       <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+      <import-table :show-dialog="data.showDialogImport" @close="method.closeDialogImport" @saveSuccess="method.saveSuccessImport" />
     </div>
   </div>
 </template>
@@ -117,12 +120,15 @@ import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-freight.vue'
+import importTable from './import-table.vue'
 import i18n from '@/languages/i18n'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
+  showDialogImport: false,
+
   dialogForm: {
     id: 0,
     carrier: '',
@@ -168,6 +174,17 @@ const method = reactive({
   },
   // After add or update success.
   saveSuccess: () => {
+    method.refresh()
+    method.closeDialog()
+  },
+  // Import Dialog
+  openDialogImport: () => {
+    data.showDialogImport = true
+  },
+  closeDialogImport: () => {
+    data.showDialogImport = false
+  },
+  saveSuccessImport: () => {
     method.refresh()
     method.closeDialog()
   },
@@ -235,6 +252,10 @@ const method = reactive({
         content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
+  },
+  importTable: () => {
+    const $table = xTable.value
+    $table.importData()
   },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
