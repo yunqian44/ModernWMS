@@ -98,6 +98,9 @@ export default {
     loginSuccess: 'Login succeeded!',
     notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!'
   },
+  homepage: {
+    subTitle: 'Modern Warehouse Management System'
+  },
   base: {
     freightSetting: {
       carrier: 'carrier',

@@ -22,9 +22,12 @@ export function menusToRouter(menuList: MenuItem[]): CustomerRouterProps[] {
 
 // Convert the menu permission returned from the back end to the sidebar
 export function menusToSideBar(): SideBarMenu[] {
-  const result: SideBarMenu[] = []
+  const result: SideBarMenu[] = [
+    { icon: GetModuleAndIcon('homepage'), lable: i18n.global.t('router.sideBar.homepage'), routerPath: 'homepage', showDetail: false }
+  ]
   const menuList: MenuItem[] = store.getters['user/menulist']
   for (const menu of menuList) {
+    console.log(menu)
     // Get the module index and check whether this group exists
     const moduleIndex = result.findIndex((item) => item.lable === i18n.global.t(`router.sideBar.${ menu.module }`))
     const lable = GetMenuNameAndModule(menu.vue_path)
