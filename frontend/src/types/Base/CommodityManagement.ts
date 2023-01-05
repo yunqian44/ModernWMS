@@ -33,6 +33,20 @@ export interface CommodityDetailVO {
   volume?: number
 }
 
+export interface CommodityDetailJoinMainVO {
+  sku_id: number
+  spu_id: number
+  spu_code: string
+  spu_name: string
+  sku_code: string
+  sku_name: string
+  supplier_id: number
+  supplier_name: string
+  brand: string
+  origin: string
+  unit: string
+}
+
 export interface DataProps {
   tableData: CommodityVO[]
   tableTreeConfig: VxeTablePropTypes.TreeConfig

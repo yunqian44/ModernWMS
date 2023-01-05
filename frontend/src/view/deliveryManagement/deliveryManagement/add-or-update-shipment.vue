@@ -1,8 +1,8 @@
 <template>
-  <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
+  <v-dialog v-model="isShow" :width="'70%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card class="formCard">
-        <v-toolbar color="white" :title="`${$t('router.sideBar.roleMenu')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('router.sideBar.deliveryManagement')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-select
@@ -16,9 +16,8 @@
               clearable
               @update:model-value="method.customerNameChange"
             ></v-select>
-            <v-row v-for="(item, index) of data.form.detailList" :key="index">
-              <v-col :cols="7">
-                <v-select
+            <v-row v-for="(item, index) of data.form.detailList" :key="index" style="margin-top: 5px;">
+              <!-- <v-select
                   v-model="item.sku_id"
                   :items="data.combobox.sku_code"
                   item-title="label"
@@ -27,9 +26,23 @@
                   :label="$t('wms.deliveryManagement.sku_code')"
                   variant="outlined"
                   clearable
-                ></v-select>
+                ></v-select> -->
+              <v-col :cols="3">
+                <v-text-field v-model="item.spu_name" :label="$t('wms.deliveryManagement.spu_name')" variant="outlined" readonly></v-text-field>
               </v-col>
               <v-col :cols="3">
+                <v-text-field
+                  v-model="item.spu_code"
+                  :label="$t('wms.deliveryManagement.spu_code')"
+                  :rules="data.rules.spu_code"
+                  variant="outlined"
+                  readonly
+                ></v-text-field>
+              </v-col>
+              <v-col :cols="3">
+                <v-text-field v-model="item.sku_code" :label="$t('wms.deliveryManagement.sku_code')" variant="outlined" readonly></v-text-field>
+              </v-col>
+              <v-col :cols="2">
                 <v-text-field
                   v-model="item.qty"
                   :rules="data.rules.qty"
@@ -38,7 +51,7 @@
                   clearable
                 ></v-text-field>
               </v-col>
-              <v-col :cols="2">
+              <v-col :cols="1">
                 <div class="detailBtnContainer">
                   <tooltip-btn
                     :flat="true"
@@ -50,7 +63,15 @@
                 </div>
               </v-col>
             </v-row>
-            <v-btn style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right" color="primary" :width="40" @click="method.AddDetail">
+            <!-- <v-btn style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right" color="primary" :width="40" @click="method.AddDetail">
+              +
+            </v-btn> -->
+            <v-btn
+              style="font-size: 20px; margin-bottom: 15px; margin-top: 10px; float: right"
+              color="primary"
+              :width="40"
+              @click="method.openSelect('target')"
+            >
               +
             </v-btn>
           </v-form>
@@ -60,6 +81,7 @@
           <v-btn color="primary" variant="text" @click="method.submit">{{ $t('system.page.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
+      <skuSelect :show-dialog="data.showSkuDialogSelect" @close="method.closeDialogSelect('target')" @sureSelect="method.sureSelect" />
     </template>
   </v-dialog>
 </template>
@@ -75,6 +97,8 @@ import { getSupplierAll } from '@/api/base/supplier'
 import { getSpuList } from '@/api/base/commodityManagementSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { checkDetailRepeatGetBool } from '@/utils/dataVerification/page'
+import skuSelect from '@/components/select/sku-select.vue'
+import { CommodityDetailJoinMainVO } from '@/types/Base/CommodityManagement'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -87,6 +111,8 @@ const props = defineProps<{
 const isShow = computed(() => props.showDialog)
 
 const data = reactive({
+  curSelectType: '',
+  showSkuDialogSelect: false,
   dialogTitle: '',
   form: ref<DeliveryManagementVO>({
     id: 0,
@@ -110,12 +136,48 @@ const data = reactive({
     customer_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.customer_name') }!`
     ],
-    sku_id: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.sku_code') }!`],
+    spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.sku_code') }!`],
     qty: [(val: number) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.detailQty') }!`]
   }
 })
 
 const method = reactive({
+  openSelect: (type: string) => {
+    data.curSelectType = type
+
+    if (type === 'target') {
+      data.showSkuDialogSelect = true
+    }
+  },
+  sureSelect: (selectRecords: CommodityDetailJoinMainVO[]) => {
+    if (data.curSelectType === 'target') {
+      for (const item of selectRecords) {
+        const index = data.form.detailList.findIndex((fi) => fi.sku_id === item.sku_id)
+        if (index === -1) {
+          data.form.detailList.push({
+            id: 0,
+            sku_id: item.sku_id,
+            spu_code: item.spu_code,
+            spu_name: item.spu_name,
+            sku_name: item.sku_name,
+            sku_code: item.sku_code,
+            qty: 0
+          })
+        }
+      }
+    }
+  },
+  closeDialogSelect: (type: string) => {
+    if (type === 'target') {
+      data.showSkuDialogSelect = false
+    }
+  },
+  clearCommodity: (item: DeliveryManagementDetailListVO) => {
+    item.sku_id = 0
+    item.sku_code = ''
+    item.spu_code = ''
+    item.spu_name = ''
+  },
   // When customers change
   customerNameChange: (val: string) => {
     if (!val) {

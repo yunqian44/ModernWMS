@@ -21,8 +21,6 @@
                   <!-- Search Input -->
                   <v-col cols="9">
                     <v-row no-gutters @keyup.enter="method.sureSearch">
-                      <v-col cols="4"></v-col>
-                      <v-col cols="4"> </v-col>
                       <v-col cols="4">
                         <v-text-field
                           v-model="data.searchForm.carrier"
@@ -31,6 +29,30 @@
                           density="comfortable"
                           class="searchInput ml-5 mt-1"
                           :label="$t('base.freightSetting.carrier')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.departure_city"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('base.freightSetting.departure_city')"
+                          variant="solo"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="4">
+                        <v-text-field
+                          v-model="data.searchForm.arrival_city"
+                          clearable
+                          hide-details
+                          density="comfortable"
+                          class="searchInput ml-5 mt-1"
+                          :label="$t('base.freightSetting.arrival_city')"
                           variant="solo"
                         >
                         </v-text-field>
@@ -135,7 +157,9 @@ const data = reactive({
     is_valid: true
   },
   searchForm: {
-    carrier: ''
+    carrier: '',
+    departure_city: '',
+    arrival_city: ''
   },
   activeTab: null,
   tableData: ref<FreightVO[]>([]),

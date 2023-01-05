@@ -40,6 +40,13 @@ export const getWarehouseSelect = () => http({
     url: '/warehouse/select-item',
     method: 'get',
   })
+
+  // Excel Import
+export const excelImport = (data: Array<WarehouseVO>) => http({
+  url: '/warehouse/excel',
+  method: 'post',
+  data
+})
   
   // Get the combobox item with warehouse area
 export const getWarehouseAreaSelect = (warehouse_id: number) => http({

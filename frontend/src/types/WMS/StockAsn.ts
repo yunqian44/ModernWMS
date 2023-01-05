@@ -40,3 +40,31 @@ export interface SortingVo {
   asn_id: number
   sorted_qty: number
 }
+
+export interface SkuInfoVo {
+  spu_id: number
+  spu_code: string
+  spu_name: string
+  category_id: number
+  category_name: string
+  spu_description: string
+  bar_code: string
+  supplier_id: number
+  supplier_name: string
+  brand: string
+  origin: string
+  length_unit: number
+  volume_unit: number
+  weight_unit: number
+  sku_id: number
+  sku_code: string
+  sku_name: string
+  weight: number
+  lenght: number
+  width: number
+  height: number
+  volume: number
+  unit: string
+  cost: number
+  price: number
+}

@@ -44,6 +44,7 @@
       <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
       <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
       <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
+      <vxe-column field="unweighing_qty" :title="$t('wms.deliveryManagement.unweighing_qty')"></vxe-column>
       <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
       <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
@@ -70,6 +71,7 @@
       @page-change="method.handlePageChange"
     >
     </vxe-pager>
+    <ToBeWeighedConfirm :show-dialog="data.showDialog" :default-weight="data.defaultWeight" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
   </div>
 </template>
 
@@ -83,14 +85,15 @@ import { hookComponent } from '@/components/system'
 import { getToBeWeighed, handleWeigh } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import ToBeWeighedConfirm from './to-be-weighed-confirm.vue'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
-    id: 0
-  },
+  dialogMaxQty: 0,
+  defaultWeight: 0,
+  weighedRow: ref<DeliveryManagementDetailVO>(),
   searchForm: {},
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
@@ -102,29 +105,42 @@ const data = reactive({
 })
 
 const method = reactive({
-  handleWeigh: async (row: DeliveryManagementDetailVO) => {
-    const { data: res } = await handleWeigh([
-      {
-        id: row.id,
-        dispatch_no: row.dispatch_no,
-        dispatch_status: row.dispatch_status,
-        weighing_qty: row.picked_qty,
-        weighing_weight: row.weight,
-        picked_qty: row.picked_qty
+  dialogClose: () => {
+    data.showDialog = false
+  },
+  // Callback after entering packaging value
+  dialogSubmit: async (obj: { weighing_qty: number; weighing_weight: number }) => {
+    if (data.weighedRow) {
+      const { data: res } = await handleWeigh([
+        {
+          id: data.weighedRow.id,
+          dispatch_no: data.weighedRow.dispatch_no,
+          dispatch_status: data.weighedRow.dispatch_status,
+          weighing_qty: obj.weighing_qty,
+          weighing_weight: obj.weighing_weight,
+          picked_qty: data.weighedRow.picked_qty
+        }
+      ])
+      if (!res.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: res.errorMessage
+        })
+        return
       }
-    ])
-    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
+        type: 'success',
+        content: res.data
       })
-      return
+      method.dialogClose()
+      method.refresh()
     }
-    hookComponent.$message({
-      type: 'success',
-      content: res.data
-    })
-    method.refresh()
+  },
+  handleWeigh: async (row: DeliveryManagementDetailVO) => {
+    data.weighedRow = row
+    data.dialogMaxQty = row.unweighing_qty ? row.unweighing_qty : 0
+    data.defaultWeight = row.weight ? row.weight : 0
+    data.showDialog = true
   },
   // Refresh data
   refresh: () => {

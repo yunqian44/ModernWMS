@@ -54,20 +54,30 @@
       <!-- <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column> -->
       <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn>
+          <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
           <tooltip-btn
+            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
             :flat="true"
             icon="mdi-pencil-outline"
             :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
             @click="method.confirmOrder(row)"
           ></tooltip-btn>
           <tooltip-btn
+            v-if="row.dispatch_status === 2"
             :flat="true"
             icon="mdi-pencil-outline"
             :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
             @click="method.confirmPicking(row)"
           ></tooltip-btn>
           <tooltip-btn
+            v-if="row.dispatch_status === 2 || row.dispatch_status === 3"
+            :flat="true"
+            icon="mdi-pencil-outline"
+            :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
+            @click="method.backToThePreviousStep(row)"
+          ></tooltip-btn>
+          <tooltip-btn
+            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
             :flat="true"
             icon="mdi-delete-outline"
             :tooltip-text="$t('system.page.delete')"
@@ -106,7 +116,7 @@ import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/
 import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getShipment, delShipment, confirmPicking } from '@/api/wms/deliveryManagement'
+import { getShipment, delShipment, cancelOrderByDispatch, confirmPicking } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import addOrUpdateShipment from './add-or-update-shipment.vue'
@@ -136,21 +146,50 @@ const data = reactive({
 const method = reactive({
   // Confirm picking
   confirmPicking: async (row: DeliveryManagementVO) => {
-    if (row.dispatch_no) {
-      const { data: res } = await confirmPicking(row.dispatch_no)
-      if (!res.isSuccess) {
-        hookComponent.$message({
-          type: 'error',
-          content: res.errorMessage
-        })
-        return
+    hookComponent.$dialog({
+      content: `${ i18n.global.t('wms.deliveryManagement.confirmPicking') }?`,
+      handleConfirm: async () => {
+        if (row.dispatch_no) {
+          const { data: res } = await confirmPicking(row.dispatch_no)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
+          }
+          hookComponent.$message({
+            type: 'success',
+            content: res.data
+          })
+          method.refresh()
+        }
       }
-      hookComponent.$message({
-        type: 'success',
-        content: res.data
-      })
-      method.refresh()
-    }
+    })
+  },
+  // Back to the previous step
+  backToThePreviousStep(row: DeliveryManagementVO) {
+    hookComponent.$dialog({
+      content: `${ i18n.global.t('wms.deliveryManagement.confirmBack') }?`,
+      handleConfirm: async () => {
+        const { data: res } = await cancelOrderByDispatch({
+          dispatch_no: row.dispatch_no,
+          dispatch_status: row.dispatch_status
+        })
+        if (!res.isSuccess) {
+          hookComponent.$message({
+            type: 'error',
+            content: res.errorMessage
+          })
+          return
+        }
+        hookComponent.$message({
+          type: 'success',
+          content: res.data
+        })
+        method.refresh()
+      }
+    })
   },
   // Close the order confirmation window
   closeConfirmOrder: () => {
@@ -183,8 +222,18 @@ const method = reactive({
   },
   editRow: (row: DeliveryManagementVO) => {
     console.log(row)
+    // data.dialogForm = row
   },
   confirmOrder: (row: DeliveryManagementVO) => {
+    if (row.dispatch_status === undefined || ![0, 1].includes(row.dispatch_status)) {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('wms.deliveryManagement.incorrectStatusMsg') }${ getShipmentState(0) }${ i18n.global.t(
+          'wms.deliveryManagement.or'
+        ) }${ getShipmentState(1) }`
+      })
+      return
+    }
     if (row.dispatch_no) {
       data.confirmOrderNo = row.dispatch_no
       data.showConfirmOrder = true

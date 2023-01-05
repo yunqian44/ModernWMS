@@ -12,9 +12,8 @@
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
           <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
+            <v-text-field
               v-model="data.searchForm.warehouse_name"
               clearable
               hide-details
@@ -23,7 +22,19 @@
               :label="$t('base.warehouseSetting.warehouse_name')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.area_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('base.warehouseSetting.area_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -80,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { WarehouseAreaVO, AreaProperty } from '@/types/Base/Warehouse'
@@ -93,6 +104,9 @@ import i18n from '@/languages/i18n'
 import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 import { formatIsValid } from '@/utils/format/formatSystem'
 import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { DEBOUNCE_TIME } from '@/constant/system'
+import { SearchObject } from '@/types/System/Form'
 
 const xTableWarehouseArea = ref()
 
@@ -107,15 +121,18 @@ const data = reactive({
     is_valid: true
   }),
   searchForm: {
-    warehouse_name: ''
+    warehouse_name: '',
+    area_name: ''
   },
   activeTab: null,
   tableData: ref<WarehouseAreaVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
-  })
+    pageSize: 10,
+    searchObjects: ref<Array<SearchObject>>([])
+  }),
+  timer: ref<any>(null)
 })
 
 const method = reactive({
@@ -207,12 +224,31 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    // console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getWarehouseAreaList()
   }
 })
 
 const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 
 defineExpose({
   getWarehouseAreaList: method.getWarehouseAreaList
