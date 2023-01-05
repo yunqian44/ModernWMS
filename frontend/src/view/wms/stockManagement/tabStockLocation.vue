@@ -13,16 +13,16 @@
           <v-col cols="4"></v-col>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse"
+            <v-text-field
+              v-model="data.searchForm.location_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse')"
+              :label="$t('wms.stockLocation.location_name')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -36,7 +36,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableStockLocation" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column field="warehouse" :title="$t('wms.stockLocation.warehouse')"></vxe-column>
       <vxe-column field="location_name" :title="$t('wms.stockLocation.location_name')"></vxe-column>
@@ -63,12 +63,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { StockLocationVO } from '@/types/WMS/StockManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
+import { DEBOUNCE_TIME } from '@/constant/system'
+import { setSearchObject } from '@/utils/common'
+import { SearchObject } from '@/types/System/Form'
 import { getStockLocationList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
@@ -78,15 +81,17 @@ const xTableStockLocation = ref()
 const data = reactive({
   showDialog: false,
   searchForm: {
-    warehouse: ''
+    location_name: ''
   },
   activeTab: null,
   tableData: ref<StockLocationVO[]>([]),
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
-  })
+    pageSize: 10,
+    searchObjects: ref<Array<SearchObject>>([])
+  }),
+  timer: ref<any>(null)
 })
 
 const method = reactive({
@@ -130,7 +135,8 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getStockLocationList()
   }
 })
 
@@ -140,6 +146,23 @@ const tableHeight = computed(() => computedTableHeight({}))
 defineExpose({
   getStockLocationList: method.getStockLocationList
 })
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style lang="less" scoped>

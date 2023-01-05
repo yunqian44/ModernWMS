@@ -13,16 +13,16 @@
           <v-col cols="4"></v-col>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.spu_name"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.stockList.spu_name')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -36,7 +36,7 @@
       height: cardHeight
     }"
   >
-    <vxe-table ref="xTableWarehouse" :column-config="{minWidth: '100px'}" :data="data.tableData" :height="tableHeight" align="center">
+    <vxe-table ref="xTableWarehouse" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.stockList.spu_code')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.stockList.spu_name')"></vxe-column>
@@ -65,16 +65,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
-import { VxePagerEvents } from 'vxe-table'
+import { computed, ref, reactive, watch } from 'vue'
+import { VxePagerEvents, VxeTablePropTypes } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { StockVO } from '@/types/WMS/StockManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
+import { DEBOUNCE_TIME } from '@/constant/system'
+import { setSearchObject } from '@/utils/common'
+import { SearchObject } from '@/types/System/Form'
 import { getStockList } from '@/api/wms/stockManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
-import { formatIsValid } from '@/utils/format/formatSystem'
 
 const xTableWarehouse = ref()
 
@@ -88,11 +90,31 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
-  })
+    pageSize: 10,
+    searchObjects: ref<Array<SearchObject>>([])
+  }),
+  timer: ref<any>(null)
 })
 
 const method = reactive({
+  sumNum: (list: any[], field: string) => {
+    let count = 0
+    list.forEach((item) => {
+      count += Number(item[field])
+    })
+    return count
+  },
+  // footerMethod:ref<VxeTablePropTypes.FooterMethod>({ columns, data }) => {
+  //   columns.map((column, columnIndex) => {
+  //     if (columnIndex === 0) {
+  //       return '合计'
+  //     }
+  //     if (['qty', 'qty_available'].includes(column.field)) {
+  //       return method.sumNum(data, column.field)
+  //     }
+  //     return null
+  //   })
+  // },
   // Refresh data
   refresh: () => {
     method.getStockList()
@@ -133,7 +155,8 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getStockList()
   }
 })
 
@@ -143,6 +166,23 @@ const tableHeight = computed(() => computedTableHeight({}))
 defineExpose({
   getStockList: method.getStockList
 })
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style lang="less" scoped>
