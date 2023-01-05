@@ -39,7 +39,8 @@ export default {
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',
-      mustInput: '请填写'
+      mustInput: '请填写',
+      mustSelect: '请选择'
     },
     homeHeader: {
       logout: '注销'
@@ -461,7 +462,27 @@ export default {
       confirmBack: '确认撤回',
       or: '或',
       irreversible: '此操作不可逆',
-      detailQuantityIsZero: '发货数量不能为0'
+      detailQuantityIsZero: '发货数量不能为0',
+      qty_available: '可用数量',
+      spu_description: '商品描述',
+      bar_code: '条码',
+      order_qty: '订单数量',
+      unpicked_qty: '待拣货数量',
+      picked_qty: '已拣货数量',
+      detailVolume: '体积',
+      package_qty: '已打包数量',
+      package_person: '打包员',
+      package_time: '打包时间',
+      weighing_no: '称重单号',
+      package_no: '打包流水号',
+      weighing_person: '称重员',
+      weighing_weight: '称重重量',
+      waybill_no: '运单号',
+      carrier: '承运单位',
+      damagedQuantity: '到货破损数量',
+      setFreight: '设置运费',
+      departure_city: '始发城市',
+      arrival_city: '到货城市',
     }
   }
 }

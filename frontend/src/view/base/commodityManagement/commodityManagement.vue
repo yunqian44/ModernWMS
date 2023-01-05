@@ -91,27 +91,27 @@
 
               <vxe-column field="weight" :title="$t('base.commodityManagement.weight')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.weight} ${method.GetUnit('weight', row.weight_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="lenght" :title="$t('base.commodityManagement.lenght')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.lenght} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.lenght} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="width" :title="$t('base.commodityManagement.width')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.width} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.width} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="height" :title="$t('base.commodityManagement.height')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.height} ${method.GetUnit('length', row.length_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.height} ${GetUnit('length', row.length_unit)}` }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="volume" :title="$t('base.commodityManagement.volume')">
                 <template #default="{ row }">
-                  <span v-if="row.parent_id > 0">{{ `${row.volume} ${method.GetUnit('volume', row.volume_unit)}` }}</span>
+                  <span v-if="row.parent_id > 0">{{ `${row.volume} ${GetUnit('volume', row.volume_unit)}` }}</span>
                 </template>
               </vxe-column>
 
@@ -180,6 +180,7 @@ import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
+import { GetUnit } from '@/constant/commodityManagement'
 
 const xTable = ref()
 
@@ -222,17 +223,6 @@ const data: DataProps = reactive({
 })
 
 const method = reactive({
-  // 获取单位
-  GetUnit(type: 'weight' | 'length' | 'volume', val: number) {
-    switch (type) {
-      case 'length':
-        return ['mm', 'cm', 'dm', 'm'][val]
-      case 'volume':
-        return ['cm³', 'dm³', 'm³'][val]
-      case 'weight':
-        return ['mg', 'g', 'kg'][val]
-    }
-  },
   sureSearch: () => {
     // console.log(data.searchForm)
   },

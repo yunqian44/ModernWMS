@@ -111,7 +111,7 @@ export const getDelivery = (data: PageConfigProps) => http({
 
 // Get Sign In
 export const getSignIn = (data: PageConfigProps) => http({
-    url: '/dispatchlist/advanced-list',
+    url: '/dispatchlist/list',
     method: 'post',
     data: {
       ...data,

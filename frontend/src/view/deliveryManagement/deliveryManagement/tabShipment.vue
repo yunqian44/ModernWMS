@@ -47,43 +47,53 @@
         </template>
       </vxe-column>
       <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weight} ${GetUnit('weight', 2)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('volume', 1)}` }}</span>
+        </template>
+      </vxe-column>
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <!-- <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column> -->
-      <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="120" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
-          <tooltip-btn
-            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
-            @click="method.confirmOrder(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 2"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
-            @click="method.confirmPicking(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 2 || row.dispatch_status === 3"
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
-            @click="method.backToThePreviousStep(row)"
-          ></tooltip-btn>
-          <tooltip-btn
-            v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
-            :flat="true"
-            icon="mdi-delete-outline"
-            :tooltip-text="$t('system.page.delete')"
-            :icon-color="errorColor"
-            @click="method.deleteRow(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
+            <tooltip-btn
+              v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
+              @click="method.confirmOrder(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              v-if="row.dispatch_status === 2"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
+              @click="method.confirmPicking(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              v-if="row.dispatch_status === 2 || row.dispatch_status === 3"
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
+              @click="method.backToThePreviousStep(row)"
+            ></tooltip-btn>
+            <tooltip-btn
+              v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
+              :flat="true"
+              icon="mdi-delete-outline"
+              :tooltip-text="$t('system.page.delete')"
+              :icon-color="errorColor"
+              @click="method.deleteRow(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
@@ -122,6 +132,7 @@ import i18n from '@/languages/i18n'
 import addOrUpdateShipment from './add-or-update-shipment.vue'
 import { getShipmentState } from './shipmentFun'
 import ConfirmOrder from './confirm-order.vue'
+import { GetUnit } from '@/constant/commodityManagement'
 
 const xTable = ref()
 
@@ -147,7 +158,7 @@ const method = reactive({
   // Confirm picking
   confirmPicking: async (row: DeliveryManagementVO) => {
     hookComponent.$dialog({
-      content: `${ i18n.global.t('wms.deliveryManagement.confirmPicking') }?`,
+      content: `${i18n.global.t('wms.deliveryManagement.confirmPicking')}?`,
       handleConfirm: async () => {
         if (row.dispatch_no) {
           const { data: res } = await confirmPicking(row.dispatch_no)
@@ -170,7 +181,7 @@ const method = reactive({
   // Back to the previous step
   backToThePreviousStep(row: DeliveryManagementVO) {
     hookComponent.$dialog({
-      content: `${ i18n.global.t('wms.deliveryManagement.confirmBack') }?`,
+      content: `${i18n.global.t('wms.deliveryManagement.confirmBack')}?`,
       handleConfirm: async () => {
         const { data: res } = await cancelOrderByDispatch({
           dispatch_no: row.dispatch_no,
@@ -228,9 +239,9 @@ const method = reactive({
     if (row.dispatch_status === undefined || ![0, 1].includes(row.dispatch_status)) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('wms.deliveryManagement.incorrectStatusMsg') }${ getShipmentState(0) }${ i18n.global.t(
+        content: `${i18n.global.t('wms.deliveryManagement.incorrectStatusMsg')}${getShipmentState(0)}${i18n.global.t(
           'wms.deliveryManagement.or'
-        ) }${ getShipmentState(1) }`
+        )}${getShipmentState(1)}`
       })
       return
     }
@@ -254,7 +265,7 @@ const method = reactive({
           }
           hookComponent.$message({
             type: 'success',
-            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+            content: `${i18n.global.t('system.page.delete')}${i18n.global.t('system.tips.success')}`
           })
           method.refresh()
         }
@@ -296,7 +307,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },

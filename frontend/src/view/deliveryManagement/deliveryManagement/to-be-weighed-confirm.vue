@@ -6,7 +6,7 @@
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field v-model="data.form.qty" :label="$t('wms.deliveryManagement.detailQty')" variant="outlined" clearable></v-text-field>
-            <v-text-field v-model="data.form.weight" :label="$t('wms.deliveryManagement.detailWeight')" variant="outlined" clearable></v-text-field>
+            <v-text-field v-model="data.form.weight" :label="$t('wms.deliveryManagement.detailWeight') + '(' + weightUnit + ')'" variant="outlined" clearable></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -29,6 +29,7 @@ const props = defineProps<{
   showDialog: boolean
   maxQty: number
   defaultWeight: number
+  weightUnit: string
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -57,6 +58,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
+      console.log(props.weightUnit)
       data.form.qty = props.maxQty
       data.form.weight = props.defaultWeight
     }
