@@ -13,6 +13,8 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
+                <tooltip-btn icon="mdi-database-import-outline" :tooltip-text="$t('system.page.import')" @click="method.openDialogImport">
+                </tooltip-btn>
                 <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
               </v-col>
 
@@ -105,7 +107,7 @@
 </template>
 
 <script lang="tsx" setup>
-import { computed, ref, reactive, onMounted } from 'vue'
+import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { CustomerVO, DataProps } from '@/types/Base/Customer'
@@ -113,6 +115,7 @@ import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-customer.vue'
 import { hookComponent } from '@/components/system'
+import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import i18n from '@/languages/i18n'
@@ -144,7 +147,8 @@ const data = reactive({
     pageIndex: 1,
     pageSize: 10,
     searchObjects: ref<Array<SearchObject>>([])
-  }
+  },
+  timer: ref<any>(null)
 })
 
 const method = reactive({
@@ -257,6 +261,24 @@ onMounted(() => {
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style scoped lang="less">
