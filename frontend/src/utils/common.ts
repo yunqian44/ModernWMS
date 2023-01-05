@@ -11,7 +11,7 @@ export const setSearchObject = (searchForm: any) => {
       if (searchValue && searchValue.trim() !== '') {
         searchObjects.push({
           name: key,
-          operators: SearchOperator.INCLUDE,
+          operator: SearchOperator.INCLUDE,
           text: searchValue,
           value: searchValue
         })

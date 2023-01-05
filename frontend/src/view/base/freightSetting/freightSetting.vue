@@ -186,7 +186,7 @@ const method = reactive({
   },
   saveSuccessImport: () => {
     method.refresh()
-    method.closeDialog()
+    method.closeDialogImport()
   },
   // Refresh data
   refresh: () => {

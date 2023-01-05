@@ -7,7 +7,12 @@
         <v-card-text>
           <div class="mb-4">
             <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.chooseFile')" size="x-small" @click="method.chooseFile"></tooltip-btn>
-            <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" size="x-small" @click="method.exportTable"></tooltip-btn>
+            <tooltip-btn
+              icon="mdi-export-variant"
+              :tooltip-text="$t('system.page.exportTemplate')"
+              size="x-small"
+              @click="method.exportTemplate"
+            ></tooltip-btn>
             <input v-show="false" id="open" ref="uploadExcel" type="file" accept=".xls, .xlsx, .csv" @change="method.readExcel" />
           </div>
           <vxe-table
@@ -21,6 +26,17 @@
             align="center"
           >
             <vxe-column type="seq" width="60"></vxe-column>
+            <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
+              <template #default="{ row }">
+                <tooltip-btn
+                  :flat="true"
+                  icon="mdi-delete-outline"
+                  :tooltip-text="$t('system.page.delete')"
+                  :icon-color="errorColor"
+                  @click="method.deleteRow(row)"
+                ></tooltip-btn>
+              </template>
+            </vxe-column>
             <vxe-column field="carrier" :title="$t('base.freightSetting.carrier')"></vxe-column>
             <vxe-column field="departure_city" :title="$t('base.freightSetting.departure_city')"></vxe-column>
             <vxe-column field="arrival_city" :title="$t('base.freightSetting.arrival_city')"></vxe-column>
@@ -39,17 +55,16 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, ref } from 'vue'
+import { reactive, computed, ref, watch } from 'vue'
 import { VxeTablePropTypes } from 'vxe-table'
 import * as XLSX from 'xlsx'
 import i18n from '@/languages/i18n'
 import { excelImport } from '@/api/base/freightSetting'
 import { hookComponent } from '@/components/system/index'
-import { SYSTEM_HEIGHT } from '@/constant/style'
+import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { FreightVO } from '@/types/Base/Freight'
 
-const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
 const xTable = ref()
@@ -62,38 +77,53 @@ const isShow = computed(() => props.showDialog)
 
 const data = reactive({
   importData: ref<Array<FreightVO>>([]),
-  path: '',
-  curFile: ref<File>(),
   validRules: ref<VxeTablePropTypes.EditRules>({})
 })
 
 const method = reactive({
+  initForm: () => {
+    data.importData = []
+  },
   closeDialog: () => {
     emit('close')
   },
   submit: async () => {
-    // const { valid } = await formRef.value.validate()
-    // if (valid) {
-      const { data: res } = await excelImport(data.importData)
-      if (!res.isSuccess) {
-        hookComponent.$message({
-          type: 'error',
-          content: res.errorMessage
-        })
-        return
-      }
+    const isValid = method.valid()
+    if (!isValid) {
+      return
+    }
+
+    const $table = xTable.value
+    // It must be use 'getTableData()' to get all datas with table because it will delete row sometimes.
+    const importData = $table.getTableData().fullData
+
+    const { data: res } = await excelImport(importData)
+    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'success',
-        content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+        type: 'error',
+        content: res.errorMessage
       })
-      emit('saveSuccess')
-    // } 
-    // else {
-    //   hookComponent.$message({
-    //     type: 'error',
-    //     content: i18n.global.t('system.checkText.checkFormFail')
-    //   })
-    // }
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: `${ i18n.global.t('system.page.submit') }${ i18n.global.t('system.tips.success') }`
+    })
+    emit('saveSuccess')
+  },
+
+  valid: () => {
+    const $table = xTable.value
+    const importData = $table.getTableData().fullData
+
+    if (importData.length <= 0) {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('system.tips.detailLengthIsZero') }`
+      })
+      return false
+    }
+    return true
   },
 
   chooseFile: async () => {
@@ -132,20 +162,19 @@ const method = reactive({
             min_payment: ws[index][i18n.global.t('base.freightSetting.min_payment')]
           })
         })
-        // TODO match the base setting
       }
     }
     fileReader.readAsBinaryString(file)
   },
 
-  exportTable: () => {
+  exportTemplate: () => {
     const $table = xTable.value
     try {
       $table.exportData({
         type: 'csv',
         filename: i18n.global.t('router.sideBar.freightSetting'),
         columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+          return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
         }
       })
     } catch (error) {
@@ -154,8 +183,29 @@ const method = reactive({
         content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
+  },
+
+  deleteRow: (row: FreightVO) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
+      handleConfirm: async () => {
+        if (row) {
+          const $table = xTable.value
+          $table.remove(row)
+        }
+      }
+    })
   }
 })
+
+watch(
+  () => isShow.value,
+  (val) => {
+    if (val) {
+      method.initForm()
+    }
+  }
+)
 </script>
 
 <style scoped lang="less">

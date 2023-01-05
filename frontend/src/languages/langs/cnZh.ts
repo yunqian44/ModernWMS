@@ -22,7 +22,8 @@ export default {
       insertOneRow: '新增一行',
       view: '查看',
       import: '导入',
-      chooseFile: '选择文件'
+      chooseFile: '选择文件',
+      exportTemplate: '导出模板'
     },
     tips: {
       success: '成功!',
