@@ -443,7 +443,21 @@ export default {
       quantityIsZero: 'Please ensure that at least one of the selected goods has an issue quantity greater than 0!',
       NoItemSelected: 'Please select at least one commodity to delivered!',
       confirmSuccess: 'Confirm the shipment order successfully!',
-      confirmPicking: 'Confirm picking'
+      confirmPicking: 'Confirm Picking',
+      confirmDelivery: 'Confirm Delivery',
+      confirmSignIn: 'Confirm Signing',
+      detailWeight: 'Weight',
+      unpackage_qty: 'Quantity to be packaged',
+      unweighing_qty: 'Quantity to be weighed',
+      validQtyMsgPackage: 'Please enter a valid value, which cannot exceed the total quantity',
+      validQtyMsgSignIn: 'Please enter a valid value',
+      signInQty: 'Actual signed in quantity',
+      incorrectStatusMsg: 'Operation failed, the status should be',
+      backToThePreviousStep: 'Recall to previous process',
+      confirmBack: 'Confirm withdrawal',
+      or: ' or ',
+      irreversible: 'This operation is irreversible',
+      detailQuantityIsZero: 'Shipment quantity cannot be 0'
     }
   }
 }

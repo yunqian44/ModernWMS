@@ -1,6 +1,6 @@
 import http from '@/utils/http/request'
 import { PageConfigProps } from '@/types/System/Form'
-import { addRequestVO, ConfirmOrderVO, PackageVO, WeighVO, DeliveryVO, SignInVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { addRequestVO, ConfirmOrderVO, PackageVO, WeighVO, DeliveryVO, SignInVO, CancleOrderVO } from '@/types/DeliveryManagement/DeliveryManagement'
 
 // Get Pre shipment
 export const getShipment = (data: PageConfigProps) => http({
@@ -162,28 +162,44 @@ export const confirmPicking = (dispatch_no: string) => http({
 
 // Pack
 export const handlePackage = (data: PackageVO[]) => http({
-  url: '/dispatchlist/package',
-  method: 'post',
-  data
-})
+    url: '/dispatchlist/package',
+    method: 'post',
+    data
+  })
 
 // Weigh
 export const handleWeigh = (data: WeighVO[]) => http({
-  url: '/dispatchlist/weight',
-  method: 'post',
-  data
-})
+    url: '/dispatchlist/weight',
+    method: 'post',
+    data
+  })
 
 // Delivery
 export const handleDelivery = (data: DeliveryVO[]) => http({
-  url: '/dispatchlist/delivery',
-  method: 'post',
-  data
-})
+    url: '/dispatchlist/delivery',
+    method: 'post',
+    data
+  })
 
 // Sign in
 export const handleSignIn = (data: SignInVO[]) => http({
-  url: '/dispatchlist/sign',
-  method: 'post',
-  data
-})
+    url: '/dispatchlist/sign',
+    method: 'post',
+    data
+  })
+
+// Undo to previous step by detail
+export const cancelOrderByDetail = (id: number) => http({
+    url: '/dispatchlist/cancel-order',
+    method: 'put',
+    params: {
+      id
+    }
+  })
+
+// Undo to previous step by dispatch
+export const cancelOrderByDispatch = (data: CancleOrderVO) => http({
+    url: '/dispatchlist/cancel-order',
+    method: 'post',
+    data
+  })

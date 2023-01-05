@@ -447,7 +447,21 @@ export default {
       quantityIsZero: '请保证选择的商品至少有一项出库数量大于0!',
       NoItemSelected: '请至少选中一项商品进行出库!',
       confirmSuccess: '确认发货单成功!',
-      confirmPicking: '确认拣货'
+      confirmPicking: '确认拣货',
+      confirmDelivery: '确认出库',
+      confirmSignIn: '确认签收',
+      detailWeight: '重量',
+      unpackage_qty: '待打包数量',
+      unweighing_qty: '待称重数量',
+      validQtyMsgPackage: '请输入有效数值, 且不能超过总数量',
+      validQtyMsgSignIn: '请输入有效数值',
+      signInQty: '实际签收数量',
+      incorrectStatusMsg: '操作失败, 状态应该为',
+      backToThePreviousStep: '撤回到上一个流程',
+      confirmBack: '确认撤回',
+      or: '或',
+      irreversible: '此操作不可逆',
+      detailQuantityIsZero: '发货数量不能为0'
     }
   }
 }
