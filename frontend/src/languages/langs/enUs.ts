@@ -23,7 +23,7 @@ export default {
       view: 'View',
       import: 'Import',
       chooseFile: 'Choose File',
-      exportTemplate: 'Export Template',
+      exportTemplate: 'Export Template'
     },
     tips: {
       success: ' success!',
@@ -407,6 +407,33 @@ export default {
       goods_owner_id: 'Goods Owner Id',
       goods_owner_name: 'Goods Owner Name',
       is_valid: 'Valid'
+    },
+    skuInfo: {
+      spu_id: 'Spu Id',
+      spu_code: 'Commodity code',
+      spu_name: 'Trade name',
+      category_id: 'Commodity Category ID',
+      category_name: 'Commodity Category',
+      spu_description: 'Commodity Description',
+      bar_code: 'Specification Code',
+      supplier_id: 'Supplier Id',
+      supplier_name: 'Supplier Name',
+      brand: 'Brand',
+      origin: 'origin',
+      length_unit: 'Length Unit',
+      volume_unit: 'Volume Unit',
+      weight_unit: 'Weight Unit',
+      sku_id: 'Sku Id',
+      sku_code: 'Specification code',
+      sku_name: 'Form Name',
+      weight: 'Commodity Weight',
+      lenght: 'Commodity Length',
+      width: 'Commodity Width',
+      height: 'Commodity Height',
+      volume: 'Commodity Volume',
+      unit: 'Commodity Unit',
+      cost: 'Commodity Cost',
+      price: 'Commodity Price'
     },
     deliveryManagement: {
       shipment: 'Invoice',
