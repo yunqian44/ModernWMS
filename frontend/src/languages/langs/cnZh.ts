@@ -53,6 +53,12 @@ export default {
         yes: '是',
         no: '否'
       }
+    },
+    pager: {
+      pageSizes: '条/页',
+      goTo: '前往',
+      total: '共',
+      record: '条记录',
     }
   },
   router: {

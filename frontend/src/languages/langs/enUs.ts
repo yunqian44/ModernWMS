@@ -23,7 +23,7 @@ export default {
       view: 'View',
       import: 'Import',
       chooseFile: 'Choose File',
-      exportTemplate: 'Export Template'
+      exportTemplate: 'Export Template',
     },
     tips: {
       success: ' success!',
@@ -53,6 +53,12 @@ export default {
         yes: 'yes',
         no: 'no'
       }
+    },
+    pager: {
+      pageSizes: '/page',
+      goTo: 'Go to',
+      total: 'Total',
+      record: 'record'
     }
   },
   router: {
