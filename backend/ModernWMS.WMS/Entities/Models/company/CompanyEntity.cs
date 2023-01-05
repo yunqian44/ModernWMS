@@ -47,6 +47,6 @@ namespace ModernWMS.WMS.Entities.Models
         /// <summary>
         /// the tenant id
         /// </summary>
-        public byte tenant_id { get; set; } = 1;
+        public long tenant_id { get; set; } = 1;
     }
 }
