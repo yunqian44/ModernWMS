@@ -62,14 +62,16 @@
                     field="handle_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseFreeze.handle_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  >
+                    <template #default="{ row, column }">
+                      <span>{{ formatDate(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                   <!-- <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseFreeze.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseFreeze.create_time')"
-                    :formatter="['formatDate']"
                   ></vxe-column> -->
                   <vxe-column field="operate" :title="$t('system.page.operate')" width="100" :resizable="false" show-overflow>
                     <template #default="{ row }">
@@ -134,6 +136,7 @@ import { getStockFreezeList, getStockFreezeOne } from '@/api/wms/warehouseFreeze
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
+import { formatDate } from '@/utils/format/formatSystem'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-freeze.vue'
 import i18n from '@/languages/i18n'

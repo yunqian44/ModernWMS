@@ -54,14 +54,12 @@
                     field="handle_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseAdjust.handle_time')"
-                    :formatter="['formatDate']"
                   ></vxe-column> -->
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseAdjust.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"
-                    :formatter="['formatDate']"
                   ></vxe-column>
                   <!-- <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <div class="homeSidebar">
       <div class="sideBarTitle">
         <Logo :height="50" :top="15" :left="5" />
@@ -125,7 +125,8 @@ onMounted(() => {
       padding-left: 22px;
       padding-right: 8px;
       border-radius: 0 50px 50px 0;
-      margin-top: 7px;
+      margin-top: 5px;
+      margin-bottom: 2px;
       display: flex;
       justify-content: space-between;
       align-items: center;

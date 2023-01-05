@@ -69,19 +69,13 @@
                     :title="$t('wms.warehouseWorking.warehouseMove.dest_googs_location_name')"
                   ></vxe-column>
                   <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseMove.handler')"></vxe-column>
-                  <vxe-column
-                    field="handle_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseMove.handle_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="handle_time" width="170px" :title="$t('wms.warehouseWorking.warehouseMove.handle_time')">
+                    <template #default="{ row, column }">
+                      <span>{{ formatDate(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseMove.creator')"></vxe-column>
-                  <vxe-column
-                    field="create_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseMove.create_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('wms.warehouseWorking.warehouseMove.create_time')"></vxe-column>
                   <vxe-column field="operate" :title="$t('system.page.operate')" width="250" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -147,6 +141,7 @@ import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import { formatMoveStatus } from '@/utils/format/formatWarehouseWorking'
+import { formatDate } from '@/utils/format/formatSystem'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-move.vue'
 import i18n from '@/languages/i18n'
