@@ -22,6 +22,8 @@ namespace ModernWMS.WMS.Entities.ViewModels
         {
 
         }
+        #endregion
+        #region Property
         /// <summary>
         /// dispatch_no
         /// </summary>
@@ -77,6 +79,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [Display(Name = "creator")]
         [MaxLength(64, ErrorMessage = "MaxLength")]
         public string creator { get; set; } = string.Empty;
+
 
         #endregion
 

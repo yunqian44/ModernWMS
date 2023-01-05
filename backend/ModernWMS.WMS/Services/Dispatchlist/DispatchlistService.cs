@@ -112,7 +112,10 @@ namespace ModernWMS.WMS.Services
                             spu_description = spu.spu_description,
                             spu_name = spu.spu_name,
                             bar_code = spu.bar_code,
-                            unpicked_qty = d.qty - d.picked_qty
+                            unpicked_qty = d.qty - d.picked_qty,
+                            length_unit = spu.length_unit,
+                            volume_unit = spu.volume_unit,
+                            weight_unit =spu.weight_unit
                         };
             query = query.Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                  .Where(queries.AsExpression<DispatchlistViewModel>());
@@ -123,11 +126,11 @@ namespace ModernWMS.WMS.Services
             }
             else if (pageSearch.sqlTitle.Equals("to_package"))
             {
-                query = query.Where(t => (t.picked_qty == t.qty && (t.dispatch_status.Equals(3)) || (t.package_qty == 0 && t.dispatch_status.Equals(5))));
+                query = query.Where(t => (t.picked_qty == t.qty && (t.dispatch_status.Equals(3)) || (t.package_qty <t.picked_qty && t.dispatch_status.Equals(5))));
             }
             else if (pageSearch.sqlTitle.Equals("to_weight"))
             {
-                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || (t.weighing_qty == 0 && t.dispatch_status.Equals(4))));
+                query = query.Where(t => t.picked_qty == t.qty && (t.dispatch_status.Equals(3) || (t.weighing_qty < t.picked_qty && t.dispatch_status.Equals(4))));
             }
             else if (pageSearch.sqlTitle.Equals("to_delivery"))
             {
@@ -299,7 +302,8 @@ namespace ModernWMS.WMS.Services
             var datas = await (from dpl in _dBContext.GetDbSet<DispatchpicklistEntity>().AsNoTracking()
                                join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on dpl.sku_id equals sku.id
                                join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
-                               join owner in _dBContext.GetDbSet<GoodsownerEntity>().AsNoTracking() on dpl.goods_owner_id equals owner.id
+                               join owner in _dBContext.GetDbSet<GoodsownerEntity>().AsNoTracking() on dpl.goods_owner_id equals owner.id into o_left
+                               from owner in o_left.DefaultIfEmpty()
                                join location in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on dpl.goods_location_id equals location.id
                                where dpl.dispatchlist_id == dispatch_id
                                select new DispatchpicklistViewModel
@@ -311,7 +315,7 @@ namespace ModernWMS.WMS.Services
                                    sku_id = dpl.sku_id,
                                    pick_qty = dpl.pick_qty,
                                    picked_qty = dpl.picked_qty,
-                                   goods_owner_name = owner.goods_owner_name,
+                                   goods_owner_name = owner.goods_owner_name == null ? "":owner.goods_owner_name,
                                    sku_code = sku.sku_code,
                                    spu_code = spu.spu_code,
                                    spu_description = spu.spu_description,
@@ -623,7 +627,7 @@ namespace ModernWMS.WMS.Services
                        }).ToList();
             foreach (var r in res)
             {
-                var picklist = (from d in datas.Where(t => t.sku_id == r.sku_id).OrderBy(o => o.qty_available)
+                var picklist = (from d in datas.Where(t => t.sku_id == r.sku_id&&t.stock_id>0).OrderBy(o => o.qty_available)
                                 select new DispatchlistConfirmPickDetailViewModel
                                 {
                                     stock_id = d.stock_id,
@@ -861,7 +865,6 @@ namespace ModernWMS.WMS.Services
                     entity.dispatch_status = 1;
                 }
             }
-            var qty = await _dBContext.SaveChangesAsync();
             var saved = false;
             int res = 0;
             while (!saved)
@@ -1017,6 +1020,10 @@ namespace ModernWMS.WMS.Services
                 {
                     return (false, _stringLocalizer["data_changed"]);
                 }
+                if ((entity.package_qty + vm.package_qty) > entity.picked_qty)
+                {
+                    return (false, _stringLocalizer["unpackgeqty_lessthen"]);
+                }
                 entity.last_update_time = time;
                 entity.package_person = currentUser.user_name;
                 entity.package_qty += vm.package_qty;
@@ -1103,6 +1110,10 @@ namespace ModernWMS.WMS.Services
                 if (entity == null)
                 {
                     return (false, _stringLocalizer["data_changed"]);
+                }
+                if ((entity.weighing_qty + vm.weighing_qty) > entity.picked_qty)
+                {
+                    return (false, _stringLocalizer["unweightqty_lessthen"]);
                 }
                 entity.last_update_time = time;
                 entity.weighing_person = currentUser.user_name;
@@ -1198,9 +1209,8 @@ namespace ModernWMS.WMS.Services
                 entity.lock_qty = 0;
                 entity.actual_qty = entity.picked_qty;
                 entity.intrasit_qty = entity.picked_qty;
-                entity.weighing_person = currentUser.user_name;
             }
-            var pick_sql = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.id));
+            var pick_sql = pick_DBSet.Where(t => dispatchlist_id_list.Contains(t.dispatchlist_id));
             var pick_datas = await pick_sql.ToListAsync();
             var picks_g = pick_sql.AsNoTracking().GroupBy(e => new { e.goods_location_id, e.sku_id, e.goods_owner_id }).Select(c => new { c.Key.goods_location_id, c.Key.sku_id, c.Key.goods_owner_id, picked_qty = c.Sum(t => t.picked_qty) });
             var picks = await picks_g.ToListAsync();
@@ -1216,6 +1226,7 @@ namespace ModernWMS.WMS.Services
                 }
                 s.qty -= pick.picked_qty;
                 s.last_update_time = time;
+                stock_DBSet.Update(s);
             }
             foreach (var pick in pick_datas)
             {

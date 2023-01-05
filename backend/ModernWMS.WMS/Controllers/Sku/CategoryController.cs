@@ -81,7 +81,7 @@ namespace ModernWMS.WMS.Controllers
             }
             else
             {
-                return ResultModel<CategoryViewModel>.Error(_stringLocalizer["exists_entity"]);
+                return ResultModel<CategoryViewModel>.Error(_stringLocalizer["not_exists_entity"]);
             }
         }
         /// <summary>

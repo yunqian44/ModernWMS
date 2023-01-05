@@ -57,12 +57,7 @@
                   <vxe-column field="price_per_volume" :title="$t('base.freightSetting.price_per_volume')"></vxe-column>
                   <vxe-column field="min_payment" :title="$t('base.freightSetting.min_payment')"></vxe-column>
                   <vxe-column field="creator" :title="$t('base.freightSetting.creator')"></vxe-column>
-                  <vxe-column
-                    field="create_time"
-                    width="170px"
-                    :title="$t('base.freightSetting.create_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('base.freightSetting.create_time')"></vxe-column>
                   <vxe-column field="is_valid" :title="$t('base.freightSetting.is_valid')">
                     <template #default="{ row, column }">
                       <span>{{ row[column.property] ? $t('system.combobox.yesOrNo.yes') : $t('system.combobox.yesOrNo.no') }}</span>
@@ -86,7 +81,7 @@
                     </template>
                   </vxe-column>
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -94,8 +89,7 @@
                   :page-sizes="PAGE_SIZE"
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
-                >
-                </vxe-pager>
+                ></custom-pager>
               </div>
             </v-window-item>
           </v-window>
@@ -119,6 +113,7 @@ import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import customPager from '@/components/custom-pager.vue'
 import addOrUpdateDialog from './add-or-update-freight.vue'
 import importTable from './import-table.vue'
 import i18n from '@/languages/i18n'

@@ -75,9 +75,9 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public long tenant_id { get; set; } = 0;
 
         /// <summary>
-        /// warehouse
+        /// warehouse_name
         /// </summary>
-        public string warehouse { get; set; } = string.Empty;
+        public string warehouse_name { get; set; } = string.Empty;
 
         /// <summary>
         /// location_name
@@ -114,6 +114,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         [Display(Name = "qty_available")]
         public int qty_available { get; set; } = 0;
+
+        /// <summary>
+        /// goods owner name
+        /// </summary>
+        public string goods_owner_name { get; set; } = string.Empty;
         #endregion
 
     }

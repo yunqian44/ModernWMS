@@ -46,25 +46,19 @@
                   <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" width="150px" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.location_name')"></vxe-column>
                   <vxe-column field="book_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.book_qty')"></vxe-column>
                   <vxe-column field="counted_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.counted_qty')"></vxe-column>
                   <vxe-column field="difference_qty" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.difference_qty')"></vxe-column>
                   <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseTaking.handler')"></vxe-column>
-                  <vxe-column
-                    field="handle_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseTaking.handle_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="handle_time" width="170px" :title="$t('wms.warehouseWorking.warehouseTaking.handle_time')">
+                    <template #default="{ row, column }">
+                      <span>{{ formatDate(row[column.property]) }}</span>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseTaking.creator')"></vxe-column>
-                  <vxe-column
-                    field="create_time"
-                    width="170px"
-                    :title="$t('wms.warehouseWorking.warehouseTaking.create_time')"
-                    :formatter="['formatDate']"
-                  ></vxe-column>
+                  <vxe-column field="create_time" width="170px" :title="$t('wms.warehouseWorking.warehouseTaking.create_time')"></vxe-column>
                   <vxe-column field="operate" :title="$t('system.page.operate')" width="250" :resizable="false" show-overflow>
                     <template #default="{ row }">
                       <tooltip-btn
@@ -98,7 +92,7 @@
                     </template>
                   </vxe-column>
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -107,7 +101,7 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pager>
               </div>
             </v-window-item>
           </v-window>
@@ -137,10 +131,12 @@ import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import { SearchObject } from '@/types/System/Form'
 import { formatTakingJobStatus } from '@/utils/format/formatWarehouseWorking'
+import { formatDate } from '@/utils/format/formatSystem'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-taking.vue'
 import numberInput from './number-input.vue'
 import i18n from '@/languages/i18n'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -164,7 +160,7 @@ const data = reactive({
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     handler: '',
     handle_time: '',
@@ -196,7 +192,7 @@ const method = reactive({
       spu_code: '',
       spu_name: '',
       sku_code: '',
-      warehouse: '',
+      warehouse_name: '',
       location_name: '',
       handler: '',
       handle_time: '',

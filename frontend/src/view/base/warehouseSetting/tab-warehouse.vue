@@ -51,7 +51,6 @@
         field="create_time"
         width="170px"
         :title="$t('base.warehouseSetting.create_time')"
-        :formatter="['formatDate']"
       ></vxe-column>
       <vxe-column field="is_valid" :title="$t('base.warehouseSetting.is_valid')">
         <template #default="{ row, column }">
@@ -71,7 +70,7 @@
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -80,7 +79,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
   </div>
   <add-or-update-dialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
 </template>
@@ -97,6 +96,7 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-warehouse.vue'
 import i18n from '@/languages/i18n'
 import { formatIsValid } from '@/utils/format/formatSystem'
+import customPager from '@/components/custom-pager.vue'
 
 const xTableWarehouse = ref()
 

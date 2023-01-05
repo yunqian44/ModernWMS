@@ -57,16 +57,16 @@
               <vxe-column field="email" :title="$t('base.supplier.email')"></vxe-column>
               <vxe-column field="contact_tel" :title="$t('base.supplier.contact_tel')"></vxe-column>
               <vxe-column field="creator" :title="$t('base.supplier.creator')"></vxe-column>
-              <vxe-column
-                field="create_time"
-                :title="$t('base.supplier.create_time')"
-                :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
-              ></vxe-column>
-              <vxe-column
-                field="last_update_time"
-                :title="$t('base.supplier.last_update_time')"
-                :formatter="['formatDate', 'yyyy-MM-dd HH:mm:ss']"
-              ></vxe-column>
+              <vxe-column field="create_time" :title="$t('base.supplier.create_time')">
+                <template #default="{ row, column }">
+                  <span>{{ formatDate(row[column.property]) }}</span>
+                </template>
+              </vxe-column>
+              <vxe-column field="last_update_time" :title="$t('base.supplier.last_update_time')">
+                <template #default="{ row, column }">
+                  <span>{{ formatDate(row[column.property]) }}</span>
+                </template>
+              </vxe-column>
               <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
                 <template #default="{ row }">
                   <tooltip-btn
@@ -85,7 +85,7 @@
                 </template>
               </vxe-column>
             </vxe-table>
-            <vxe-pager
+            <custom-pager
               :current-page="data.tablePage.pageIndex"
               :page-size="data.tablePage.pageSize"
               perfect
@@ -94,7 +94,7 @@
               :layouts="PAGE_LAYOUT"
               @page-change="method.handlePageChange"
             >
-            </vxe-pager>
+            </custom-pager>
           </div>
           <!-- </v-window-item>
           </v-window> -->
@@ -121,6 +121,8 @@ import { SearchObject } from '@/types/System/Form'
 import i18n from '@/languages/i18n'
 import { getSupplierList, deleteSupplier } from '@/api/base/supplier'
 import importSupplierTable from './import-supplier-table.vue'
+import { formatDate } from '@/utils/format/formatSystem'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

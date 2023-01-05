@@ -47,21 +47,19 @@
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" width="150px" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
                   <vxe-column field="qty" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.qty')"></vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.location_name')"></vxe-column>
                   <!-- <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.handler')"></vxe-column>
                   <vxe-column
                     field="handle_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseAdjust.handle_time')"
-                    :formatter="['formatDate']"
                   ></vxe-column> -->
                   <vxe-column field="creator" :title="$t('wms.warehouseWorking.warehouseAdjust.creator')"></vxe-column>
                   <vxe-column
                     field="create_time"
                     width="170px"
                     :title="$t('wms.warehouseWorking.warehouseAdjust.create_time')"
-                    :formatter="['formatDate']"
                   ></vxe-column>
                   <!-- <vxe-column field="operate" :title="$t('system.page.operate')" width="200" :resizable="false" show-overflow>
                     <template #default="{ row }">
@@ -89,7 +87,7 @@
                     </template>
                   </vxe-column> -->
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -98,7 +96,7 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pager>
               </div>
             </v-window-item>
           </v-window>
@@ -131,6 +129,7 @@ import { formatAdjustJobType } from '@/utils/format/formatWarehouseWorking'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-adjust.vue'
 import i18n from '@/languages/i18n'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -154,7 +153,7 @@ const data = reactive({
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    warehouse: '',
+    warehouse_name: '',
     location_name: ''
   },
   tablePage: reactive({
@@ -181,7 +180,7 @@ const method = reactive({
       spu_code: '',
       spu_name: '',
       sku_code: '',
-      warehouse: '',
+      warehouse_name: '',
       location_name: ''
     }
     nextTick(() => {
