@@ -10,7 +10,16 @@ export interface CustomerVO extends UniformFileNaming {
   contact_tel: string
   is_valid: boolean
 }
-
+export interface CustomerExcelVO {
+  customer_name: string
+  city: string
+  address: string
+  manager: string
+  email: string
+  contact_tel: string
+  _XID: string
+  errorMsg: string
+}
 export interface DataProps {
   tableData: CustomerVO[]
   tablePage: TablePage
