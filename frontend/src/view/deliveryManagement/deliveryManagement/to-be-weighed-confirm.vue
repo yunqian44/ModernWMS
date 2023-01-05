@@ -58,7 +58,6 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      console.log(props.weightUnit)
       data.form.qty = props.maxQty
       data.form.weight = props.defaultWeight
     }

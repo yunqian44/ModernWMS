@@ -88,7 +88,7 @@
 <script lang="ts" setup>
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
+import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
@@ -157,7 +157,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
   },

@@ -311,7 +311,7 @@ const method = reactive({
           }
           hookComponent.$message({
             type: 'success',
-            content: `${i18n.global.t('system.page.delete')}${i18n.global.t('system.tips.success')}`
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
           })
           method.refresh()
         }
@@ -332,7 +332,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
   },

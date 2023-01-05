@@ -79,7 +79,6 @@ const method = reactive({
   valClearable: () => {
     data.form = { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '' }
   },
-  valChange: (freightfee_id: number) => {},
   closeDialog: () => {
     emit('close')
   },
@@ -89,7 +88,7 @@ const method = reactive({
     } else {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('system.checkText.mustSelect')}${i18n.global.t('wms.deliveryManagement.carrier')}!`
+        content: `${ i18n.global.t('system.checkText.mustSelect') }${ i18n.global.t('wms.deliveryManagement.carrier') }!`
       })
     }
   }

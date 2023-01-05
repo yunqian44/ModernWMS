@@ -21,8 +21,8 @@
               :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field
-          ></v-col>
+            </v-text-field>
+          </v-col>
           <v-col cols="4">
             <v-select
               v-model="data.searchForm.dispatch_status"
@@ -88,7 +88,6 @@
       <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
-            <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
             <tooltip-btn
               :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
               :flat="true"
@@ -170,11 +169,14 @@ const data = reactive({
     id: 0,
     detailList: []
   },
-  searchForm: {
+  searchForm: ref<{
+    dispatch_no: string
+    customer_name: string
+    dispatch_status?: string
+  }>({
     dispatch_no: '',
-    customer_name: '',
-    dispatch_status: '0'
-  },
+    customer_name: ''
+  }),
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
   tablePage: ref<TablePage>({
@@ -227,7 +229,7 @@ const method = reactive({
   // Confirm picking
   confirmPicking: async (row: DeliveryManagementVO) => {
     hookComponent.$dialog({
-      content: `${i18n.global.t('wms.deliveryManagement.confirmPicking')}?`,
+      content: `${ i18n.global.t('wms.deliveryManagement.confirmPicking') }?`,
       handleConfirm: async () => {
         if (row.dispatch_no) {
           const { data: res } = await confirmPicking(row.dispatch_no)
@@ -250,7 +252,7 @@ const method = reactive({
   // Back to the previous step
   backToThePreviousStep(row: DeliveryManagementVO) {
     hookComponent.$dialog({
-      content: `${i18n.global.t('wms.deliveryManagement.confirmBack')}?`,
+      content: `${ i18n.global.t('wms.deliveryManagement.confirmBack') }?`,
       handleConfirm: async () => {
         const { data: res } = await cancelOrderByDispatch({
           dispatch_no: row.dispatch_no,
@@ -300,17 +302,13 @@ const method = reactive({
     method.clearDialogForm()
     data.showDialog = true
   },
-  editRow: (row: DeliveryManagementVO) => {
-    console.log(row)
-    // data.dialogForm = row
-  },
   confirmOrder: (row: DeliveryManagementVO) => {
     if (row.dispatch_status === undefined || ![0, 1].includes(row.dispatch_status)) {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('wms.deliveryManagement.incorrectStatusMsg')}${getShipmentState(0)}${i18n.global.t(
+        content: `${ i18n.global.t('wms.deliveryManagement.incorrectStatusMsg') }${ getShipmentState(0) }${ i18n.global.t(
           'wms.deliveryManagement.or'
-        )}${getShipmentState(1)}`
+        ) }${ getShipmentState(1) }`
       })
       return
     }
@@ -334,7 +332,7 @@ const method = reactive({
           }
           hookComponent.$message({
             type: 'success',
-            content: `${i18n.global.t('system.page.delete')}${i18n.global.t('system.tips.success')}`
+            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
           })
           method.refresh()
         }
@@ -376,13 +374,12 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
-    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm, 1)
     method.getShipment()
   }
 })

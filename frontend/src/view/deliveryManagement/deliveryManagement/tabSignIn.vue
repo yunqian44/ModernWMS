@@ -96,6 +96,13 @@
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="120" :resizable="false" show-overflow>
+        <template #default="{ row }">
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
+          </div>
+        </template>
+      </vxe-column>
     </vxe-table>
     <custom-pager
       :current-page="data.tablePage.pageIndex"
@@ -107,29 +114,32 @@
       @page-change="method.handlePageChange"
     >
     </custom-pager>
+    <SearchDeliveredDetail :id="data.showDeliveredDetailID" :show-dialog="data.showDeliveredDetail" @close="method.closeDeliveredDetail" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
-import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import XEUtils from 'xe-utils'
+import { computedCardHeight, computedTableHeight } from '@/constant/style'
+import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { getSignIn } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
-import XEUtils from 'xe-utils'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import { TablePage } from '@/types/System/Form'
+import SearchDeliveredDetail from './search-delivered-detail.vue'
 
 const xTable = ref()
 
 const data = reactive({
-  showDialog: false,
+  showDeliveredDetailID: 0,
+  showDeliveredDetail: false,
   dialogForm: {
     id: 0
   },
@@ -139,7 +149,7 @@ const data = reactive({
     spu_name: ''
   },
   activeTab: null,
-  tableData: ref<DeliveryManagementVO[]>([]),
+  tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
@@ -149,6 +159,13 @@ const data = reactive({
 })
 
 const method = reactive({
+  closeDeliveredDetail: () => {
+    data.showDeliveredDetail = false
+  },
+  viewRow: (row: DeliveryManagementDetailVO) => {
+    data.showDeliveredDetailID = row.id
+    data.showDeliveredDetail = true
+  },
   // Refresh data
   refresh: () => {
     method.getSignIn()
@@ -184,7 +201,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
+        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
       })
     }
   },

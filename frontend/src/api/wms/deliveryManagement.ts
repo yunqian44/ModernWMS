@@ -210,3 +210,12 @@ export const setCarrier = (data: SetCarrierVO[]) => http({
     method: 'post',
     data
   })
+
+// Set carrier
+export const viewInventoryDetails = (dispatch_id: number) => http({
+    url: '/dispatchlist/pick-list',
+    method: 'get',
+    params: {
+      dispatch_id
+    }
+  })
