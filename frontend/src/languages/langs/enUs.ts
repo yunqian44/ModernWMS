@@ -23,7 +23,7 @@ export default {
       view: 'View',
       import: 'Import',
       chooseFile: 'Choose File',
-      exportTemplate: 'Export Template'
+      exportTemplate: 'Export Template',
     },
     tips: {
       success: ' success!',
@@ -53,6 +53,12 @@ export default {
         yes: 'yes',
         no: 'no'
       }
+    },
+    pager: {
+      pageSizes: '/page',
+      goTo: 'Go to',
+      total: 'Total',
+      record: 'record'
     }
   },
   router: {
@@ -339,7 +345,7 @@ export default {
       stock: 'Stock'
     },
     stockLocation: {
-      warehouse: 'Warehouse',
+      warehouse_name: 'Warehouse',
       location_name: 'Location Code',
       spu_code: 'Commodity code',
       spu_name: 'Trade name',

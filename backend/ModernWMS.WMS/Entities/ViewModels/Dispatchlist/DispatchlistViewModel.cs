@@ -260,6 +260,21 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// bar_code
         /// </summary>
         public string bar_code { get; set; } = string.Empty;
+
+        /// <summary>
+        /// volume_unit
+        /// </summary>
+        public byte volume_unit { get; set; } = 0;
+
+        /// <summary>
+        /// weight_unit
+        /// </summary>
+        public byte weight_unit { get; set; } = 0;
+
+        /// <summary>
+        /// length_unit
+        /// </summary>
+        public byte length_unit { get; set; } = 0;
         #endregion
 
     }

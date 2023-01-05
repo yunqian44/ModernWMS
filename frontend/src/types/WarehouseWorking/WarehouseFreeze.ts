@@ -9,7 +9,7 @@ export interface WarehouseFreezeVO extends UniformFileNaming {
   goods_location_id: number
   handler: string
   handle_time: string
-  warehouse: string
+  warehouse_name: string
   location_name: string
   spu_code: string
   spu_name: string

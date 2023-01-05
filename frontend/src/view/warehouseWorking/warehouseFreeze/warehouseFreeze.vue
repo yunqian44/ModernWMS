@@ -52,7 +52,7 @@
                       <span>{{ formatFreezeJobType(row[column.property]) }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseFreeze.location_name')"></vxe-column>
                   <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
@@ -97,7 +97,7 @@
                     </template>
                   </vxe-column>
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -106,7 +106,7 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pager>
               </div>
             </v-window-item>
           </v-window>
@@ -140,6 +140,7 @@ import { formatDate } from '@/utils/format/formatSystem'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-freeze.vue'
 import i18n from '@/languages/i18n'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -161,7 +162,7 @@ const data = reactive({
     handle_time: '',
     last_update_time: '',
     tenant_id: 0,
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     spu_code: '',
     spu_name: '',
@@ -192,7 +193,7 @@ const method = reactive({
       handle_time: '',
       last_update_time: '',
       tenant_id: 0,
-      warehouse: '',
+      warehouse_name: '',
       location_name: '',
       spu_code: '',
       spu_name: '',

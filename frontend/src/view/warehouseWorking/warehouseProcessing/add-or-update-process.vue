@@ -30,6 +30,17 @@
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
+                  <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
+                    <template #default="{ row }">
+                      <tooltip-btn
+                        :flat="true"
+                        icon="mdi-delete-outline"
+                        :tooltip-text="$t('system.page.delete')"
+                        :icon-color="errorColor"
+                        @click="method.deleteRowSource(row)"
+                      ></tooltip-btn>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="spu_code" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('wms.warehouseWorking.warehouseProcessing.sku_code')"></vxe-column>
@@ -72,6 +83,17 @@
                   align="center"
                 >
                   <vxe-column type="seq" width="60"></vxe-column>
+                  <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
+                    <template #default="{ row }">
+                      <tooltip-btn
+                        :flat="true"
+                        icon="mdi-delete-outline"
+                        :tooltip-text="$t('system.page.delete')"
+                        :icon-color="errorColor"
+                        @click="method.deleteRowTarget(row)"
+                      ></tooltip-btn>
+                    </template>
+                  </vxe-column>
                   <vxe-column field="spu_code" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_code')"></vxe-column>
                   <vxe-column field="spu_name" :title="$t('wms.warehouseWorking.warehouseProcessing.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('wms.warehouseWorking.warehouseProcessing.sku_code')"></vxe-column>
@@ -115,7 +137,7 @@ import { WarehouseProcessingVO, WarehouseProcessingDetailVO } from '@/types/Ware
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addStockProcess } from '@/api/wms/warehouseProcessing'
-import { SYSTEM_HEIGHT } from '@/constant/style'
+import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import { removeObjectNull } from '@/utils/common'
 import { PROCESS_JOB_COMBINE, PROCESS_JOB_SPLIT } from '@/constant/warehouseWorking'
 import commoditySelect from '@/components/select/commodity-select.vue'
@@ -219,7 +241,7 @@ const method = reactive({
             id: 0,
             stock_process_id: 0,
             sku_id: record.sku_id,
-            goods_owner_id: 0,
+            goods_owner_id: record.goods_owner_id,
             goods_location_id: record.goods_location_id,
             qty: record.qty_available || 0,
             tenant_id: 0,
@@ -244,7 +266,7 @@ const method = reactive({
           id: 0,
           stock_process_id: 0,
           sku_id: selectRecords[0].sku_id,
-          goods_owner_id: 0,
+          goods_owner_id: selectRecords[0].goods_owner_id,
           goods_location_id: selectRecords[0].goods_location_id,
           qty: selectRecords[0].qty_available || 0,
           tenant_id: 0,
@@ -275,7 +297,7 @@ const method = reactive({
           stock_process_id: 0,
           sku_id: selectRecords[0].sku_id,
           goods_owner_id: 0,
-          goods_location_id: selectRecords[0].goods_location_id,
+          goods_location_id: 0,
           qty: 0,
           tenant_id: 0,
           is_source: false,
@@ -300,7 +322,7 @@ const method = reactive({
             stock_process_id: 0,
             sku_id: record.sku_id,
             goods_owner_id: 0,
-            goods_location_id: record.goods_location_id,
+            goods_location_id: 0,
             qty: 0,
             tenant_id: 0,
             is_source: false,
@@ -437,6 +459,30 @@ const method = reactive({
     if (qty > qtyAvailable) {
       return new Error(`${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qtyMoreThanAvailable') } ${ qtyAvailable }`)
     }
+  },
+
+  deleteRowSource: (row: WarehouseProcessingDetailVO) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
+      handleConfirm: async () => {
+        if (row) {
+          const $table = xTableSource.value
+          $table.remove(row)
+        }
+      }
+    })
+  },
+
+  deleteRowTarget: (row: WarehouseProcessingDetailVO) => {
+    hookComponent.$dialog({
+      content: i18n.global.t('system.tips.beforeDeleteDetailMessage'),
+      handleConfirm: async () => {
+        if (row) {
+          const $table = xTableTarget.value
+          $table.remove(row)
+        }
+      }
+    })
   }
 })
 

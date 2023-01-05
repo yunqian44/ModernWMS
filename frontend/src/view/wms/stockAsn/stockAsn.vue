@@ -58,32 +58,32 @@ const tabReceiptDetailsRef = ref()
 const tabsConfig = [
   {
     value: 'tabNotice',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-checkbox-blank-badge',
     tabName: i18n.global.t('wms.stockAsn.tabNotice')
   },
   {
     value: 'tabToDoArrival',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-truck-cargo-container',
     tabName: i18n.global.t('wms.stockAsn.tabToDoArrival')
   },
   {
     value: 'tabToDoUnload',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-truck-outline',
     tabName: i18n.global.t('wms.stockAsn.tabToDoUnload')
   },
   {
     value: 'tabToDoSorting',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-dolly',
     tabName: i18n.global.t('wms.stockAsn.tabToDoSorting')
   },
   {
     value: 'tabToDoGrounding',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-grid',
     tabName: i18n.global.t('wms.stockAsn.tabToDoGrounding')
   },
   {
     value: 'tabReceiptDetails',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-file-cabinet',
     tabName: i18n.global.t('wms.stockAsn.tabReceiptDetails')
   }
 ]

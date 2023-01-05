@@ -53,6 +53,12 @@ export default {
         yes: '是',
         no: '否'
       }
+    },
+    pager: {
+      pageSizes: '条/页',
+      goTo: '前往',
+      total: '共',
+      record: '条记录',
     }
   },
   router: {
@@ -343,7 +349,7 @@ export default {
       stock: '库存列表'
     },
     stockLocation: {
-      warehouse: '仓库名称',
+      warehouse_name: '仓库名称',
       location_name: '库位名称',
       spu_code: '商品编码',
       spu_name: '商品名称',
