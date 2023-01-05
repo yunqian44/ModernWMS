@@ -38,9 +38,9 @@
               disabled
             ></v-text-field>
             <v-text-field
-              v-model="data.form.warehouse"
+              v-model="data.form.warehouse_name"
               :label="$t('wms.warehouseWorking.warehouseFreeze.warehouse')"
-              :rules="data.rules.warehouse"
+              :rules="data.rules.warehouse_name"
               variant="outlined"
               disabled
             ></v-text-field>
@@ -110,7 +110,7 @@ const data = reactive({
     handle_time: '',
     last_update_time: '',
     tenant_id: 0,
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     spu_code: '',
     spu_name: '',
@@ -119,7 +119,7 @@ const data = reactive({
     create_time: ''
   }),
   rules: {
-    warehouse: [],
+    warehouse_name: [],
     location_name: [],
     spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_code') }!`],
     spu_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_name') }!`],
@@ -165,22 +165,12 @@ const method = reactive({
       data.form.sku_code = selectRecords[0].sku_code
 
       data.form.goods_location_id = selectRecords[0].goods_location_id
-      data.form.warehouse = selectRecords[0].warehouse
+      data.form.warehouse_name = selectRecords[0].warehouse
       data.form.location_name = selectRecords[0].location_name
     } catch (error) {
       console.error(error)
     }
   },
-
-  // sureSelectLocation: (selectRecords: any) => {
-  //   try {
-  //     data.form.goods_location_id = selectRecords[0].id
-  //     data.form.warehouse = selectRecords[0].warehouse_name
-  //     data.form.location_name = selectRecords[0].location_name
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // },
 
   clearCommodity: () => {
     data.form.sku_id = 0
@@ -191,7 +181,7 @@ const method = reactive({
 
   clearLocation: () => {
     data.form.goods_location_id = 0
-    data.form.warehouse = ''
+    data.form.warehouse_name = ''
     data.form.location_name = ''
   },
 

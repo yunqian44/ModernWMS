@@ -47,7 +47,7 @@
                   <vxe-column field="spu_name" width="150px" :title="$t('base.commodityManagement.spu_name')"></vxe-column>
                   <vxe-column field="sku_code" width="150px" :title="$t('base.commodityManagement.sku_code')"></vxe-column>
                   <vxe-column field="qty" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.qty')"></vxe-column>
-                  <vxe-column field="warehouse" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
+                  <vxe-column field="warehouse_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.warehouse')"></vxe-column>
                   <vxe-column field="location_name" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.location_name')"></vxe-column>
                   <!-- <vxe-column field="handler" width="150px" :title="$t('wms.warehouseWorking.warehouseAdjust.handler')"></vxe-column>
                   <vxe-column
@@ -153,7 +153,7 @@ const data = reactive({
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    warehouse: '',
+    warehouse_name: '',
     location_name: ''
   },
   tablePage: reactive({
@@ -180,7 +180,7 @@ const method = reactive({
       spu_code: '',
       spu_name: '',
       sku_code: '',
-      warehouse: '',
+      warehouse_name: '',
       location_name: ''
     }
     nextTick(() => {

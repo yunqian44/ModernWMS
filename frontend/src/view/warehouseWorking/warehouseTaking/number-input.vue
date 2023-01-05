@@ -61,7 +61,7 @@ const data = reactive({
     spu_code: '',
     spu_name: '',
     sku_code: '',
-    warehouse: '',
+    warehouse_name: '',
     location_name: '',
     adjust_status: false,
     handler: '',
