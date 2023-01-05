@@ -43,7 +43,7 @@ namespace ModernWMS.WMS.Entities.Models
         /// <summary>
         /// process_time
         /// </summary>
-        public DateTime process_time { get; set; } 
+        public DateTime process_time { get; set; }  = UtilConvert.MinDate;
 
         /// <summary>
         /// creator
