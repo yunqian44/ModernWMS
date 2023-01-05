@@ -147,7 +147,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(UserroleViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<UserroleEntity>();
-            if (await DbSet.AnyAsync(t => t.role_name == viewModel.role_name))
+            if (await DbSet.AnyAsync(t => t.role_name == viewModel.role_name && t.tenant_id ==  currentUser.tenant_id))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["role_name"], viewModel.role_name));
             }
@@ -171,11 +171,12 @@ namespace ModernWMS.WMS.Services
         /// update a record
         /// </summary>
         /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> UpdateAsync(UserroleViewModel viewModel)
+        public async Task<(bool flag, string msg)> UpdateAsync(UserroleViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<UserroleEntity>();
-            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.role_name == viewModel.role_name))
+            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.role_name == viewModel.role_name && t.tenant_id == currentUser.tenant_id))
             {
                 return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["role_name"], viewModel.role_name));
             }

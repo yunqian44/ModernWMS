@@ -139,7 +139,7 @@
          public async Task<(int id, string msg)> AddAsync(GoodslocationViewModel viewModel, CurrentUser currentUser)
          {
              var DbSet = _dBContext.GetDbSet<GoodslocationEntity>();
-            if (await DbSet.AnyAsync(t => t.location_name == viewModel.location_name))
+            if (await DbSet.AnyAsync(t => t.location_name == viewModel.location_name && t.tenant_id == currentUser.tenant_id))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["location_name"], viewModel.location_name));
             }
@@ -159,15 +159,16 @@
                  return (0, _stringLocalizer["save_failed"]);
              }
          }
-         /// <summary>
-         /// update a record
-         /// </summary>
-         /// <param name="viewModel">args</param>
-         /// <returns></returns>
-         public async Task<(bool flag, string msg)> UpdateAsync(GoodslocationViewModel viewModel)
+        /// <summary>
+        /// update a record
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> UpdateAsync(GoodslocationViewModel viewModel,CurrentUser currentUser)
          {
              var DbSet = _dBContext.GetDbSet<GoodslocationEntity>();
-            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_id == viewModel.warehouse_id && t.location_name == viewModel.location_name))
+            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_id == viewModel.warehouse_id && t.location_name == viewModel.location_name && t.tenant_id == currentUser.tenant_id))
             {
                 return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["location_name"], viewModel.location_name));
             }

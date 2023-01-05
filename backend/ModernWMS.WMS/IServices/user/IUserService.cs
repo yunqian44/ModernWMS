@@ -46,12 +46,13 @@ namespace ModernWMS.WMS.IServices
          /// <param name="viewModel">viewmodel</param>
          /// <returns></returns>
          Task<(int id, string msg)> AddAsync(UserViewModel viewModel, CurrentUser currentUser);
-         /// <summary>
-         /// update a data
-         /// </summary>
-         /// <param name="viewModel">viewmodel</param>
-         /// <returns></returns>
-         Task<(bool flag, string msg)> UpdateAsync(UserViewModel viewModel);
+        /// <summary>
+        /// update a data
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> UpdateAsync(UserViewModel viewModel, CurrentUser currentUser);
  
          /// <summary>
          /// delete a data
@@ -81,6 +82,13 @@ namespace ModernWMS.WMS.IServices
         /// <param name="viewModel">viewmodel</param>
         /// <returns></returns>
         Task<(bool flag, string msg)> ChangePwd(UserChangePwdViewModel viewModel);
+
+        /// <summary>
+        /// register a new tenant
+        /// </summary>
+        /// <param name="viewModel">viewModel</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> Register(RegisterViewModel viewModel);
          #endregion
      }
  }

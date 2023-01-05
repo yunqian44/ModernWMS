@@ -127,7 +127,7 @@
          [HttpPut]
          public async Task<ResultModel<bool>> UpdateAsync(UserroleViewModel viewModel)
          {
-             var (flag, msg) = await _userroleService.UpdateAsync(viewModel);
+             var (flag, msg) = await _userroleService.UpdateAsync(viewModel, CurrentUser);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);

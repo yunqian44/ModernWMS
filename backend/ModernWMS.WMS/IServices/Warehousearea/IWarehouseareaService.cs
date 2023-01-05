@@ -41,12 +41,13 @@
          /// <param name="currentUser">current user</param>
          /// <returns></returns>
          Task<(int id, string msg)> AddAsync(WarehouseareaViewModel viewModel, CurrentUser currentUser);
-         /// <summary>
-         /// update a record
-         /// </summary>
-         /// <param name="viewModel">viewmodel</param>
-         /// <returns></returns>
-         Task<(bool flag, string msg)> UpdateAsync(WarehouseareaViewModel viewModel);
+        /// <summary>
+        /// update a record
+        /// </summary>
+        /// <param name="viewModel">viewmodel</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(bool flag, string msg)> UpdateAsync(WarehouseareaViewModel viewModel, CurrentUser currentUser);
  
          /// <summary>
          /// delete a record

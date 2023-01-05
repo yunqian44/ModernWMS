@@ -118,7 +118,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(SupplierViewModel viewModel, CurrentUser currentUser) 
         {
             var DbSet = _dBContext.GetDbSet<SupplierEntity>();
-            if (await DbSet.AnyAsync(t => t.supplier_name == viewModel.supplier_name))
+            if (await DbSet.AnyAsync(t => t.supplier_name == viewModel.supplier_name && t.tenant_id == currentUser.tenant_id))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
             }
@@ -139,15 +139,16 @@ namespace ModernWMS.WMS.Services
                  return (0, _stringLocalizer["save_failed"]);
              }
          }
-         /// <summary>
-         /// update a record
-         /// </summary>
-         /// <param name="viewModel">args</param>
-         /// <returns></returns>
-         public async Task<(bool flag, string msg)> UpdateAsync(SupplierViewModel viewModel)
+        /// <summary>
+        /// update a record
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(bool flag, string msg)> UpdateAsync(SupplierViewModel viewModel, CurrentUser currentUser)
          {
              var DbSet = _dBContext.GetDbSet<SupplierEntity>();
-            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.supplier_name == viewModel.supplier_name))
+            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.supplier_name == viewModel.supplier_name && t.tenant_id == currentUser.tenant_id))
             {
                return(false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
             }

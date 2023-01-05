@@ -34,6 +34,11 @@ namespace ModernWMS.Core.Models
         public int userrole_id { get; set; }
 
         /// <summary>
+        ///  tenant_id
+        /// </summary>
+        public long tenant_id { get; set; }
+
+        /// <summary>
         /// token expire time
         /// </summary>
         public int expire { get; set; }

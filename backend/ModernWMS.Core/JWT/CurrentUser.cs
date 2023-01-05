@@ -29,6 +29,6 @@ namespace ModernWMS.Core.JWT
         /// <summary>
         /// tenant
         /// </summary>
-        public byte tenant_id { get; set; } = 1;
+        public long tenant_id { get; set; } = 1;
     }
 }

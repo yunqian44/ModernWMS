@@ -91,7 +91,7 @@ namespace ModernWMS.Core.Extentions
             app.UseSwaggerConfigure(configuration);
             app.UseRouting();
             app.UseMiddleware<ModernWMS.Core.Middleware.CorsMiddleware>();
-            app.UseTokenGeneratorConfigure();
+            app.UseTokenGeneratorConfigure(configuration);
             app.UseAuthorization();
             app.UseMiddleware<GlobalExceptionMiddleware>();
             var support_languages = new[] {  "zh-cn", "en-us" };
@@ -239,7 +239,7 @@ namespace ModernWMS.Core.Extentions
 
         }
 
-        private static void UseTokenGeneratorConfigure(this IApplicationBuilder app)
+        private static void UseTokenGeneratorConfigure(this IApplicationBuilder app, IConfiguration configuration)
         {
             app.UseAuthentication();
         }
@@ -274,5 +274,7 @@ namespace ModernWMS.Core.Extentions
             return services;
         }
         #endregion
+
+
     }
 }

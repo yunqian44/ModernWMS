@@ -138,7 +138,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(WarehouseViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            if (await DbSet.AnyAsync(t => t.warehouse_name == viewModel.warehouse_name))
+            if (await DbSet.AnyAsync(t => t.warehouse_name == viewModel.warehouse_name && t.tenant_id == currentUser.tenant_id))
             {
                return(0,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
             }
@@ -163,11 +163,12 @@ namespace ModernWMS.WMS.Services
         /// update a record
         /// </summary>
         /// <param name="viewModel">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<(bool flag, string msg)> UpdateAsync(WarehouseViewModel viewModel)
+        public async Task<(bool flag, string msg)> UpdateAsync(WarehouseViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_name == viewModel.warehouse_name))
+            if (await DbSet.AnyAsync(t => t.id != viewModel.id && t.warehouse_name == viewModel.warehouse_name && t.tenant_id == currentUser.tenant_id))
             {
                return(false,  string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], viewModel.warehouse_name));
             }

@@ -138,7 +138,7 @@ namespace ModernWMS.WMS.Controllers
          [HttpPut]
          public async Task<ResultModel<bool>> UpdateAsync(WarehouseareaViewModel viewModel)
          {
-             var (flag, msg) = await _warehouseareaService.UpdateAsync(viewModel);
+             var (flag, msg) = await _warehouseareaService.UpdateAsync(viewModel,CurrentUser);
              if (flag)
              {
                  return ResultModel<bool>.Success(flag);

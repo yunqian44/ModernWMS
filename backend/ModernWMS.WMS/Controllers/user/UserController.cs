@@ -131,6 +131,24 @@ namespace ModernWMS.WMS.Controllers
             }
         }
         /// <summary>
+        /// register a new tenant
+        /// </summary>
+        /// <param name="viewModel">args</param>
+        /// <returns></returns>
+        [HttpPost("register")]
+        public async Task<ResultModel<string>> Register(RegisterViewModel viewModel)
+        {
+            var (flag, msg) = await _userService.Register(viewModel);
+            if (flag)
+            {
+                return ResultModel<string>.Success(msg);
+            }
+            else
+            {
+                return ResultModel<string>.Error(msg);
+            }
+        }
+        /// <summary>
         /// import users by excel
         /// </summary>
         /// <param name="excel_datas">excel datas</param>
@@ -138,7 +156,7 @@ namespace ModernWMS.WMS.Controllers
         [HttpPost("excel")]
         public async Task<ResultModel<string>> ExcelAsync(List<UserExcelImportViewModel> excel_datas)
         {
-            var (flag, msg) = await _userService.ExcelAsync(excel_datas,CurrentUser);
+            var (flag, msg) = await _userService.ExcelAsync(excel_datas, CurrentUser);
             if (flag)
             {
                 return ResultModel<string>.Success(msg);
@@ -156,7 +174,7 @@ namespace ModernWMS.WMS.Controllers
         [HttpPut]
         public async Task<ResultModel<bool>> UpdateAsync(UserViewModel viewModel)
         {
-            var (flag, msg) = await _userService.UpdateAsync(viewModel);
+            var (flag, msg) = await _userService.UpdateAsync(viewModel, CurrentUser);
             if (flag)
             {
                 return ResultModel<bool>.Success(flag);

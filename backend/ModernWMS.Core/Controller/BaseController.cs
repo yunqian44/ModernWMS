@@ -10,7 +10,7 @@ namespace ModernWMS.Core.Controller
     /// <summary>
     /// base controller
     /// </summary>
-    //[Authorize] /* 可暂时关闭授权验证 */
+    [Authorize] 
     [Produces("application/json")]
     public class BaseController : ControllerBase
     {

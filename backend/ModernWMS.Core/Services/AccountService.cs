@@ -45,7 +45,8 @@ namespace ModernWMS.Core.Services
                                                     user_name = user.user_name,
                                                     user_role = user.user_role,
                                                     userrole_id = ur.id,
-                                                    cipher = user.auth_string
+                                                    cipher = user.auth_string,
+                                                    tenant_id = user.tenant_id
                                                 }
                                                ).ToListAsync();
             string md5_password = Core.Utility.Md5Helper.Md5Encrypt32(loginInput.password);
@@ -58,7 +59,8 @@ namespace ModernWMS.Core.Services
                     user_name = result.user_name,
                     user_num = result.user_num,
                     user_role = result.user_role,
-                    userrole_id = result.userrole_id
+                    userrole_id = result.userrole_id,
+                    tenant_id= result.tenant_id,
                 };
             }
             return null;

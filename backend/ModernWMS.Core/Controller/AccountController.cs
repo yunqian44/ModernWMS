@@ -76,6 +76,7 @@ namespace ModernWMS.Core.Controller
                         user_name = user.user_name,
                         user_num = user.user_num,
                         user_role = user.user_role,
+                        tenant_id = user.tenant_id
                     }
                     );
                 string rt = this._tokenManager.GenerateRefreshToken();
