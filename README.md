@@ -162,7 +162,7 @@
   + 第三步，部署
 
   ```bash
-  cd /tmp//ModernWMS-master/docker/
+  cd /tmp/ModernWMS-master/docker/
   docker build -t modernwms:1.0 .
   docker run -d -p 8089:80  modernwms:1.0 /bin/bash ./run.sh
   ```
