@@ -54,7 +54,7 @@
               <vxe-column field="manager" :title="$t('base.customer.manager')"></vxe-column>
               <vxe-column field="email" :title="$t('base.customer.email')"></vxe-column>
               <vxe-column field="contact_tel" :title="$t('base.customer.contact_tel')"></vxe-column>
-              <vxe-column field="creater" :title="$t('base.customer.creator')"></vxe-column>
+              <vxe-column field="creator" :title="$t('base.customer.creator')"></vxe-column>
               <vxe-column
                 field="create_time"
                 :title="$t('base.customer.create_time')"
