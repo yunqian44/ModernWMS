@@ -62,7 +62,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// </summary>
         [Display(Name = "process_time")]
         [DataType(DataType.DateTime, ErrorMessage = "DataType_DateTime")]
-        public DateTime process_time { get; set; }
+        public DateTime process_time { get; set; } = UtilConvert.MinDate;
 
         /// <summary>
         /// creator
