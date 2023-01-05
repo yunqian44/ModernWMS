@@ -90,16 +90,6 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 ></custom-pager>
-                <!-- <vxe-pager
-                  :current-page="data.tablePage.pageIndex"
-                  :page-size="data.tablePage.pageSize"
-                  perfect
-                  :total="data.tablePage.total"
-                  :page-sizes="PAGE_SIZE"
-                  :layouts="PAGE_LAYOUT"
-                  @page-change="method.handlePageChange"
-                >
-                </vxe-pager> -->
               </div>
             </v-window-item>
           </v-window>
