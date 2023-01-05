@@ -69,6 +69,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// tenant
         /// </summary>
         [Display(Name = "tenant")]
-        public byte tenant_id { get; set; } = 0;
+        public long tenant_id { get; set; }  =  0;
     }
 }

@@ -13,27 +13,29 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
+                <tooltip-btn icon="mdi-database-import-outline" :tooltip-text="$t('system.page.import')" @click="method.openDialogImport">
+                </tooltip-btn>
                 <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
               </v-col>
 
               <!-- Search Input -->
               <v-col cols="12" sm="9">
-                <!-- <v-row no-gutters @keyup.enter="method.sureSearch">
-                      <v-col cols="12" sm="4"></v-col>
-                      <v-col cols="12" sm="4"></v-col>
-                      <v-col cols="12" sm="4">
-                        <v-text-field
-                          v-model="data.searchForm.customer_name"
-                          clearable
-                          hide-details
-                          density="comfortable"
-                          class="searchInput ml-5 mt-1"
-                          :label="$t('base.customer.customer_name')"
-                          variant="solo"
-                        >
-                        </v-text-field>
-                      </v-col>
-                    </v-row> -->
+                <v-row no-gutters @keyup.enter="method.sureSearch">
+                  <v-col cols="12" sm="4"></v-col>
+                  <v-col cols="12" sm="4"></v-col>
+                  <v-col cols="12" sm="4">
+                    <v-text-field
+                      v-model="data.searchForm.customer_name"
+                      clearable
+                      hide-details
+                      density="comfortable"
+                      class="searchInput ml-5 mt-1"
+                      :label="$t('base.customer.customer_name')"
+                      variant="solo"
+                    >
+                    </v-text-field>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </div>
@@ -101,10 +103,11 @@
     </div>
   </div>
   <addOrUpdateDialog :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
+  <importCustomerTable :show-dialog="data.showDialogImport" @close="method.closeDialogImport" @saveSuccess="method.saveSuccessImport" />
 </template>
 
 <script lang="tsx" setup>
-import { computed, ref, reactive, onMounted } from 'vue'
+import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { CustomerVO, DataProps } from '@/types/Base/Customer'
@@ -112,18 +115,23 @@ import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-customer.vue'
 import { hookComponent } from '@/components/system'
+import { DEBOUNCE_TIME } from '@/constant/system'
+import { setSearchObject } from '@/utils/common'
+import { SearchObject } from '@/types/System/Form'
 import i18n from '@/languages/i18n'
-import { getCustomerAll, deleteCustomer } from '@/api/base/customer'
+import { getCustomerList, deleteCustomer } from '@/api/base/customer'
+import importCustomerTable from './import-customer-table.vue'
 
 const xTable = ref()
 
-const data: DataProps = reactive({
-  // searchForm: {
-  //   customer_name: ''
-  // },
+const data = reactive({
+  searchForm: {
+    customer_name: ''
+  },
   tableData: [],
   // activeTab: null,
   showDialog: false,
+  showDialogImport: false,
   dialogForm: {
     id: 0,
     customer_name: '',
@@ -137,13 +145,27 @@ const data: DataProps = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10
-  }
+    pageSize: 10,
+    searchObjects: ref<Array<SearchObject>>([])
+  },
+  timer: ref<any>(null)
 })
 
 const method = reactive({
+  // Import Dialog
+  openDialogImport: () => {
+    data.showDialogImport = true
+  },
+  closeDialogImport: () => {
+    data.showDialogImport = false
+  },
+  saveSuccessImport: () => {
+    method.refresh()
+    method.closeDialog()
+  },
   sureSearch: () => {
-    // console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getData()
   },
   // Add user
   add: () => {
@@ -221,7 +243,7 @@ const method = reactive({
     }
   },
   getData: async () => {
-    const { data: res } = await getCustomerAll()
+    const { data: res } = await getCustomerList(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -229,7 +251,8 @@ const method = reactive({
       })
       return
     }
-    data.tableData = res.data
+    data.tableData = res.data.rows
+    data.tablePage.total = res.data.totals
   }
 })
 onMounted(() => {
@@ -238,6 +261,24 @@ onMounted(() => {
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      // 放入业务逻辑
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style scoped lang="less">
