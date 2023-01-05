@@ -98,6 +98,9 @@ export default {
     loginSuccess: '登录成功',
     notAuthority: '您的账号不包含任何菜单, 请联系管理员增加!'
   },
+  homepage: {
+    subTitle: '现代化仓库管理系统'
+  },
   base: {
     freightSetting: {
       carrier: '承运商',

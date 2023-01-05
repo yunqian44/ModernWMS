@@ -2,7 +2,7 @@
   <div class="container">
     <div class="textBox">
       <div class="mainTitle">ModernWMS</div>
-      <div class="subTitle">现代化仓库管理系统</div>
+      <div class="subTitle">{{ i18n.global.t('homepage.subTitle') }}</div>
     </div>
     <div class="content">
       <div class="lottieBox">
@@ -15,6 +15,7 @@
 <script lang="ts" setup>
 import lottie from '@/components/lottie.vue'
 import dataJson from '@/assets/warehouse.json'
+import i18n from '@/languages/i18n'
 </script>
 
 <style scoped lang="less">
