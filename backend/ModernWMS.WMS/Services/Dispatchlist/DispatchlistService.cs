@@ -112,7 +112,10 @@ namespace ModernWMS.WMS.Services
                             spu_description = spu.spu_description,
                             spu_name = spu.spu_name,
                             bar_code = spu.bar_code,
-                            unpicked_qty = d.qty - d.picked_qty
+                            unpicked_qty = d.qty - d.picked_qty,
+                            length_unit = spu.length_unit,
+                            volume_unit = spu.volume_unit,
+                            weight_unit =spu.weight_unit
                         };
             query = query.Where(t => t.tenant_id.Equals(currentUser.tenant_id))
                  .Where(queries.AsExpression<DispatchlistViewModel>());
@@ -1017,6 +1020,10 @@ namespace ModernWMS.WMS.Services
                 {
                     return (false, _stringLocalizer["data_changed"]);
                 }
+                if ((entity.package_qty + vm.package_qty) > entity.picked_qty)
+                {
+                    return (false, _stringLocalizer["unpackgeqty_lessthen"]);
+                }
                 entity.last_update_time = time;
                 entity.package_person = currentUser.user_name;
                 entity.package_qty += vm.package_qty;
@@ -1103,6 +1110,10 @@ namespace ModernWMS.WMS.Services
                 if (entity == null)
                 {
                     return (false, _stringLocalizer["data_changed"]);
+                }
+                if ((entity.weighing_qty + vm.weighing_qty) > entity.picked_qty)
+                {
+                    return (false, _stringLocalizer["unweightqty_lessthen"]);
                 }
                 entity.last_update_time = time;
                 entity.weighing_person = currentUser.user_name;

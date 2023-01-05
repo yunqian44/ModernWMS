@@ -38,7 +38,7 @@ const tabStockRef = ref()
 const tabsConfig = [
   {
     value: 'tabStockLocation',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-database',
     tabName: i18n.global.t('wms.stockManagement.stockLocation')
   },
   {

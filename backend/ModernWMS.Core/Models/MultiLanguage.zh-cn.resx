@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-    <data name="carrier" xml:space="preserve">
+  <data name="carrier" xml:space="preserve">
     <value>承运商</value>
   </data>
   <data name="departure_city" xml:space="preserve">
@@ -605,5 +605,14 @@
   </data>
   <data name="sorted_failed" xml:space="preserve">
     <value>确认分拣完成失败</value>
+  </data>
+  <data name="try_agin" xml:space="preserve">
+    <value>不能进行当前操作，请刷新后重试</value>
+  </data>
+  <data name="unpackgeqty_lessthen" xml:space="preserve">
+    <value>未打包数量小于当前操作打包数量</value>
+  </data>
+  <data name="unweightqty_lessthen" xml:space="preserve">
+    <value>未称重数量小于当前操作称重数量</value>
   </data>
 </root>
