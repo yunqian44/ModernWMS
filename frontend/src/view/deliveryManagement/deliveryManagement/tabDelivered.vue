@@ -69,16 +69,18 @@
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="80" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.signIn')"
-            @click="method.handleSignIn(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.signIn')"
+              @click="method.handleSignIn(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -87,8 +89,14 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
-    <ToBeSignInConfirm :show-dialog="data.showDialog" :dialog-default-qty="data.dialogDefaultQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    </custom-pager>
+    <ToBeSignInConfirm
+      :show-dialog="data.showDialog"
+      :dialog-default-qty="data.dialogDefaultQty"
+      @close="method.dialogClose"
+      @submit="method.dialogSubmit"
+    />
+    <ToBeFreightfee :show-dialog="data.showSetFreight" @close="method.freightfeeClose" @submit="method.freightfeeSubmit" />
   </div>
 </template>
 
@@ -96,14 +104,16 @@
 import { computed, ref, reactive } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO, SetCarrierVO } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
-import { getDelivery, handleSignIn } from '@/api/wms/deliveryManagement'
+import { getDelivery, handleSignIn, setCarrier } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import ToBeSignInConfirm from './to-be-sign-in-confirm.vue'
 import { GetUnit } from '@/constant/commodityManagement'
+import ToBeFreightfee from './to-be-freightfee.vue'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -124,7 +134,45 @@ const data = reactive({
 
 const method = reactive({
   setFreight: () => {
-    data.showSetFreight = true
+    const $table = xTable.value
+    if ($table.getCheckboxRecords().length > 0) {
+      data.showSetFreight = true
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: `${i18n.global.t('base.userManagement.checkboxIsNull')}`
+      })
+    }
+  },
+  freightfeeClose: () => {
+    data.showSetFreight = false
+  },
+  freightfeeSubmit: async (form: { carrier: string; freightfee_id: number }) => {
+    const reqList: SetCarrierVO[] = []
+    const $table = xTable.value
+    for (let item of $table.getCheckboxRecords()) {
+      reqList.push({
+        id: item.id,
+        dispatch_no: item.dispatch_no,
+        dispatch_status: item.dispatch_status,
+        freightfee_id: form.freightfee_id,
+        carrier: form.carrier
+      })
+    }
+    const { data: res } = await setCarrier(reqList)
+    if (!res.isSuccess) {
+      hookComponent.$message({
+        type: 'error',
+        content: res.errorMessage
+      })
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: res.data
+    })
+    method.freightfeeClose()
+    method.refresh()
   },
   dialogClose: () => {
     data.showDialog = false
@@ -195,7 +243,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },

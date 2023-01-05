@@ -96,3 +96,11 @@ export interface CancleOrderVO {
   dispatch_no?: string
   dispatch_status?: number
 }
+
+export interface SetCarrierVO {
+  id: number
+  dispatch_no: string
+  dispatch_status: number
+  freightfee_id: number
+  carrier: string
+}

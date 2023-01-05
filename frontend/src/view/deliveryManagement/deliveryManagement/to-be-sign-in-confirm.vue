@@ -5,7 +5,7 @@
         <v-toolbar color="white" :title="`${$t('wms.deliveryManagement.signIn')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-text-field v-model="data.form.qty" :label="$t('wms.deliveryManagement.signInQty')" variant="outlined" clearable></v-text-field>
+            <v-text-field v-model="data.form.qty" :label="$t('wms.deliveryManagement.damagedQuantity')" variant="outlined" clearable></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -60,7 +60,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      data.form.qty = props.dialogDefaultQty
+      data.form.qty = 0
     }
   }
 )

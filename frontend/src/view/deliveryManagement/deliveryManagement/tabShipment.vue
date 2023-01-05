@@ -60,33 +60,33 @@
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <!-- <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column> -->
-      <vxe-column field="operate" :title="$t('system.page.operate')" width="120" :resizable="false" show-overflow>
+      <vxe-column field="operate" :title="$t('system.page.operate')" width="240" :resizable="false" show-overflow>
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
             <!-- <tooltip-btn :flat="true" icon="mdi-pencil-outline" :tooltip-text="$t('system.page.edit')" @click="method.editRow(row)"></tooltip-btn> -->
             <tooltip-btn
-              v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
+              :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
               :flat="true"
               icon="mdi-pencil-outline"
               :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
               @click="method.confirmOrder(row)"
             ></tooltip-btn>
             <tooltip-btn
-              v-if="row.dispatch_status === 2"
+              :disabled="row.dispatch_status !== 2"
               :flat="true"
               icon="mdi-pencil-outline"
               :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
               @click="method.confirmPicking(row)"
             ></tooltip-btn>
             <tooltip-btn
-              v-if="row.dispatch_status === 2 || row.dispatch_status === 3"
+              :disabled="row.dispatch_status !== 2 && row.dispatch_status !== 3"
               :flat="true"
               icon="mdi-pencil-outline"
               :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
               @click="method.backToThePreviousStep(row)"
             ></tooltip-btn>
             <tooltip-btn
-              v-if="row.dispatch_status === 0 || row.dispatch_status === 1"
+              :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
               :flat="true"
               icon="mdi-delete-outline"
               :tooltip-text="$t('system.page.delete')"
@@ -97,7 +97,7 @@
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -106,7 +106,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
     <!-- Add or modify data mode window -->
     <addOrUpdateShipment :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
     <!-- Confirm Order -->
@@ -133,6 +133,7 @@ import addOrUpdateShipment from './add-or-update-shipment.vue'
 import { getShipmentState } from './shipmentFun'
 import ConfirmOrder from './confirm-order.vue'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

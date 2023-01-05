@@ -76,7 +76,7 @@
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -85,7 +85,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
     <ToBePackageConfirm :show-dialog="data.showDialog" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
   </div>
 </template>
@@ -102,6 +102,7 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import ToBePackageConfirm from './to-be-package-confirm.vue'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 

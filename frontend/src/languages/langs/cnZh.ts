@@ -508,9 +508,9 @@ export default {
       waybill_no: '运单号',
       carrier: '承运单位',
       damagedQuantity: '到货破损数量',
-      setFreight: '设置运费',
+      setFreight: '设置承运单位',
       departure_city: '始发城市',
-      arrival_city: '到货城市',
+      arrival_city: '到货城市'
     }
   }
 }

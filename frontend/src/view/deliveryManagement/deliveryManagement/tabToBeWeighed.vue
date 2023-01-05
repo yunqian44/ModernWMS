@@ -69,16 +69,18 @@
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="80" :resizable="false" show-overflow>
         <template #default="{ row }">
-          <tooltip-btn
-            :flat="true"
-            icon="mdi-pencil-outline"
-            :tooltip-text="$t('wms.deliveryManagement.weigh')"
-            @click="method.handleWeigh(row)"
-          ></tooltip-btn>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <tooltip-btn
+              :flat="true"
+              icon="mdi-pencil-outline"
+              :tooltip-text="$t('wms.deliveryManagement.weigh')"
+              @click="method.handleWeigh(row)"
+            ></tooltip-btn>
+          </div>
         </template>
       </vxe-column>
     </vxe-table>
-    <vxe-pager
+    <custom-pager
       :current-page="data.tablePage.pageIndex"
       :page-size="data.tablePage.pageSize"
       perfect
@@ -87,7 +89,7 @@
       :layouts="PAGE_LAYOUT"
       @page-change="method.handlePageChange"
     >
-    </vxe-pager>
+    </custom-pager>
     <ToBeWeighedConfirm
       :show-dialog="data.showDialog"
       :default-weight="data.defaultWeight"
@@ -111,6 +113,7 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import ToBeWeighedConfirm from './to-be-weighed-confirm.vue'
 import { GetUnit } from '@/constant/commodityManagement'
+import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
@@ -204,7 +207,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },
