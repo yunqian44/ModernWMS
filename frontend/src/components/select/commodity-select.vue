@@ -1,6 +1,6 @@
 <!-- Select Modal -->
 <template>
-  <v-dialog v-model="isShow" width="60%" transition="dialog-top-transition" :persistent="true">
+  <v-dialog v-model="isShow" width="70%" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
         <v-toolbar color="white" :title="`${$t('wms.stock.stockSelectModal')}`"></v-toolbar>
