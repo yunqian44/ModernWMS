@@ -79,7 +79,7 @@ namespace ModernWMS.WMS.Controllers
             }
             else
             {
-                return ResultModel<SpuBothViewModel>.Error(_stringLocalizer["exists_entity"]);
+                return ResultModel<SpuBothViewModel>.Error(_stringLocalizer["not_exists_entity"]);
             }
         }
         /// <summary>
