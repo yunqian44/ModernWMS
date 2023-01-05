@@ -11,7 +11,16 @@
                 <tooltip-btn icon="mdi-refresh" size="x-small" :tooltip-text="$t('system.page.reset')" @click="method.resetForm"></tooltip-btn>
                 <tooltip-btn icon="mdi-magnify" size="x-small" :tooltip-text="$t('system.page.confirm')" @click="method.sureSearch"></tooltip-btn>
                 <v-form ref="formRef" class="mt-4">
-                  <!-- <v-text-field
+                  <v-text-field
+                    v-model="data.searchForm.warehouse_name"
+                    :label="$t('wms.stock.warehouse')"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    clearable
+                    class="mb-4"
+                  ></v-text-field>
+                  <v-text-field
                     v-model="data.searchForm.location_name"
                     :label="$t('wms.stock.location_name')"
                     variant="outlined"
@@ -19,7 +28,25 @@
                     hide-details
                     clearable
                     class="mb-4"
-                  ></v-text-field> -->
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="data.searchForm.spu_name"
+                    :label="$t('base.commodityManagement.spu_name')"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    clearable
+                    class="mb-4"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="data.searchForm.sku_code"
+                    :label="$t('base.commodityManagement.sku_code')"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    clearable
+                    class="mb-4"
+                  ></v-text-field>
                 </v-form>
               </div>
             </v-col>
@@ -109,7 +136,10 @@ const data = reactive({
     searchObjects: ref<Array<SearchObject>>([])
   }),
   searchForm: {
-    location_name: ''
+    location_name: '',
+    warehouse_name: '',
+    spu_name: '',
+    sku_code: ''
   },
   timer: ref<any>(null)
 })
