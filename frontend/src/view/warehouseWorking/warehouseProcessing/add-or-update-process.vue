@@ -241,7 +241,7 @@ const method = reactive({
             id: 0,
             stock_process_id: 0,
             sku_id: record.sku_id,
-            goods_owner_id: 0,
+            goods_owner_id: record.goods_owner_id,
             goods_location_id: record.goods_location_id,
             qty: record.qty_available || 0,
             tenant_id: 0,
@@ -266,7 +266,7 @@ const method = reactive({
           id: 0,
           stock_process_id: 0,
           sku_id: selectRecords[0].sku_id,
-          goods_owner_id: 0,
+          goods_owner_id: selectRecords[0].goods_owner_id,
           goods_location_id: selectRecords[0].goods_location_id,
           qty: selectRecords[0].qty_available || 0,
           tenant_id: 0,
@@ -297,7 +297,7 @@ const method = reactive({
           stock_process_id: 0,
           sku_id: selectRecords[0].sku_id,
           goods_owner_id: 0,
-          goods_location_id: selectRecords[0].goods_location_id,
+          goods_location_id: 0,
           qty: 0,
           tenant_id: 0,
           is_source: false,
@@ -322,7 +322,7 @@ const method = reactive({
             stock_process_id: 0,
             sku_id: record.sku_id,
             goods_owner_id: 0,
-            goods_location_id: record.goods_location_id,
+            goods_location_id: 0,
             qty: 0,
             tenant_id: 0,
             is_source: false,
@@ -483,7 +483,7 @@ const method = reactive({
         }
       }
     })
-  },
+  }
 })
 
 const data = reactive({

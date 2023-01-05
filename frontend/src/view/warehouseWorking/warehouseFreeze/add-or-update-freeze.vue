@@ -163,7 +163,8 @@ const method = reactive({
       data.form.spu_code = selectRecords[0].spu_code
       data.form.spu_name = selectRecords[0].spu_name
       data.form.sku_code = selectRecords[0].sku_code
-
+      
+      data.form.goods_owner_id = selectRecords[0].goods_owner_id
       data.form.goods_location_id = selectRecords[0].goods_location_id
       data.form.warehouse_name = selectRecords[0].warehouse
       data.form.location_name = selectRecords[0].location_name
