@@ -126,7 +126,6 @@ const method = reactive({
             contact_tel: ws[index][i18n.global.t('base.supplier.contact_tel')]
           })
         })
-        // TODO match the base setting
       }
     }
     fileReader.readAsBinaryString(file)
