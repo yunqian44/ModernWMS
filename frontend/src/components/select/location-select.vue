@@ -57,7 +57,7 @@
                     </template>
                   </vxe-column>
                 </vxe-table>
-                <vxe-pager
+                <custom-pager
                   :current-page="data.tablePage.pageIndex"
                   :page-size="data.tablePage.pageSize"
                   perfect
@@ -66,7 +66,7 @@
                   :layouts="PAGE_LAYOUT"
                   @page-change="method.handlePageChange"
                 >
-                </vxe-pager>
+                </custom-pager>
               </div>
             </v-col>
           </v-row>
@@ -105,6 +105,7 @@ import { SearchObject } from '@/types/System/Form'
 import { computedSelectTableSearchHeight, SYSTEM_HEIGHT } from '@/constant/style'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
+import customPager from '@/components/custom-pager.vue'
 
 const emit = defineEmits(['close', 'sureSelect'])
 const xTable = ref()

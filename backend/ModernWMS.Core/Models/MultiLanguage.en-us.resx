@@ -610,9 +610,9 @@
     <value>The current operation cannot be performed. Please refresh and try again</value>
   </data>
   <data name="unpackgeqty_lessthen" xml:space="preserve">
-    <value>Unpacked quantity is less than the quantity to be packed</value>
+    <value>Unpacked quantity is less than the quantity to be packed.Please refresh and try again</value>
   </data>
   <data name="unweightqty_lessthen" xml:space="preserve">
-    <value>Unweighed quantity is less than the quantity to be weighed</value>
+    <value>Unweighed quantity is less than the quantity to be weighed.Please refresh and try again</value>
   </data>
 </root>

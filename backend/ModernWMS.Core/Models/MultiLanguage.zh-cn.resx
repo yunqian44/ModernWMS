@@ -610,9 +610,9 @@
     <value>不能进行当前操作，请刷新后重试</value>
   </data>
   <data name="unpackgeqty_lessthen" xml:space="preserve">
-    <value>未打包数量小于当前操作打包数量</value>
+    <value>未打包数量小于当前操作打包数量，请刷新后重试</value>
   </data>
   <data name="unweightqty_lessthen" xml:space="preserve">
-    <value>未称重数量小于当前操作称重数量</value>
+    <value>未称重数量小于当前操作称重数量，请刷新后重试</value>
   </data>
 </root>
