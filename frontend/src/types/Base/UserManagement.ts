@@ -13,6 +13,11 @@ export interface UserVO extends UniformFileNaming {
 
 export interface DataProps {
   tableData: UserVO[]
+  searchForm: {
+    user_num: string
+    user_name: string
+    user_role: string
+  }
   tablePage: TablePage
   showDialog: boolean
   dialogForm: UserVO

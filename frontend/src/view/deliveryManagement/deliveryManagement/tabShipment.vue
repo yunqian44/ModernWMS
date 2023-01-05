@@ -11,19 +11,44 @@
       <!-- Search Input -->
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
-          <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.dispatch_no"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field
+          ></v-col>
+          <v-col cols="4">
+            <v-select
+              v-model="data.searchForm.dispatch_status"
+              :items="data.combobox.dispatch_status"
+              item-title="label"
+              item-value="value"
+              :label="$t('wms.deliveryManagement.dispatch_status')"
+              variant="solo"
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              clearable
+              hide-details
+              @update:model-value="method.sureSearch"
+            ></v-select>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.customer_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.customer_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -134,6 +159,8 @@ import { getShipmentState } from './shipmentFun'
 import ConfirmOrder from './confirm-order.vue'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { TablePage } from '@/types/System/Form'
 
 const xTable = ref()
 
@@ -143,16 +170,57 @@ const data = reactive({
     id: 0,
     detailList: []
   },
-  searchForm: {},
+  searchForm: {
+    dispatch_no: '',
+    customer_name: '',
+    dispatch_status: '0'
+  },
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
-  tablePage: reactive({
+  tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    searchObjects: []
   }),
   showConfirmOrder: false,
-  confirmOrderNo: ''
+  confirmOrderNo: '',
+  combobox: {
+    dispatch_status: [
+      {
+        label: i18n.global.t('wms.deliveryManagement.preShipment'),
+        value: '0'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.newShipment'),
+        value: '1'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.goodsToBePicked'),
+        value: '2'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.picked'),
+        value: '3'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.packaged'),
+        value: '4'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.weighed'),
+        value: '5'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.outOfWarehouse'),
+        value: '6'
+      },
+      {
+        label: i18n.global.t('wms.deliveryManagement.signedIn'),
+        value: '7'
+      }
+    ]
+  }
 })
 
 const method = reactive({
@@ -314,6 +382,8 @@ const method = reactive({
   },
   sureSearch: () => {
     console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getShipment()
   }
 })
 

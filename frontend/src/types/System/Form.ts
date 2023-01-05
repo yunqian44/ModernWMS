@@ -10,6 +10,7 @@ export interface TablePage {
   total: number
   pageIndex: number
   pageSize: number
+  searchObjects?: SearchObject[]
 }
 
 export interface NavListOptions {

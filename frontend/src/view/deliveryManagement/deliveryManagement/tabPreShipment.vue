@@ -11,18 +11,29 @@
       <v-col cols="9">
         <v-row no-gutters @keyup.enter="method.sureSearch">
           <v-col cols="4"></v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="4">
-            <!-- <v-text-field
-              v-model="data.searchForm.warehouse_name"
+            <v-text-field
+              v-model="data.searchForm.dispatch_no"
               clearable
               hide-details
               density="comfortable"
               class="searchInput ml-5 mt-1"
-              :label="$t('base.warehouseSetting.warehouse_name')"
+              :label="$t('wms.deliveryManagement.dispatch_no')"
               variant="solo"
             >
-            </v-text-field> -->
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="data.searchForm.customer_name"
+              clearable
+              hide-details
+              density="comfortable"
+              class="searchInput ml-5 mt-1"
+              :label="$t('wms.deliveryManagement.customer_name')"
+              variant="solo"
+            >
+            </v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -86,6 +97,8 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
+import { TablePage } from '@/types/System/Form'
 
 const xTable = ref()
 
@@ -94,13 +107,17 @@ const data = reactive({
   dialogForm: {
     id: 0
   },
-  searchForm: {},
+  searchForm: {
+    dispatch_no: '',
+    customer_name: ''
+  },
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
-  tablePage: reactive({
+  tablePage: ref<TablePage>({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: 10,
+    searchObjects: []
   })
 })
 
@@ -145,7 +162,8 @@ const method = reactive({
     }
   },
   sureSearch: () => {
-    console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getPreShipment()
   }
 })
 

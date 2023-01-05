@@ -16,44 +16,44 @@
 
               <!-- Search Input -->
               <v-col cols="12" sm="9">
-                <!-- <v-row no-gutters @keyup.enter="method.sureSearch">
-                  <v-col cols="12" sm="4">
+                <v-row no-gutters @keyup.enter="method.sureSearch">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName"
+                      v-model="data.searchForm.user_num"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.userManagement.user_num')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName1"
+                      v-model="data.searchForm.user_name"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.userManagement.user_name')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="4">
                     <v-text-field
-                      v-model="data.searchForm.userName2"
+                      v-model="data.searchForm.user_role"
                       clearable
                       hide-details
                       density="comfortable"
                       class="searchInput ml-5 mt-1"
-                      :label="$t('login.userName')"
+                      :label="$t('base.userManagement.user_role')"
                       variant="solo"
                     >
                     </v-text-field>
                   </v-col>
-                </v-row> -->
+                </v-row>
               </v-col>
             </v-row>
           </div>
@@ -143,15 +143,16 @@ import addOrUpdateDialog from './add-or-update-user.vue'
 import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
+import { setSearchObject } from '@/utils/common'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
-  // searchForm: {
-  //   userName: '',
-  //   userName1: '',
-  //   userName2: ''
-  // },
+  searchForm: {
+    user_num: '',
+    user_name: '',
+    user_role: ''
+  },
   tableData: [],
   tablePage: {
     total: 0,
@@ -172,7 +173,8 @@ const data: DataProps = reactive({
 
 const method = reactive({
   sureSearch: () => {
-    // console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getUserList()
   },
   // Find Data by Pagination
   getUserList: async () => {
@@ -231,7 +233,7 @@ const method = reactive({
           }
           hookComponent.$message({
             type: 'success',
-            content: `${ i18n.global.t('system.page.delete') }${ i18n.global.t('system.tips.success') }`
+            content: `${i18n.global.t('system.page.delete')}${i18n.global.t('system.tips.success')}`
           })
           method.refresh()
         }
@@ -258,7 +260,7 @@ const method = reactive({
     } catch (error) {
       hookComponent.$message({
         type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
+        content: `${i18n.global.t('system.page.export')}${i18n.global.t('system.tips.fail')}`
       })
     }
   },
