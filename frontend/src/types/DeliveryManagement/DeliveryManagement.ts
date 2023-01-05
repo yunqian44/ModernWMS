@@ -20,6 +20,7 @@ export interface DeliveryManagementDetailListVO {
   spu_code?: string
   spu_name?: string
   sku_code?: string
+  sku_name?: string
 }
 
 export interface DeliveryManagementDetailVO extends DeliveryManagementVO {
@@ -27,6 +28,8 @@ export interface DeliveryManagementDetailVO extends DeliveryManagementVO {
   spu_code?: string
   spu_name?: string
   sku_code?: string
+  unpackage_qty?: number
+  unweighing_qty?: number
 }
 
 export interface addRequestVO {
@@ -79,4 +82,9 @@ export interface SignInVO {
   dispatch_no?: string
   dispatch_status?: number
   damage_qty?: number
+}
+
+export interface CancleOrderVO {
+  dispatch_no?: string
+  dispatch_status?: number
 }

@@ -70,6 +70,7 @@
       @page-change="method.handlePageChange"
     >
     </vxe-pager>
+    <ToBeSignInConfirm :show-dialog="data.showDialog" :dialog-default-qty="data.dialogDefaultQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
   </div>
 </template>
 
@@ -83,14 +84,14 @@ import { hookComponent } from '@/components/system'
 import { getDelivery, handleSignIn } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
+import ToBeSignInConfirm from './to-be-sign-in-confirm.vue'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
-  dialogForm: {
-    id: 0
-  },
+  dialogDefaultQty: 0,
+  packageRow: ref<DeliveryManagementDetailVO>(),
   searchForm: {},
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
@@ -102,27 +103,39 @@ const data = reactive({
 })
 
 const method = reactive({
-  handleSignIn: async (row: DeliveryManagementDetailVO) => {
-    const { data: res } = await handleSignIn([
-      {
-        id: row.id,
-        dispatch_no: row.dispatch_no,
-        dispatch_status: row.dispatch_status,
-        damage_qty: row.picked_qty
+  dialogClose: () => {
+    data.showDialog = false
+  },
+  // Callback after entering packaging value
+  dialogSubmit: async (qty: number) => {
+    if (data.packageRow) {
+      const { data: res } = await handleSignIn([
+        {
+          id: data.packageRow.id,
+          dispatch_no: data.packageRow.dispatch_no,
+          dispatch_status: data.packageRow.dispatch_status,
+          damage_qty: qty
+        }
+      ])
+      if (!res.isSuccess) {
+        hookComponent.$message({
+          type: 'error',
+          content: res.errorMessage
+        })
+        return
       }
-    ])
-    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'error',
-        content: res.errorMessage
+        type: 'success',
+        content: res.data
       })
-      return
+      method.dialogClose()
+      method.refresh()
     }
-    hookComponent.$message({
-      type: 'success',
-      content: res.data
-    })
-    method.refresh()
+  },
+  handleSignIn: async (row: DeliveryManagementDetailVO) => {
+    data.packageRow = row
+    data.dialogDefaultQty = row.picked_qty ? row.picked_qty : 0
+    data.showDialog = true
   },
   // Refresh data
   refresh: () => {
