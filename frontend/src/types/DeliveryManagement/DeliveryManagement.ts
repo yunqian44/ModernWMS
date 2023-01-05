@@ -30,6 +30,14 @@ export interface DeliveryManagementDetailVO extends DeliveryManagementVO {
   sku_code?: string
   unpackage_qty?: number
   unweighing_qty?: number
+  spu_description?: string
+  bar_code?: string
+  qty?: number
+  unpicked_qty?: number
+  picked_qty?: number
+  weight?: number
+  volume?: number
+  weight_unit?: number
 }
 
 export interface addRequestVO {

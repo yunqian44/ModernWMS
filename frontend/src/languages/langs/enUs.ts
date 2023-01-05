@@ -39,7 +39,8 @@ export default {
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
-      mustInput: 'Please fill in the '
+      mustInput: 'Please fill in the ',
+      mustSelect: 'Please select '
     },
     homeHeader: {
       logout: 'Logout'
@@ -485,7 +486,8 @@ export default {
       confirmBack: 'Confirm withdrawal',
       or: ' or ',
       irreversible: 'This operation is irreversible',
-      detailQuantityIsZero: 'Shipment quantity cannot be 0'
+      detailQuantityIsZero: 'Shipment quantity cannot be 0',
+      qty_available: 'Available Quantity'
     }
   }
 }

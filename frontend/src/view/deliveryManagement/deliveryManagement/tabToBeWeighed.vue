@@ -38,15 +38,32 @@
   >
     <vxe-table ref="xTable" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
       <vxe-column type="seq" width="60"></vxe-column>
-      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <!-- <vxe-column field="weighing_no" :title="$t('wms.deliveryManagement.weighing_no')"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
+      <vxe-column field="spu_description" :title="$t('wms.deliveryManagement.spu_description')"></vxe-column>
       <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
       <vxe-column field="sku_code" :title="$t('wms.deliveryManagement.sku_code')"></vxe-column>
-      <vxe-column field="qty" :title="$t('wms.deliveryManagement.qty')"></vxe-column>
-      <vxe-column field="unweighing_qty" :title="$t('wms.deliveryManagement.unweighing_qty')"></vxe-column>
-      <vxe-column field="weight" :title="$t('wms.deliveryManagement.weight')"></vxe-column>
-      <vxe-column field="volume" :title="$t('wms.deliveryManagement.volume')"></vxe-column>
+      <vxe-column field="bar_code" :title="$t('wms.deliveryManagement.bar_code')"></vxe-column>
+      <vxe-column field="qty" :title="$t('wms.deliveryManagement.order_qty')"></vxe-column>
+      <vxe-column field="weight" :title="$t('wms.deliveryManagement.detailWeight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="volume" :title="$t('wms.deliveryManagement.detailVolume')">
+        <template #default="{ row }">
+          <span>{{ `${row.volume} ${GetUnit('volume', row.volume_unit)}` }}</span>
+        </template>
+      </vxe-column>
+      <vxe-column field="package_person" :title="$t('wms.deliveryManagement.package_person')"></vxe-column>
+      <vxe-column field="package_no" :title="$t('wms.deliveryManagement.package_no')"></vxe-column>
+      <!-- <vxe-column field="weighing_person" :title="$t('wms.deliveryManagement.weighing_person')"></vxe-column>
+      <vxe-column field="weighing_weight" :title="$t('wms.deliveryManagement.weighing_weight')">
+        <template #default="{ row }">
+          <span>{{ `${row.weighing_weight} ${GetUnit('weight', row.weight_unit)}` }}</span>
+        </template>
+      </vxe-column> -->
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
       <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
@@ -71,7 +88,14 @@
       @page-change="method.handlePageChange"
     >
     </vxe-pager>
-    <ToBeWeighedConfirm :show-dialog="data.showDialog" :default-weight="data.defaultWeight" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    <ToBeWeighedConfirm
+      :show-dialog="data.showDialog"
+      :default-weight="data.defaultWeight"
+      :max-qty="data.dialogMaxQty"
+      :weight-unit="data.dialogWeightUnit"
+      @close="method.dialogClose"
+      @submit="method.dialogSubmit"
+    />
   </div>
 </template>
 
@@ -86,12 +110,14 @@ import { getToBeWeighed, handleWeigh } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import ToBeWeighedConfirm from './to-be-weighed-confirm.vue'
+import { GetUnit } from '@/constant/commodityManagement'
 
 const xTable = ref()
 
 const data = reactive({
   showDialog: false,
   dialogMaxQty: 0,
+  dialogWeightUnit: '',
   defaultWeight: 0,
   weighedRow: ref<DeliveryManagementDetailVO>(),
   searchForm: {},
@@ -138,6 +164,7 @@ const method = reactive({
   },
   handleWeigh: async (row: DeliveryManagementDetailVO) => {
     data.weighedRow = row
+    data.dialogWeightUnit = row.weight_unit !== undefined ? GetUnit('weight', row.weight_unit) : ''
     data.dialogMaxQty = row.unweighing_qty ? row.unweighing_qty : 0
     data.defaultWeight = row.weight ? row.weight : 0
     data.showDialog = true
