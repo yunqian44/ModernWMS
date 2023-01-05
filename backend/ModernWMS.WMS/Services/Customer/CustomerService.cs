@@ -202,7 +202,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(bool flag, List<CustomerImportViewModel> errorData)> ExcelAsync(List<CustomerImportViewModel> input, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CustomerEntity>();
-            var existsDatas = await DbSet.AsNoTracking().Select(t => new { t.customer_name}).ToListAsync();
+            var existsDatas = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).Select(t => new { t.customer_name}).ToListAsync();
             input.ForEach(async t =>
             {
                 if (existsDatas.Any(d => d.customer_name.Equals(t.customer_name)))
