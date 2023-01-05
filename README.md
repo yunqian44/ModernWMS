@@ -162,7 +162,7 @@
   + 第三步，部署
 
   ```bash
-  cd /tmp//ModernWMS-master/docker/
+  cd /tmp/ModernWMS-master/docker/
   docker build -t modernwms:1.0 .
   docker run -d -p 8089:80  modernwms:1.0 /bin/bash ./run.sh
   ```
@@ -176,7 +176,7 @@
   <a href="https://github.com/fjykTec/ModernWMS/issues/new?template=feature_request.md&title=[FR]">提交一个建议</a>
 </h4>
 <h4>
-  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群聊【ModernWMS共创基地】</a>
+  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群  757128595</a>
 </h4>
 
 ## License - 版权信息
