@@ -105,7 +105,7 @@ export default {
     userName: '用户名',
     password: '密码',
     loginSuccess: '登录成功',
-    notAuthority: '您的账号不包含任何菜单, 请联系管理员增加!',
+    notAuthority: '该账号未分配菜单权限，请联系管理员',
     registerTips: '没有账号？点此注册一个！',
     register: '注册'
   },

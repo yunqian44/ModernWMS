@@ -28,7 +28,7 @@
               <div
                 v-for="(detailItem, detailIndex) in item.children"
                 :key="detailIndex"
-                class="menuItems"
+                class="menuItems padding-l"
                 :class="method.getItemClass(detailItem)"
                 @click="method.openMenu(detailItem)"
               >
@@ -147,6 +147,7 @@ onMounted(() => {
         background-color: #edeef3;
       }
     }
+
     .openedMenuItems {
       background-color: #e8e9ed;
     }
@@ -171,5 +172,9 @@ onMounted(() => {
 
 .rotate90 {
   transform: rotate(90deg);
+}
+
+.padding-l{
+  padding-left: 44px !important;
 }
 </style>

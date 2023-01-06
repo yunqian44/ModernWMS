@@ -73,6 +73,7 @@ const data = reactive({
     user_name: '',
     auth_string: '',
     email: '',
+    sex: '',
     is_valid: true
   }),
   rules: {
@@ -122,6 +123,7 @@ const method = reactive({
       user_name: data.form.user_name,
       auth_string: Md5.hashStr(data.form.auth_string as string),
       email: data.form.email,
+      sex: data.form.sex,
       is_valid: true
     }
     
