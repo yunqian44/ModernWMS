@@ -23,7 +23,8 @@ export default {
       view: '查看',
       import: '导入',
       chooseFile: '选择文件',
-      exportTemplate: '导出模板'
+      exportTemplate: '导出模板',
+      noData: '暂无数据',
     },
     tips: {
       success: '成功!',

@@ -23,7 +23,8 @@ export default {
       view: 'View',
       import: 'Import',
       chooseFile: 'Choose File',
-      exportTemplate: 'Export Template'
+      exportTemplate: 'Export Template',
+      noData: 'No data',
     },
     tips: {
       success: ' success!',

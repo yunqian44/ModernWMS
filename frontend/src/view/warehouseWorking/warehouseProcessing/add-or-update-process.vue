@@ -29,6 +29,9 @@
                   :edit-rules="data.validRulesSource"
                   align="center"
                 >
+                  <template #empty>
+                    {{ i18n.global.t('system.page.noData') }}
+                  </template>
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="operate" width="50" :title="$t('system.page.operate')" :resizable="false">
                     <template #default="{ row }">
@@ -82,6 +85,9 @@
                   :edit-rules="data.validRulesTarget"
                   align="center"
                 >
+                  <template #empty>
+                    {{ i18n.global.t('system.page.noData') }}
+                  </template>
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="operate" width="50" :title="$t('system.page.operate')" :resizable="false">
                     <template #default="{ row }">
