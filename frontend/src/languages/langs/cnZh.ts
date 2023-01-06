@@ -48,7 +48,8 @@ export default {
       decimal: ' 小数',
       pleaseEnter: '请输入长度为',
       inputIntMsg: '的整数位',
-      inputDecimalMsg: '的小数位'
+      inputDecimalMsg: '的小数位',
+      lengthValid: '字段长度应该在'
     },
     homeHeader: {
       logout: '注销'

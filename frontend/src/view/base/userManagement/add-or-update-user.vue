@@ -64,6 +64,7 @@ import { UserVO } from '@/types/Base/UserManagement'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addUser, updateUser, getSelectItem } from '@/api/base/userManagement'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -91,11 +92,17 @@ const data = reactive({
     is_valid: true
   }),
   rules: {
-    user_num: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_num') }!`],
-    user_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_name') }!`],
+    user_num: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_num') }!`,
+      (val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)
+    ],
+    user_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_name') }!`,
+      (val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)
+    ],
     user_role: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_role') }!`],
     sex: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.sex') }!`],
-    contact_tel: [],
+    contact_tel: [(val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 64)],
     is_valid: []
   },
   combobox: ref<{

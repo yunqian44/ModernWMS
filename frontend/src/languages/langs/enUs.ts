@@ -48,7 +48,8 @@ export default {
       decimal: ' decimal',
       pleaseEnter: 'Please enter ',
       inputIntMsg: 'decimal places of integer part',
-      inputDecimalMsg: ' decimal places of the decimal part'
+      inputDecimalMsg: ' decimal places of the decimal part',
+      lengthValid: 'The length should be between '
     },
     homeHeader: {
       logout: 'Logout'

@@ -55,6 +55,7 @@
                 :height="'500px'"
                 align="center"
                 :edit-config="{ trigger: 'click', mode: 'cell' }"
+                :edit-rules="data.validRules"
               >
                 <template #empty>
                   {{ i18n.global.t('system.page.noData') }}
@@ -88,8 +89,10 @@ import { ConfirmOrderVO, ConfirmOrderPickListVO } from '@/types/DeliveryManageme
 import i18n from '@/languages/i18n'
 import { getConfirmOrderInfoAndStock, confirmOrder } from '@/api/wms/deliveryManagement'
 import { hookComponent } from '@/components/system/index'
+import { isInteger } from '@/utils/dataVerification/tableRule'
 
 const xTable = ref()
+const detailXTable = ref()
 
 const emit = defineEmits(['close', 'saveSuccess'])
 
@@ -110,7 +113,16 @@ const data = reactive({
   treeData: ref<ConfirmOrderVO[]>([]),
   tableData: ref<ConfirmOrderPickListVO[]>([]),
   // List of verification results for each commodity
-  validList: ref<string[]>([])
+  validList: ref<string[]>([]),
+  validRules: ref<any>({
+    pick_qty: [
+      {
+        validator: isInteger,
+        validNumerical: 'nonNegative',
+        trigger: 'change'
+      }
+    ]
+  })
 })
 
 const method = reactive({
@@ -167,6 +179,15 @@ const method = reactive({
     return true
   },
   submit: async () => {
+    const $table = detailXTable.value
+    const errMap = await $table.validate(true)
+    if (errMap) {
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.checkText.checkFormFail')
+      })
+      return
+    }
     if (method.beforeSubmit()) {
       // console.log(data.treeData)
       const { data: res } = await confirmOrder(data.treeData)

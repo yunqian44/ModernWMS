@@ -34,6 +34,7 @@ import { UserRoleVO } from '@/types/Base/UserRoleSetting'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addUserRole, updateUserRole } from '@/api/base/userRoleSetting'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -59,7 +60,10 @@ const data = reactive({
     is_valid: true
   }),
   rules: {
-    role_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userRoleSetting.role_name') }!`],
+    role_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userRoleSetting.role_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
+    ],
     is_valid: []
   }
 })

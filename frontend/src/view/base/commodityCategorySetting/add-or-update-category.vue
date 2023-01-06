@@ -38,6 +38,7 @@ import { CategoryVO } from '@/types/Base/CommodityCategorySetting'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addCategory, updateCategory, getCategoryAll } from '@/api/base/commodityCategorySetting'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -63,7 +64,8 @@ const data = reactive({
   }),
   rules: {
     category_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityCategorySetting.category_name') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityCategorySetting.category_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
     ],
     parent_id: [],
     is_valid: []
