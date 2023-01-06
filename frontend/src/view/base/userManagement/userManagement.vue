@@ -146,7 +146,7 @@ import { DataProps, UserVO } from '@/types/Base/UserManagement'
 import { getUserList, deleteUser, resetPassword } from '@/api/base/userManagement'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-user.vue'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
@@ -165,7 +165,7 @@ const data: DataProps = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: DEFAULT_PAGE_SIZE
   },
   // Dialog info
   showDialog: false,

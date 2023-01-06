@@ -11,12 +11,7 @@
               :rules="data.rules.company_name"
               variant="outlined"
             ></v-text-field>
-            <v-text-field
-              v-model="data.form.city"
-              :label="$t('base.companySetting.city')"
-              :rules="data.rules.city"
-              variant="outlined"
-            ></v-text-field>
+            <v-text-field v-model="data.form.city" :label="$t('base.companySetting.city')" :rules="data.rules.city" variant="outlined"></v-text-field>
             <v-text-field
               v-model="data.form.address"
               :label="$t('base.companySetting.address')"
@@ -52,6 +47,7 @@ import { CompanyVO } from '@/types/Base/CompanySetting'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addCompany, updateCompany } from '@/api/base/companySetting'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -80,11 +76,14 @@ const data = reactive({
     contact_tel: ''
   }),
   rules: {
-    company_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.companySetting.company_name') }!`],
-    city: [],
-    address: [],
-    manager: [],
-    contact_tel: []
+    company_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.companySetting.company_name') }!`,
+      (val: string) => StringLength(val, 0, 256) === '' || StringLength(val, 0, 256)
+    ],
+    city: [(val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)],
+    address: [(val: string) => StringLength(val, 0, 256) === '' || StringLength(val, 0, 256)],
+    manager: [(val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)],
+    contact_tel: [(val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)]
   }
 })
 

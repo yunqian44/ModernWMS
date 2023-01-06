@@ -10,6 +10,7 @@
                 <v-form ref="formRef">
                   <v-text-field
                     v-model="data.form.spu_code"
+                    :rules="data.rules.spu_code"
                     :label="$t('base.commodityManagement.spu_code')"
                     variant="outlined"
                     density="compact"
@@ -18,6 +19,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="data.form.spu_name"
+                    :rules="data.rules.spu_name"
                     :label="$t('base.commodityManagement.spu_name')"
                     variant="outlined"
                     density="compact"
@@ -37,16 +39,9 @@
                     clearable
                     @update:model-value="method.categoryNameChange"
                   ></v-select>
-                  <!-- <v-text-field
-                    v-model="data.form.category_name"
-                    :label="$t('base.commodityManagement.category_name')"
-                    variant="outlined"
-                    density="compact"
-                    clearable
-                    class="mb-4"
-                  ></v-text-field> -->
                   <v-text-field
                     v-model="data.form.spu_description"
+                    :rules="data.rules.spu_description"
                     :label="$t('base.commodityManagement.spu_description')"
                     variant="outlined"
                     density="compact"
@@ -55,6 +50,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="data.form.bar_code"
+                    :rules="data.rules.bar_code"
                     :label="$t('base.commodityManagement.bar_code')"
                     variant="outlined"
                     density="compact"
@@ -73,16 +69,9 @@
                     clearable
                     @update:model-value="method.supplierNameChange"
                   ></v-select>
-                  <!-- <v-text-field
-                    v-model="data.form.supplier_name"
-                    :label="$t('base.commodityManagement.supplier_name')"
-                    variant="outlined"
-                    density="compact"
-                    clearable
-                    class="mb-4"
-                  ></v-text-field> -->
                   <v-text-field
                     v-model="data.form.brand"
+                    :rules="data.rules.brand"
                     :label="$t('base.commodityManagement.brand')"
                     variant="outlined"
                     density="compact"
@@ -152,7 +141,7 @@
                   :height="SYSTEM_HEIGHT.SELECT_TABLE"
                   align="center"
                   :edit-rules="data.validRules"
-                  :edit-config="{ trigger: 'manual', mode: 'row' }"
+                  :edit-config="{ trigger: 'click', mode: 'cell' }"
                 >
                   <template #empty>
                     {{ i18n.global.t('system.page.noData') }}
@@ -210,14 +199,14 @@
                       <vxe-input v-model="row.price" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="operate" :title="$t('system.page.operate')" width="160" :resizable="false" show-overflow>
+                  <vxe-column field="operate" :title="$t('system.page.operate')" width="100" :resizable="false" show-overflow>
                     <template #default="{ row }">
-                      <tooltip-btn
+                      <!-- <tooltip-btn
                         :flat="true"
                         icon="mdi-pencil-outline"
                         :tooltip-text="$t('system.page.edit')"
                         @click="method.editRow(row)"
-                      ></tooltip-btn>
+                      ></tooltip-btn> -->
                       <tooltip-btn
                         :flat="true"
                         icon="mdi-delete-outline"
@@ -254,6 +243,8 @@ import { SupplierVO } from '@/types/Base/Supplier'
 import { computedSelectTableSearchHeight, SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { removeArrayNull } from '@/utils/common'
+import { StringLength } from '@/utils/dataVerification/formRule'
+import { isDecimal } from '@/utils/dataVerification/tableRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -293,8 +284,17 @@ const data = reactive({
   }),
   tableData: [],
   rules: {
-    spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_code') }!`],
-    spu_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_name') }!`],
+    spu_code: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_code') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
+    ],
+    spu_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.spu_name') }!`,
+      (val: string) => StringLength(val, 0, 200) === '' || StringLength(val, 0, 200)
+    ],
+    spu_description: [(val: string) => StringLength(val, 0, 1000) === '' || StringLength(val, 0, 1000)],
+    bar_code: [(val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)],
+    brand: [(val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)],
     category_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.category_name') }!`
     ],
@@ -308,10 +308,100 @@ const data = reactive({
       (val: number) => [0, 1, 2].includes(val) || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.weight_unit') }!`
     ]
   },
-  validRules: {
-    sku_name: [{ required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_name') }` }],
-    unit: [{ required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.unit') }` }]
-  },
+  validRules: ref<any>({
+    sku_code: [
+      {
+        type: 'string',
+        min: 0,
+        max: 32,
+        message: `${ i18n.global.t('system.checkText.lengthValid') }${ 0 }-${ 32 }`,
+        trigger: 'change'
+      }
+    ],
+    sku_name: [
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_name') }` },
+      {
+        type: 'string',
+        min: 0,
+        max: 200,
+        message: `${ i18n.global.t('system.checkText.lengthValid') }${ 0 }-${ 200 }`,
+        trigger: 'change'
+      }
+    ],
+    unit: [
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.unit') }` },
+      {
+        type: 'string',
+        min: 0,
+        max: 5,
+        message: `${ i18n.global.t('system.checkText.lengthValid') }${ 0 }-${ 5 }`,
+        trigger: 'change'
+      }
+    ],
+    weight: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 8,
+        decimalLength: 3,
+        trigger: 'change'
+      }
+    ],
+    lenght: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 8,
+        decimalLength: 3,
+        trigger: 'change'
+      }
+    ],
+    width: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 8,
+        decimalLength: 3,
+        trigger: 'change'
+      }
+    ],
+    height: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 8,
+        decimalLength: 3,
+        trigger: 'change'
+      }
+    ],
+    volume: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 8,
+        decimalLength: 3,
+        trigger: 'change'
+      }
+    ],
+    cost: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 10,
+        decimalLength: 2,
+        trigger: 'change'
+      }
+    ],
+    price: [
+      {
+        validator: isDecimal,
+        validNumerical: 'nonNegative',
+        length: 10,
+        decimalLength: 2,
+        trigger: 'change'
+      }
+    ]
+  }),
   combobox: ref<{
     length_unit: {
       label: string

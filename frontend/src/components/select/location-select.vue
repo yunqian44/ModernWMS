@@ -101,7 +101,7 @@ import { VxePagerEvents } from 'vxe-table'
 import { hookComponent } from '@/components/system/index'
 import { getGoodsLocationList } from '@/api/base/warehouseSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { formatIsValid } from '@/utils/format/formatSystem'
 import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 import { SearchObject } from '@/types/System/Form'
@@ -125,7 +125,7 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   }),
   searchForm: {

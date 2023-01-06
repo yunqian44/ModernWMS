@@ -84,3 +84,11 @@ export function IsDecimal(
   }
   return ''
 }
+
+// Judge string length
+export function StringLength(value: string, min: number, max: number) {
+  if (value.length < min || value.length > max) {
+    return `${ i18n.global.t('system.checkText.lengthValid') }${ min }-${ max }`
+  }
+  return ''
+}

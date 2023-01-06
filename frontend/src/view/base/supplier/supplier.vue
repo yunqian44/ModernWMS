@@ -114,7 +114,7 @@ import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { SupplierVO, DataProps } from '@/types/Base/Supplier'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import addOrUpdateDialog from './add-or-update-supplier.vue'
 import { hookComponent } from '@/components/system'
@@ -150,7 +150,7 @@ const data = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   },
   timer: ref<any>(null)

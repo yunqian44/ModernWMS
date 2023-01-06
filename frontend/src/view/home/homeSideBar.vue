@@ -125,8 +125,7 @@ onMounted(() => {
       padding-left: 22px;
       padding-right: 8px;
       border-radius: 0 50px 50px 0;
-      margin-top: 5px;
-      margin-bottom: 2px;
+      margin-bottom: 7px;
       display: flex;
       justify-content: space-between;
       align-items: center;
