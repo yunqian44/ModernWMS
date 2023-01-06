@@ -8,15 +8,17 @@
       </v-breadcrumbs>
     </div>
     <div class="toolsBar">
+      <div class="gitSrc mr-4">
+        <img src="@/assets/img/gitee.png" alt="Gitee" @click="method.toGit('gitee')">
+      </div>
+      <div class="gitSrc mr-4">
+        <img src="@/assets/img/github.png" alt="Gitee" @click="method.toGit('github')">
+      </div>
       <LanguagesSwitch />
-      <!-- <div class="toolItems bell">
-        <v-icon icon="mdi-bell-outline" color="#666666"></v-icon>
-        <div class="hasNotify"></div>
-      </div> -->
       <v-menu>
         <template #activator="{ props }">
-          <div class="toolItems headPortrait ml-2" v-bind="props">
-            <v-icon icon="mdi-account" color="#666666"></v-icon>
+          <div class="toolItems headPortrait ml-4" v-bind="props">
+            <p class="firstName">{{ firstName }}</p>
             <div class="alive"></div>
           </div>
         </template>
@@ -31,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import LanguagesSwitch from '@/components/system/languages.vue'
 import { lightGrey } from '@/constant/style'
@@ -86,7 +88,19 @@ const method = reactive({
 
       router.push('/login')
     }
+  },
+  toGit: (type: string) => {
+    if (type === 'gitee') {
+      window.open('https://gitee.com/modernwms/ModernWMS', '_blank')
+    } else if (type === 'github') {
+      window.open('https://github.com/fjykTec/ModernWMS', '_blank')
+    }
   }
+})
+
+const firstName = computed(() => {
+  const userInfo = store.getters['user/userInfo']
+  return userInfo?.user_name?.charAt(0) || ''
 })
 </script>
 
@@ -121,6 +135,24 @@ const method = reactive({
     }
   }
 
+  .gitSrc {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    > img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+    }
+
+    :hover {
+      cursor: pointer;
+      opacity: 1;
+      scale: 1.1;
+      transition: all ease-in-out 0.2s;
+    }
+  }
   .toolsBar {
     display: flex;
     align-items: center;
@@ -183,5 +215,10 @@ const method = reactive({
       }
     }
   }
+}
+
+.firstName{
+  font-weight: 600;
+  color: #9c27b0;
 }
 </style>

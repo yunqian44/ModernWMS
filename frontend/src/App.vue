@@ -52,11 +52,9 @@ watch(
 
 onMounted(() => {
   emitter.on('showLoading', () => {
-    // console.log('showloading')
     loadingFlag.value = true
   })
   emitter.on('closeLoading', () => {
-    // console.log('closeLoading')
     loadingFlag.value = false
   })
 
