@@ -96,7 +96,9 @@ export default {
     userName: '用户名',
     password: '密码',
     loginSuccess: '登录成功',
-    notAuthority: '您的账号不包含任何菜单, 请联系管理员增加!'
+    notAuthority: '您的账号不包含任何菜单, 请联系管理员增加!',
+    registerTips: '没有账号？点此注册一个！',
+    register: '注册'
   },
   homepage: {
     subTitle: '现代化仓库管理系统'
@@ -125,7 +127,10 @@ export default {
       restPwd: '重置密码',
       checkboxIsNull: '请选中数据!',
       beforeResetPwd: '您确定要重置这些用户的密码吗?',
-      afterResetPwd: '重置密码成功!'
+      afterResetPwd: '重置密码成功!',
+      user_register_name: '用户名',
+      email: 'Email',
+      auth_string: '密码'
     },
     warehouseSetting: {
       warehouseSetting: '仓库设置',

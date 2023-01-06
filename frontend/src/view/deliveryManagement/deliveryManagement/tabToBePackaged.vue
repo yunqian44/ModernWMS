@@ -91,7 +91,7 @@
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
             <tooltip-btn
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-package-down"
               :tooltip-text="$t('wms.deliveryManagement.package')"
               @click="method.handlePackage(row)"
             ></tooltip-btn>

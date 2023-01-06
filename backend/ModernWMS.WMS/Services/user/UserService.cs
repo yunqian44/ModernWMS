@@ -312,10 +312,10 @@ namespace ModernWMS.WMS.Services
             var time = DateTime.Now;
             entity.user_num = entity.user_name;
             entity.id = 0;
-            entity.auth_string = Md5Helper.Md5Encrypt32(viewModel.password);
+            entity.auth_string = viewModel.auth_string;
             entity.create_time = time;
             entity.last_update_time = time;
-            entity.contact_tel = viewModel.email;
+            entity.email = viewModel.email;
             entity.is_valid = true;
             await DbSet.AddAsync(entity);
             await _dBContext.SaveChangesAsync();

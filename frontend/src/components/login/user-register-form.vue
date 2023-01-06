@@ -1,30 +1,25 @@
 <template>
-  <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
+  <v-dialog v-model="isShow" width="20%" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card>
-        <v-toolbar color="white" :title="`${$t('router.sideBar.userManagement')}`"></v-toolbar>
+        <v-toolbar color="white" :title="`${$t('login.register')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
-              v-model="data.form.user_num"
-              :label="$t('base.userManagement.user_num')"
-              :rules="data.rules.user_num"
-              variant="outlined"
-            ></v-text-field>
-            <v-text-field
               v-model="data.form.user_name"
-              :label="$t('base.userManagement.user_name')"
+              :label="$t('base.userManagement.user_register_name')"
               :rules="data.rules.user_name"
               variant="outlined"
             ></v-text-field>
-            <v-select
-              v-model="data.form.user_role"
-              :items="data.combobox.user_role"
-              :rules="data.rules.user_role"
-              :label="$t('base.userManagement.user_role')"
+            <v-text-field
+              v-model="data.form.auth_string"
+              :label="$t('base.userManagement.auth_string')"
+              :rules="data.rules.auth_string"
               variant="outlined"
-              clearable
-            ></v-select>
+              :append-icon="data.isShowPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="data.isShowPassword ? 'text' : 'password'"
+              @click:append="data.isShowPassword = !data.isShowPassword"
+            ></v-text-field>
             <v-select
               v-model="data.form.sex"
               :items="data.combobox.sex"
@@ -36,17 +31,11 @@
               clearable
             ></v-select>
             <v-text-field
-              v-model="data.form.contact_tel"
-              :label="$t('base.userManagement.contact_tel')"
-              :rules="data.rules.contact_tel"
+              v-model="data.form.email"
+              :label="$t('base.userManagement.email')"
+              :rules="data.rules.email"
               variant="outlined"
             ></v-text-field>
-            <v-switch
-              v-model="data.form.is_valid"
-              color="primary"
-              :label="$t('base.userManagement.is_valid')"
-              :rules="data.rules.is_valid"
-            ></v-switch>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -60,10 +49,11 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
+import { Md5 } from 'ts-md5'
 import { UserVO } from '@/types/Base/UserManagement'
 import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
-import { addUser, updateUser, getSelectItem } from '@/api/base/userManagement'
+import { registerUser } from '@/api/base/userManagement'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -75,25 +65,23 @@ const props = defineProps<{
 
 const isShow = computed(() => props.showDialog)
 
-const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
-
 const data = reactive({
+  isShowPassword: false,
   form: ref<UserVO>({
     id: 0,
     user_num: '',
     user_name: '',
-    contact_tel: '',
+    auth_string: '',
+    email: '',
     is_valid: true
   }),
   rules: {
-    user_num: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_num') }!`],
-    user_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_name') }!`],
-    user_role: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_role') }!`],
+    user_num: [],
+    user_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.user_register_name') }!`
+    ],
+    auth_string: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.auth_string') }!`],
+    email: [],
     sex: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.userManagement.sex') }!`],
     contact_tel: [],
     is_valid: []
@@ -103,10 +91,8 @@ const data = reactive({
       label: string
       value: string
     }[]
-    user_role: string[]
   }>({
-    sex: [],
-    user_role: []
+    sex: []
   })
 })
 
@@ -122,27 +108,24 @@ const method = reactive({
         value: sex
       })
     }
-    // Dynamic drop-down box
-    data.combobox.user_role = []
-    const { data: res } = await getSelectItem()
-    if (!res.isSuccess) {
-      return
-    }
-    for (const item of res.data) {
-      switch (item.code) {
-        case 'user_role':
-          data.combobox.user_role.push(item.name)
-          break
-      }
-    }
   },
   closeDialog: () => {
     emit('close')
   },
   submit: async () => {
     const { valid } = await formRef.value.validate()
+
     if (valid) {
-      const { data: res } = dialogTitle.value === 'add' ? await addUser(data.form) : await updateUser(data.form)
+      const form = {
+      id: 0,
+      user_num: '',
+      user_name: data.form.user_name,
+      auth_string: Md5.hashStr(data.form.auth_string as string),
+      email: data.form.email,
+      is_valid: true
+    }
+    
+      const { data: res } = await registerUser(form)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',

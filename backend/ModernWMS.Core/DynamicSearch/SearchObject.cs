@@ -12,42 +12,42 @@ namespace ModernWMS.Core.DynamicSearch
     public class SearchObject
     {
         /// <summary>
-        /// 排序
+        /// sort
         /// </summary>
         public int Sort { get; set; } = 0;
 
         /// <summary>
-        /// 查找条件标题
+        /// label
         /// </summary>
         public string Label { get; set; } = string.Empty;
 
         /// <summary>
-        /// 查找条件字段名
+        /// name
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// 控件类型 TEXTBOX,DATETIMEPICKER,COMBOBOX
+        /// type
         /// </summary>
         public string Type { get; set; } = string.Empty;
 
         /// <summary>
-        /// 操作
+        /// operator
         /// </summary>
         public Operators Operator { get; set; } = Operators.Equal;
 
         /// <summary>
-        /// 查找的值
+        /// text
         /// </summary>
         public string Text { get; set; } = string.Empty;
 
         /// <summary>
-        /// 查找的值
+        /// value
         /// </summary>
         public object Value { get; set; } = new object();
 
         /// <summary>
-        /// 下拉框绑定的数据
+        /// select item combox list
         /// </summary>
         public List<ComboxItem> comboxItem { get; set; } = new List<ComboxItem>();
 
