@@ -104,6 +104,17 @@ http.interceptors.request.use(
     const token = store.getters['user/token']
     // const user = store.getters['user/userInfo']
 
+    let culture = 'en-us'
+    switch (store.getters['system/language']) {
+      case 'zh':
+        culture = 'zh-cn'
+        break
+      case 'en':
+        culture = 'en-us'
+        break
+    }
+    config.params ? (config.params.culture = culture) : (config.params = { culture })
+
     if (!config.hideLoading) {
       showLoading()
     }

@@ -5,7 +5,13 @@
         <v-toolbar color="white" :title="`${$t('wms.deliveryManagement.package')}`"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
-            <v-text-field v-model="data.form.qty" :label="$t('wms.deliveryManagement.detailQty')" variant="outlined" clearable></v-text-field>
+            <v-text-field
+              v-model="data.form.qty"
+              :rules="data.rules.qty"
+              :label="$t('wms.deliveryManagement.detailQty')"
+              variant="outlined"
+              clearable
+            ></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -21,6 +27,7 @@
 import { reactive, computed, defineEmits, watch } from 'vue'
 import { hookComponent } from '@/components/system/index'
 import i18n from '@/languages/i18n'
+import { IsInteger } from '@/utils/dataVerification/formRule'
 
 const emit = defineEmits(['close', 'submit'])
 
@@ -32,7 +39,13 @@ const props = defineProps<{
 const isShow = computed(() => props.showDialog)
 
 const data = reactive({
-  form: { qty: 0 }
+  form: { qty: 0 },
+  rules: {
+    qty: [
+      (val: number) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.detailQty') }!`,
+      (val: number) => IsInteger(val, 'greaterThanZero') === '' || IsInteger(val, 'greaterThanZero')
+    ]
+  }
 })
 
 const method = reactive({
@@ -40,7 +53,7 @@ const method = reactive({
     emit('close')
   },
   submit: () => {
-    if (Number(data.form.qty) > 0 && Number(data.form.qty) <= props.maxQty) {
+    if (IsInteger(data.form.qty, 'greaterThanZero') === '' && Number(data.form.qty) > 0 && Number(data.form.qty) <= props.maxQty) {
       emit('submit', data.form.qty)
     } else {
       hookComponent.$message({

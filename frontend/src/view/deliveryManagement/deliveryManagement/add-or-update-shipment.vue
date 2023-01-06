@@ -16,7 +16,7 @@
               clearable
               @update:model-value="method.customerNameChange"
             ></v-select>
-            <v-row v-for="(item, index) of data.form.detailList" :key="index" style="margin-top: 5px;">
+            <v-row v-for="(item, index) of data.form.detailList" :key="index" style="margin-top: 5px">
               <!-- <v-select
                   v-model="item.sku_id"
                   :items="data.combobox.sku_code"
@@ -94,11 +94,11 @@ import { errorColor } from '@/constant/style'
 import { hookComponent } from '@/components/system/index'
 import { addShipment } from '@/api/wms/deliveryManagement'
 import { getSupplierAll } from '@/api/base/supplier'
-import { getSpuList } from '@/api/base/commodityManagementSetting'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { checkDetailRepeatGetBool } from '@/utils/dataVerification/page'
 import skuSelect from '@/components/select/sku-select.vue'
 import { CommodityDetailJoinMainVO } from '@/types/Base/CommodityManagement'
+import { IsInteger } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -124,20 +124,18 @@ const data = reactive({
       label: string
       value: number
     }[]
-    sku_code: {
-      label: string
-      value: number
-    }[]
   }>({
-    customer_name: [],
-    sku_code: []
+    customer_name: []
   }),
   rules: {
     customer_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.customer_name') }!`
     ],
     spu_code: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.sku_code') }!`],
-    qty: [(val: number) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.detailQty') }!`]
+    qty: [
+      (val: number) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.deliveryManagement.detailQty') }!`,
+      (val: number) => IsInteger(val, 'greaterThanZero') === '' || IsInteger(val, 'greaterThanZero')
+    ]
   }
 })
 
@@ -212,7 +210,6 @@ const method = reactive({
   // Get the options required by the drop-down box
   getCombobox: async () => {
     data.combobox.customer_name = []
-    data.combobox.sku_code = []
     const { data: supplierRes } = await getSupplierAll()
     if (!supplierRes.isSuccess) {
       return
@@ -222,18 +219,6 @@ const method = reactive({
         data.combobox.customer_name.push({
           label: item.supplier_name,
           value: item.id
-        })
-      }
-    }
-    const { data: skuRes } = await getSpuList({ pageIndex: 1, pageSize: 99999999 })
-    if (!skuRes.isSuccess) {
-      return
-    }
-    for (const item of skuRes.data.rows) {
-      for (const dItem of item.detailList) {
-        data.combobox.sku_code.push({
-          label: dItem.sku_code,
-          value: dItem.id
         })
       }
     }

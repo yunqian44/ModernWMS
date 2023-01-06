@@ -40,7 +40,12 @@ export default {
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
       mustInput: 'Please fill in the ',
-      mustSelect: 'Please select '
+      mustSelect: 'Please select ',
+      integer: ' integer',
+      decimal: ' decimal',
+      pleaseEnter: 'Please enter ',
+      inputIntMsg: 'decimal places of integer part',
+      inputDecimalMsg: ' decimal places of the decimal part'
     },
     homeHeader: {
       logout: 'Logout'

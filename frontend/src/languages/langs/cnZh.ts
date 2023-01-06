@@ -40,7 +40,12 @@ export default {
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',
       mustInput: '请填写',
-      mustSelect: '请选择'
+      mustSelect: '请选择',
+      integer: '整数',
+      decimal: ' 小数',
+      pleaseEnter: '请输入长度为',
+      inputIntMsg: '的整数位',
+      inputDecimalMsg: '的小数位'
     },
     homeHeader: {
       logout: '注销'
@@ -486,7 +491,7 @@ export default {
       unpackage_qty: '待打包数量',
       unweighing_qty: '待称重数量',
       validQtyMsgPackage: '请输入有效数值, 且不能超过总数量',
-      validQtyMsgSignIn: '请输入有效数值',
+      validQtyMsgSignIn: '请输入有效数值, 且不能超过总数量',
       signInQty: '实际签收数量',
       incorrectStatusMsg: '操作失败, 状态应该为',
       backToThePreviousStep: '撤回到上一个流程',
