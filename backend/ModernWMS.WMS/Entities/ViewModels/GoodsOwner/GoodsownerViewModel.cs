@@ -36,7 +36,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// city
         /// </summary>
         [Display(Name = "city")]
-        [Required(ErrorMessage = "Required")]
         [MaxLength(128, ErrorMessage = "MaxLength")]
         public string city { get; set; } = string.Empty;
 
@@ -44,7 +43,6 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// address
         /// </summary>
         [Display(Name = "address")]
-        [Required(ErrorMessage = "Required")]
         [MaxLength(256, ErrorMessage = "MaxLength")]
         public string address { get; set; } = string.Empty;
 
