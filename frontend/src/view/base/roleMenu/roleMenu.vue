@@ -81,6 +81,9 @@
               </v-col>
               <v-col :cols="9">
                 <vxe-table ref="xTable" :data="data.activeRoleMenuForm.detailList" :height="tableHeight" align="center">
+                  <template #empty>
+                    {{ i18n.global.t('system.page.noData') }}
+                  </template>
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="menu_name" :title="$t('base.roleMenu.menu_name')">
                     <template #default="{ row }">

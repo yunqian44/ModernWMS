@@ -154,6 +154,9 @@
                   :edit-rules="data.validRules"
                   :edit-config="{ trigger: 'manual', mode: 'row' }"
                 >
+                  <template #empty>
+                    {{ i18n.global.t('system.page.noData') }}
+                  </template>
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')" :edit-render="{}">
                     <template #edit="{ row }">

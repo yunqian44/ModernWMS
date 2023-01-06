@@ -68,6 +68,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column type="checkbox" width="50"></vxe-column>
               <vxe-column field="user_num" :title="$t('base.userManagement.user_num')"></vxe-column>

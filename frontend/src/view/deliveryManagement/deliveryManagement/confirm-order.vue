@@ -16,6 +16,9 @@
                 :cell-style="method.cellStyle"
                 @cell-click="method.cellClick"
               >
+                <template #empty>
+                  {{ i18n.global.t('system.page.noData') }}
+                </template>
                 <vxe-column type="seq" width="40"></vxe-column>
                 <vxe-column width="40">
                   <template #default="{ row }">
@@ -53,6 +56,9 @@
                 align="center"
                 :edit-config="{ trigger: 'click', mode: 'cell' }"
               >
+                <template #empty>
+                  {{ i18n.global.t('system.page.noData') }}
+                </template>
                 <vxe-column type="seq" width="60"></vxe-column>
                 <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"> </vxe-column>
                 <vxe-column field="location_name" :title="$t('wms.stock.location_name')"> </vxe-column>

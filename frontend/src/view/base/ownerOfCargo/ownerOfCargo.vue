@@ -16,7 +16,24 @@
               </v-col>
 
               <!-- Search Input -->
-              <v-col cols="12" sm="9"> </v-col>
+              <v-col cols="12" sm="9">
+                <v-row no-gutters @keyup.enter="method.sureSearch">
+                  <v-col cols="4"> </v-col>
+                  <v-col cols="4"> </v-col>
+                  <v-col cols="4">
+                    <v-text-field
+                      v-model="data.searchForm.goods_owner_name"
+                      clearable
+                      hide-details
+                      density="comfortable"
+                      class="searchInput ml-5 mt-1"
+                      :label="$t('base.ownerOfCargo.goods_owner_name')"
+                      variant="solo"
+                    >
+                    </v-text-field>
+                  </v-col>
+                </v-row>
+              </v-col>
             </v-row>
           </div>
 
@@ -28,6 +45,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="goods_owner_name" :title="$t('base.ownerOfCargo.goods_owner_name')"></vxe-column>
               <vxe-column field="city" :title="$t('base.ownerOfCargo.city')"></vxe-column>
@@ -54,6 +74,16 @@
                 </template>
               </vxe-column>
             </vxe-table>
+            <custom-pager
+              :current-page="data.tablePage.pageIndex"
+              :page-size="data.tablePage.pageSize"
+              perfect
+              :total="data.tablePage.total"
+              :page-sizes="PAGE_SIZE"
+              :layouts="PAGE_LAYOUT"
+              @page-change="method.handlePageChange"
+            >
+            </custom-pager>
           </div>
         </v-card-text>
       </v-card>
@@ -66,18 +96,25 @@
 
 <script lang="ts" setup>
 import { computed, reactive, onMounted, ref } from 'vue'
+import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { OwnerOfCargoVO, DataProps } from '@/types/Base/OwnerOfCargo'
-import { getOwnerOfCargoAll, deleteOwnerOfCargo } from '@/api/base/ownerOfCargo'
+import { getOwnerOfCargoByPage, deleteOwnerOfCargo } from '@/api/base/ownerOfCargo'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-owner-of-cargo.vue'
 import i18n from '@/languages/i18n'
 import importTable from './import-table.vue'
+import { setSearchObject } from '@/utils/common'
+import customPager from '@/components/custom-pager.vue'
+import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
 
 const xTable = ref()
 
 const data: DataProps = reactive({
+  searchForm: {
+    goods_owner_name: ''
+  },
   showDialogImport: false,
   tableData: [],
   // Dialog info
@@ -89,10 +126,21 @@ const data: DataProps = reactive({
     address: '',
     contact_tel: '',
     manager: ''
+  },
+  tablePage: {
+    total: 0,
+    pageIndex: 1,
+    pageSize: 10
   }
 })
 
 const method = reactive({
+  // When change paging
+  handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {
+    data.tablePage.pageIndex = currentPage
+    data.tablePage.pageSize = pageSize
+    method.refresh()
+  }),
   // Import Dialog
   openDialogImport: () => {
     data.showDialogImport = true
@@ -105,11 +153,12 @@ const method = reactive({
     method.closeDialogImport()
   },
   sureSearch: () => {
-    // console.log(data.searchForm)
+    data.tablePage.searchObjects = setSearchObject(data.searchForm)
+    method.getOwnerOfCargoList()
   },
   // Find Data by Pagination
   getOwnerOfCargoList: async () => {
-    const { data: res } = await getOwnerOfCargoAll()
+    const { data: res } = await getOwnerOfCargoByPage(data.tablePage)
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
@@ -117,7 +166,8 @@ const method = reactive({
       })
       return
     }
-    data.tableData = res.data
+    data.tableData = res.data.rows
+    data.tablePage.total = res.data.totals
   },
   // Add user
   add: () => {
@@ -196,7 +246,7 @@ onMounted(async () => {
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 
-const tableHeight = computed(() => computedTableHeight({ hasTab: false, hasPager: false }))
+const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
 </script>
 
 <style scoped lang="less">

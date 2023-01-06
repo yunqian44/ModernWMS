@@ -13,6 +13,9 @@
             align="center"
             :edit-config="{ trigger: 'click', mode: 'cell' }"
           >
+            <template #empty>
+              {{ i18n.global.t('system.page.noData') }}
+            </template>
             <vxe-column type="seq" width="60"></vxe-column>
             <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
             <vxe-column field="spu_name" :title="$t('wms.deliveryManagement.spu_name')"></vxe-column>
@@ -39,6 +42,7 @@
 import { reactive, computed, defineEmits, watch } from 'vue'
 import { hookComponent } from '@/components/system/index'
 import { viewInventoryDetails } from '@/api/wms/deliveryManagement'
+import i18n from '@/languages/i18n'
 
 const emit = defineEmits(['close', 'submit'])
 

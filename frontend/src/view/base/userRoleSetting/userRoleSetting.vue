@@ -65,6 +65,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="role_name" :title="$t('base.userRoleSetting.role_name')"></vxe-column>
               <vxe-column field="is_valid" :title="$t('base.userRoleSetting.is_valid')">

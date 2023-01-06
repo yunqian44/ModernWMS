@@ -65,6 +65,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="company_name" :title="$t('base.companySetting.company_name')"></vxe-column>
               <vxe-column field="city" :title="$t('base.companySetting.city')"></vxe-column>

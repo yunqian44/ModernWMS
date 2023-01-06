@@ -66,6 +66,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" :tree-config="data.tableTreeConfig" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="80"></vxe-column>
               <vxe-column field="category_name" align="left" :title="$t('base.commodityCategorySetting.category_name')" tree-node></vxe-column>
               <vxe-column field="creator" :title="$t('base.commodityCategorySetting.creator')"></vxe-column>
@@ -98,7 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, ref, nextTick } from 'vue'
+import { computed, reactive, onMounted, ref } from 'vue'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { DataProps, CategoryVO } from '@/types/Base/CommodityCategorySetting'
@@ -134,7 +137,7 @@ const method = reactive({
     // console.log(data.searchForm)
   },
   // Find Data by Pagination
-  getUserRoleList: async () => {
+  getCommodityCategorySetting: async () => {
     const { data: res } = await getCategoryAll()
     if (!res.isSuccess) {
       hookComponent.$message({
@@ -144,9 +147,9 @@ const method = reactive({
       return
     }
     data.tableData = res.data
-    nextTick(() => {
-      xTable.value.setAllTreeExpand(true)
-    })
+    // nextTick(() => {
+    //   xTable.value.setAllTreeExpand(true)
+    // })
   },
   // Add user
   add: () => {
@@ -167,7 +170,7 @@ const method = reactive({
   },
   // Refresh data
   refresh: () => {
-    method.getUserRoleList()
+    method.getCommodityCategorySetting()
   },
   editRow(row: CategoryVO) {
     data.dialogForm = JSON.parse(JSON.stringify(row))
@@ -220,7 +223,7 @@ const method = reactive({
 })
 
 onMounted(async () => {
-  await method.getUserRoleList()
+  await method.getCommodityCategorySetting()
 })
 
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))

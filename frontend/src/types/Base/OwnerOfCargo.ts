@@ -1,4 +1,4 @@
-import { UniformFileNaming } from '../System/Form'
+import { UniformFileNaming, TablePage } from '../System/Form'
 
 export interface OwnerOfCargoVO extends UniformFileNaming {
   id: number
@@ -22,4 +22,8 @@ export interface DataProps {
   showDialog: boolean
   showDialogImport: boolean
   dialogForm: OwnerOfCargoVO
+  searchForm: {
+    goods_owner_name: string
+  }
+  tablePage: TablePage
 }

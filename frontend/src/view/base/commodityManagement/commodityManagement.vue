@@ -74,6 +74,9 @@
               align="center"
               :tree-config="data.tableTreeConfig"
             >
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column field="spu_code" width="150px" :title="$t('base.commodityManagement.spu_code')" tree-node>
                 <template #default="{ row }">
