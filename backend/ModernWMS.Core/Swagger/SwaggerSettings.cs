@@ -4,33 +4,33 @@ using System.Collections.Generic;
 namespace ModernWMS.Core.Swagger
 {
     /// <summary>
-    /// Swagger配置项
+    /// Swagger Settings
     /// </summary>
     public class SwaggerSettings
     {
         /// <summary>
-        /// SwaggerDoc 的Name属性
+        /// SwaggerDoc Name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// OpenApiInfo 的Title属性
+        /// OpenApiInfo Title
         /// </summary>
         public string ApiTitle { get; set; }
         /// <summary>
-        /// OpenApiInfo 的版本号
+        /// OpenApiInfo Version
         /// </summary>
         public string ApiVersion { get; set; }
         /// <summary>
-        /// OpenApiInfo 的描述
+        /// OpenApiInfo Description
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// 是否打开授权验证
+        /// Whether to turn on authorization verification
         /// </summary>
         public bool SecurityDefinition { get; set; }
-         
+
         /// <summary>
-        /// 包含的XML文档
+        /// Included XML documents
         /// </summary>
         public List<string> XmlFiles { get; set; }
          

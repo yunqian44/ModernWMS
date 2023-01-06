@@ -48,6 +48,9 @@
             }"
           >
             <vxe-table ref="xTable" :data="data.tableData" :height="tableHeight" align="center">
+              <template #empty>
+                {{ i18n.global.t('system.page.noData') }}
+              </template>
               <vxe-column type="seq" width="60"></vxe-column>
               <vxe-column type="checkbox" width="50"></vxe-column>
               <vxe-column field="customer_name" :title="$t('base.customer.customer_name')"></vxe-column>

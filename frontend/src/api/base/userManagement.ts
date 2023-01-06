@@ -22,6 +22,13 @@ export const addUser = (data: UserVO) => http({
     data
   })
 
+  // Register a new user
+export const registerUser = (data: UserVO) => http({
+    url: '/user/register',
+    method: 'post',
+    data
+  })
+
 // Update user
 export const updateUser = (data: UserVO) => http({
     url: '/user',

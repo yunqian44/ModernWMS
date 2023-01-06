@@ -31,7 +31,7 @@ namespace ModernWMS.Core.Middleware
                 {
                     if (method.Equals("GET"))
                     {
-                        msg.Append($",参数值“{item.AttemptedValue}”未通过校验！");
+                        msg.Append($",parameter value“{item.AttemptedValue}”does not pass the verification！");
                     }
                     else
                     {
@@ -54,7 +54,7 @@ namespace ModernWMS.Core.Middleware
                 }
                 if (flag)
                 {
-                    msg.Append($",您填写的数据存在类型不正确或数值超出类型范围");
+                    msg.Append($",The data is of incorrect type or the value exceeds the type range");
                 }
                 if (msg.ToString().Length > 0)
                 {

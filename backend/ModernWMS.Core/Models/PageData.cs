@@ -13,11 +13,11 @@ namespace ModernWMS.Core.Models
     public class PageData<T>
     {
         /// <summary>
-        /// 数据
+        /// data
         /// </summary>
         public List<T> Rows { get; set; } = new List<T>(2);
         /// <summary>
-        /// 总行数
+        /// total rows
         /// </summary>
         public int Totals { get; set; } = 0;       
     }

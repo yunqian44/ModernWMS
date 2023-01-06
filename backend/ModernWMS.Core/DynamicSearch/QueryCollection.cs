@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 namespace ModernWMS.Core.DynamicSearch
 {
     /// <summary>
-    /// 动态查询
+    /// Dynamic Query
     /// </summary>
     public class QueryCollection : Collection<SearchObject>
     {
         /// <summary>
-        /// 机关函数应用True时：单个AND有效，多个AND有效；单个OR无效，多个OR无效；混应时写在AND后的OR有效
+        /// Expression
         /// </summary>
-        /// <typeparam name="T">表实体</typeparam>
+        /// <typeparam name="T">entity</typeparam>
         /// <returns></returns>
         public static Expression<Func<T, bool>> True<T>() { return f => true; }
         /// <summary>
-        /// 动态查询
+        /// Expression
         /// </summary>
-        /// <typeparam name="T">表实体</typeparam>
-        /// <param name="condition">连接</param>
+        /// <typeparam name="T">entity</typeparam>
+        /// <param name="condition">condition</param>
         /// <returns></returns>
         public Expression<Func<T, bool>> AsExpression<T>(Condition? condition = Condition.AndAlso) where T : class
         {

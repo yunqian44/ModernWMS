@@ -25,6 +25,9 @@
             :export-config="{}"
             align="center"
           >
+            <template #empty>
+              {{ i18n.global.t('system.page.noData') }}
+            </template>
             <vxe-column type="seq" width="60"></vxe-column>
             <vxe-column field="operate" width="60" :title="$t('system.page.operate')" :resizable="false">
               <template #default="{ row }">

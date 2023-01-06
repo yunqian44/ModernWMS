@@ -8,6 +8,7 @@ export interface UserVO extends UniformFileNaming {
   user_role?: string
   sex?: string
   auth_string?: string
+  email?: string
   is_valid: boolean
 }
 

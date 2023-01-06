@@ -18,9 +18,13 @@
           @click:append-inner="method.handleShowPassword()"
         ></v-text-field>
         <v-checkbox v-model="data.remember" :label="$t('login.rememberTips')"></v-checkbox>
-        <v-btn color="purple" @click="method.login()">{{ $t('login.mainButtonLabel') }}</v-btn>
+        <v-btn color="purple" class="loginBtn" @click="method.login()">{{ $t('login.mainButtonLabel') }}</v-btn>
+        <v-btn class="mt-2" color="#666" variant="plain" @click="method.openRegisterDialog">
+          {{ i18n.global.t('login.registerTips') }}
+        </v-btn>
       </v-form>
     </div>
+    <userRegisterForm :show-dialog="data.showDialog" :form="data.dialogForm" @close="method.closeDialog" @saveSuccess="method.saveSuccess" />
   </div>
 </template>
 
@@ -32,16 +36,26 @@ import { login, getUserAuthority } from '@/api/sys/login'
 import { store } from '@/store'
 import { hookComponent } from '@/components/system'
 import { router } from '@/router/index'
+import userRegisterForm from './user-register-form.vue'
 
 // Get v-form ref
 const VFormRef = ref()
 
 const data = reactive({
+  showDialog: false,
   valid: true,
   showPassword: false,
   userName: '',
   password: '',
   remember: false,
+  dialogForm: {
+    id: 0,
+    user_num: '',
+    user_name: '',
+    auth_string: '',
+    email: '',
+    is_valid: true
+  },
   userNameVaildRules: [(v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.userName') }!`],
   passwordVaildRules: [(v: string) => !!v || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('login.password') }!`]
 })
@@ -110,6 +124,25 @@ const method = reactive({
         content: loginRes.errorMessage
       })
     }
+  },
+  openRegisterDialog: () => {
+    data.dialogForm = {
+      id: 0,
+      user_num: '',
+      user_name: '',
+      auth_string: '',
+      email: '',
+      is_valid: true
+    }
+    data.showDialog = true
+  },
+  // Shut add or update dialog
+  closeDialog: () => {
+    data.showDialog = false
+  },
+  // after Add or update success.
+  saveSuccess: () => {
+    method.closeDialog()
   }
 })
 
@@ -161,5 +194,9 @@ onMounted(() => {
       height: 60px;
     }
   }
+}
+
+.loginBtn {
+  height: 45px;
 }
 </style>

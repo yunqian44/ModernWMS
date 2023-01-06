@@ -23,11 +23,16 @@ namespace ModernWMS.WMS.Entities.ViewModels
         public string user_name { get; set; } = string.Empty;
 
         /// <summary>
+        /// sex
+        /// </summary>
+        public string sex { get; set; } = string.Empty;
+
+        /// <summary>
         /// password
         /// </summary>
         [Display(Name = "password")]
         [MaxLength(64, ErrorMessage = "MaxLength")]
-        public string password { get; set; } = string.Empty;
+        public string auth_string { get; set; } = string.Empty;
 
         /// <summary>
         /// email
@@ -35,5 +40,7 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [Display(Name = "email")]
         [MaxLength(64, ErrorMessage = "MaxLength")]
         public string email { get; set; } = string.Empty;
+
+
     }
 }

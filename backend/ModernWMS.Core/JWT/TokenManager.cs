@@ -1,10 +1,4 @@
-﻿/*
- * 功能：JWT实现
- * 日期：2020年4月8日
- * 开发人员：陈天生
- * 重大变更：
- */
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,17 +13,17 @@ using ModernWMS.Core.Utility;
 namespace ModernWMS.Core.JWT
 {
     /// <summary>
-    /// 
+    /// token manager
     /// </summary>
     public class TokenManager : ITokenManager
     {
-        private readonly IOptions<TokenSettings> _tokenSettings;//配置文件token设置
-        private readonly IHttpContextAccessor _accessor; // 注入IHttpContextAccessor
+        private readonly IOptions<TokenSettings> _tokenSettings;//token setting
+        private readonly IHttpContextAccessor _accessor; // Inject IHttpContextAccessor
         /// <summary>
-        /// 构造函数
+        /// Constructor
         /// </summary>
-        /// <param name="tokenSettings">注入配置文件基础设置</param>
-        /// <param name="accessor">注入IHttpContextAccessor</param>
+        /// <param name="tokenSettings">token setting s</param>
+        /// <param name="accessor">Inject IHttpContextAccessor</param>
         public TokenManager(IOptions<TokenSettings> tokenSettings
             , IHttpContextAccessor accessor)
         {
@@ -37,7 +31,7 @@ namespace ModernWMS.Core.JWT
             this._accessor = accessor;
         }
         /// <summary>
-        /// 创建刷新token
+        /// Method of refreshing token
         /// </summary>
         /// <returns></returns>
         public string GenerateRefreshToken()
@@ -52,7 +46,7 @@ namespace ModernWMS.Core.JWT
             }
         }
         /// <summary>
-        /// 生成AccessToken方法
+        /// Method of generating AccessToken
         /// </summary>
         /// <param name="userClaims">自定义信息</param>
         /// <returns>(token,有效分钟数)</returns>
@@ -71,7 +65,7 @@ namespace ModernWMS.Core.JWT
             return (token, _tokenSettings.Value.ExpireMinute);
         }
         /// <summary>
-        /// 获取用户信息
+        /// Get the current user information in the token
         /// </summary>
         /// <returns></returns>
         public CurrentUser GetCurrentUser()
@@ -122,7 +116,7 @@ namespace ModernWMS.Core.JWT
         }
 
         /// <summary>
-        /// 获取用户信息
+        /// Get the current user information in the token
         /// </summary>
         /// <returns></returns>
         public CurrentUser GetCurrentUser(string token)
@@ -162,7 +156,7 @@ namespace ModernWMS.Core.JWT
 
         }
         /// <summary>
-        /// 获取刷新token失效分钟数
+        /// Method of refreshing token
         /// </summary>
         /// <returns></returns>
         public int GetRefreshTokenExpireMinute()
@@ -170,11 +164,10 @@ namespace ModernWMS.Core.JWT
             return _tokenSettings.Value.ExpireMinute + 1;
         }
 
-        #region 私有方法
         /// <summary>
-        /// 设置自定义信息
+        /// Setting Custom Information
         /// </summary>
-        /// <param name="userClaims">自定义信息</param>
+        /// <param name="userClaims">Custom Information</param>
         /// <returns></returns>
         private static IEnumerable<Claim> SetClaims(CurrentUser userClaims)
         {
@@ -185,6 +178,5 @@ namespace ModernWMS.Core.JWT
             };
         }
 
-        #endregion
     }
 }
