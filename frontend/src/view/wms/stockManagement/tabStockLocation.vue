@@ -37,6 +37,9 @@
     }"
   >
     <vxe-table ref="xTableStockLocation" :column-config="{ minWidth: '100px' }" :data="data.tableData" :height="tableHeight" align="center">
+      <template #empty>
+        {{ i18n.global.t('system.page.noData') }}
+      </template>
       <vxe-column type="seq" width="60"></vxe-column>
       <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="warehouse_name" :title="$t('wms.stockLocation.warehouse_name')"></vxe-column>
