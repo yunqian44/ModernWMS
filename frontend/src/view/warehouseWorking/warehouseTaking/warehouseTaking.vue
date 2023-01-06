@@ -137,7 +137,7 @@ import { computed, ref, reactive, onActivated, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { WarehouseTakingVO } from '@/types/WarehouseWorking/WarehouseTaking'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { TAKING_JOB_FINISH, TAKING_JOB_UNFINISH } from '@/constant/warehouseWorking'
 import { deleteStockTaking, getStockTakingList, getStockTakingOne, confirmAdjustment } from '@/api/wms/warehouseTaking'
@@ -187,7 +187,7 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   })
 })

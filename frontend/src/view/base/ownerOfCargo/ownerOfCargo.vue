@@ -107,7 +107,7 @@ import i18n from '@/languages/i18n'
 import importTable from './import-table.vue'
 import { setSearchObject } from '@/utils/common'
 import customPager from '@/components/custom-pager.vue'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 
 const xTable = ref()
 
@@ -130,7 +130,7 @@ const data: DataProps = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: DEFAULT_PAGE_SIZE
   }
 })
 

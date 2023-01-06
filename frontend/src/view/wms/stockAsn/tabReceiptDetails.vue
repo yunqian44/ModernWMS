@@ -92,7 +92,7 @@ import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import { StockAsnVO } from '@/types/WMS/StockAsn'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
@@ -146,7 +146,7 @@ const data = reactive({
     total: 0,
     sqlTitle: 'asn_status:4',
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   }),
   timer: ref<any>(null)

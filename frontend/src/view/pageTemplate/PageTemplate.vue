@@ -134,7 +134,7 @@
 import { computed, ref, reactive, onMounted } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
@@ -180,7 +180,7 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: DEFAULT_PAGE_SIZE
   })
 })
 

@@ -208,7 +208,7 @@ const data: DataProps = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: DEFAULT_PAGE_SIZE
   },
   tableTreeConfig: {
     transform: true,

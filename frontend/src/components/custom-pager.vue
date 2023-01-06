@@ -32,7 +32,7 @@
 </template>
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-import { PAGE_SIZE } from '@/constant/vxeTable'
+import { PAGE_SIZE, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { primaryColor } from '@/constant/style'
 import i18n from '@/languages/i18n'
 
@@ -45,7 +45,7 @@ const props = defineProps({
   },
   pageSize: {
     type: Number,
-    default: 10
+    default: DEFAULT_PAGE_SIZE
   },
   total: {
     type: Number,
@@ -69,7 +69,7 @@ const props = defineProps({
 
 const data = reactive({
   pageIndex: 1,
-  pageSizeSelect: 10
+  pageSizeSelect: DEFAULT_PAGE_SIZE
 })
 
 const method = reactive({

@@ -142,7 +142,7 @@ import { computed, ref, reactive, onActivated, watch, nextTick } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { WarehouseFreezeVO } from '@/types/WarehouseWorking/WarehouseFreeze'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system'
 import { formatFreezeJobType } from '@/utils/format/formatWarehouseWorking'
@@ -189,7 +189,7 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   })
 })
