@@ -1,27 +1,25 @@
-﻿/*
- * 功能：JWT配置项
- * 日期：2020年4月8日
- * 开发人员：陈天生
- * 重大变更：
- */
+﻿
 namespace ModernWMS.Core.JWT
 {
+    /// <summary>
+    /// token settings
+    /// </summary>
     public class TokenSettings
     {
         /// <summary>
-        /// 订阅者
+        /// Audience
         /// </summary>
         public string Audience { get; set; }
         /// <summary>
-        /// 发布者
+        /// Issuer
         /// </summary>
         public string Issuer { get; set; }
         /// <summary>
-        /// 密钥
+        /// SigningKey
         /// </summary>
         public string SigningKey { get; set; }
         /// <summary>
-        /// 过期分钟数
+        ///  Expire
         /// </summary>
         public int ExpireMinute { get; set; }
     }

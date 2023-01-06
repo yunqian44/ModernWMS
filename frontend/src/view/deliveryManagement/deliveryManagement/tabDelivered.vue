@@ -5,7 +5,7 @@
       <v-col cols="3" class="col">
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
-        <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('wms.deliveryManagement.setFreight')" @click="method.setFreight"> </tooltip-btn>
+        <tooltip-btn icon="mdi-car-cog" :tooltip-text="$t('wms.deliveryManagement.setFreight')" @click="method.setFreight"> </tooltip-btn>
       </v-col>
 
       <!-- Search Input -->
@@ -95,7 +95,7 @@
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
             <tooltip-btn
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-email-check"
               :tooltip-text="$t('wms.deliveryManagement.signIn')"
               @click="method.handleSignIn(row)"
             ></tooltip-btn>

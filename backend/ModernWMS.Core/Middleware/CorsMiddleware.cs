@@ -1,43 +1,36 @@
-﻿/*
- * 功能：跨域中间件
- * 日期：2020年8月5日
- * 开发人员：陈天生
- * 重大变更：
- */
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace ModernWMS.Core.Middleware
 {
     /// <summary>
-    /// 跨域中间件
+    /// Cross domain middleware
     /// </summary>
     public class CorsMiddleware
     {
-        #region 参数
+        #region parameter
         /// <summary>
-        /// 代理
+        /// agent
         /// </summary>
         private readonly RequestDelegate _next;
         #endregion
 
-        #region 构造函数
+        #region Constructor
 
         /// <summary>
-        /// 构造函数
+        /// Constructor
         /// </summary>
-        /// <param name="next"></param>
+        /// <param name="next">Delegate in next step</param>
         public CorsMiddleware(RequestDelegate next)
         {
             _next = next;
         }
         #endregion
 
-        #region 执行方法
         /// <summary>
-        /// 执行方法
+        /// Invoke
         /// </summary>
-        /// <param name="httpContext">上下文</param>
+        /// <param name="httpContext">httpContext</param>
         /// <returns></returns>
         public Task Invoke(HttpContext httpContext)
         {
@@ -48,7 +41,7 @@ namespace ModernWMS.Core.Middleware
                 httpContext.Response.Headers.Add("Access-Control-Allow-Headers", httpContext.Request.Headers["Access-Control-Request-Headers"]);
                 httpContext.Response.Headers.Add("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS,HEAD,PATCH");
                 httpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-                httpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");//缓存一天
+                httpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");
                 httpContext.Response.StatusCode = StatusCodes.Status200OK;
                 return Task.CompletedTask;
             }
@@ -60,10 +53,9 @@ namespace ModernWMS.Core.Middleware
             httpContext.Response.Headers.Add("Access-Control-Allow-Headers", httpContext.Request.Headers["Access-Control-Request-Headers"]);
             httpContext.Response.Headers.Add("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS,HEAD,PATCH");
             httpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-            httpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");//缓存一天
+            httpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");
             return _next.Invoke(httpContext);
         }
-        #endregion
 
     }
 }

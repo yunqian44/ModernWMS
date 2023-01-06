@@ -91,21 +91,21 @@
             <tooltip-btn
               :disabled="row.dispatch_status !== 0 && row.dispatch_status !== 1"
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-clipboard-check-outline"
               :tooltip-text="$t('wms.deliveryManagement.confirmOrder')"
               @click="method.confirmOrder(row)"
             ></tooltip-btn>
             <tooltip-btn
               :disabled="row.dispatch_status !== 2"
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-cart-arrow-down"
               :tooltip-text="$t('wms.deliveryManagement.confirmPicking')"
               @click="method.confirmPicking(row)"
             ></tooltip-btn>
             <tooltip-btn
               :disabled="row.dispatch_status !== 2 && row.dispatch_status !== 3"
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-arrow-u-left-top"
               :tooltip-text="$t('wms.deliveryManagement.backToThePreviousStep')"
               @click="method.backToThePreviousStep(row)"
             ></tooltip-btn>

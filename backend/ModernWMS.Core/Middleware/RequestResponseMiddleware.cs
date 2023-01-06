@@ -1,10 +1,4 @@
-﻿/*
- * 功能：请求响应中间件
- * 日期：2020年8月26日
- * 开发人员：陈天生
- * 重大变更：
- */
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -17,28 +11,28 @@ using ModernWMS.Core.Models;
 namespace ModernWMS.Core.Middleware
 {
     /// <summary>
-    /// 请求响应中间件
+    /// Request response middleware
     /// </summary>
     public class RequestResponseMiddleware
     {
-        #region 参数
+        #region parameter
         /// <summary>
-        /// 委托
+        /// Delegate
         /// </summary>
         private readonly RequestDelegate _next;
         /// <summary>
-        /// 日志
+        /// log manager
         /// </summary>
         private readonly ILogger<RequestResponseMiddleware> _logger;
 
         #endregion
 
-        #region 构造函数
+        #region Constructor
         /// <summary>
-        /// 请求响应中间件
+        /// Constructor
         /// </summary>
-        /// <param name="next">委托</param>
-        /// <param name="logger">日志</param>
+        /// <param name="next">Delegate</param>
+        /// <param name="logger">log manager</param>
         public RequestResponseMiddleware(RequestDelegate next
             , ILogger<RequestResponseMiddleware> logger)
         {
@@ -48,8 +42,11 @@ namespace ModernWMS.Core.Middleware
 
         #endregion
 
-        #region 方法
-
+        /// <summary>
+        /// Invoke
+        /// </summary>
+        /// <param name="context">httpcontext</param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
             if (ModernWMS.Core.Utility.GlobalConsts.IsRequestResponseMiddleware)
@@ -75,8 +72,7 @@ namespace ModernWMS.Core.Middleware
                     }
 
 
-                    //var logMsg = $@"请求信息: {requestInfo}{Environment.NewLine}响应信息: {responseInfo}{Environment.NewLine}耗时: {stopwach.ElapsedMilliseconds}ms";
-                    var logMsg = $@"请求信息: {requestInfo} ;耗时: {stopwach.ElapsedMilliseconds}ms";
+                    var logMsg = $@"request information: {requestInfo} ;time spent: {stopwach.ElapsedMilliseconds}ms";
                     _logger.LogInformation(logMsg);
 
                 }
@@ -85,7 +81,7 @@ namespace ModernWMS.Core.Middleware
                     stopwach.Stop();
                     if (ex != null)
                     {
-                        var logMsg = $@"请求信息: {requestInfo}{Environment.NewLine}异常: {ex.ToString()}{Environment.NewLine}耗时: {stopwach.ElapsedMilliseconds}ms";
+                        var logMsg = $@"request information: {requestInfo}{Environment.NewLine}exception: {ex.ToString()}{Environment.NewLine}time spent: {stopwach.ElapsedMilliseconds}ms";
 
                         _logger.LogError(logMsg);
                         _logger.LogError(ex.ToString());
@@ -106,7 +102,11 @@ namespace ModernWMS.Core.Middleware
            
 
         }
-
+        /// <summary>
+        /// format request
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
         private async Task<string> FormatRequest(HttpRequest request)
         {
             HttpRequestRewindExtensions.EnableBuffering(request);
@@ -120,7 +120,11 @@ namespace ModernWMS.Core.Middleware
 
             return $" {request.Method} {request.Scheme}://{request.Host}{request.Path} {request.QueryString} {bodyAsText}";
         }
-
+        /// <summary>
+        /// format response
+        /// </summary>
+        /// <param name="response">response</param>
+        /// <returns></returns>
         private async Task<string> FormatResponse(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
@@ -130,6 +134,5 @@ namespace ModernWMS.Core.Middleware
             return $"{response.StatusCode}: {text}";
         }
 
-        #endregion
     }
 }

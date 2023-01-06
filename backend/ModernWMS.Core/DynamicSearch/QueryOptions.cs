@@ -7,41 +7,41 @@ using System.Threading.Tasks;
 namespace ModernWMS.Core.DynamicSearch
 {
     /// <summary>
-    /// 操作
+    /// DynamicSearch Operators
     /// </summary>
     public enum Operators
     {
         /// <summary>
-        /// 无操作
+        /// None
         /// </summary>
         None = 0,
         /// <summary>
-        /// 等于 =
+        /// Equal =
         /// </summary>
         Equal = 1,
         /// <summary>
-        /// 大于 >
+        /// GreaterThan 
         /// </summary>
         GreaterThan = 2,
         /// <summary>
-        /// 大于等于 >=
+        /// GreaterThanOrEqual 
         /// </summary>
         GreaterThanOrEqual = 3,
         /// <summary>
-        /// 小于  
+        /// LessThan
         /// </summary>
         LessThan = 4,
         /// <summary>
-        /// 小于等于  
+        /// LessThanOrEqual
         /// </summary>
         LessThanOrEqual = 5,
         /// <summary>
-        /// 包含 like
+        /// Contains
         /// </summary>
         Contains = 6
     }
     /// <summary>
-    /// 条件
+    /// Condition
     /// </summary>
     public enum Condition
     {
@@ -55,16 +55,16 @@ namespace ModernWMS.Core.DynamicSearch
         AndAlso = 2
     }
     /// <summary>
-    /// 查找条件下拉框类
+    /// select item combox
     /// </summary>
     public class ComboxItem
     {
         /// <summary>
-        /// 下拉框value值
+        /// value
         /// </summary>
         public string value { get; set; }
         /// <summary>
-        /// 下拉框text值
+        /// text
         /// </summary>
         public string text { get; set; }
     }
