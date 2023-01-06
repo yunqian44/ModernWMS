@@ -164,9 +164,13 @@
   ```bash
   cd /tmp/ModernWMS-master/docker/
   docker build -t modernwms:1.0 .
-  docker run -d -p 8089:80  modernwms:1.0 /bin/bash ./run.sh
+  docker run -d -p 80:80  modernwms:1.0 /bin/bash ./run.sh
   ```
-
+## Usage - 用法
+  
+  ```
+  打开浏览器，进入：http://127.0.0.1:80 或者http://部署电脑的IP地址:80
+  ```
 ## Contact - 联系
 
 <h4>
