@@ -48,10 +48,12 @@ namespace ModernWMS.WMS.Services
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CompanyViewModel>> GetAllAsync()
+        public async Task<List<CompanyViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CompanyEntity>();
-            var data = await DbSet.AsNoTracking().ToListAsync();
+            var data = await DbSet.AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id)
+                .OrderByDescending(t => t.create_time)
+                .ToListAsync();
             return data.Adapt<List<CompanyViewModel>>();
         }
 

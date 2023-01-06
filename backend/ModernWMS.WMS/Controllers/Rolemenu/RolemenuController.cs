@@ -74,7 +74,7 @@
         [HttpGet("all")]
         public async Task<ResultModel<List<RolemenuListViewModel>>> GetAllAsync()
         {
-            var data = await _rolemenuService.GetAllAsync();
+            var data = await _rolemenuService.GetAllAsync(CurrentUser);
             if (data.Any())
             {
                 return ResultModel<List<RolemenuListViewModel>>.Success(data);
