@@ -95,7 +95,7 @@
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
             <tooltip-btn
               :flat="true"
-              icon="mdi-pencil-outline"
+              icon="mdi-weight"
               :tooltip-text="$t('wms.deliveryManagement.weigh')"
               @click="method.handleWeigh(row)"
             ></tooltip-btn>

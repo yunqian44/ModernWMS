@@ -52,7 +52,7 @@ namespace ModernWMS.WMS.Controllers
         [HttpGet("all")]
         public async Task<ResultModel<List<CompanyViewModel>>> GetAllAsync()
         {
-            var data = await _companyService.GetAllAsync();
+            var data = await _companyService.GetAllAsync(CurrentUser);
             if (data.Any())
             {
                 return ResultModel<List<CompanyViewModel>>.Success(data);

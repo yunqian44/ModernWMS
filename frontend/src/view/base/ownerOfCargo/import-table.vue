@@ -153,11 +153,11 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            goods_owner_name: ws[index][i18n.global.t('base.ownerOfCargo.goods_owner_name')],
-            city: ws[index][i18n.global.t('base.ownerOfCargo.city')],
-            address: ws[index][i18n.global.t('base.ownerOfCargo.address')],
-            manager: ws[index][i18n.global.t('base.ownerOfCargo.manager')],
-            contact_tel: ws[index][i18n.global.t('base.ownerOfCargo.contact_tel')]
+            goods_owner_name: String(ws[index][i18n.global.t('base.ownerOfCargo.goods_owner_name')]),
+            city: String(ws[index][i18n.global.t('base.ownerOfCargo.city')]),
+            address: String(ws[index][i18n.global.t('base.ownerOfCargo.address')]),
+            manager: String(ws[index][i18n.global.t('base.ownerOfCargo.manager')]),
+            contact_tel: String(ws[index][i18n.global.t('base.ownerOfCargo.contact_tel')])
           })
         })
       }

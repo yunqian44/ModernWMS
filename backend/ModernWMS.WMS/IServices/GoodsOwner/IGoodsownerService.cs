@@ -1,4 +1,5 @@
 ﻿using ModernWMS.Core.JWT;
+using ModernWMS.Core.Models;
 using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
@@ -12,10 +13,18 @@ namespace ModernWMS.WMS.IServices
     {
         #region Api
         /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        Task<(List<GoodsownerViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
+        /// <summary>
         /// Get all records
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<List<GoodsownerViewModel>> GetAllAsync();
+        Task<List<GoodsownerViewModel>> GetAllAsync(CurrentUser currentUser);
         /// <summary>
         /// Get a record by id
         /// </summary>

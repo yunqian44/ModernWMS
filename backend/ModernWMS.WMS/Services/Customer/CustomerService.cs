@@ -78,10 +78,11 @@ namespace ModernWMS.WMS.Services
         /// Get all records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CustomerViewModel>> GetAllAsync()
+        public async Task<List<CustomerViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CustomerEntity>();
-            var data = await DbSet.AsNoTracking().ToListAsync();
+            var data = await DbSet.AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id)
+                .OrderByDescending(t => t.create_time).ToListAsync();
             return data.Adapt<List<CustomerViewModel>>();
         }
 
@@ -205,6 +206,7 @@ namespace ModernWMS.WMS.Services
             var existsDatas = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).Select(t => new { t.customer_name}).ToListAsync();
             input.ForEach(async t =>
             {
+                t.errorMsg = string.Empty;
                 if (existsDatas.Any(d => d.customer_name.Equals(t.customer_name)))
                 {
                     t.errorMsg = string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["customer_name"], t.customer_name);
