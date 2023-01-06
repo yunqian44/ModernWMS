@@ -30,6 +30,12 @@ const method = reactive({
       data.isShow = true
       store.commit('system/setRefreshFlag', false)
     })
+  },
+  getClientSize: () => {
+    const clientHeight = document.documentElement.clientHeight
+    const clientWidth = document.documentElement.clientWidth
+    store.commit('system/setClientHeight', clientHeight)
+    store.commit('system/setClientWidth', clientWidth)
   }
 })
 
@@ -54,12 +60,10 @@ onMounted(() => {
     loadingFlag.value = false
   })
 
-  // 监听浏览器大小
+  method.getClientSize()
+
   window.onresize = function () {
-    const clientHeight = document.documentElement.clientHeight
-    const clientWidth = document.documentElement.clientWidth
-    store.commit('system/setClientHeight', clientHeight)
-    store.commit('system/setClientWidth', clientWidth)
+    method.getClientSize()
   }
 })
 </script>
