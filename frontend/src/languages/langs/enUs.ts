@@ -509,7 +509,8 @@ export default {
       damagedQuantity: 'Damaged quantity upon arrival',
       setFreight: 'Set Carrier',
       departure_city: 'Originating city',
-      arrival_city: 'City of arrival'
+      arrival_city: 'City of arrival',
+      ViewInventoryDetails: 'View product details'
     }
   }
 }
