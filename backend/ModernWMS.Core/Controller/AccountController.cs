@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using ModernWMS.Core.JWT;
 using ModernWMS.Core.Models;
@@ -36,22 +37,29 @@ namespace ModernWMS.Core.Controller
         private readonly IAccountService _accountService;
 
         /// <summary>
+        /// Localizer
+        /// </summary>
+        private readonly IStringLocalizer _stringLocalizer;
+        /// <summary>
         /// Structure
         /// </summary>
         /// <param name="logger">logger helper</param>
         /// <param name="tokenManager">token manger</param>
         /// <param name="cacheManager">cache helper</param>
         /// <param name="accountService">account service class</param>
+        /// <param name="stringLocalizer">Localizer</param>
         public AccountController(ILogger<AccountController> logger
             , ITokenManager tokenManager
             , CacheManager cacheManager
             , IAccountService accountService
+            , IStringLocalizer stringLocalizer
             )
         {
             this._tokenManager = tokenManager;
             this._logger = logger;
             this._cacheManager = cacheManager;
             this._accountService = accountService;
+            this._stringLocalizer = stringLocalizer;
         }
 
         #region Login
@@ -91,7 +99,7 @@ namespace ModernWMS.Core.Controller
             }
             else
             {
-                return ResultModel<LoginOutputViewModel>.Error("Login Faild");
+                return ResultModel<LoginOutputViewModel>.Error(_stringLocalizer["login_failed"]);
             }
         }
         /// <summary>

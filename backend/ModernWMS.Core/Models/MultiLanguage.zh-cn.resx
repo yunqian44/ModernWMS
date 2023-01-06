@@ -615,4 +615,7 @@
   <data name="unweightqty_lessthen" xml:space="preserve">
     <value>未称重数量小于当前操作称重数量，请刷新后重试</value>
   </data>
+  <data name="login_failed" xml:space="preserve">
+    <value>登录失败</value>
+  </data>
 </root>
