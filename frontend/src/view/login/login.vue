@@ -2,7 +2,7 @@
   <div class="loginContainer">
     <Logo />
     <div class="loginLeft">
-      <img src="../../assets/img/loginLeft2.png" style="width: 60%" />
+      <img src="../../assets/img/loginLeft.png" style="width: 80%" />
     </div>
     <div class="loginRight">
       <div class="LanguagesSwitchContainer">
@@ -29,7 +29,7 @@ import Logo from '@/components/system/logo.vue'
   width: 100%;
   height: 100%;
   display: flex;
-  background-color: #f4f5fa;
+  background-color: #fff;
   .loginLeft {
     width: 70%;
     display: flex;
