@@ -16,13 +16,15 @@ namespace ModernWMS.WMS.IServices
         /// page search
         /// </summary>
         /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
         Task<(List<CustomerViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser);
         /// <summary>
         /// Get all records
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<List<CustomerViewModel>> GetAllAsync();
+        Task<List<CustomerViewModel>> GetAllAsync(CurrentUser currentUser);
         /// <summary>
         /// Get a record by id
         /// </summary>

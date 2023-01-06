@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using ModernWMS.Core.DBContext;
+using ModernWMS.Core.DynamicSearch;
 using ModernWMS.Core.JWT;
+using ModernWMS.Core.Models;
 using ModernWMS.Core.Services;
 using ModernWMS.WMS.Entities.Models;
 using ModernWMS.WMS.Entities.ViewModels;
@@ -45,13 +47,42 @@ namespace ModernWMS.WMS.Services
 
         #region Api
         /// <summary>
+        /// page search
+        /// </summary>
+        /// <param name="pageSearch">args</param>
+        /// <param name="currentUser">currentUser</param>
+        /// <returns></returns>
+        public async Task<(List<GoodsownerViewModel> data, int totals)> PageAsync(PageSearch pageSearch, CurrentUser currentUser)
+        {
+            QueryCollection queries = new QueryCollection();
+            if (pageSearch.searchObjects.Any())
+            {
+                pageSearch.searchObjects.ForEach(s =>
+                {
+                    queries.Add(s);
+                });
+            }
+            var DbSet = _dBContext.GetDbSet<GoodsownerEntity>();
+            var query = DbSet.AsNoTracking()
+                .Where(t => t.tenant_id.Equals(currentUser.tenant_id))
+                .Where(queries.AsExpression<GoodsownerEntity>());
+            int totals = await query.CountAsync();
+            var list = await query.OrderByDescending(t => t.create_time)
+                       .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
+                       .Take(pageSearch.pageSize)
+                       .ToListAsync();
+            return (list.Adapt<List<GoodsownerViewModel>>(), totals);
+        }
+        /// <summary>
         /// Get all records
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<List<GoodsownerViewModel>> GetAllAsync()
+        public async Task<List<GoodsownerViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<GoodsownerEntity>();
-            var data = await DbSet.AsNoTracking().ToListAsync();
+            var data = await DbSet.AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id)
+                .OrderByDescending(t => t.create_time).ToListAsync();
             return data.Adapt<List<GoodsownerViewModel>>();
         }
 
@@ -169,6 +200,7 @@ namespace ModernWMS.WMS.Services
             var existsDatas = await DbSet.AsNoTracking().Where(t => t.tenant_id.Equals(currentUser.tenant_id)).Select(t => new { t.goods_owner_name }).ToListAsync();
             input.ForEach(async t =>
             {
+                t.errorMsg = string.Empty;
                 if (existsDatas.Any(d => d.goods_owner_name.Equals(t.goods_owner_name)))
                 {
                     t.errorMsg = string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["goods_owner_name"], t.goods_owner_name);
