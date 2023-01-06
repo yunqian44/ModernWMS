@@ -64,6 +64,7 @@ import { hookComponent } from '@/components/system/index'
 import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { WarehouseVO } from '@/types/Base/Warehouse'
+import { exportTable } from '@/utils/exportTable'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -170,12 +171,9 @@ const method = reactive({
   exportTemplate: () => {
     const $table = xTable.value
     try {
-      $table.exportData({
-        type: 'xlsx',
-        filename: i18n.global.t('router.sideBar.warehouseSetting'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
+      exportTable({
+        table: $table,
+        filename: i18n.global.t('router.sideBar.warehouseSetting')
       })
     } catch (error) {
       hookComponent.$message({
