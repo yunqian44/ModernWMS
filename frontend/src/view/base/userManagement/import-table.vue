@@ -1,4 +1,4 @@
-<!-- Freight Setting Import Dialog -->
+<!-- UserManagement Setting Import Dialog -->
 <template>
   <v-dialog v-model="isShow" width="70%" transition="dialog-top-transition" :persistent="true">
     <template #default>
@@ -66,6 +66,7 @@ import { hookComponent } from '@/components/system/index'
 import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { ImportVO } from '@/types/Base/UserManagement'
+import { exportTable } from '@/utils/exportTable'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -187,12 +188,9 @@ const method = reactive({
   exportTemplate: () => {
     const $table = xTable.value
     try {
-      $table.exportData({
-        type: 'xlsx',
-        filename: i18n.global.t('router.sideBar.userManagement'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
+      exportTable({
+        table: $table,
+        filename: i18n.global.t('router.sideBar.userManagement')
       })
     } catch (error) {
       hookComponent.$message({
