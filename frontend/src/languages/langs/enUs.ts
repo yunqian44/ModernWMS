@@ -156,7 +156,10 @@ export default {
       receiving_area: 'Receiving Area',
       return_area: 'Return Area',
       defective_area: 'Defective Area',
-      inventory_area: 'Inventory Area'
+      inventory_area: 'Inventory Area',
+      creator: 'Creator',
+      create_time: 'Create Time',
+      last_update_time: 'Last Update Time'
     },
     customer: {
       customer_name: 'Customer Name',
@@ -279,6 +282,7 @@ export default {
         alreadyAdjust: 'The data can\'t delete because it had been adjusted'
       },
       warehouseMove: {
+        job_code: 'Job No',
         move_status: 'Move Status',
         qty: 'Qty',
         handler: 'Handler',
