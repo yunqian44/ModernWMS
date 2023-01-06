@@ -14,8 +14,9 @@ namespace ModernWMS.WMS.IServices
         /// <summary>
         /// Get all records
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        Task<List<RolemenuListViewModel>> GetAllAsync();
+        Task<List<RolemenuListViewModel>> GetAllAsync(CurrentUser currentUser);
 
         /// <summary>
         /// Get a record by id

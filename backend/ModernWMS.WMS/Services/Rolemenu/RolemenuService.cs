@@ -51,12 +51,14 @@ namespace ModernWMS.WMS.Services
         /// <summary>
         /// Get all records
         /// </summary>
+        /// <param name="currentUser">currentUser</param>
         /// <returns></returns>
-        public async Task<List<RolemenuListViewModel>> GetAllAsync()
+        public async Task<List<RolemenuListViewModel>> GetAllAsync(CurrentUser currentUser)
         {
             var Rolemenus = _dBContext.GetDbSet<RolemenuEntity>();
             var Userroles = _dBContext.GetDbSet<UserroleEntity>();
             var queryMenusGroup = Rolemenus.AsNoTracking()
+               .Where(t => t.tenant_id == currentUser.tenant_id)
                .GroupBy(g => new { g.userrole_id })
                .Select(g => new
                {
@@ -65,7 +67,8 @@ namespace ModernWMS.WMS.Services
                    last_update_time = g.Max(t => t.last_update_time)
                });
             var data = await (from g in queryMenusGroup
-                              join r in Userroles.AsNoTracking() on g.userrole_id equals r.id
+                              join r in Userroles.AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id)
+                              on g.userrole_id equals r.id
                               select new RolemenuListViewModel
                               {
                                   userrole_id = g.userrole_id,
