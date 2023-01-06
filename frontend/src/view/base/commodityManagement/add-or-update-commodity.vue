@@ -142,59 +142,61 @@
                   align="center"
                   :edit-rules="data.validRules"
                   :edit-config="{ trigger: 'click', mode: 'cell' }"
+                  :mouse-config="{ selected: true }"
+                  :keyboard-config="{ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true, isChecked: true }"
                 >
                   <template #empty>
                     {{ i18n.global.t('system.page.noData') }}
                   </template>
                   <vxe-column type="seq" width="60"></vxe-column>
-                  <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')" :edit-render="{}">
+                  <vxe-column field="sku_code" :title="$t('base.commodityManagement.sku_code')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.sku_code" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')" :edit-render="{}">
+                  <vxe-column field="sku_name" :title="$t('base.commodityManagement.sku_name')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.sku_name" type="text"></vxe-input>
                     </template>
                   </vxe-column>
                   <!-- <vxe-column field="supplier_name" :title="$t('base.commodityManagement.supplier_name')"></vxe-column> -->
                   <!-- <vxe-column field="brand" :title="$t('base.commodityManagement.brand')"></vxe-column> -->
-                  <vxe-column field="unit" :title="$t('base.commodityManagement.unit')" :edit-render="{}">
+                  <vxe-column field="unit" :title="$t('base.commodityManagement.unit')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.unit" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="weight" :title="$t('base.commodityManagement.weight')" :edit-render="{}">
+                  <vxe-column field="weight" :title="$t('base.commodityManagement.weight')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.weight" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="lenght" :title="$t('base.commodityManagement.lenght')" :edit-render="{}">
+                  <vxe-column field="lenght" :title="$t('base.commodityManagement.lenght')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.lenght" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="width" :title="$t('base.commodityManagement.width')" :edit-render="{}">
+                  <vxe-column field="width" :title="$t('base.commodityManagement.width')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.width" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="height" :title="$t('base.commodityManagement.height')" :edit-render="{}">
+                  <vxe-column field="height" :title="$t('base.commodityManagement.height')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.height" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')" :edit-render="{}">
+                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.volume" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="cost" :title="$t('base.commodityManagement.cost')" :edit-render="{}">
+                  <vxe-column field="cost" :title="$t('base.commodityManagement.cost')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.cost" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="price" :title="$t('base.commodityManagement.price')" :edit-render="{}">
+                  <vxe-column field="price" :title="$t('base.commodityManagement.price')" :edit-render="{autofocus: '.vxe-input--inner'}">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.price" type="text"></vxe-input>
                     </template>
