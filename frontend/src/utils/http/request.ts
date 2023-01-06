@@ -2,6 +2,8 @@ import axios from 'axios' // 引入axios
 import { store } from '@/store'
 import { emitter } from '@/utils/bus.js'
 import { router } from '@/router'
+import { hookComponent } from '@/components/system'
+import i18n from '@/languages/i18n'
 
 // Basis of axios
 const SERVER_URL = `${ import.meta.env.VITE_BASE_PATH }:${ import.meta.env.VITE_SERVER_PORT }`
@@ -36,7 +38,7 @@ function resetSubscribes() {
 function isTokenExpired() {
   const expiredTime = store.getters['user/expirationTime']
   if (expiredTime) {
-    // 距离到期还有x秒则判定为到期
+    // Distance and x seconds is judged to be due
     const willExpiredSecond = 10 * 60
     const nowTime = new Date().getTime()
     const willExpired = (expiredTime - nowTime) / 1000 < willExpiredSecond
@@ -100,9 +102,8 @@ const handleRefreshToken = (token: string) => {
 
 http.interceptors.request.use(
   (config: any) => {
-    const donNeedTokenApi = ['/login']
+    const donNeedTokenApi = ['/login', '/user/register']
     const token = store.getters['user/token']
-    // const user = store.getters['user/userInfo']
 
     let culture = 'en-us'
     switch (store.getters['system/language']) {
@@ -119,18 +120,18 @@ http.interceptors.request.use(
       showLoading()
     }
 
-    // 登录接口就不要去查找token了  不然可能会卡在登陆界面刷新token
+    // It don't need token to request with some apis.
     if (donNeedTokenApi.includes(config.url)) {
       return config
     }
 
-    // 1.token不存在，退出登录
+    // 1.Logout when token isn't exist
     if (!token) {
       rediretToLogin()
       return config
     }
 
-    // 2.token存在且未过期，继续正常的请求
+    // 2.Request normally when token is exist and in valid date
     if (!isTokenExpired() || config.url === '/refresh-token') {
       config.headers = {
         'Content-Type': 'application/json',
@@ -143,12 +144,12 @@ http.interceptors.request.use(
       return config
     }
 
-    // 3.当前未在刷新token，则需要发起刷新token请求
+    // 3.Take a 'refresh token' request when it not in the refreshing.
     if (!store.getters['user/isRefreshingToken']) {
       handleRefreshToken(token)
     }
 
-    // 4.将请求失败的接口挂起，等刷新token后补偿调用
+    // 4.Put the fail requests up and initiate them after refresh token
     const retry = new Promise((resolve) => {
       pushSubscribeInterface((newToken: string) => {
         config.headers.Authorization = `Bearer ${ newToken }`
@@ -159,11 +160,6 @@ http.interceptors.request.use(
   },
   (error) => {
     closeLoading()
-    // ElMessage({
-    //     showClose: true,
-    //     message: error,
-    //     type: 'error'
-    // })
     return error
   }
 )
@@ -177,34 +173,33 @@ http.interceptors.response.use(
       }
       return response.data
     }
-    // ElMessage({
-    //     showClose: true,
-    //     message: response.data.msg || decodeURI(response.headers.msg),
-    //     type: 'error'
-    // })
-    if (response.data.data && response.data.data.reload) {
-      // store.commit('user/LoginOut')
-    }
     return response.data.msg ? response.data : response
   },
   (error) => {
     closeLoading()
     // 1.There isn't 'error.response' object when request timeout
     if (!error.response) {
-      console.log('请求超时', error.message)
+      hookComponent.$message({
+        type: 'error',
+        content: i18n.global.t('system.tips.requestTimeout')
+      })
       return
     }
 
     // 2.There is response status when request fail but not timeout
     switch (error.response.status) {
       case 500:
-        console.log('错误：', 500)
+        console.error('error：', 500)
         break
       case 404:
-        console.log('错误：', 404)
+        console.error('error：', 404)
         break
     }
 
+    hookComponent.$message({
+      type: 'error',
+      content: i18n.global.t('system.tips.requestFail')
+    })
     return error
   }
 )

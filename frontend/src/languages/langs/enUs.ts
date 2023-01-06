@@ -36,7 +36,9 @@ export default {
       noData: 'no data',
       beforeAsnConfirm: 'Confirm Arrival?',
       beforeAsnUnload: 'Confirm Unload?',
-      beforeAsnSorted: 'Confirm Sorted?'
+      beforeAsnSorted: 'Confirm Sorted?',
+      requestTimeout: 'Request Timeout!',
+      requestFail: 'Request fail.Please try it again'
     },
     checkText: {
       checkFormFail: 'Operation failed. Please check the data and try again!',
