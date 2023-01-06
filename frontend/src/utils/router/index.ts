@@ -143,6 +143,24 @@ function GetModuleAndIcon(name: string) {
       return 'cart-minus'
     case 'ownerOfCargo':
       return 'account-credit-card'
+    case 'freightSetting':
+      return 'cash-multiple'
+    case 'warehouseSetting':
+      return 'warehouse'
+    case 'warehouseProcessing':
+      return 'vector-combine'
+    case 'warehouseMove':
+      return 'file-document-arrow-right-outline'
+    case 'warehouseFreeze':
+      return 'lock-outline'
+    case 'warehouseAdjust':
+      return 'image-auto-adjust'
+    case 'warehouseTaking':
+      return 'ballot-recount-outline'
+      case 'customer':
+      return 'account-box-outline'
+    case 'supplier':
+      return 'account-badge'
     default:
       return ''
   }

@@ -105,7 +105,7 @@ export default {
     userName: 'UserName',
     password: 'Password',
     loginSuccess: 'Login succeeded!',
-    notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!',
+    notAuthority: 'Undistributed menu access the account, please contact the administrator to add it!',
     registerTips: 'No account? Click here to register!',
     register: 'Register'
   },
