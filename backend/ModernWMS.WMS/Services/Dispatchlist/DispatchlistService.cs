@@ -358,7 +358,7 @@ namespace ModernWMS.WMS.Services
                             customer_id = dg.Key.customer_id,
                             customer_name = dg.Key.customer_name,
                             qty = dg.Sum(t => t.d.qty),
-                            volume = dg.Sum(t =>t.spu.volume_unit==1?  t.d.volume:(t.spu.volume_unit==0?t.d.volume*1000:t.d.volume/1000)),
+                            volume = dg.Sum(t =>t.spu.volume_unit==1?  t.d.volume:(t.spu.volume_unit==0?t.d.volume/1000:t.d.volume*1000)),
                             weight = dg.Sum(t =>t.spu.weight_unit==0?t.d.weight/1000000:(t.spu.weight_unit==1? t.d.weight/1000:t.d.weight)),
                             creator = dg.Key.creator,
                         };
