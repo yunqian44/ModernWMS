@@ -136,7 +136,7 @@ export default {
       restPwd: 'Reset password',
       checkboxIsNull: 'Please select data!',
       beforeResetPwd: 'Are you sure you want to reset the passwords of these users?',
-      afterResetPwd: 'Password reset succeeded!',
+      afterResetPwd: 'Password reset succeeded, The new password is ',
       user_register_name: 'User Name',
       email: 'Email',
       auth_string: 'Password'

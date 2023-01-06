@@ -299,9 +299,8 @@ const method = reactive({
             })
             return
           }
-          hookComponent.$message({
-            type: 'success',
-            content: i18n.global.t('base.userManagement.afterResetPwd')
+          hookComponent.$dialog({
+            content: `${ i18n.global.t('base.userManagement.afterResetPwd') } ${ res.data }`
           })
         }
       })

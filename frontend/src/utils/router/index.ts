@@ -55,6 +55,7 @@ export function menusToSideBar(): SideBarMenu[] {
           children: [
             {
               lable,
+              icon: GetModuleAndIcon(menu.vue_path),
               routerPath: menu.vue_path
             }
           ]
@@ -128,6 +129,20 @@ function GetModuleAndIcon(name: string) {
       return 'account-hard-hat-outline '
     case 'deliveryManagement':
       return 'cube-send'
+    case 'companySetting':
+      return 'office-building'
+    case 'roleMenu':
+      return 'menu'
+    case 'userRoleSetting':
+      return 'account-box'
+    case 'userManagement':
+      return 'account'
+    case 'commodityCategorySetting':
+      return 'format-list-bulleted-type'
+    case 'commodityManagement':
+      return 'cart-minus'
+    case 'ownerOfCargo':
+      return 'account-credit-card'
     default:
       return ''
   }

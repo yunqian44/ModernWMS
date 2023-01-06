@@ -35,8 +35,8 @@
                 <div style="display: flex; align-items: center; height: 100%">
                   <div class="menuIcon">
                     <v-icon
-                      :icon="'mdi-checkbox-blank-circle-outline'"
-                      :size="12"
+                      :icon="detailItem.icon ? `mdi-${detailItem.icon}` : 'mdi-checkbox-blank-circle-outline'"
+                      :size="14"
                       :color="currentRouterPath === detailItem.routerPath ? '#fff' : '#524e59'"
                     ></v-icon>
                   </div>

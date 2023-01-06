@@ -136,7 +136,7 @@ export default {
       restPwd: '重置密码',
       checkboxIsNull: '请选中数据!',
       beforeResetPwd: '您确定要重置这些用户的密码吗?',
-      afterResetPwd: '重置密码成功!',
+      afterResetPwd: '重置密码成功, 新密码为: ',
       user_register_name: '用户名',
       email: 'Email',
       auth_string: '密码'
