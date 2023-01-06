@@ -59,6 +59,9 @@
                   :height="SYSTEM_HEIGHT.SELECT_TABLE"
                   align="center"
                 >
+                  <template #empty>
+                    {{ i18n.global.t('system.page.noData') }}
+                  </template>
                   <vxe-column type="seq" width="60"></vxe-column>
                   <vxe-column type="checkbox" width="50"></vxe-column>
                   <vxe-column field="warehouse_name" :title="$t('wms.stock.warehouse')"></vxe-column>
@@ -117,6 +120,7 @@ import { computedSelectTableSearchHeight, SYSTEM_HEIGHT } from '@/constant/style
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { setSearchObject } from '@/utils/common'
 import customPager from '@/components/custom-pager.vue'
+import i18n from '@/languages/i18n'
 
 const emit = defineEmits(['close', 'sureSelect'])
 const xTable = ref()
