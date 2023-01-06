@@ -190,7 +190,7 @@ import { CommodityVO, DataProps } from '@/types/Base/CommodityManagement'
 import { getSpuList, deleteSpu } from '@/api/base/commodityManagementSetting'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-company.vue'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
@@ -208,7 +208,7 @@ const data: DataProps = reactive({
   tablePage: {
     total: 0,
     pageIndex: 1,
-    pageSize: 10
+    pageSize: DEFAULT_PAGE_SIZE
   },
   tableTreeConfig: {
     transform: true,

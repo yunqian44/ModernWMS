@@ -128,7 +128,7 @@ import { computed, ref, reactive, watch, nextTick, onActivated } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { WarehouseAdjustVO } from '@/types/WarehouseWorking/WarehouseAdjust'
-import { PAGE_SIZE, PAGE_LAYOUT } from '@/constant/vxeTable'
+import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { deleteStockAdjust, getStockAdjustList, getStockAdjustOne, confirmStockAdjust } from '@/api/wms/warehouseAdjust'
 import { PROCESS_JOB_COMBINE } from '@/constant/warehouseWorking'
@@ -171,7 +171,7 @@ const data = reactive({
   tablePage: reactive({
     total: 0,
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: DEFAULT_PAGE_SIZE,
     searchObjects: ref<Array<SearchObject>>([])
   })
 })
