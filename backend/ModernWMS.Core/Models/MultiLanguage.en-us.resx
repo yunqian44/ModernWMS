@@ -615,4 +615,7 @@
   <data name="unweightqty_lessthen" xml:space="preserve">
     <value>Unweighed quantity is less than the quantity to be weighed.Please refresh and try again</value>
   </data>
+  <data name="login_failed" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
 </root>
