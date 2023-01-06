@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using ModernWMS.Core.DBContext;
 using Microsoft.Extensions.Localization;
+using ModernWMS.Core.JWT;
 
 namespace ModernWMS.Core.Services
 {
@@ -33,12 +34,13 @@ namespace ModernWMS.Core.Services
         /// login
         /// </summary>
         /// <param name="loginInput"> login params viewmodel</param>
+        /// <param name="currentUser"> current user</param>
         /// <returns></returns>
-        public async Task<LoginOutputViewModel> Login(LoginInputViewModel loginInput)
+        public async Task<LoginOutputViewModel> Login(LoginInputViewModel loginInput, CurrentUser currentUser)
         {
             var users = await (from user in _sqlDBContext.GetDbSet<userEntity>().AsNoTracking()
                                                 join ur in _sqlDBContext.GetDbSet<UserroleEntity>().AsNoTracking() on user.user_role equals ur.role_name
-                                                where user.user_name == loginInput.user_name || user.user_num == loginInput.user_name
+                                                where user.tenant_id == currentUser.tenant_id&&(user.user_name == loginInput.user_name || user.user_num == loginInput.user_name)
                                                 select new  {
                                                     user_id = user.id,
                                                     user_num = user.user_num,

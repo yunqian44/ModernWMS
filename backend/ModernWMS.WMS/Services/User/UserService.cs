@@ -271,11 +271,12 @@ namespace ModernWMS.WMS.Services
         {
             var DBSet = _dBContext.GetDbSet<userEntity>();
             var entities =await DBSet.Where(t => viewModel.id_list.Contains(t.id)).ToListAsync();
-            entities.ForEach(t => { t.auth_string = Md5Helper.Md5Encrypt32("pwd123456"); t.last_update_time = DateTime.Now; });
+            var newpassword = GetRandomPassword();
+            entities.ForEach(t => { t.auth_string = Md5Helper.Md5Encrypt32(newpassword); t.last_update_time = DateTime.Now; });
             var res = await  _dBContext.SaveChangesAsync();
             if (res > 0)
             {
-                return (true, _stringLocalizer["operation_success"]);
+                return (true, newpassword);
             }
             return (false,_stringLocalizer["operation_failed"]);
         }
@@ -533,6 +534,24 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["operation_failed"]);
             }
+        }
+
+        /// <summary>
+        /// get a random password
+        /// </summary>
+        /// <returns></returns>
+        public string GetRandomPassword()
+        {
+            string randomChars = "ABCDEFGHIJKLMNOPQRSTVWXYZ123456789";
+            string password = string.Empty;
+            int randomNum;
+            Random random = new Random();
+            for (int i = 0; i < 6; i++)
+            {
+                randomNum = random.Next(randomChars.Length);
+                password += randomChars[randomNum];
+            }
+            return password;
         }
 
         #endregion
