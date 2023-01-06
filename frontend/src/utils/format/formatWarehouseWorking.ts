@@ -1,5 +1,5 @@
 import i18n from '@/languages/i18n'
-import { PROCESS_JOB_COMBINE, FREEZE_JOB_FREEZE, TAKING_JOB_FINISH, TAKING_JOB_UNFINISH } from '@/constant/warehouseWorking'
+import { PROCESS_JOB_COMBINE, FREEZE_JOB_FREEZE, TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
 import { MoveStatus } from '@/types/WarehouseWorking/WarehouseMove'
 import { AdjustJobType } from '@/types/WarehouseWorking/WarehouseAdjust'
 

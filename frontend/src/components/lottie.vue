@@ -27,7 +27,7 @@ const props = defineProps({
 const lottieBox = ref(null)
 onMounted(() => {
   if (lottieBox.value) {
-    const animation = lottie.loadAnimation({
+    lottie.loadAnimation({
       container: lottieBox.value,
       renderer: 'svg',
       loop: props.loop,

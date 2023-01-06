@@ -131,7 +131,6 @@ import { reactive, computed, ref, watch } from 'vue'
 import { hookComponent } from '@/components/system/index'
 import { addGoodsLocation, updateGoodsLocation, getWarehouseSelect, getWarehouseAreaSelect } from '@/api/base/warehouseSetting'
 import { GoodsLocationVO, AreaProperty } from '@/types/Base/Warehouse'
-import { formatAreaProperty } from '@/utils/format/formatWarehouse'
 import i18n from '@/languages/i18n'
 
 const formRef = ref()
@@ -175,9 +174,7 @@ const data = reactive({
     warehouse_area_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`
     ],
-    warehouse_area_property: [
-      // (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`
-    ],
+    warehouse_area_property: [],
     location_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.location_name') }!`
     ],

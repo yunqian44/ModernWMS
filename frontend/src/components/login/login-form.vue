@@ -76,12 +76,12 @@ const method = reactive({
 
     if (loginRes.isSuccess) {
       const expiredTime = new Date().getTime() + loginRes.data.expire * 60 * 1000
-      // const expiredTime = new Date().getTime() + 1 * 60 * 1000
 
       store.commit('user/setToken', loginRes.data.access_token)
       store.commit('user/setRefreshToken', loginRes.data.refresh_token)
       store.commit('user/setExpirationTime', expiredTime)
       store.commit('user/setEffectiveMinutes', loginRes.data.expire)
+      store.commit('user/setUserInfo', loginRes.data)
 
       const { data: authorityRes } = await getUserAuthority(loginRes.data.userrole_id)
       if (!authorityRes.isSuccess) {

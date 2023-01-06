@@ -98,7 +98,7 @@ const data = reactive({
 
 const method = reactive({
   // Get the options required by the drop-down box
-  getCombobox: async () => {
+  getCombobox: () => {
     // Static drop-down box
     const sexOptions = ['male', 'female']
     data.combobox.sex = []

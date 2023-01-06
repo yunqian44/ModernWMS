@@ -14,7 +14,6 @@ export const user = {
     // 当前是否正在refreshToken
     isRefreshingToken: false,
     // 菜单权限
-    // 目前用于测试
     menulist: [
       // {
       //   name: 'testmenu',
@@ -25,30 +24,24 @@ export const user = {
   },
   mutations: {
     setUserInfo(state: UserStateProps, userInfo: any) {
-      // 这里的 `state` 对象是模块的局部状态
       state.userInfo = userInfo
     },
     resetUserInfo(state: UserStateProps, userInfo = {}) {
       state.userInfo = { ...state.userInfo, ...userInfo }
     },
     setToken(state: UserStateProps, token: string) {
-      // 这里的 `state` 对象是模块的局部状态
       state.token = token
     },
     setExpirationTime(state: UserStateProps, expirationTime: number) {
-      // 这里的 `state` 对象是模块的局部状态
       state.expirationTime = expirationTime
     },
     setIsRefreshingToken(state: UserStateProps, isRefreshingToken: boolean) {
-      // 这里的 `state` 对象是模块的局部状态
       state.isRefreshingToken = isRefreshingToken
     },
     setRefreshToken(state: UserStateProps, refreshToken: string) {
-      // 这里的 `state` 对象是模块的局部状态
       state.refreshToken = refreshToken
     },
     setEffectiveMinutes(state: UserStateProps, effectiveMinutes: number) {
-      // 这里的 `state` 对象是模块的局部状态
       state.effectiveMinutes = effectiveMinutes
     },
     setUserMenuList(state: UserStateProps, menulist: MenuItem[]) {

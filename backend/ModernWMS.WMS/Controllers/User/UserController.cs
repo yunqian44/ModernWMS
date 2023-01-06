@@ -8,6 +8,7 @@ using ModernWMS.Core.Models;
 using ModernWMS.WMS.Entities.ViewModels;
 using ModernWMS.WMS.IServices;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ModernWMS.WMS.Controllers
 {
@@ -135,6 +136,7 @@ namespace ModernWMS.WMS.Controllers
         /// </summary>
         /// <param name="viewModel">args</param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ResultModel<string>> Register(RegisterViewModel viewModel)
         {

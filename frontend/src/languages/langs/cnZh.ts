@@ -36,7 +36,9 @@ export default {
       noData: '暂无数据',
       beforeAsnConfirm: '确认到货？',
       beforeAsnUnload: '确认卸货？',
-      beforeAsnSorted: '确认分拣完成？'
+      beforeAsnSorted: '确认分拣完成？',
+      requestTimeout: '请求超时！',
+      requestFail: '接口请求失败，请重试'
     },
     checkText: {
       checkFormFail: '操作失败, 请检查数据后重试!',

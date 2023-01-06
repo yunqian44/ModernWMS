@@ -316,6 +316,7 @@ namespace ModernWMS.WMS.Services
             entity.create_time = time;
             entity.last_update_time = time;
             entity.email = viewModel.email;
+            entity.sex = viewModel.sex;
             entity.is_valid = true;
             await DbSet.AddAsync(entity);
             await _dBContext.SaveChangesAsync();
@@ -509,7 +510,7 @@ namespace ModernWMS.WMS.Services
                 entity.tenant_id = tenant_id;
                 entity.creator = entity.user_name;
                 entity.user_role = "admin";
-                var adminrole = new UserroleEntity { last_update_time = time, create_time = time, role_name = "admin", tenant_id = tenant_id };
+                var adminrole = new UserroleEntity {is_valid = true, last_update_time = time, create_time = time, role_name = "admin", tenant_id = tenant_id };
                 await _dBContext.GetDbSet<UserroleEntity>().AddAsync(adminrole);
                 await _dBContext.GetDbSet<MenuEntity>().AddRangeAsync(menus);
                 await _dBContext.SaveChangesAsync();

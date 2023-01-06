@@ -44,7 +44,7 @@ export function IsInteger(value: string | number, validNumerical: 'nonNegative' 
   return ''
 }
 
-// 判断是否为小数
+// Judge whether it is decimal
 export function IsDecimal(
   value: string | number,
   validNumerical: 'nonNegative' | 'greaterThanZero',

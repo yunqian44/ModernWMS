@@ -28,6 +28,8 @@ using ModernWMS.Core.Middleware;
 using Microsoft.Extensions.DependencyModel;
 using ModernWMS.Core.DI;
 using Microsoft.Extensions.Localization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.EntityFrameworkCore.Migrations.Internal;
 
 namespace ModernWMS.Core.Extentions
 {
@@ -48,13 +50,23 @@ namespace ModernWMS.Core.Extentions
                 var cache = new MemoryCache(new MemoryCacheOptions());
                 return cache;
             });
-            var connection = configuration.GetConnectionString("MainConn");
+            var Mysql_connection = configuration.GetConnectionString("MySqlConn");
+            var SqlLite_connection = configuration.GetConnectionString("SqlLiteConn");
+            var database_config = configuration.GetSection("Database")["db"];
             services.AddDbContextPool<SqlDBContext>(t =>
             {
-                t.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 26)));
+                if(database_config == "SqlLite")
+                {
+                    t.UseSqlite(SqlLite_connection, b => b.MigrationsAssembly("ModernWMS"));
+                }
+                 else
+                 {
+                     t.UseMySql(Mysql_connection, new MySqlServerVersion(new Version(8, 0, 26)));
+                 }
+                
                 t.EnableSensitiveDataLogging();
                 t.UseLoggerFactory(new LoggerFactory(new[] { new DebugLoggerProvider() }));
-            }, 100);
+            }, 100); ;
             services.AddMemoryCache( );
             services.AddScoped<MultiTenancy.ITenantProvider, MultiTenancy.TenantProvider>();            
             services.AddSwaggerService(configuration, AppContext.BaseDirectory);

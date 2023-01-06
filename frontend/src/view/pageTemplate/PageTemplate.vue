@@ -142,8 +142,10 @@ import customPager from '@/components/custom-pager.vue'
 
 const xTable = ref()
 
-// Table Model, this just a example
-// You should put it on the 'types' folder
+/**
+ * Table Model, this just a example
+ * You should put it on the 'types' folder
+ */
 interface UserVO {
   id: number
   name: string

@@ -1,4 +1,4 @@
-<!-- Freight Setting Operate Dialog -->
+<!-- Warehouse Setting Operate Dialog -->
 <template>
   <v-dialog v-model="isShow" :width="'30%'" transition="dialog-top-transition" :persistent="true">
     <template #default>

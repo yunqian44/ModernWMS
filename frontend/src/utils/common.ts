@@ -23,7 +23,7 @@ export const setSearchObject = (searchForm: any, operator: number = SearchOperat
   }
 }
 
-// 移除数组为null,''的属性
+// Remove item what value is 'null' or '' in array
 export const removeArrayNull = (array: any) => {
   for (const obj of array) {
     Object.keys(obj).forEach((item) => {
@@ -37,7 +37,8 @@ export const removeArrayNull = (array: any) => {
   }
   return array
 }
-// 移除对象为null,''的属性
+
+// Remove item what value is 'null' or '' in object
 export const removeObjectNull = (obj: any) => {
   const copy = JSON.parse(JSON.stringify(obj))
   Object.keys(copy).forEach((item) => {
