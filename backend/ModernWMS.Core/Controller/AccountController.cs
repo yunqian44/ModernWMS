@@ -66,7 +66,7 @@ namespace ModernWMS.Core.Controller
         public async Task<ResultModel<LoginOutputViewModel>> LoginAsync(LoginInputViewModel loginAccount)
         {
 
-            var user = await _accountService.Login(loginAccount);
+            var user = await _accountService.Login(loginAccount,CurrentUser);
             if (user != null)
             {
                 var result = _tokenManager.GenerateToken(

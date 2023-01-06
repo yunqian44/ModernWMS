@@ -8,12 +8,7 @@
         <v-btn variant="text" @click="data.dialogVisible = false">
           {{ cancleText }}
         </v-btn>
-        <v-btn
-          v-if="typeof dialogProps.handleConfirm === 'function'"
-          color="green-darken-1"
-          variant="text"
-          @click="method._sure()"
-        >
+        <v-btn v-if="typeof dialogProps.handleConfirm === 'function'" color="green-darken-1" variant="text" @click="method._sure()">
           {{ confirmText }}
         </v-btn>
       </v-card-actions>
@@ -23,7 +18,6 @@
 
 <script lang="ts" setup>
 import { watch, reactive } from 'vue'
-import i18n from '@/languages/i18n'
 
 const dialogProps = defineProps({
   visible: {
@@ -32,11 +26,11 @@ const dialogProps = defineProps({
   },
   confirmText: {
     type: String,
-    default: i18n.global.t('system.hookComponent.dialog.defaultConfirm')
+    default: ''
   },
   cancleText: {
     type: String,
-    default: i18n.global.t('system.hookComponent.dialog.defaultClose')
+    default: ''
   },
   handleConfirm: {
     type: Function,
@@ -53,7 +47,7 @@ const dialogProps = defineProps({
   },
   title: {
     type: String,
-    default: i18n.global.t('system.hookComponent.dialog.defaultTitle')
+    default: ''
   },
   dialogWidth: {
     type: [String, Number],
