@@ -431,7 +431,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "customer",
                         vue_path_detail = "",
                         vue_directory = "base/customer",
-                        sort = 12,
+                        sort = 11,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -440,7 +440,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "stockManagement",
                         vue_path_detail = "",
                         vue_directory = "wms/stockManagement",
-                        sort = 12,
+                        sort = 3,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -449,7 +449,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "warehouseProcessing",
                         vue_path_detail = "",
                         vue_directory = "warehouseWorking/warehouseProcessing",
-                        sort = 13,
+                        sort = 4,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -458,7 +458,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "warehouseMove",
                         vue_path_detail = "",
                         vue_directory = "warehouseWorking/warehouseMove",
-                        sort = 14,
+                        sort = 5,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -467,7 +467,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "warehouseFreeze",
                         vue_path_detail = "",
                         vue_directory = "warehouseWorking/warehouseFreeze",
-                        sort = 15,
+                        sort = 6,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -476,7 +476,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "warehouseAdjust",
                         vue_path_detail = "",
                         vue_directory = "warehouseWorking/warehouseAdjust",
-                        sort = 16,
+                        sort = 7,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -485,7 +485,7 @@ namespace ModernWMS.WMS.Services
                         vue_path = "warehouseTaking",
                         vue_path_detail = "",
                         vue_directory = "warehouseWorking/warehouseTaking",
-                        sort = 17,
+                        sort = 8,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
@@ -494,16 +494,16 @@ namespace ModernWMS.WMS.Services
                         vue_path = "stockAsn",
                         vue_path_detail = "",
                         vue_directory = "wms/stockAsn",
-                        sort = 18,
+                        sort = 2,
                         tenant_id = tenant_id
                     },new MenuEntity
                     {
                         menu_name = "deliveryManagement",
-                        module = "deliveryManagement",
+                        module = "",
                         vue_path = "deliveryManagement",
                         vue_path_detail = "",
                         vue_directory = "deliveryManagement/deliveryManagement",
-                        sort = 19,
+                        sort = 5,
                         tenant_id = tenant_id
                     }
                 };
