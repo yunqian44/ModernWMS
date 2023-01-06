@@ -1,40 +1,34 @@
-﻿/*
- * 功能：JWT接口
- * 日期：2020年4月8日
- * 开发人员：陈天生
- * 重大变更：
- */
-
+﻿
 namespace ModernWMS.Core.JWT
 {
     /// <summary>
-    /// Token管理类
+    /// token manager interface
     /// </summary>
     public interface ITokenManager
     {
         /// <summary>
-        /// 生成AccessToken方法
+        /// Method of generating AccessToken
         /// </summary>
-        /// <param name="userClaims">自定义信息</param>
-        /// <returns>(token,有效分钟数)</returns>
+        /// <param name="userClaims">userClaims</param>
+        /// <returns></returns>
         (string token, int expire) GenerateToken(CurrentUser userClaims);
         /// <summary>
-        /// 生成RefreshToken方法
+        /// Method of refreshing token
         /// </summary>
         /// <returns></returns>
         string GenerateRefreshToken();
         /// <summary>
-        /// 获取刷新token失效分钟数
+        /// Get the minutes of refreshed token invalidation
         /// </summary>
         /// <returns></returns>
         int GetRefreshTokenExpireMinute();
         /// <summary>
-        /// 获取token中当前用户信息
+        /// Get the current user information in the token
         /// </summary>
         /// <returns></returns>
         CurrentUser GetCurrentUser();
         /// <summary>
-        /// 获取token中当前用户信息
+        /// Get the current user information in the token
         /// </summary>
         /// <returns></returns>
         CurrentUser GetCurrentUser(string token);

@@ -8,22 +8,22 @@ namespace ModernWMS.Core.Models
     public class PageSearch
     {
         /// <summary>
-        /// 当前页码
+        /// current page number
         /// </summary> 
         public int pageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 每页行数
+        /// rows per page
         /// </summary>
         public int pageSize { get; set; } = 20;
 
         /// <summary>
-        /// 自定义分类
+        /// Custom Classification
         /// </summary>
         public string sqlTitle { get; set; } = "";
-        
+
         /// <summary>
-        /// 查找条件
+        /// search condition
         /// </summary>
         public List<SearchObject> searchObjects { get; set; } = new List<SearchObject>();
     }

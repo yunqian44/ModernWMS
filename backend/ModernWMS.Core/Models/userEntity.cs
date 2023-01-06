@@ -52,6 +52,11 @@ namespace ModernWMS.Core.Models
         public string auth_string { get; set; } = string.Empty;
 
         /// <summary>
+        /// email
+        /// </summary>
+        public string email { get; set; } = string.Empty;
+
+        /// <summary>
         /// creator
         /// </summary>
         public string creator { get; set; } = string.Empty;

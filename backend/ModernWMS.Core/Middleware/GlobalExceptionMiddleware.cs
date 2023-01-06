@@ -1,47 +1,49 @@
-﻿/*
- * 功能：全局异常中间件
- * 日期：2020年4月8日
- * 开发人员：陈天生
- * 重大变更：
- */
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ModernWMS.Core.Models;
+using Microsoft.Extensions.Localization;
 
 namespace ModernWMS.Core.Middleware
 {
     /// <summary>
-    /// 全局异常中间件
+    /// Global exception middleware
     /// </summary>
     public class GlobalExceptionMiddleware
     {
-        #region 参数
-        private readonly RequestDelegate next; //下一步 委托
-        private readonly ILogger<GlobalExceptionMiddleware> logger; //日志
+        #region parameter
+        private readonly RequestDelegate next; 
+        private readonly ILogger<GlobalExceptionMiddleware> logger;
+        /// <summary>
+        /// Localizer Service
+        /// </summary>
+        private readonly IStringLocalizer<MultiLanguage> _stringLocalizer;
         #endregion
 
-        #region 构造函数
+        #region Constructor
         /// <summary>
-        /// 构造函数
+        /// Constructor
         /// </summary>
-        /// <param name="next">注入委托</param>
-        /// <param name="logger">注入日志</param>
+        /// <param name="next">Delegate in next step</param>
+        /// <param name="logger">log manager</param>
+        /// <param name="stringLocalizer">Localizer</param>
         public GlobalExceptionMiddleware(RequestDelegate next,
-                                         ILogger<GlobalExceptionMiddleware> logger)
+                  ILogger<GlobalExceptionMiddleware> logger,
+                  IStringLocalizer<MultiLanguage> stringLocalizer
+                                         )
         {
             this.next = next;
             this.logger = logger;
+            this._stringLocalizer = stringLocalizer;
         }
         #endregion
 
-        #region 方法
         /// <summary>
-        /// 实现Invoke方法
+        /// invoke
         /// </summary>
-        /// <param name="context">http请求</param>
+        /// <param name="context">httpcontext</param>
         /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
@@ -55,10 +57,10 @@ namespace ModernWMS.Core.Middleware
             }
         }
         /// <summary>
-        /// 写入日志
+        /// Write Log
         /// </summary>
-        /// <param name="context">上下文</param>
-        /// <param name="e">错误信息</param>
+        /// <param name="context">httpcontext</param>
+        /// <param name="e">error messasge</param>
         /// <returns></returns>
         private async Task WriteExceptionAsync(HttpContext context, Exception e)
         {
@@ -73,9 +75,9 @@ namespace ModernWMS.Core.Middleware
                 {
                     ip = context.Connection.RemoteIpAddress.ToString();
                 }
-                logger.LogError($"\r\n\r\n主机IP:{ip},异常描述：{e.Message}\r\n堆栈信息：{e.StackTrace}");
+                logger.LogError($"\r\n\r\nIP:{ip},Exception：{e.Message}\r\nStackTrace：{e.StackTrace}");
 
-                string result = Utility.JsonHelper.SerializeObject(ResultModel<object>.Error("抱歉，操作失败了。请联系管理员。"));
+                string result = Utility.JsonHelper.SerializeObject(ResultModel<object>.Error(_stringLocalizer["operation_failed"]));
                 await context.Response.WriteAsync(result).ConfigureAwait(false);
             }
             else
@@ -89,16 +91,15 @@ namespace ModernWMS.Core.Middleware
                         return;
                     case 401:
                         context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync(Utility.JsonHelper.SerializeObject(ResultModel<object>.Error("Token无效"))).ConfigureAwait(false);
+                        await context.Response.WriteAsync(Utility.JsonHelper.SerializeObject(ResultModel<object>.Error("Invalid Token"))).ConfigureAwait(false);
                         break;
                     default:
                         context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync(Utility.JsonHelper.SerializeObject(ResultModel<object>.Error("未知错误"))).ConfigureAwait(false);
+                        await context.Response.WriteAsync(Utility.JsonHelper.SerializeObject(ResultModel<object>.Error("Unknown Error"))).ConfigureAwait(false);
                         break;
                 }
             }
         }
-        #endregion
 
     }
 }
