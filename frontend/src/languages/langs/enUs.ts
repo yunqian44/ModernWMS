@@ -96,7 +96,9 @@ export default {
     userName: 'UserName',
     password: 'Password',
     loginSuccess: 'Login succeeded!',
-    notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!'
+    notAuthority: 'Your account does not contain any menu, please contact the administrator to add it!',
+    registerTips: 'No account? Click here to register!',
+    register: 'Register'
   },
   homepage: {
     subTitle: 'Modern Warehouse Management System'
@@ -125,7 +127,10 @@ export default {
       restPwd: 'Reset password',
       checkboxIsNull: 'Please select data!',
       beforeResetPwd: 'Are you sure you want to reset the passwords of these users?',
-      afterResetPwd: 'Password reset succeeded!'
+      afterResetPwd: 'Password reset succeeded!',
+      user_register_name: 'User Name',
+      email: 'Email',
+      auth_string: 'Password'
     },
     warehouseSetting: {
       warehouseSetting: 'Warehouse Setting',
