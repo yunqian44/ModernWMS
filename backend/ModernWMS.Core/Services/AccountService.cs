@@ -40,7 +40,7 @@ namespace ModernWMS.Core.Services
         {
             var users = await (from user in _sqlDBContext.GetDbSet<userEntity>().AsNoTracking()
                                                 join ur in _sqlDBContext.GetDbSet<UserroleEntity>().AsNoTracking() on user.user_role equals ur.role_name
-                                                where user.tenant_id == currentUser.tenant_id&&(user.user_name == loginInput.user_name || user.user_num == loginInput.user_name)
+                                                where ur.tenant_id == user.tenant_id&&(user.user_name == loginInput.user_name || user.user_num == loginInput.user_name)
                                                 select new  {
                                                     user_id = user.id,
                                                     user_num = user.user_num,
