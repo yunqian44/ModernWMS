@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, watch, nextTick } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import i18n from '@/languages/i18n'
 import tabShipment from './tabShipment.vue'
 import tabPreShipment from './tabPreShipment.vue'
@@ -88,62 +88,62 @@ const tabSignInRef = ref()
 const tabsConfig = [
   {
     value: 'tabShipment',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-clipboard-list',
     tabName: i18n.global.t('wms.deliveryManagement.shipment')
   },
   {
     value: 'tabPreShipment',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-list-box-outline',
     tabName: i18n.global.t('wms.deliveryManagement.preShipment')
   },
   {
     value: 'tabNewShipment',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-list-box',
     tabName: i18n.global.t('wms.deliveryManagement.newShipment')
   },
   {
     value: 'tabGoodsToBePicked',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-dolly',
     tabName: i18n.global.t('wms.deliveryManagement.goodsToBePicked')
   },
   {
     value: 'tabPicked',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-human-dolly',
     tabName: i18n.global.t('wms.deliveryManagement.picked')
   },
   {
     value: 'tabToBePackaged',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-package-variant',
     tabName: i18n.global.t('wms.deliveryManagement.toBePackaged')
   },
   {
     value: 'tabPackaged',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-package-variant-closed-check',
     tabName: i18n.global.t('wms.deliveryManagement.packaged')
   },
   {
     value: 'tabToBeWeighed',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-basket-fill',
     tabName: i18n.global.t('wms.deliveryManagement.toBeWeighed')
   },
   {
     value: 'tabWeighed',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-weight',
     tabName: i18n.global.t('wms.deliveryManagement.weighed')
   },
   {
     value: 'tabToBeDelivered',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-send-outline',
     tabName: i18n.global.t('wms.deliveryManagement.toBeDelivered')
   },
   {
     value: 'tabDelivered',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-send',
     tabName: i18n.global.t('wms.deliveryManagement.outOfWarehouse')
   },
   {
     value: 'tabSignIn',
-    icon: 'mdi-warehouse',
+    icon: 'mdi-check-circle',
     tabName: i18n.global.t('wms.deliveryManagement.signedIn')
   }
 ]
