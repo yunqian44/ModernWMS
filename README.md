@@ -172,6 +172,14 @@
   ```
   打开浏览器，进入：http://127.0.0.1 或者 http://部署电脑的IP地址
   ```
+  <h4>
+    <a href="https://wmsonline.ikeyly.com">体验地址入口</a>
+  </h4>
+  
+  ![img1](https://cdn.nlark.com/yuque/0/2023/png/29533305/1673100274447-452600a8-3ed9-40b3-a923-5efc3706c998.png)
+  
+  ![img2](https://cdn.nlark.com/yuque/0/2023/png/29533305/1673100333075-5b538fba-cb4b-4862-8d50-d53eabca5b86.png?x-oss-process=image%2Fresize%2Cw_674%2Climit_0)
+
 ## Contact - 联系
 
 <h4>
