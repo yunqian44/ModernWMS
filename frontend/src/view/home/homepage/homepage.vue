@@ -29,7 +29,7 @@ import i18n from '@/languages/i18n'
 }
 
 .content {
-  width: 65%;
+  width: 60%;
 }
 
 .textBox {
@@ -40,10 +40,10 @@ import i18n from '@/languages/i18n'
   transform: translate(-50%, 0);
   letter-spacing: 5px;
   z-index: 999;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.mainTitle{
+.mainTitle {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -52,7 +52,7 @@ import i18n from '@/languages/i18n'
   font-size: 120px;
 }
 
-.subTitle{
+.subTitle {
   display: flex;
   justify-content: center;
   width: 100%;

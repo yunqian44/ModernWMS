@@ -66,7 +66,7 @@ import { hookComponent } from '@/components/system/index'
 import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { ImportVO } from '@/types/Base/UserManagement'
-import { exportTable } from '@/utils/exportTable'
+import { exportData } from '@/utils/exportTable'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -187,17 +187,13 @@ const method = reactive({
 
   exportTemplate: () => {
     const $table = xTable.value
-    try {
-      exportTable({
-        table: $table,
-        filename: i18n.global.t('router.sideBar.userManagement')
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.userManagement'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
 
   deleteRow: (row: ImportVO) => {
