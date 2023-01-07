@@ -151,6 +151,7 @@ import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import importTable from './import-table.vue'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -268,20 +269,13 @@ const method = reactive({
   // Export table
   exportTable: () => {
     const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('router.sideBar.userManagement'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.userManagement'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   // Reset password
   restPwd: async () => {

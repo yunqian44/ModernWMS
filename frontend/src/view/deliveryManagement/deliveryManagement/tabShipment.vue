@@ -163,6 +163,7 @@ import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import { TablePage } from '@/types/System/Form'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -366,20 +367,13 @@ const method = reactive({
   }),
   exportTable: () => {
     const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('wms.deliveryManagement.shipment'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('wms.deliveryManagement.shipment'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm, 1)

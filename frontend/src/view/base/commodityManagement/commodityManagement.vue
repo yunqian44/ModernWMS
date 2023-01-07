@@ -10,7 +10,7 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
-                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
+                <!-- <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn> -->
               </v-col>
 
               <!-- Search Input -->
@@ -195,6 +195,7 @@ import i18n from '@/languages/i18n'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -322,22 +323,16 @@ const method = reactive({
     })
   },
   // Export table
+  // The tree structure table cannot be exported
   exportTable: () => {
     const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('router.sideBar.commodityManagement'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.commodityManagement'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   // When change paging
   handlePageChange: ref<VxePagerEvents.PageChange>(({ currentPage, pageSize }) => {

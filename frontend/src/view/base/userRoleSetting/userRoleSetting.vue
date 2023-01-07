@@ -111,6 +111,7 @@ import { getUserRoleAll, deleteUserRole } from '@/api/base/userRoleSetting'
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-user-role.vue'
 import i18n from '@/languages/i18n'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -197,20 +198,13 @@ const method = reactive({
   // Export table
   exportTable: () => {
     const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('router.sideBar.userRoleSetting'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.userRoleSetting'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   }
 })
 
