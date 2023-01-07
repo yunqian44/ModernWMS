@@ -117,6 +117,7 @@ import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import { DEBOUNCE_TIME } from '@/constant/system'
 import { SearchObject } from '@/types/System/Form'
+import { exportData } from '@/utils/exportTable'
 
 const xTableGoodsLocation = ref()
 
@@ -233,20 +234,13 @@ const method = reactive({
   }),
   exportTable: () => {
     const $table = xTableGoodsLocation.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('base.warehouseSetting.locationSetting'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)

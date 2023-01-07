@@ -112,6 +112,7 @@ import i18n from '@/languages/i18n'
 import addOrUpdateNotice from './add-or-update-notice.vue'
 import customPager from '@/components/custom-pager.vue'
 import skuInfo from './sku-info.vue'
+import { exportData } from '@/utils/exportTable'
 
 const xTableStockLocation = ref()
 
@@ -261,20 +262,13 @@ const method = reactive({
   }),
   exportTable: () => {
     const $table = xTableStockLocation.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('wms.stockAsn.tabNotice'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('wms.stockAsn.tabNotice'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)

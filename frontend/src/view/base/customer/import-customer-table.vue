@@ -178,6 +178,7 @@ const method = reactive({
     exportData({
       table: $table,
       filename: i18n.global.t('router.sideBar.customer'),
+      mode: 'header',
       columnFilterMethod({ column }: any) {
         return !['checkbox', 'seq'].includes(column?.type) && !['operate'].includes(column?.field)
       }

@@ -21,11 +21,7 @@
                   <v-col cols="3" class="col">
                     <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')"></tooltip-btn>
                     <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')"></tooltip-btn>
-                    <tooltip-btn
-                      icon="mdi-export-variant"
-                      :tooltip-text="$t('system.page.export')"
-                      @click="method.exportTable"
-                    ></tooltip-btn>
+                    <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
                   </v-col>
 
                   <!-- Search Input -->
@@ -139,6 +135,7 @@ import { hookComponent } from '@/components/system'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -201,21 +198,14 @@ const method = reactive({
   }),
   exportTable: () => {
     const $table = xTable.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        // TODO Write filename according to your file.
-        filename: i18n.global.t('base.warehouseSetting.locationSetting'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      // TODO Write filename according to your file.
+      filename: i18n.global.t('base.warehouseSetting.locationSetting'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   }
 })
 

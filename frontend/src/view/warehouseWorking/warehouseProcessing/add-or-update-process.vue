@@ -150,6 +150,7 @@ import commoditySelect from '@/components/select/commodity-select.vue'
 import locationSelect from '@/components/select/location-select.vue'
 import skuSelect from '@/components/select/sku-select.vue'
 import tooltipBtn from '@/components/tooltip-btn.vue'
+import { exportData } from '@/utils/exportTable'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const xTableSource = ref()
@@ -347,20 +348,13 @@ const method = reactive({
   // Export table
   exportTable: (type: string) => {
     const $table = type === 'source' ? xTableSource.value : xTableTarget.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('router.sideBar.commodityManagement'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.commodityManagement'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
 
   submit: async () => {

@@ -109,6 +109,7 @@ import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
 import customPager from '@/components/custom-pager.vue'
 import skuInfo from './sku-info.vue'
+import { exportData } from '@/utils/exportTable'
 
 const xTableStockLocation = ref()
 
@@ -121,7 +122,7 @@ const data = reactive({
   },
   activeTab: null,
   tableData: ref<StockAsnVO[]>([]),
-    dialogForm: ref<StockAsnVO>({
+  dialogForm: ref<StockAsnVO>({
     id: 0,
     asn_no: '',
     asn_status: 0,
@@ -235,20 +236,13 @@ const method = reactive({
   }),
   exportTable: () => {
     const $table = xTableStockLocation.value
-    try {
-      $table.exportData({
-        type: 'csv',
-        filename: i18n.global.t('wms.stockAsn.tabToDoUnload'),
-        columnFilterMethod({ column }: any) {
-          return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
-        }
-      })
-    } catch (error) {
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-      })
-    }
+    $table.exportData({
+      table: $table,
+      filename: i18n.global.t('wms.stockAsn.tabToDoUnload'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type) && !['operate'].includes(column?.field)
+      }
+    })
   },
   sureSearch: () => {
     data.tablePage.searchObjects = setSearchObject(data.searchForm)
