@@ -87,7 +87,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(CategoryViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CategoryEntity>();
-            if (await DbSet.AsNoTracking().AnyAsync(t => t.category_name.Equals(viewModel.category_name)))
+            if (await DbSet.AsNoTracking().AnyAsync(t => t.tenant_id.Equals(currentUser.tenant_id) && t.category_name.Equals(viewModel.category_name)))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["category_name"], viewModel.category_name));
             }
@@ -122,7 +122,7 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
-            if (await DbSet.AsNoTracking().AnyAsync(t => !t.id.Equals(viewModel.id) && t.category_name.Equals(viewModel.category_name)))
+            if (await DbSet.AsNoTracking().AnyAsync(t => !t.id.Equals(viewModel.id) && t.tenant_id.Equals(entity.tenant_id) && t.category_name.Equals(viewModel.category_name)))
             {
                 return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["category_name"], viewModel.category_name));
             }

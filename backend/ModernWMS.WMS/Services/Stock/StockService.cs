@@ -80,12 +80,15 @@ namespace ModernWMS.WMS.Services
             var processdetail_DBSet = _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking();
             var move_DBSet = _dBContext.GetDbSet<StockmoveEntity>();
             var stock_group_datas = from stock in DbSet.AsNoTracking()
-                                    group stock by stock.sku_id into sg
+                                    join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on stock.goods_location_id equals gl.id 
+                                    group new { stock ,gl} by stock.sku_id into sg
                                     select new
                                     {
                                         sku_id = sg.Key,
-                                        qty_frozen = sg.Where(t => t.is_freeze == true).Sum(e => e.qty),
-                                        qty = sg.Sum(t => t.qty)
+                                        qty_frozen = sg.Where(t => t.stock.is_freeze == true).Sum(e => e.stock.qty),
+                                        qty = sg.Sum(t => t.stock.qty),
+                                        qty_normal = sg.Where(t=>t.gl.warehouse_area_property != 5).Sum(t=>t.stock.qty),
+                                        qty_normal_frozen = sg.Where(t=>t.gl.warehouse_area_property != 5 && t.stock.is_freeze == true).Sum(t=>t.stock.qty),
                                     };
             var asn_group_datas = from asn in asn_DBSet.AsNoTracking()
                                   group asn by asn.sku_id into ag
@@ -122,16 +125,18 @@ namespace ModernWMS.WMS.Services
                                               qty_locked = mg.Sum(t => t.qty)
                                           };
 
-            var query = from ag in asn_group_datas
-                        join sg in stock_group_datas on ag.sku_id equals sg.sku_id into sg_left
+            var query = from sku in sku_DBSet
+                        join  ag in asn_group_datas on sku.id equals ag.sku_id into ag_left
+                        from ag in ag_left.DefaultIfEmpty()
+                        join sg in stock_group_datas on sku.id equals sg.sku_id into sg_left
                         from sg in sg_left.DefaultIfEmpty()
+                        
                         join dp in dispatch_group_datas on sg.sku_id equals dp.sku_id into dp_left
                         from dp in dp_left.DefaultIfEmpty()
-                        join pl in process_locked_group_datas on ag.sku_id equals pl.sku_id into pl_left
+                        join pl in process_locked_group_datas on sku.id equals pl.sku_id into pl_left
                         from pl in pl_left.DefaultIfEmpty()
-                        join m in move_locked_group_datas on ag.sku_id equals m.sku_id into m_left
+                        join m in move_locked_group_datas on sku.id equals m.sku_id into m_left
                         from m in m_left.DefaultIfEmpty()
-                        join sku in sku_DBSet on ag.sku_id equals sku.id
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         select new StockManagementViewModel
                         {
@@ -140,16 +145,16 @@ namespace ModernWMS.WMS.Services
                             spu_code = spu.spu_code,
                             sku_code = sku.sku_code,
                             qty_asn = ag.qty_asn,
-                            qty_available = (sg.qty == null ? 0 : sg.qty) - (sg.qty_frozen == null ? 0 : sg.qty_frozen) - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_locked == null ? 0 : pl.qty_locked)- (m.qty_locked == null ? 0 : m.qty_locked),
+                            qty_available = (sg.qty_normal == null ? 0 : sg.qty_normal) - (sg.qty_normal_frozen == null ? 0 : sg.qty_normal_frozen) - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_locked == null ? 0 : pl.qty_locked)- (m.qty_locked == null ? 0 : m.qty_locked),
                             qty_frozen = sg.qty_frozen == null ? 0 : sg.qty_frozen,
                             qty_locked = (dp.qty_locked == null ? 0 : dp.qty_locked) + (pl.qty_locked == null ? 0 : pl.qty_locked) + (m.qty_locked == null ? 0:m.qty_locked),
-                            qty_sorted = ag.qty_sorted,
-                            qty_to_sort = ag.qty_to_sort,
-                            shortage_qty = ag.shortage_qty,
-                            qty_to_unload = ag.qty_to_unload,
+                            qty_sorted = ag.qty_sorted==null?0:ag.qty_sorted,
+                            qty_to_sort = ag.qty_to_sort == null ? 0 : ag.qty_to_sort,
+                            shortage_qty = ag.shortage_qty == null ? 0 : ag.shortage_qty,
+                            qty_to_unload = ag.qty_to_unload == null ? 0 : ag.qty_to_unload,
                             qty = sg.qty == null ? 0 : sg.qty,
                         };
-            query = query.Where(queries.AsExpression<StockManagementViewModel>());
+            query = query.Where(t=>t.qty_asn>0 || t.qty > 0).Where(queries.AsExpression<StockManagementViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderBy(t => t.sku_code)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)
@@ -247,7 +252,7 @@ namespace ModernWMS.WMS.Services
                             location_name = gl.location_name,
                             warehouse_name = gl.warehouse_name,
                         };
-            query = query.Where(queries.AsExpression<LocationStockManagementViewModel>());
+            query = query.Where(t => t.qty > 0).Where(queries.AsExpression<LocationStockManagementViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderBy(t => t.sku_code)
                        .Skip((pageSearch.pageIndex - 1) * pageSearch.pageSize)

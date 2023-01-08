@@ -246,7 +246,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(SpuBothViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<SpuEntity>();
-            if (await DbSet.AsNoTracking().AnyAsync(t => t.spu_code.Equals(viewModel.spu_code)))
+            if (await DbSet.AsNoTracking().AnyAsync(t => t.tenant_id.Equals(currentUser.tenant_id) && t.spu_code.Equals(viewModel.spu_code)))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["spu_code"], viewModel.spu_code));
             }
@@ -284,7 +284,7 @@ namespace ModernWMS.WMS.Services
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
             }
-            if (await DbSet.AsNoTracking().AnyAsync(t => !t.id.Equals(viewModel.id) && t.spu_code.Equals(viewModel.spu_code)))
+            if (await DbSet.AsNoTracking().AnyAsync(t => !t.id.Equals(viewModel.id) && t.tenant_id.Equals(entity.tenant_id) && t.spu_code.Equals(viewModel.spu_code)))
             {
                 return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["spu_code"], viewModel.spu_code));
             }
