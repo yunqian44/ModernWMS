@@ -176,6 +176,8 @@
     <a href="https://wmsonline.ikeyly.com">体验地址入口</a>
   </h4> 
 
+  ![image0.png](https://gitee.com/modernwms/ModernWMS/raw/develop/image0.png)
+
   ![image1.png](https://gitee.com/modernwms/ModernWMS/raw/develop/image1.png)
 
   ![image2.png](https://gitee.com/modernwms/ModernWMS/raw/develop/image2.png)

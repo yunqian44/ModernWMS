@@ -65,6 +65,7 @@ import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { WarehouseVO } from '@/types/Base/Warehouse'
 import { exportData } from '@/utils/exportTable'
+import { formatString } from '@/utils/format/formatSystem'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -155,12 +156,12 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            warehouse_name: ws[index][i18n.global.t('base.warehouseSetting.warehouse_name')],
-            city: ws[index][i18n.global.t('base.warehouseSetting.city')],
-            address: ws[index][i18n.global.t('base.warehouseSetting.address')],
-            contact_tel: ws[index][i18n.global.t('base.warehouseSetting.contact_tel')],
-            email: ws[index][i18n.global.t('base.warehouseSetting.email')],
-            manager: ws[index][i18n.global.t('base.warehouseSetting.manager')]
+            warehouse_name: formatString(ws[index][i18n.global.t('base.warehouseSetting.warehouse_name')]),
+            city: formatString(ws[index][i18n.global.t('base.warehouseSetting.city')]),
+            address: formatString(ws[index][i18n.global.t('base.warehouseSetting.address')]),
+            contact_tel: formatString(ws[index][i18n.global.t('base.warehouseSetting.contact_tel')]),
+            email: formatString(ws[index][i18n.global.t('base.warehouseSetting.email')]),
+            manager: formatString(ws[index][i18n.global.t('base.warehouseSetting.manager')])
           })
         })
       }

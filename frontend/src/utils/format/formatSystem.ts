@@ -10,3 +10,8 @@ export const formatDate = (value: string, format?: string) => {
   }
   return XEUtils.toDateString(date, format || 'yyyy-MM-dd HH:mm:ss')
 }
+
+export const formatString = (value: any): string => {
+  if (value == null) return ''
+  return value?.toString() || ''
+}
