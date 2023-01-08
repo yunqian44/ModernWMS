@@ -618,4 +618,19 @@
   <data name="login_failed" xml:space="preserve">
     <value>登录失败</value>
   </data>
+  <data name="dispatch_not_comfirm" xml:space="preserve">
+    <value>该库位存在未出库的发货单</value>
+  </data>
+  <data name="exist_location_not_delete" xml:space="preserve">
+    <value>该库区下已设置库位,不能删除</value>
+  </data>
+  <data name="exist_warehousearea_not_delete" xml:space="preserve">
+    <value>该仓库下已设置库区，不能删除</value>
+  </data>
+  <data name="move_not_comfirm" xml:space="preserve">
+    <value>该库位存在未确认的库存移动</value>
+  </data>
+  <data name="process_not_comfirm" xml:space="preserve">
+    <value>该库位存在未确认的仓内加工</value>
+  </data>
 </root>

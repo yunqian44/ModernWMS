@@ -118,10 +118,6 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(SupplierViewModel viewModel, CurrentUser currentUser) 
         {
             var DbSet = _dBContext.GetDbSet<SupplierEntity>();
-            if (await DbSet.AnyAsync(t => t.supplier_name == viewModel.supplier_name && t.tenant_id == currentUser.tenant_id))
-            {
-                return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
-            }
             var entity = viewModel.Adapt<SupplierEntity>();
              entity.id = 0;
              entity.create_time = DateTime.Now;
@@ -129,7 +125,11 @@ namespace ModernWMS.WMS.Services
              entity.last_update_time = DateTime.Now;
              entity.tenant_id = currentUser.tenant_id;
              await DbSet.AddAsync(entity);
-             await _dBContext.SaveChangesAsync();
+            if (await DbSet.AnyAsync(t => t.supplier_name == viewModel.supplier_name && t.tenant_id == currentUser.tenant_id))
+            {
+                return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], viewModel.supplier_name));
+            }
+            await _dBContext.SaveChangesAsync();
              if (entity.id > 0)
              {
                  return (entity.id, _stringLocalizer["save_success"]);

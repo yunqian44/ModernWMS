@@ -228,6 +228,10 @@ namespace ModernWMS.WMS.Services
         /// <returns></returns>
         public async Task<(bool flag, string msg)> DeleteAsync(int id)
         {
+            if (await _dBContext.GetDbSet < GoodslocationEntity>().AnyAsync(t=>t.warehouse_area_id  == id))
+            {
+                return (false, _stringLocalizer["exist_location_not_delete"]);
+            }
             var qty = await _dBContext.GetDbSet<WarehouseareaEntity>().Where(t => t.id.Equals(id)).ExecuteDeleteAsync();
             if (qty > 0)
             {

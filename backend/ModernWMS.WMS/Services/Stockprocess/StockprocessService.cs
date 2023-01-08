@@ -191,9 +191,9 @@ namespace ModernWMS.WMS.Services
                 ConstantExpression t_constan_owner = Expression.Constant(entity.detailList[i].goods_owner_id);
                 PropertyInfo t_prop_owner = typeof(StockEntity).GetProperty("goods_owner_id");
                 MemberExpression t_owner_exp = Expression.Property(parameterExpression, t_prop_owner);
-                BinaryExpression t_owner_full_exp = Expression.Equal(t_sku_exp, t_constan_owner);
+                BinaryExpression t_owner_full_exp = Expression.Equal(t_owner_exp, t_constan_owner);
                 var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
-                t_exp = Expression.And(t_exp, t_owner_exp);
+                t_exp = Expression.And(t_exp, t_owner_full_exp);
                 if (exp != null)
                     exp = Expression.Or(exp, t_exp);
                 else
