@@ -67,6 +67,7 @@ import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { ImportVO } from '@/types/Base/UserManagement'
 import { exportData } from '@/utils/exportTable'
+import { formatString } from '@/utils/format/formatSystem'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -145,6 +146,7 @@ const method = reactive({
   },
 
   chooseFile: async () => {
+    uploadExcel.value.value = ''
     uploadExcel.value.click()
   },
 
@@ -172,11 +174,11 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            user_num: ws[index][i18n.global.t('base.userManagement.user_num')] ? String(ws[index][i18n.global.t('base.userManagement.user_num')]) : '',
-            user_name: ws[index][i18n.global.t('base.userManagement.user_name')] ? String(ws[index][i18n.global.t('base.userManagement.user_name')]) : '',
-            contact_tel: ws[index][i18n.global.t('base.userManagement.contact_tel')] ? String(ws[index][i18n.global.t('base.userManagement.contact_tel')]) : '',
-            user_role: ws[index][i18n.global.t('base.userManagement.user_role')] ? String(ws[index][i18n.global.t('base.userManagement.user_role')]) : '',
-            sex: ws[index][i18n.global.t('base.userManagement.sex')] ? ws[index][i18n.global.t('base.userManagement.sex')] : '',
+            user_num: formatString(ws[index][i18n.global.t('base.userManagement.user_num')]),
+            user_name: formatString(ws[index][i18n.global.t('base.userManagement.user_name')]),
+            contact_tel: formatString(ws[index][i18n.global.t('base.userManagement.contact_tel')]),
+            user_role: formatString(ws[index][i18n.global.t('base.userManagement.user_role')]),
+            sex: formatString(ws[index][i18n.global.t('base.userManagement.sex')]),
             is_valid: true
           })
         })

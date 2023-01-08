@@ -131,6 +131,7 @@ const method = reactive({
   },
 
   chooseFile: async () => {
+    uploadExcel.value.value = ''
     uploadExcel.value.click()
   },
 

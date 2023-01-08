@@ -67,6 +67,7 @@ import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { ImportVO } from '@/types/Base/OwnerOfCargo'
 import { exportData } from '@/utils/exportTable'
+import { formatString } from '@/utils/format/formatSystem'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -130,6 +131,7 @@ const method = reactive({
   },
 
   chooseFile: async () => {
+    uploadExcel.value.value = ''
     uploadExcel.value.click()
   },
 
@@ -157,11 +159,11 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            goods_owner_name: String(ws[index][i18n.global.t('base.ownerOfCargo.goods_owner_name')]),
-            city: String(ws[index][i18n.global.t('base.ownerOfCargo.city')]),
-            address: String(ws[index][i18n.global.t('base.ownerOfCargo.address')]),
-            manager: String(ws[index][i18n.global.t('base.ownerOfCargo.manager')]),
-            contact_tel: String(ws[index][i18n.global.t('base.ownerOfCargo.contact_tel')])
+            goods_owner_name: formatString(ws[index][i18n.global.t('base.ownerOfCargo.goods_owner_name')]),
+            city: formatString(ws[index][i18n.global.t('base.ownerOfCargo.city')]),
+            address: formatString(ws[index][i18n.global.t('base.ownerOfCargo.address')]),
+            manager: formatString(ws[index][i18n.global.t('base.ownerOfCargo.manager')]),
+            contact_tel: formatString(ws[index][i18n.global.t('base.ownerOfCargo.contact_tel')])
           })
         })
       }
