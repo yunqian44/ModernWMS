@@ -1,12 +1,16 @@
 import XEUtils from 'xe-utils'
 import { SearchObject, SearchOperator } from '@/types/System/Form'
 
-export const setSearchObject = (searchForm: any, operator: number = SearchOperator.INCLUDE) => {
+export const setSearchObject = (searchForm: any, preciseSearchCols: string[] = []) => {
   const searchObjects: Array<SearchObject> = []
   try {
     for (const key in searchForm) {
       const str = key as string
       const searchValue = searchForm[str as keyof typeof searchForm]
+      let operator = SearchOperator.INCLUDE
+      if (preciseSearchCols.includes(key)) {
+        operator = SearchOperator.EQUAL
+      }
 
       if (searchValue && searchValue.trim() !== '') {
         searchObjects.push({

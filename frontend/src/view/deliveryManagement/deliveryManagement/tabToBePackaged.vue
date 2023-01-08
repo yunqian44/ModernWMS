@@ -84,10 +84,10 @@
         </template>
       </vxe-column>
       <!-- <vxe-column field="package_person" :title="$t('wms.deliveryManagement.package_person')"></vxe-column>
-      <vxe-column field="package_time" width="170px" :title="$t('wms.deliveryManagement.package_time')" :formatter="['formatDate']"></vxe-column> -->
+      <vxe-column field="package_time" width="170px" :title="$t('wms.deliveryManagement.package_time')"></vxe-column> -->
       <vxe-column field="customer_name" :title="$t('wms.deliveryManagement.customer_name')"></vxe-column>
       <vxe-column field="creator" :title="$t('wms.deliveryManagement.creator')"></vxe-column>
-      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')" :formatter="['formatDate']"></vxe-column>
+      <vxe-column field="create_time" width="170px" :title="$t('wms.deliveryManagement.create_time')"></vxe-column>
       <vxe-column field="operate" :title="$t('system.page.operate')" width="140" :resizable="false" show-overflow>
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
@@ -118,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
@@ -134,6 +134,7 @@ import { setSearchObject } from '@/utils/common'
 import { TablePage } from '@/types/System/Form'
 import SearchDeliveredDetail from './search-delivered-detail.vue'
 import { exportData } from '@/utils/exportTable'
+import { DEBOUNCE_TIME } from '@/constant/system'
 
 const xTable = ref()
 
@@ -151,6 +152,7 @@ const data = reactive({
     customer_name: '',
     spu_name: ''
   },
+  timer: ref<any>(null),
   activeTab: null,
   tableData: ref<DeliveryManagementDetailVO[]>([]),
   tablePage: ref<TablePage>({
@@ -244,6 +246,23 @@ const method = reactive({
 
 const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 
 defineExpose({
   getToBePackaged: method.getToBePackaged

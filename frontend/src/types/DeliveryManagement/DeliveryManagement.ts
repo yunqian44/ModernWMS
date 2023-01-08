@@ -103,4 +103,5 @@ export interface SetCarrierVO {
   dispatch_status: number
   freightfee_id: number
   carrier: string
+  waybill_no: string
 }
