@@ -132,6 +132,7 @@ import { hookComponent } from '@/components/system/index'
 import { addGoodsLocation, updateGoodsLocation, getWarehouseSelect, getWarehouseAreaSelect } from '@/api/base/warehouseSetting'
 import { GoodsLocationVO, AreaProperty } from '@/types/Base/Warehouse'
 import i18n from '@/languages/i18n'
+import { StringLength, IsDecimal } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -169,24 +170,27 @@ const data = reactive({
   }),
   rules: {
     warehouse_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
     ],
     warehouse_area_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
     ],
     warehouse_area_property: [],
     location_name: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.location_name') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.location_name') }!`,
+      (val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)
     ],
-    location_length: [],
-    location_width: [],
-    location_heigth: [],
-    location_volume: [],
-    location_load: [],
-    roadway_number: [],
-    shelf_number: [],
-    layer_number: [],
-    tag_number: [],
+    location_length: [(val: number) => IsDecimal(val, 'nonNegative', 5, 2) === '' || IsDecimal(val, 'nonNegative', 5, 2)],
+    location_width: [(val: number) => IsDecimal(val, 'nonNegative', 5, 2) === '' || IsDecimal(val, 'nonNegative', 5, 2)],
+    location_heigth: [(val: number) => IsDecimal(val, 'nonNegative', 5, 2) === '' || IsDecimal(val, 'nonNegative', 5, 2)],
+    location_volume: [(val: number) => IsDecimal(val, 'nonNegative', 12, 2) === '' || IsDecimal(val, 'nonNegative', 12, 2)],
+    location_load: [(val: number) => IsDecimal(val, 'nonNegative', 8, 2) === '' || IsDecimal(val, 'nonNegative', 8, 2)],
+    roadway_number: [(val: string) => StringLength(val, 0, 10) === '' || StringLength(val, 0, 10)],
+    shelf_number: [(val: string) => StringLength(val, 0, 10) === '' || StringLength(val, 0, 10)],
+    layer_number: [(val: string) => StringLength(val, 0, 10) === '' || StringLength(val, 0, 10)],
+    tag_number: [(val: string) => StringLength(val, 0, 10) === '' || StringLength(val, 0, 10)],
     is_valid: []
   },
   combobox: ref<{

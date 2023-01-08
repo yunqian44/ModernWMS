@@ -5,6 +5,7 @@
       <v-col cols="3" class="col">
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
+        <tooltip-btn icon="mdi-cube-send" :tooltip-text="$t('wms.deliveryManagement.delivery')" @click="method.handleDeliver"> </tooltip-btn>
       </v-col>
 
       <!-- Search Input -->
@@ -63,6 +64,7 @@
         {{ i18n.global.t('system.page.noData') }}
       </template>
       <vxe-column type="seq" width="60"></vxe-column>
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
       <vxe-column field="spu_description" :title="$t('wms.deliveryManagement.spu_description')"></vxe-column>
@@ -94,12 +96,12 @@
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
-            <tooltip-btn
+            <!-- <tooltip-btn
               :flat="true"
               icon="mdi-cube-send"
               :tooltip-text="$t('wms.deliveryManagement.delivery')"
               @click="method.handleDeliver(row)"
-            ></tooltip-btn>
+            ></tooltip-btn> -->
           </div>
         </template>
       </vxe-column>
@@ -168,32 +170,40 @@ const method = reactive({
     data.showDeliveredDetailID = row.id
     data.showDeliveredDetail = true
   },
-  handleDeliver: async (row: DeliveryManagementDetailVO) => {
-    hookComponent.$dialog({
-      content: `${ i18n.global.t('wms.deliveryManagement.irreversible') }, ${ i18n.global.t('wms.deliveryManagement.confirmDelivery') }?`,
-      handleConfirm: async () => {
-        const { data: res } = await handleDelivery([
-          {
-            id: row.id,
-            dispatch_no: row.dispatch_no,
-            dispatch_status: row.dispatch_status,
-            picked_qty: row.picked_qty
+  handleDeliver: async () => {
+    const $table = xTable.value
+    const checkTableList = $table.getCheckboxRecords()
+    if (checkTableList.length > 0) {
+      const deliveredList = checkTableList.map((row: DeliveryManagementDetailVO) => ({
+          id: row.id,
+          dispatch_no: row.dispatch_no,
+          dispatch_status: row.dispatch_status,
+          picked_qty: row.picked_qty
+        }))
+      hookComponent.$dialog({
+        content: `${ i18n.global.t('wms.deliveryManagement.irreversible') }, ${ i18n.global.t('wms.deliveryManagement.confirmDelivery') }?`,
+        handleConfirm: async () => {
+          const { data: res } = await handleDelivery(deliveredList)
+          if (!res.isSuccess) {
+            hookComponent.$message({
+              type: 'error',
+              content: res.errorMessage
+            })
+            return
           }
-        ])
-        if (!res.isSuccess) {
           hookComponent.$message({
-            type: 'error',
-            content: res.errorMessage
+            type: 'success',
+            content: res.data
           })
-          return
+          method.refresh()
         }
-        hookComponent.$message({
-          type: 'success',
-          content: res.data
-        })
-        method.refresh()
-      }
-    })
+      })
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('base.userManagement.checkboxIsNull') }`
+      })
+    }
   },
   // Refresh data
   refresh: () => {

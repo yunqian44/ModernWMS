@@ -33,6 +33,7 @@ import { WarehouseTakingVO } from '@/types/WarehouseWorking/WarehouseTaking'
 import { removeObjectNull } from '@/utils/common'
 import { TAKING_JOB_FINISH } from '@/constant/warehouseWorking'
 import i18n from '@/languages/i18n'
+import { IsInteger } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -72,7 +73,8 @@ const data = reactive({
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.book_qty') }!`
     ],
     counted_qty: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.counted_qty') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseTaking.counted_qty') }!`,
+      (val: number) => IsInteger(val, 'nonNegative') === '' || IsInteger(val, 'nonNegative')
     ]
   }
 })

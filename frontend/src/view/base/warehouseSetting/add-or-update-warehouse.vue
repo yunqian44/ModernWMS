@@ -71,6 +71,7 @@ import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addWarehouse, updateWarehouse } from '@/api/base/warehouseSetting'
 import { WarehouseVO } from '@/types/Base/Warehouse'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -101,12 +102,21 @@ const data = reactive({
     is_valid: true
   }),
   rules: {
-    warehouse_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`],
-    city: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.city') }!`],
-    address: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.address') }!`],
-    contact_tel: [],
-    email: [],
-    manager: [],
+    warehouse_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
+    ],
+    city: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.city') }!`,
+      (val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)
+    ],
+    address: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.address') }!`,
+      (val: string) => StringLength(val, 0, 256) === '' || StringLength(val, 0, 256)
+    ],
+    contact_tel: [(val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)],
+    email: [(val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)],
+    manager: [(val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)],
     is_valid: []
   }
 })

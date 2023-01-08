@@ -57,6 +57,7 @@ import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addWarehouseArea, updateWarehouseArea, getWarehouseSelect } from '@/api/base/warehouseSetting'
 import { WarehouseAreaVO, AreaProperty } from '@/types/Base/Warehouse'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -89,7 +90,10 @@ const data = reactive({
     warehouse_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.warehouse_name') }!`
     ],
-    area_name: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`],
+    area_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_name') }!`,
+      (val: string) => StringLength(val, 0, 32) === '' || StringLength(val, 0, 32)
+    ],
     area_property: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.warehouseSetting.area_property') }!`
     ],

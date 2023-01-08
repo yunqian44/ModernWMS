@@ -101,6 +101,7 @@ import { WarehouseMoveVO, MoveStatus } from '@/types/WarehouseWorking/WarehouseM
 import { removeObjectNull } from '@/utils/common'
 import commoditySelect from '@/components/select/commodity-select.vue'
 import locationSelect from '@/components/select/location-select.vue'
+import { IsInteger } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -146,6 +147,7 @@ const data = reactive({
   rules: {
     qty: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseMove.qty') }!`,
+      (val: number) => IsInteger(val, 'greaterThanZero') === '' || IsInteger(val, 'greaterThanZero'),
       (val: string) => method.validQty(val)
     ],
     orig_goods_warehouse: [

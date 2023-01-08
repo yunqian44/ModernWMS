@@ -88,6 +88,7 @@ import { addStockAdjust } from '@/api/wms/warehouseAdjust'
 import { WarehouseAdjustVO, AdjustJobType } from '@/types/WarehouseWorking/WarehouseAdjust'
 import { removeObjectNull } from '@/utils/common'
 import commoditySelect from '@/components/select/commodity-select.vue'
+import { IsInteger } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -128,7 +129,10 @@ const data = reactive({
   }),
   rules: {
     job_type: [],
-    qty: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.qty') }!`],
+    qty: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.qty') }!`,
+      (val: number) => IsInteger(val, 'greaterThanZero') === '' || IsInteger(val, 'greaterThanZero')
+    ],
     warehouse_name: [
       (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseAdjust.warehouse') }!`
     ],
