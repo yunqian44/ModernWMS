@@ -513,6 +513,7 @@ namespace ModernWMS.WMS.Services
             var owner_DBSet = _dBContext.GetDbSet<GoodsownerEntity>();
             var location_DBSet = _dBContext.GetDbSet<GoodslocationEntity>();
             var stock_group_datas = from stock in stock_DbSet.AsNoTracking()
+                                    join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on stock.goods_location_id equals gl.id
                                     group stock by new { stock.id, stock.sku_id, stock.goods_location_id, stock.goods_owner_id } into sg
                                     select new
                                     {
@@ -567,7 +568,7 @@ namespace ModernWMS.WMS.Services
                                join spu in spu_DBSet on sku.spu_id equals spu.id
                                join owner in owner_DBSet.AsNoTracking() on sg.goods_owner_id equals owner.id into owner_left
                                from owner in owner_left.DefaultIfEmpty()
-                               join gl in location_DBSet.AsNoTracking() on sg.goods_location_id equals gl.id into gl_left
+                               join gl in location_DBSet.Where(t=>t.warehouse_area_property != 5).AsNoTracking() on sg.goods_location_id equals gl.id into gl_left
                                from gl in gl_left.DefaultIfEmpty()
                                where dl.dispatch_no == dispatch_no && dl.tenant_id == currentUser.tenant_id && (dl.dispatch_status == 0 || dl.dispatch_status == 1)
                                select new

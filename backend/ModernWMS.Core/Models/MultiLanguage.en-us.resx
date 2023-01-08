@@ -618,4 +618,19 @@
   <data name="login_failed" xml:space="preserve">
     <value>Login failed</value>
   </data>
+  <data name="exist_location_not_delete" xml:space="preserve">
+    <value>The warehouse location has been set under this warehouse area and cannot be deleted</value>
+  </data>
+  <data name="exist_warehousearea_not_delete" xml:space="preserve">
+    <value>The warehouse area has been set under this warehouse and cannot be deleted</value>
+  </data>
+  <data name="dispatch_not_comfirm" xml:space="preserve">
+    <value>There are un issued shipment documents</value>
+  </data>
+  <data name="move_not_comfirm" xml:space="preserve">
+    <value>There are unconfirmed inventory movements in this location</value>
+  </data>
+  <data name="process_not_comfirm" xml:space="preserve">
+    <value>There are unconfirmed warehouse processings</value>
+  </data>
 </root>

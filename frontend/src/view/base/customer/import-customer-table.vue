@@ -81,7 +81,8 @@ const isShow = computed(() => props.showDialog)
 
 const data = reactive({
   importData: ref<Array<CustomerExcelVO>>([]),
-  validRules: ref<VxeTablePropTypes.EditRules>({})
+  validRules: ref<VxeTablePropTypes.EditRules>({}),
+  eMsg: ''
 })
 
 const method = reactive({
@@ -103,9 +104,17 @@ const method = reactive({
 
     const { data: res } = await excelImport(importData)
     if (!res.isSuccess) {
+      data.eMsg = ''
+      if (res.data.length > 0) {
+        for (const item of res.data) {
+          if (item.errorMsg) {
+            data.eMsg = data.eMsg ? data.eMsg + ',' + item.errorMsg : item.errorMsg
+          }
+        }
+      }
       hookComponent.$message({
         type: 'error',
-        content: res.errorMessage
+        content: data.eMsg
       })
       return
     }
@@ -158,12 +167,12 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            customer_name: ws[index][i18n.global.t('base.customer.customer_name')],
-            city: ws[index][i18n.global.t('base.customer.city')],
-            address: ws[index][i18n.global.t('base.customer.address')],
-            manager: ws[index][i18n.global.t('base.customer.manager')],
-            email: ws[index][i18n.global.t('base.customer.email')],
-            contact_tel: ws[index][i18n.global.t('base.customer.contact_tel')],
+            customer_name: ws[index][i18n.global.t('base.customer.customer_name')] + '',
+            city: ws[index][i18n.global.t('base.customer.city')] + '',
+            address: ws[index][i18n.global.t('base.customer.address')] + '',
+            manager: ws[index][i18n.global.t('base.customer.manager')] + '',
+            email: ws[index][i18n.global.t('base.customer.email')] + '',
+            contact_tel: ws[index][i18n.global.t('base.customer.contact_tel')] + '',
             _XID: '',
             errorMsg: ''
           })

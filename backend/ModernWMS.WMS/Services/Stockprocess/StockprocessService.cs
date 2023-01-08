@@ -191,9 +191,9 @@ namespace ModernWMS.WMS.Services
                 ConstantExpression t_constan_owner = Expression.Constant(entity.detailList[i].goods_owner_id);
                 PropertyInfo t_prop_owner = typeof(StockEntity).GetProperty("goods_owner_id");
                 MemberExpression t_owner_exp = Expression.Property(parameterExpression, t_prop_owner);
-                BinaryExpression t_owner_full_exp = Expression.Equal(t_sku_exp, t_constan_owner);
+                BinaryExpression t_owner_full_exp = Expression.Equal(t_owner_exp, t_constan_owner);
                 var t_exp = Expression.And(t_location_full_exp, t_sku_full_exp);
-                t_exp = Expression.And(t_exp, t_owner_exp);
+                t_exp = Expression.And(t_exp, t_owner_full_exp);
                 if (exp != null)
                     exp = Expression.Or(exp, t_exp);
                 else
@@ -218,7 +218,7 @@ namespace ModernWMS.WMS.Services
             entity.creator = currentUser.user_name;
             entity.last_update_time = DateTime.Now;
             entity.tenant_id = currentUser.tenant_id;
-            entity.job_code = await GetOrderCode();
+            entity.job_code = await GetOrderCode(currentUser);
             await DbSet.AddAsync(entity);
             foreach (var d in entity.detailList)
             {
@@ -411,11 +411,11 @@ namespace ModernWMS.WMS.Services
         /// get next order code number
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetOrderCode()
+        public async Task<string> GetOrderCode(CurrentUser currentUser)
         {
             string code;
             string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
-            string maxNo = await _dBContext.GetDbSet<StockprocessEntity>().MaxAsync(t => t.job_code);
+            string maxNo = await _dBContext.GetDbSet<StockprocessEntity>().AsNoTracking().Where(t=>t.tenant_id == currentUser.tenant_id).MaxAsync(t => t.job_code);
             if (maxNo == null) 
             {
                 code = date + "-0001";
