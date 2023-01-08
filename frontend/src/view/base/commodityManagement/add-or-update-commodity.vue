@@ -186,10 +186,7 @@
                       <vxe-input v-model="row.height" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')" :edit-render="{ autofocus: '.vxe-input--inner' }">
-                    <template #edit="{ row }">
-                      <vxe-input v-model="row.volume" type="text"></vxe-input>
-                    </template>
+                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')">
                   </vxe-column>
                   <vxe-column field="cost" :title="$t('base.commodityManagement.cost')" :edit-render="{ autofocus: '.vxe-input--inner' }">
                     <template #edit="{ row }">

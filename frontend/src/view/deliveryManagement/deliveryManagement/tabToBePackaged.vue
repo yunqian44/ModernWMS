@@ -5,6 +5,7 @@
       <v-col cols="3" class="col">
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
+        <tooltip-btn icon="mdi-package-down" :tooltip-text="$t('wms.deliveryManagement.package')" @click="method.handlePackage"> </tooltip-btn>
       </v-col>
 
       <!-- Search Input -->
@@ -63,7 +64,7 @@
         {{ i18n.global.t('system.page.noData') }}
       </template>
       <vxe-column type="seq" width="60"></vxe-column>
-      <!-- <vxe-column type="checkbox" width="50"></vxe-column> -->
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
       <vxe-column field="spu_description" :title="$t('wms.deliveryManagement.spu_description')"></vxe-column>
@@ -92,12 +93,12 @@
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
-            <tooltip-btn
+            <!-- <tooltip-btn
               :flat="true"
               icon="mdi-package-down"
               :tooltip-text="$t('wms.deliveryManagement.package')"
               @click="method.handlePackage(row)"
-            ></tooltip-btn>
+            ></tooltip-btn> -->
           </div>
         </template>
       </vxe-column>
@@ -113,7 +114,8 @@
     >
     </custom-pager>
     <SearchDeliveredDetail :id="data.showDeliveredDetailID" :show-dialog="data.showDeliveredDetail" @close="method.closeDeliveredDetail" />
-    <ToBePackageConfirm :show-dialog="data.showDialog" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    <!-- <ToBePackageConfirm :show-dialog="data.showDialog" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" /> -->
+    <PackageConfirm :show-dialog="data.showDialog" :is-weight="false" :data-list="data.confirmList" @close="method.dialogClose" @submit="method.dialogSubmit" />
   </div>
 </template>
 
@@ -121,13 +123,14 @@
 import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
-import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO, ConfirmItem } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { getToBePackaged, handlePackage } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
-import ToBePackageConfirm from './to-be-package-confirm.vue'
+// import ToBePackageConfirm from './to-be-package-confirm.vue'
+import PackageConfirm from './package-confirm.vue'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
@@ -142,6 +145,7 @@ const data = reactive({
   showDeliveredDetailID: 0,
   showDeliveredDetail: false,
   showDialog: false,
+  confirmList: ref<ConfirmItem[]>([]),
   dialogMaxQty: 0,
   packageRow: ref<DeliveryManagementDetailVO>(),
   dialogForm: {
@@ -175,36 +179,61 @@ const method = reactive({
     data.showDialog = false
   },
   // Callback after entering packaging value
-  dialogSubmit: async (qty: number) => {
-    if (data.packageRow) {
-      const { data: res } = await handlePackage([
-        {
-          id: data.packageRow.id,
-          dispatch_no: data.packageRow.dispatch_no,
-          dispatch_status: data.packageRow.dispatch_status,
-          package_qty: qty,
-          picked_qty: data.packageRow.picked_qty
-        }
-      ])
-      if (!res.isSuccess) {
-        hookComponent.$message({
-          type: 'error',
-          content: res.errorMessage
-        })
-        return
-      }
+  dialogSubmit: async (list: ConfirmItem[]) => {
+    const packList = list.map((item) => ({
+      id: item.id,
+      dispatch_no: item.dispatch_no,
+      dispatch_status: item.dispatch_status,
+      package_qty: item.qty,
+      picked_qty: item.picked_qty
+    }))
+    const { data: res } = await handlePackage(packList)
+    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'success',
-        content: res.data
+        type: 'error',
+        content: res.errorMessage
       })
-      method.dialogClose()
-      method.refresh()
+      return
     }
+    hookComponent.$message({
+      type: 'success',
+      content: res.data
+    })
+    method.dialogClose()
+    method.refresh()
   },
-  handlePackage: async (row: DeliveryManagementDetailVO) => {
-    data.packageRow = row
-    data.dialogMaxQty = row.unpackage_qty ? row.unpackage_qty : 0
-    data.showDialog = true
+  // handlePackage: async (row: DeliveryManagementDetailVO) => {
+  //   data.packageRow = row
+  //   data.dialogMaxQty = row.unpackage_qty ? row.unpackage_qty : 0
+  //   data.showDialog = true
+  // },
+  handlePackage: async () => {
+    const $table = xTable.value
+    const checkTableList = $table.getCheckboxRecords()
+    const confirmList: ConfirmItem[] = []
+    if (checkTableList.length > 0) {
+      // Processing the data required by the window
+      for (const item of checkTableList) {
+        confirmList.push({
+          id: item.id,
+          spu_name: item.spu_name,
+          spu_code: item.spu_code,
+          sku_code: item.sku_code,
+          maxQty: item.unpackage_qty,
+          qty: item.unpackage_qty,
+          dispatch_no: item.dispatch_no,
+          dispatch_status: item.dispatch_status,
+          picked_qty: item.picked_qty
+        })
+      }
+      data.confirmList = confirmList
+      data.showDialog = true
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('base.userManagement.checkboxIsNull') }`
+      })
+    }
   },
   // Refresh data
   refresh: () => {

@@ -528,7 +528,9 @@ export default {
       setFreight: 'Set Carrier',
       departure_city: 'Originating city',
       arrival_city: 'City of arrival',
-      ViewInventoryDetails: 'View product details'
+      ViewInventoryDetails: 'View product details',
+      invalidValue: 'Please enter a valid value',
+      exceedingQuantity: 'Cannot exceed the total quantity'
     }
   }
 }

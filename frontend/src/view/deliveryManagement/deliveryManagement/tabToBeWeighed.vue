@@ -5,6 +5,7 @@
       <v-col cols="3" class="col">
         <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh"></tooltip-btn>
         <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"> </tooltip-btn>
+        <tooltip-btn icon="mdi-weight" :tooltip-text="$t('wms.deliveryManagement.weigh')" @click="method.handleWeigh"> </tooltip-btn>
       </v-col>
 
       <!-- Search Input -->
@@ -63,6 +64,7 @@
         {{ i18n.global.t('system.page.noData') }}
       </template>
       <vxe-column type="seq" width="60"></vxe-column>
+      <vxe-column type="checkbox" width="50"></vxe-column>
       <!-- <vxe-column field="weighing_no" :title="$t('wms.deliveryManagement.weighing_no')"></vxe-column> -->
       <vxe-column field="dispatch_no" :title="$t('wms.deliveryManagement.dispatch_no')"></vxe-column>
       <vxe-column field="spu_code" :title="$t('wms.deliveryManagement.spu_code')"></vxe-column>
@@ -96,12 +98,12 @@
         <template #default="{ row }">
           <div style="width: 100%; display: flex; justify-content: center">
             <tooltip-btn :flat="true" icon="mdi-eye-outline" :tooltip-text="$t('system.page.view')" @click="method.viewRow(row)"></tooltip-btn>
-            <tooltip-btn
+            <!-- <tooltip-btn
               :flat="true"
               icon="mdi-weight"
               :tooltip-text="$t('wms.deliveryManagement.weigh')"
               @click="method.handleWeigh(row)"
-            ></tooltip-btn>
+            ></tooltip-btn> -->
           </div>
         </template>
       </vxe-column>
@@ -116,15 +118,16 @@
       @page-change="method.handlePageChange"
     >
     </custom-pager>
-    <ToBeWeighedConfirm
+    <!-- <ToBeWeighedConfirm
       :show-dialog="data.showDialog"
       :default-weight="data.defaultWeight"
       :max-qty="data.dialogMaxQty"
       :weight-unit="data.dialogWeightUnit"
       @close="method.dialogClose"
       @submit="method.dialogSubmit"
-    />
+    /> -->
     <SearchDeliveredDetail :id="data.showDeliveredDetailID" :show-dialog="data.showDeliveredDetail" @close="method.closeDeliveredDetail" />
+    <WeightConfirm :show-dialog="data.showDialog" :is-weight="true" :data-list="data.confirmList" @close="method.dialogClose" @submit="method.dialogSubmit" />
   </div>
 </template>
 
@@ -132,13 +135,12 @@
 import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
-import { DeliveryManagementDetailVO } from '@/types/DeliveryManagement/DeliveryManagement'
+import { DeliveryManagementDetailVO, ConfirmItem } from '@/types/DeliveryManagement/DeliveryManagement'
 import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { hookComponent } from '@/components/system'
 import { getToBeWeighed, handleWeigh } from '@/api/wms/deliveryManagement'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import i18n from '@/languages/i18n'
-import ToBeWeighedConfirm from './to-be-weighed-confirm.vue'
 import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
@@ -146,6 +148,7 @@ import { TablePage } from '@/types/System/Form'
 import SearchDeliveredDetail from './search-delivered-detail.vue'
 import { exportData } from '@/utils/exportTable'
 import { DEBOUNCE_TIME } from '@/constant/system'
+import WeightConfirm from './package-confirm.vue'
 
 const xTable = ref()
 
@@ -153,6 +156,7 @@ const data = reactive({
   showDeliveredDetailID: 0,
   showDeliveredDetail: false,
   showDialog: false,
+  confirmList: ref<ConfirmItem[]>([]),
   dialogMaxQty: 0,
   dialogWeightUnit: '',
   defaultWeight: 0,
@@ -185,18 +189,17 @@ const method = reactive({
     data.showDialog = false
   },
   // Callback after entering packaging value
-  dialogSubmit: async (obj: { weighing_qty: number; weighing_weight: number }) => {
-    if (data.weighedRow) {
-      const { data: res } = await handleWeigh([
-        {
-          id: data.weighedRow.id,
-          dispatch_no: data.weighedRow.dispatch_no,
-          dispatch_status: data.weighedRow.dispatch_status,
-          weighing_qty: obj.weighing_qty,
-          weighing_weight: obj.weighing_weight,
-          picked_qty: data.weighedRow.picked_qty
-        }
-      ])
+  dialogSubmit: async (list: ConfirmItem[]) => {
+    const packList = list.map((item) => ({
+      id: item.id,
+      dispatch_no: item.dispatch_no,
+      dispatch_status: item.dispatch_status,
+      weighing_qty: item.qty,
+      weighing_weight: item.weight,
+      picked_qty: item.picked_qty
+    }))
+    // if (data.weighedRow) {
+      const { data: res } = await handleWeigh(packList)
       if (!res.isSuccess) {
         hookComponent.$message({
           type: 'error',
@@ -210,14 +213,42 @@ const method = reactive({
       })
       method.dialogClose()
       method.refresh()
-    }
+    // }
   },
-  handleWeigh: async (row: DeliveryManagementDetailVO) => {
-    data.weighedRow = row
-    data.dialogWeightUnit = row.weight_unit !== undefined ? GetUnit('weight', row.weight_unit) : ''
-    data.dialogMaxQty = row.unweighing_qty ? row.unweighing_qty : 0
-    data.defaultWeight = row.weight ? row.weight : 0
-    data.showDialog = true
+  handleWeigh: async () => {
+    const $table = xTable.value
+    const checkTableList = $table.getCheckboxRecords()
+    const confirmList: ConfirmItem[] = []
+    if (checkTableList.length > 0) {
+      // Processing the data required by the window
+      for (const item of checkTableList) {
+        confirmList.push({
+          id: item.id,
+          spu_name: item.spu_name,
+          spu_code: item.spu_code,
+          sku_code: item.sku_code,
+          maxQty: item.unweighing_qty,
+          qty: item.unweighing_qty,
+          weight: item.weight,
+          weight_unit: GetUnit('weight', item.weight_unit),
+          dispatch_no: item.dispatch_no,
+          dispatch_status: item.dispatch_status,
+          picked_qty: item.picked_qty
+        })
+      }
+      data.confirmList = confirmList
+      data.showDialog = true
+    } else {
+      hookComponent.$message({
+        type: 'error',
+        content: `${ i18n.global.t('base.userManagement.checkboxIsNull') }`
+      })
+    }
+    // data.weighedRow = row
+    // data.dialogWeightUnit = row.weight_unit !== undefined ? GetUnit('weight', row.weight_unit) : ''
+    // data.dialogMaxQty = row.unweighing_qty ? row.unweighing_qty : 0
+    // data.defaultWeight = row.weight ? row.weight : 0
+    // data.showDialog = true
   },
   // Refresh data
   refresh: () => {
