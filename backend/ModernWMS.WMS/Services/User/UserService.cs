@@ -234,7 +234,7 @@ namespace ModernWMS.WMS.Services
                 return (false,sb.ToString());
             }
 
-            var user_num_repeat_exists =await DbSet.Where(t => datas.Select(t => t.user_num).ToList().Contains(t.user_num)).Select(t=>t.user_num).ToListAsync();
+            var user_num_repeat_exists =await DbSet.Where(t=>t.tenant_id == currentUser.tenant_id).Where(t => datas.Select(t => t.user_num).ToList().Contains(t.user_num)).Select(t=>t.user_num).ToListAsync();
             foreach (var repeat in user_num_repeat_exists)
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["user_num"], repeat));
