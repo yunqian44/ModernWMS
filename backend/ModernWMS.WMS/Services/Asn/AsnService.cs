@@ -591,7 +591,7 @@ namespace ModernWMS.WMS.Services
             var Location = await Goodslocations.FirstOrDefaultAsync(t => t.id.Equals(viewModel.goods_location_id));
             if (Location == null)
             {
-                return (false, string.Format(_stringLocalizer["Required"], _stringLocalizer["location_name"]);
+                return (false, string.Format(_stringLocalizer["Required"], _stringLocalizer["location_name"]));
             }
 
             var entity = await Asns.FirstOrDefaultAsync(t => t.id == viewModel.asn_id);
