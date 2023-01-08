@@ -378,11 +378,8 @@ namespace ModernWMS.WMS.Services
             entity.weight_unit = viewModel.weight_unit;
             entity.is_valid = viewModel.is_valid;
             entity.last_update_time = DateTime.Now;
-            decimal dec = ChangeLengthUnit(entity.length_unit, entity.volume_unit);
-            viewModel.detailList.ForEach(t =>
-            {
-                t.volume = Math.Round(t.lenght * dec * t.width * dec * t.height * dec, 3);
-            });
+           
+            
             if (viewModel.detailList.Any(t => t.id > 0))
             {
                 entity.detailList.ForEach(d =>
@@ -416,6 +413,9 @@ namespace ModernWMS.WMS.Services
             var qty = await _dBContext.SaveChangesAsync();
             if (qty > 0)
             {
+                decimal dec = ChangeLengthUnit(entity.length_unit, entity.volume_unit);
+                await _dBContext.GetDbSet<SkuEntity>().Where(t => t.spu_id.Equals(entity.id))
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.volume, x => Math.Round(x.lenght * dec * x.width * dec * x.height * dec, 3)));
                 return (true, _stringLocalizer["save_success"]);
             }
             else
