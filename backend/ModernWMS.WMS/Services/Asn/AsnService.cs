@@ -586,6 +586,14 @@ namespace ModernWMS.WMS.Services
         public async Task<(bool flag, string msg)> PutAwayAsync(AsnPutAwayInputViewModel viewModel, CurrentUser currentUser)
         {
             var Asns = _dBContext.GetDbSet<AsnEntity>();
+
+            var Goodslocations = _dBContext.GetDbSet<GoodslocationEntity>();
+            var Location = await Goodslocations.FirstOrDefaultAsync(t => t.id.Equals(viewModel.goods_location_id));
+            if (Location == null)
+            {
+                return (false, string.Format(_stringLocalizer["Required"], _stringLocalizer["location_name"]));
+            }
+
             var entity = await Asns.FirstOrDefaultAsync(t => t.id == viewModel.asn_id);
             if (entity == null)
             {
@@ -600,10 +608,15 @@ namespace ModernWMS.WMS.Services
                 return (false, $"{entity.asn_no}{_stringLocalizer["ASN_Total_PutAway_Qty_Greater_Than_Sorted_Qty"]}");
             }
             entity.actual_qty += viewModel.putaway_qty;
+            if (Location.warehouse_area_property.Equals(5))
+            {
+                entity.damage_qty += viewModel.putaway_qty;
+            }
             if (entity.actual_qty.Equals(entity.sorted_qty))
             {
                 entity.asn_status = 4;
             }
+
             entity.last_update_time = DateTime.Now;
             var Stocks = _dBContext.GetDbSet<StockEntity>();
             var stockEntity = await Stocks.FirstOrDefaultAsync(t => t.sku_id.Equals(entity.sku_id) && t.goods_location_id.Equals(viewModel.goods_location_id));
