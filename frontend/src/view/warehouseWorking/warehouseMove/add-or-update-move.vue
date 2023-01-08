@@ -212,7 +212,7 @@ const method = reactive({
     try {
       data.form.sku_id = selectRecords[0].sku_id
       data.form.orig_goods_location_id = selectRecords[0].goods_location_id
-      data.form.orig_goods_warehouse = selectRecords[0].warehouse
+      data.form.orig_goods_warehouse = selectRecords[0].warehouse_name
       data.form.orig_goods_location_name = selectRecords[0].location_name
       data.form.goods_owner_id = selectRecords[0].goods_owner_id
       data.form.spu_code = selectRecords[0].spu_code
