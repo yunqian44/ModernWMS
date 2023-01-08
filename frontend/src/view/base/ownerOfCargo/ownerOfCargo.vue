@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, ref } from 'vue'
+import { computed, reactive, onMounted, ref, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
@@ -109,6 +109,7 @@ import { setSearchObject } from '@/utils/common'
 import customPager from '@/components/custom-pager.vue'
 import { PAGE_SIZE, PAGE_LAYOUT, DEFAULT_PAGE_SIZE } from '@/constant/vxeTable'
 import { exportData } from '@/utils/exportTable'
+import { DEBOUNCE_TIME } from '@/constant/system'
 
 const xTable = ref()
 
@@ -132,7 +133,8 @@ const data: DataProps = reactive({
     total: 0,
     pageIndex: 1,
     pageSize: DEFAULT_PAGE_SIZE
-  }
+  },
+  timer: null
 })
 
 const method = reactive({
@@ -241,6 +243,23 @@ onMounted(async () => {
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 
 const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style scoped lang="less">

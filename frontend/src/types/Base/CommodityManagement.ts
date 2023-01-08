@@ -57,5 +57,6 @@ export interface DataProps {
     spu_code: string
     spu_name: string
     category_name: string
-  }
+  },
+  timer: any
 }

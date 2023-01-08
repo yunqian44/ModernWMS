@@ -112,7 +112,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(GoodsownerViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<GoodsownerEntity>();
-            if (await DbSet.AnyAsync(t => t.goods_owner_name.Equals(viewModel.goods_owner_name)))
+            if (await DbSet.AnyAsync(t => t.tenant_id.Equals(currentUser.tenant_id) && t.goods_owner_name.Equals(viewModel.goods_owner_name)))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["goods_owner_name"], viewModel.goods_owner_name));
             }
@@ -141,14 +141,14 @@ namespace ModernWMS.WMS.Services
         public async Task<(bool flag, string msg)> UpdateAsync(GoodsownerViewModel viewModel)
         {
             var DbSet = _dBContext.GetDbSet<GoodsownerEntity>();
-            if (await DbSet.AnyAsync(t => !t.id.Equals(viewModel.id) && t.goods_owner_name.Equals(viewModel.goods_owner_name)))
-            {
-                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["goods_owner_name"], viewModel.goods_owner_name));
-            }
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
             if (entity == null)
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            if (await DbSet.AnyAsync(t => !t.id.Equals(viewModel.id) && t.tenant_id.Equals(entity.tenant_id) && t.goods_owner_name.Equals(viewModel.goods_owner_name)))
+            {
+                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["goods_owner_name"], viewModel.goods_owner_name));
             }
             entity.goods_owner_name = viewModel.goods_owner_name;
             entity.city = viewModel.city;

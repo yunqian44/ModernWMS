@@ -6,6 +6,13 @@
         <v-card-text>
           <v-form ref="formRef">
             <v-text-field
+              v-model="data.form.waybill_no"
+              :rules="data.rules.waybill_no"
+              :label="$t('wms.deliveryManagement.waybill_no')"
+              variant="outlined"
+              clearable
+            ></v-text-field>
+            <v-text-field
               v-model="data.form.carrier"
               :label="$t('wms.deliveryManagement.carrier')"
               variant="outlined"
@@ -44,6 +51,7 @@ import { hookComponent } from '@/components/system/index'
 import i18n from '@/languages/i18n'
 import freightSelect from '@/components/select/freight-select.vue'
 import { FreightVO } from '@/types/Base/Freight'
+import { StringLength } from '@/utils/dataVerification/formRule'
 
 const emit = defineEmits(['close', 'submit'])
 
@@ -55,9 +63,14 @@ const isShow = computed(() => props.showDialog)
 
 const data = reactive({
   dialogSelect: false,
-  form: { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '' },
+  form: { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '', waybill_no: '' },
   combobox: {
     freightfee_id: []
+  },
+  rules: {
+    waybill_no: [
+      (val: string) => StringLength(val, 0, 64) === '' || StringLength(val, 0, 64)
+    ]
   }
 })
 
@@ -77,7 +90,7 @@ const method = reactive({
     }
   },
   valClearable: () => {
-    data.form = { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '' }
+    data.form = { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '', waybill_no: data.form.waybill_no }
   },
   closeDialog: () => {
     emit('close')
@@ -98,7 +111,7 @@ watch(
   () => isShow.value,
   (val) => {
     if (val) {
-      data.form = { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '' }
+      data.form = { carrier: '', freightfee_id: 0, departure_city: '', arrival_city: '', waybill_no: '' }
     }
   }
 )

@@ -72,7 +72,7 @@
         field="create_time"
         width="170px"
         :title="$t('wms.deliveryManagement.create_time')"
-        :formatter="['formatDate']"
+       
       ></vxe-column> -->
     </vxe-table>
     <custom-pager
@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight } from '@/constant/style'
 import { DeliveryManagementVO } from '@/types/DeliveryManagement/DeliveryManagement'
@@ -103,6 +103,7 @@ import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import { TablePage } from '@/types/System/Form'
 import { exportData } from '@/utils/exportTable'
+import { DEBOUNCE_TIME } from '@/constant/system'
 
 const xTable = ref()
 
@@ -115,6 +116,7 @@ const data = reactive({
     dispatch_no: '',
     customer_name: ''
   },
+  timer: ref<any>(null),
   activeTab: null,
   tableData: ref<DeliveryManagementVO[]>([]),
   tablePage: ref<TablePage>({
@@ -166,6 +168,23 @@ const method = reactive({
 
 const cardHeight = computed(() => computedCardHeight({}))
 const tableHeight = computed(() => computedTableHeight({}))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 
 defineExpose({
   getPreShipment: method.getPreShipment

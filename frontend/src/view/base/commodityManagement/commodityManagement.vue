@@ -93,7 +93,7 @@
               <vxe-column field="category_name" :title="$t('base.commodityManagement.category_name')">
                 <template #default="{ row }">
                   <span v-if="row.parent_id > 0">{{ row.unit }}</span>
-                  <span v-else>{{ row.bar_code }}</span>
+                  <span v-else>{{ row.category_name }}</span>
                 </template>
               </vxe-column>
               <vxe-column field="spu_description" :title="$t('base.commodityManagement.spu_description')"> </vxe-column>
@@ -182,7 +182,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, ref } from 'vue'
+import { computed, reactive, onMounted, ref, watch } from 'vue'
 import { VxePagerEvents } from 'vxe-table'
 import { computedCardHeight, computedTableHeight, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
@@ -196,6 +196,7 @@ import { GetUnit } from '@/constant/commodityManagement'
 import customPager from '@/components/custom-pager.vue'
 import { setSearchObject } from '@/utils/common'
 import { exportData } from '@/utils/exportTable'
+import { DEBOUNCE_TIME } from '@/constant/system'
 
 const xTable = ref()
 
@@ -205,6 +206,7 @@ const data: DataProps = reactive({
     spu_name: '',
     category_name: ''
   },
+  timer: null,
   tableData: [],
   tablePage: {
     total: 0,
@@ -348,6 +350,23 @@ onMounted(async () => {
 const cardHeight = computed(() => computedCardHeight({ hasTab: false }))
 
 const tableHeight = computed(() => computedTableHeight({ hasTab: false }))
+
+watch(
+  () => data.searchForm,
+  () => {
+    // debounce
+    if (data.timer) {
+      clearTimeout(data.timer)
+    }
+    data.timer = setTimeout(() => {
+      data.timer = null
+      method.sureSearch()
+    }, DEBOUNCE_TIME)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 
 <style scoped lang="less">

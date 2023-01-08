@@ -32,6 +32,7 @@ export interface DataProps {
   tablePage: TablePage
   showDialog: boolean
   dialogForm: UserVO
+  timer: any
 }
 
 export interface ChangePwdAPIParams {

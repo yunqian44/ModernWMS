@@ -100,7 +100,7 @@ const method = reactive({
     // It must be use 'getTableData()' to get all datas with table because it will delete row sometimes.
     const importData = JSON.parse(JSON.stringify($table.getTableData().fullData))
     for (const item of importData) {
-      let sex = 'Male'
+      let sex = 'male'
       if (['男', '女', 'Male', 'Female'].includes(item.sex)) {
         switch (item.sex) {
           case '男':
@@ -172,11 +172,11 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            user_num: String(ws[index][i18n.global.t('base.userManagement.user_num')]),
-            user_name: String(ws[index][i18n.global.t('base.userManagement.user_name')]),
-            contact_tel: String(ws[index][i18n.global.t('base.userManagement.contact_tel')]),
-            user_role: String(ws[index][i18n.global.t('base.userManagement.user_role')]),
-            sex: ws[index][i18n.global.t('base.userManagement.sex')],
+            user_num: ws[index][i18n.global.t('base.userManagement.user_num')] ? String(ws[index][i18n.global.t('base.userManagement.user_num')]) : '',
+            user_name: ws[index][i18n.global.t('base.userManagement.user_name')] ? String(ws[index][i18n.global.t('base.userManagement.user_name')]) : '',
+            contact_tel: ws[index][i18n.global.t('base.userManagement.contact_tel')] ? String(ws[index][i18n.global.t('base.userManagement.contact_tel')]) : '',
+            user_role: ws[index][i18n.global.t('base.userManagement.user_role')] ? String(ws[index][i18n.global.t('base.userManagement.user_role')]) : '',
+            sex: ws[index][i18n.global.t('base.userManagement.sex')] ? ws[index][i18n.global.t('base.userManagement.sex')] : '',
             is_valid: true
           })
         })

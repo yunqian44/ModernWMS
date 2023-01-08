@@ -83,7 +83,7 @@ namespace ModernWMS.WMS.Services
         public async Task<(int id, string msg)> AddAsync(CompanyViewModel viewModel, CurrentUser currentUser)
         {
             var DbSet = _dBContext.GetDbSet<CompanyEntity>();
-            if (await DbSet.AnyAsync(t => t.company_name.Equals(viewModel.company_name)))
+            if (await DbSet.AnyAsync(t => t.tenant_id.Equals(currentUser.tenant_id) && t.company_name.Equals(viewModel.company_name)))
             {
                 return (0, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["company_name"], viewModel.company_name));
             }
@@ -111,15 +111,15 @@ namespace ModernWMS.WMS.Services
         public async Task<(bool flag, string msg)> UpdateAsync(CompanyViewModel viewModel)
         {
             var DbSet = _dBContext.GetDbSet<CompanyEntity>();
-            if (await DbSet.AnyAsync(t => !t.id.Equals(viewModel.id) && t.company_name.Equals(viewModel.company_name)))
-            {
-                //国际化
-                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["company_name"], viewModel.company_name));
-            }
             var entity = await DbSet.FirstOrDefaultAsync(t => t.id.Equals(viewModel.id));
             if (entity == null)
             {
                 return (false, _stringLocalizer["not_exists_entity"]);
+            }
+            if (await DbSet.AnyAsync(t => !t.id.Equals(viewModel.id) && t.tenant_id.Equals(entity.tenant_id) && t.company_name.Equals(viewModel.company_name)))
+            {
+                //国际化
+                return (false, string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["company_name"], viewModel.company_name));
             }
             entity.company_name = viewModel.company_name;
             entity.city = viewModel.city;

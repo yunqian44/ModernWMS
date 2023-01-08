@@ -26,4 +26,5 @@ export interface DataProps {
     goods_owner_name: string
   }
   tablePage: TablePage
+  timer: any
 }
