@@ -10,8 +10,7 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
-                <!-- Tree node does not support export -->
-                <!-- <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn> -->
+                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
               </v-col>
 
               <!-- Search Input -->
@@ -109,6 +108,7 @@ import { getCategoryAll, deleteCategory } from '@/api/base/commodityCategorySett
 import { hookComponent } from '@/components/system'
 import addOrUpdateDialog from './add-or-update-category.vue'
 import i18n from '@/languages/i18n'
+import { exportData } from '@/utils/exportTable'
 
 const xTable = ref()
 
@@ -201,25 +201,18 @@ const method = reactive({
         }
       }
     })
-  }
+  },
   // Export table
-  // Tree node does not support export
-  // exportTable: () => {
-  //   const $table = xTable.value
-  //   try {
-  //     $table.exportData({
-  //       type: 'csv',
-  //       columnFilterMethod({ column }: any) {
-  //         return !['checkbox'].includes(column?.type)
-  //       }
-  //     })
-  //   } catch (error) {
-  //     hookComponent.$message({
-  //       type: 'error',
-  //       content: `${ i18n.global.t('system.page.export') }${ i18n.global.t('system.tips.fail') }`
-  //     })
-  //   }
-  // }
+  exportTable: () => {
+    const $table = xTable.value
+    exportData({
+      table: $table,
+      filename: i18n.global.t('router.sideBar.commodityCategorySetting'),
+      columnFilterMethod({ column }: any) {
+        return !['checkbox'].includes(column?.type)
+      }
+    })
+  }
 })
 
 onMounted(async () => {

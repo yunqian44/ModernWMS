@@ -10,7 +10,7 @@
               <v-col cols="12" sm="3" class="col">
                 <tooltip-btn icon="mdi-plus" :tooltip-text="$t('system.page.add')" @click="method.add()"></tooltip-btn>
                 <tooltip-btn icon="mdi-refresh" :tooltip-text="$t('system.page.refresh')" @click="method.refresh()"></tooltip-btn>
-                <!-- <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn> -->
+                <tooltip-btn icon="mdi-export-variant" :tooltip-text="$t('system.page.export')" @click="method.exportTable"></tooltip-btn>
               </v-col>
 
               <!-- Search Input -->
@@ -323,7 +323,6 @@ const method = reactive({
     })
   },
   // Export table
-  // The tree structure table cannot be exported
   exportTable: () => {
     const $table = xTable.value
     exportData({
