@@ -65,6 +65,7 @@ import i18n from '@/languages/i18n'
 import { hookComponent } from '@/components/system/index'
 import { addFreight, updateFreight } from '@/api/base/freightSetting'
 import { FreightVO } from '@/types/Base/Freight'
+import { StringLength, IsDecimal } from '@/utils/dataVerification/formRule'
 
 const formRef = ref()
 const emit = defineEmits(['close', 'saveSuccess'])
@@ -95,20 +96,32 @@ const data = reactive({
     is_valid: true
   }),
   rules: {
-    carrier: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.carrier') }!`],
-    departure_city: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.departure_city') }!`
+    carrier: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.carrier') }!`,
+      (val: string) => StringLength(val, 0, 256) === '' || StringLength(val, 0, 256)
     ],
-    arrival_city: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.arrival_city') }!`],
+    departure_city: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.departure_city') }!`,
+      (val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)
+    ],
+    arrival_city: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.arrival_city') }!`,
+      (val: string) => StringLength(val, 0, 128) === '' || StringLength(val, 0, 128)
+    ],
     price_per_weight: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.price_per_weight') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.price_per_weight') }!`,
+      (val: number) => IsDecimal(val, 'nonNegative', 6, 2) === '' || IsDecimal(val, 'nonNegative', 6, 2)
     ],
     price_per_volume: [
-      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.price_per_volume') }!`
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.price_per_volume') }!`,
+      (val: number) => IsDecimal(val, 'nonNegative', 6, 2) === '' || IsDecimal(val, 'nonNegative', 6, 2)
     ],
-    min_payment: [(val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.min_payment') }!`],
+    min_payment: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.freightSetting.min_payment') }!`,
+      (val: number) => IsDecimal(val, 'nonNegative', 8, 2) === '' || IsDecimal(val, 'nonNegative', 8, 2)
+    ],
     is_valid: []
-  },
+  }
 })
 
 const method = reactive({
@@ -116,7 +129,7 @@ const method = reactive({
     emit('close')
   },
   initForm: () => {
-      data.form = props.form
+    data.form = props.form
   },
   submit: async () => {
     const { valid } = await formRef.value.validate()

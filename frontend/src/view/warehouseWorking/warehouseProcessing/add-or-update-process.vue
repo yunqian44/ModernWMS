@@ -151,6 +151,7 @@ import locationSelect from '@/components/select/location-select.vue'
 import skuSelect from '@/components/select/sku-select.vue'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { exportData } from '@/utils/exportTable'
+import { isInteger } from '@/utils/dataVerification/tableRule'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const xTableSource = ref()
@@ -519,17 +520,27 @@ const data = reactive({
     unit: '',
     is_update_stock: false
   }),
-  validRulesSource: ref<VxeTablePropTypes.EditRules>({
+  validRulesSource: ref<any>({
     qty: [
       { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qty') }` },
       {
         validator: method.validQty
+      },
+      {
+        validator: isInteger,
+        validNumerical: 'greaterThanZero',
+        trigger: 'change'
       }
     ]
   }),
-  validRulesTarget: ref<VxeTablePropTypes.EditRules>({
+  validRulesTarget: ref<any>({
     qty: [
-      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qty') }` }
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('wms.warehouseWorking.warehouseProcessing.qty') }` },
+      {
+        validator: isInteger,
+        validNumerical: 'greaterThanZero',
+        trigger: 'change'
+      }
     ],
     location_name: [
       {
