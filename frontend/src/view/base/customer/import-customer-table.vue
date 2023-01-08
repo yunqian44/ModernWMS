@@ -167,12 +167,12 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            customer_name: ws[index][i18n.global.t('base.customer.customer_name')] + '',
-            city: ws[index][i18n.global.t('base.customer.city')] + '',
-            address: ws[index][i18n.global.t('base.customer.address')] + '',
-            manager: ws[index][i18n.global.t('base.customer.manager')] + '',
-            email: ws[index][i18n.global.t('base.customer.email')] + '',
-            contact_tel: ws[index][i18n.global.t('base.customer.contact_tel')] + '',
+            customer_name: ws[index][i18n.global.t('base.customer.customer_name')] ? ws[index][i18n.global.t('base.customer.customer_name')] + '' : '',
+            city: ws[index][i18n.global.t('base.customer.city')] ? ws[index][i18n.global.t('base.customer.city')] + '' : '',
+            address: ws[index][i18n.global.t('base.customer.address')] ? ws[index][i18n.global.t('base.customer.address')] + '' : '',
+            manager: ws[index][i18n.global.t('base.customer.manager')] ? ws[index][i18n.global.t('base.customer.manager')] + '' : '',
+            email: ws[index][i18n.global.t('base.customer.email')] ? ws[index][i18n.global.t('base.customer.email')] + '' : '',
+            contact_tel: ws[index][i18n.global.t('base.customer.contact_tel')] ? ws[index][i18n.global.t('base.customer.contact_tel')] + '' : '',
             _XID: '',
             errorMsg: ''
           })
