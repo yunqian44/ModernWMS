@@ -528,7 +528,9 @@ export default {
       setFreight: '设置承运单位',
       departure_city: '始发城市',
       arrival_city: '到货城市',
-      ViewInventoryDetails: '查看商品明细'
+      ViewInventoryDetails: '查看商品明细',
+      invalidValue: '请输入有效数值',
+      exceedingQuantity: '不能超过总数量'
     }
   }
 }

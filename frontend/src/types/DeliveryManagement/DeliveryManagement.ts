@@ -105,3 +105,17 @@ export interface SetCarrierVO {
   carrier: string
   waybill_no: string
 }
+
+export interface ConfirmItem {
+  id: number
+  dispatch_no: string
+  dispatch_status: number
+  spu_name: string
+  spu_code: string
+  sku_code: string
+  maxQty: number
+  qty: number
+  picked_qty?: number
+  weight?: number
+  weight_unit?: string
+}
