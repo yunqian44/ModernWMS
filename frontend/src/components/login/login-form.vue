@@ -109,8 +109,8 @@ const method = reactive({
       // Remember user login info
       if (data.remember) {
         const rememberJSON = JSON.stringify({
-          userName: window.btoa(data.userName),
-          password: window.btoa(data.password)
+          userName: window.btoa(encodeURIComponent(data.userName)),
+          password: window.btoa(encodeURIComponent(data.password))
         })
         localStorage.setItem('userLoginInfo', rememberJSON)
       } else {
@@ -153,8 +153,13 @@ onMounted(() => {
   const rememberJSON = localStorage.getItem('userLoginInfo')
   if (rememberJSON) {
     const obj = JSON.parse(rememberJSON)
-    data.userName = window.atob(obj.userName)
-    data.password = window.atob(obj.password)
+    try {
+      data.userName = decodeURIComponent(window.atob(obj.userName))
+      data.password = decodeURIComponent(window.atob(obj.password))
+    } catch {
+      data.userName = window.atob(obj.userName)
+      data.password = window.atob(obj.password)
+    }
     data.remember = true
   }
 })
