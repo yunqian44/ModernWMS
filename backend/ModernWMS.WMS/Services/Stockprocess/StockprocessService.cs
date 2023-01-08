@@ -377,6 +377,8 @@ namespace ModernWMS.WMS.Services
                     }
                 }
             }
+            var code = await GetAdjustOrderCode(currentUser);
+            adjusts.ForEach(t => t.job_code = code);
             await adjust_DBset.AddRangeAsync(adjusts);
             var res = await _dBContext.SaveChangesAsync();
             if (res > 0)
@@ -436,6 +438,37 @@ namespace ModernWMS.WMS.Services
                 }
             }
             
+            return code;
+        }
+        /// <summary>
+        /// get next order code number
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetAdjustOrderCode(CurrentUser currentUser)
+        {
+            string code;
+            string date = DateTime.Now.ToString("yyyy" + "MM" + "dd");
+            string maxNo = await _dBContext.GetDbSet<StockadjustEntity>().AsNoTracking().Where(t => t.tenant_id == currentUser.tenant_id).MaxAsync(t => t.job_code);
+            if (maxNo == null)
+            {
+                code = date + "-0001";
+            }
+            else
+            {
+                string maxDate = maxNo.Substring(0, 8);
+                string maxDateNo = maxNo.Substring(9, 4);
+                if (date == maxDate)
+                {
+                    int.TryParse(maxDateNo, out int dd);
+                    int newDateNo = dd + 1;
+                    code = date + "-" + newDateNo.ToString("0000");
+                }
+                else
+                {
+                    code = date + "-0001";
+                }
+            }
+
             return code;
         }
         #endregion
