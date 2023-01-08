@@ -258,7 +258,11 @@ namespace ModernWMS.WMS.Services
             entity.tenant_id = currentUser.tenant_id;
             if (viewModel.detailList.Any())
             {
-                viewModel.detailList.ForEach(t => t.id = 0);
+                viewModel.detailList.ForEach(t =>
+                {
+                    t.id = 0;
+                    t.volume = Math.Round(t.lenght * t.width * t.height, 3);
+                });
             }
             await DbSet.AddAsync(entity);
             await _dBContext.SaveChangesAsync();
@@ -302,6 +306,10 @@ namespace ModernWMS.WMS.Services
             entity.weight_unit = viewModel.weight_unit;
             entity.is_valid = viewModel.is_valid;
             entity.last_update_time = DateTime.Now;
+            viewModel.detailList.ForEach(t =>
+            {
+                t.volume = Math.Round(t.lenght * t.width * t.height, 3);
+            });
             if (viewModel.detailList.Any(t => t.id > 0))
             {
                 entity.detailList.ForEach(d =>
