@@ -8,6 +8,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <div v-show="loadingFlag" class="mask"></div>
     <router-view v-if="data.isShow"></router-view>
   </div>
 </template>
@@ -71,5 +72,12 @@ onMounted(() => {
   height: 100%;
   width: 100%;
   background-color: #f4f5fa;
+}
+
+.mask {
+  position: absolute;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
 }
 </style>

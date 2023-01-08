@@ -166,7 +166,7 @@ const method = reactive({
       
       data.form.goods_owner_id = selectRecords[0].goods_owner_id
       data.form.goods_location_id = selectRecords[0].goods_location_id
-      data.form.warehouse_name = selectRecords[0].warehouse
+      data.form.warehouse_name = selectRecords[0].warehouse_name
       data.form.location_name = selectRecords[0].location_name
     } catch (error) {
       console.error(error)
