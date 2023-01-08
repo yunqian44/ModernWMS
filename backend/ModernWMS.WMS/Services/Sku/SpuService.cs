@@ -258,10 +258,11 @@ namespace ModernWMS.WMS.Services
             entity.tenant_id = currentUser.tenant_id;
             if (viewModel.detailList.Any())
             {
+                decimal dec = ChangeLengthUnit(entity.length_unit, entity.volume_unit);
                 viewModel.detailList.ForEach(t =>
                 {
                     t.id = 0;
-                    t.volume = Math.Round(t.lenght * t.width * t.height, 3);
+                    t.volume = Math.Round(t.lenght * dec * t.width * dec * t.height * dec, 3);
                 });
             }
             await DbSet.AddAsync(entity);
@@ -274,6 +275,77 @@ namespace ModernWMS.WMS.Services
             {
                 return (0, _stringLocalizer["save_failed"]);
             }
+        }
+        /// <summary>
+        /// change to the volume unit
+        /// </summary>
+        /// <param name="length_unit">length_unit</param>
+        /// <param name="volume_unit">volume_unit</param>
+        /// <returns></returns>
+        private decimal ChangeLengthUnit(byte length_unit, byte volume_unit)
+        {
+            if (volume_unit.Equals(0)) // cm3
+            {
+                if (length_unit.Equals(0)) //mm
+                {
+                    return 0.1M;
+                }
+                else if (length_unit.Equals(2)) // dm
+                {
+                    return 10M;
+                }
+                else if (length_unit.Equals(3)) // m
+                {
+                    return 100M;
+                }
+                else // cm
+                {
+                    return 1M;
+                }
+            }
+            else if (volume_unit.Equals(1)) // dm3
+            {
+                if (length_unit.Equals(0))
+                {
+                    return 0.01M;
+                }
+                else if (length_unit.Equals(2))
+                {
+                    return 1M;
+                }
+                else if (length_unit.Equals(3))
+                {
+                    return 10M;
+                }
+                else
+                {
+                    return 0.1M;
+                }
+            }
+            else if (volume_unit.Equals(2)) // m3
+            {
+                if (length_unit.Equals(0))
+                {
+                    return 0.001M;
+                }
+                else if (length_unit.Equals(2))
+                {
+                    return 0.1M;
+                }
+                else if (length_unit.Equals(3))
+                {
+                    return 1M;
+                }
+                else
+                {
+                    return 0.01M;
+                }
+            }
+            else
+            {
+                return 1M;
+            }
+
         }
         /// <summary>
         /// update a record
@@ -306,9 +378,10 @@ namespace ModernWMS.WMS.Services
             entity.weight_unit = viewModel.weight_unit;
             entity.is_valid = viewModel.is_valid;
             entity.last_update_time = DateTime.Now;
+            decimal dec = ChangeLengthUnit(entity.length_unit, entity.volume_unit);
             viewModel.detailList.ForEach(t =>
             {
-                t.volume = Math.Round(t.lenght * t.width * t.height, 3);
+                t.volume = Math.Round(t.lenght * dec * t.width * dec * t.height * dec, 3);
             });
             if (viewModel.detailList.Any(t => t.id > 0))
             {
