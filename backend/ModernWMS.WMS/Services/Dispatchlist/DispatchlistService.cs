@@ -655,8 +655,9 @@ namespace ModernWMS.WMS.Services
                     pick.pick_qty = (r.qty <= (pick_qty + pick.qty_available)) ? (r.qty - pick_qty) : pick.qty_available;
                     pick_qty += pick.pick_qty;
                 }
-                r.pick_list = picklist;
+                r.pick_list = picklist.Where(t=>t.qty_available>0).ToList();
             }
+            
             return res;
 
         }
@@ -949,7 +950,8 @@ namespace ModernWMS.WMS.Services
                 }
                 entity.weighing_no = "";
                 entity.weighing_qty = 0;
-                entity.package_person = "";
+                entity.weighing_weight = 0;
+                entity.weighing_person = "";
             }
             else
             {

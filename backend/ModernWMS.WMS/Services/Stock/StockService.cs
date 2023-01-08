@@ -109,20 +109,24 @@ namespace ModernWMS.WMS.Services
                                            qty_locked = dg.Sum(t => t.lock_qty)
                                        };
             var process_locked_group_datas = from pd in processdetail_DBSet
+                                             join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on pd.goods_location_id equals gl.id
                                              where pd.is_update_stock == false
-                                             group pd by pd.sku_id into pdg
+                                             group new { pd , gl } by pd.sku_id into pdg
                                              select new
                                              {
                                                  sku_id = pdg.Key,
-                                                 qty_locked = pdg.Sum(t => t.qty)
+                                                 qty_locked = pdg.Sum(t => t.pd.qty),
+                                                 qty_normal_locked = pdg.Where(t => t.gl.warehouse_area_property != 5).Sum(t => t.pd.qty),
                                              };
             var move_locked_group_datas = from m in move_DBSet.AsNoTracking()
+                                          join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on m.orig_goods_location_id equals gl.id
                                           where m.move_status == 0
-                                          group m by m.sku_id into mg
+                                          group new { m , gl } by m.sku_id into mg
                                           select new
                                           {
                                               sku_id = mg.Key,
-                                              qty_locked = mg.Sum(t => t.qty)
+                                              qty_locked = mg.Sum(t => t.m.qty),
+                                              qty_normal_locked = mg.Where(t=>t.gl.warehouse_area_property !=5).Sum(t => t.m.qty),
                                           };
 
             var query = from sku in sku_DBSet
@@ -130,7 +134,6 @@ namespace ModernWMS.WMS.Services
                         from ag in ag_left.DefaultIfEmpty()
                         join sg in stock_group_datas on sku.id equals sg.sku_id into sg_left
                         from sg in sg_left.DefaultIfEmpty()
-                        
                         join dp in dispatch_group_datas on sg.sku_id equals dp.sku_id into dp_left
                         from dp in dp_left.DefaultIfEmpty()
                         join pl in process_locked_group_datas on sku.id equals pl.sku_id into pl_left
@@ -140,12 +143,12 @@ namespace ModernWMS.WMS.Services
                         join spu in spu_DBSet on sku.spu_id equals spu.id
                         select new StockManagementViewModel
                         {
-                            sku_id = ag.sku_id,
+                            sku_id = sku.id,
                             spu_name = spu.spu_name,
                             spu_code = spu.spu_code,
                             sku_code = sku.sku_code,
-                            qty_asn = ag.qty_asn,
-                            qty_available = (sg.qty_normal == null ? 0 : sg.qty_normal) - (sg.qty_normal_frozen == null ? 0 : sg.qty_normal_frozen) - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_locked == null ? 0 : pl.qty_locked)- (m.qty_locked == null ? 0 : m.qty_locked),
+                            qty_asn = ag.qty_asn == null ? 0: ag.qty_asn,
+                            qty_available = (sg.qty_normal == null ? 0 : sg.qty_normal) - (sg.qty_normal_frozen == null ? 0 : sg.qty_normal_frozen) - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_normal_locked == null ? 0 : pl.qty_normal_locked) - (m.qty_normal_locked == null ? 0 : m.qty_normal_locked) ,
                             qty_frozen = sg.qty_frozen == null ? 0 : sg.qty_frozen,
                             qty_locked = (dp.qty_locked == null ? 0 : dp.qty_locked) + (pl.qty_locked == null ? 0 : pl.qty_locked) + (m.qty_locked == null ? 0:m.qty_locked),
                             qty_sorted = ag.qty_sorted==null?0:ag.qty_sorted,
@@ -359,6 +362,10 @@ namespace ModernWMS.WMS.Services
             else if(pageSearch.sqlTitle == "all")
             {
 
+            }
+            else if(pageSearch.sqlTitle == "frozen")
+            {
+                query = query.Where(t => t.is_freeze == true);
             }
             query = query.Where(queries.AsExpression<StockViewModel>());
             int totals = await query.CountAsync();
