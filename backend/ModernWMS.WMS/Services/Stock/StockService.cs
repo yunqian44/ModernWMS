@@ -363,6 +363,10 @@ namespace ModernWMS.WMS.Services
             {
 
             }
+            else if(pageSearch.sqlTitle == "frozen")
+            {
+                query = query.Where(t => t.is_freeze == true);
+            }
             query = query.Where(queries.AsExpression<StockViewModel>());
             int totals = await query.CountAsync();
             var list = await query.OrderBy(t => t.sku_code)
