@@ -245,7 +245,7 @@ namespace ModernWMS.WMS.Services
                             spu_code = spu.spu_code,
                             sku_code = sku.sku_code,
                             sku_name = sku.sku_name,
-                            qty_available = sg.qty - sg.qty_frozen - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_locked == null ? 0 : pl.qty_locked) - (m.qty_locked == null ? 0 : m.qty_locked),
+                            qty_available =gl.warehouse_area_property == 5?0:( sg.qty - sg.qty_frozen - (dp.qty_locked == null ? 0 : dp.qty_locked) - (pl.qty_locked == null ? 0 : pl.qty_locked) - (m.qty_locked == null ? 0 : m.qty_locked)),
                             qty_frozen = sg.qty_frozen,
                             qty_locked = (dp.qty_locked == null ? 0 : dp.qty_locked) + (pl.qty_locked == null ? 0 : pl.qty_locked)+ (m.qty_locked == null ? 0 : m.qty_locked),
                             qty = sg.qty,
