@@ -110,7 +110,7 @@ namespace ModernWMS.WMS.Services
                                        };
             var process_locked_group_datas = from pd in processdetail_DBSet
                                              join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on pd.goods_location_id equals gl.id
-                                             where pd.is_update_stock == false
+                                             where pd.is_update_stock == false && pd.is_source == true
                                              group new { pd , gl } by pd.sku_id into pdg
                                              select new
                                              {
@@ -213,7 +213,7 @@ namespace ModernWMS.WMS.Services
                                            qty_locked = dg.Sum(t => t.pick_qty)
                                        };
             var process_locked_group_datas = from pd in processdetail_DBSet
-                                             where pd.is_update_stock == false
+                                             where pd.is_update_stock == false && pd.is_source == true
                                              group pd by new { pd.sku_id, pd.goods_location_id } into pdg
                                              select new
                                              {
@@ -304,6 +304,7 @@ namespace ModernWMS.WMS.Services
             var process_locked_group_datas = from pd in processdetail_DBSet
                                              where pd.is_update_stock == false
                                              group pd by new { pd.sku_id, pd.goods_location_id, pd.goods_owner_id } into pdg
+                                             where pd.is_update_stock == false && pd.is_source == true
                                              select new
                                              {
                                                  goods_owner_id = pdg.Key.goods_owner_id,
