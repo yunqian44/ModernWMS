@@ -1307,6 +1307,7 @@ namespace ModernWMS.WMS.Services
                     {
                         entity.last_update_time = time;
                         entity.carrier = freightfee.carrier;
+                        entity.waybill_no = vm.waybill_no;
                         if (entity.weighing_no != "")
                         {
                             entity.freightfee = entity.weighing_weight * freightfee.price_per_weight > freightfee.min_payment ? entity.weighing_weight * freightfee.price_per_weight : freightfee.min_payment;
