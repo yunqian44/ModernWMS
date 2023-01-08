@@ -40,7 +40,7 @@ export const deleteCustomer = (id: number) => http({
 
 // Excel Import
 export const excelImport = (data: Array<CustomerExcelVO>) => http({
-    url: '/supplier/excel',
+    url: '/customer/excel',
     method: 'post',
     data
   })
