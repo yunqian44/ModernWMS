@@ -56,6 +56,7 @@
 
   <commodity-select
     :show-dialog="data.showCommodityDialogSelect"
+    :sql-title="commoditySqlTitle"
     @close="method.closeCommodityDialogSelect"
     @sureSelect="method.sureSelectCommodity"
   />
@@ -64,7 +65,7 @@
 
 <script lang="ts" setup>
 import { reactive, computed, ref, watch } from 'vue'
-import { FREEZE_JOB_FREEZE } from '@/constant/warehouseWorking'
+import { FREEZE_JOB_FREEZE, FREEZE_JOB_UNFREEZE } from '@/constant/warehouseWorking'
 import { hookComponent } from '@/components/system/index'
 import { addStockFreeze } from '@/api/wms/warehouseFreeze'
 import { WarehouseFreezeVO } from '@/types/WarehouseWorking/WarehouseFreeze'
@@ -88,12 +89,8 @@ const jobTypeComp = computed(() => (data.form.job_type === FREEZE_JOB_FREEZE
     ? i18n.global.t('wms.warehouseWorking.warehouseFreeze.freeze')
     : i18n.global.t('wms.warehouseWorking.warehouseFreeze.unfreeze')))
 
-const dialogTitle = computed(() => {
-  if (props.form.id && props.form.id > 0) {
-    return 'update'
-  }
-  return 'add'
-})
+// Unfreeze should be filter freezed.
+const commoditySqlTitle = computed(() => (data.form.job_type === FREEZE_JOB_UNFREEZE ? 'frozen' : ''))
 
 const data = reactive({
   showCommodityDialogSelect: false,
@@ -163,7 +160,7 @@ const method = reactive({
       data.form.spu_code = selectRecords[0].spu_code
       data.form.spu_name = selectRecords[0].spu_name
       data.form.sku_code = selectRecords[0].sku_code
-      
+
       data.form.goods_owner_id = selectRecords[0].goods_owner_id
       data.form.goods_location_id = selectRecords[0].goods_location_id
       data.form.warehouse_name = selectRecords[0].warehouse_name

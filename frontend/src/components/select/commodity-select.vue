@@ -127,6 +127,7 @@ const xTable = ref()
 
 const props = defineProps<{
   showDialog: boolean
+  sqlTitle?: string
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -162,7 +163,10 @@ const method = reactive({
   },
 
   getList: async () => {
-    const { data: res } = await getStockSelectList(data.tablePage)
+    const { data: res } = await getStockSelectList({
+      ...data.tablePage,
+      sqlTitle: props.sqlTitle
+    })
     if (!res.isSuccess) {
       hookComponent.$message({
         type: 'error',
