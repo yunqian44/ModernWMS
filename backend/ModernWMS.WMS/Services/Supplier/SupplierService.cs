@@ -204,22 +204,22 @@ namespace ModernWMS.WMS.Services
         {
             StringBuilder sb = new StringBuilder();
             var DbSet = _dBContext.GetDbSet<SupplierEntity>();
-            var user_num_repeat_excel = datas.GroupBy(t => t.supplier_name).Select(t => new { supplier_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
-            foreach (var repeat in user_num_repeat_excel)
+            var supplier_name_repeat_excel = datas.GroupBy(t => t.supplier_name).Select(t => new { supplier_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
+            foreach (var repeat in supplier_name_repeat_excel)
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], repeat.supplier_name));
             }
-            if (user_num_repeat_excel.Count > 1)
+            if (supplier_name_repeat_excel.Count > 0)
             {
                 return (false, sb.ToString());
             }
 
-            var user_num_repeat_exists = await DbSet.Where(t => datas.Select(t => t.supplier_name).ToList().Contains(t.supplier_name)).Select(t => t.supplier_name).ToListAsync();
-            foreach (var repeat in user_num_repeat_exists)
+            var supplier_name_repeat_exists = await DbSet.Where(t=>t.tenant_id == currentUser.tenant_id).Where(t => datas.Select(t => t.supplier_name).ToList().Contains(t.supplier_name)).Select(t => t.supplier_name).ToListAsync();
+            foreach (var repeat in supplier_name_repeat_exists)
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["supplier_name"], repeat));
             }
-            if (user_num_repeat_exists.Count > 1)
+            if (supplier_name_repeat_exists.Count > 0)
             {
                 return (false, sb.ToString());
             }

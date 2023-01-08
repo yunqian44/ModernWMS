@@ -51,6 +51,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         [MaxLength(256, ErrorMessage = "MaxLength")]
         [Required(ErrorMessage = "Required")]
         public string carrier { get; set; } = string.Empty;
+
+        /// <summary>
+        /// waybill_no
+        /// </summary>
+        public string waybill_no { get; set; } = string.Empty;
         #endregion
     }
 }

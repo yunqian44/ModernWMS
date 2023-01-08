@@ -65,6 +65,7 @@ import { SYSTEM_HEIGHT, errorColor } from '@/constant/style'
 import tooltipBtn from '@/components/tooltip-btn.vue'
 import { FreightVO } from '@/types/Base/Freight'
 import { exportData } from '@/utils/exportTable'
+import { formatString } from '@/utils/format/formatSystem'
 
 const emit = defineEmits(['close', 'saveSuccess'])
 const uploadExcel = ref()
@@ -155,9 +156,9 @@ const method = reactive({
         data.importData = []
         ws.forEach((value: any, index: number, ws: any) => {
           data.importData.push({
-            carrier: ws[index][i18n.global.t('base.freightSetting.carrier')],
-            departure_city: ws[index][i18n.global.t('base.freightSetting.departure_city')],
-            arrival_city: ws[index][i18n.global.t('base.freightSetting.arrival_city')],
+            carrier: formatString(ws[index][i18n.global.t('base.freightSetting.carrier')]),
+            departure_city: formatString(ws[index][i18n.global.t('base.freightSetting.departure_city')]),
+            arrival_city: formatString(ws[index][i18n.global.t('base.freightSetting.arrival_city')]),
             price_per_weight: ws[index][i18n.global.t('base.freightSetting.price_per_weight')],
             price_per_volume: ws[index][i18n.global.t('base.freightSetting.price_per_volume')],
             min_payment: ws[index][i18n.global.t('base.freightSetting.min_payment')]
