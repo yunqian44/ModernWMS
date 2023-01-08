@@ -241,22 +241,22 @@ namespace ModernWMS.WMS.Services
         {
             StringBuilder sb = new StringBuilder();
             var DbSet = _dBContext.GetDbSet<WarehouseEntity>();
-            var user_num_repeat_excel = datas.GroupBy(t => t.warehouse_name).Select(t => new { warehouse_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
-            foreach (var repeat in user_num_repeat_excel)
+            var warehouse_name_repeat_excel = datas.GroupBy(t => t.warehouse_name).Select(t => new { warehouse_name = t.Key, cnt = t.Count() }).Where(t => t.cnt > 1).ToList();
+            foreach (var repeat in warehouse_name_repeat_excel)
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat.warehouse_name));
             }
-            if (user_num_repeat_excel.Count > 1)
+            if (warehouse_name_repeat_excel.Count > 0)
             {
                 return (false, sb.ToString());
             }
 
-            var user_num_repeat_exists = await DbSet.Where(t=>t.tenant_id == currentUser.tenant_id).Where(t => datas.Select(t => t.warehouse_name).ToList().Contains(t.warehouse_name)).Select(t => t.warehouse_name).ToListAsync();
-            foreach (var repeat in user_num_repeat_exists)
+            var warehouse_name_repeat_exists = await DbSet.Where(t=>t.tenant_id == currentUser.tenant_id).Where(t => datas.Select(t => t.warehouse_name).ToList().Contains(t.warehouse_name)).Select(t => t.warehouse_name).ToListAsync();
+            foreach (var repeat in warehouse_name_repeat_exists)
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["warehouse_name"], repeat));
             }
-            if (user_num_repeat_exists.Count > 1)
+            if (warehouse_name_repeat_exists.Count > 0)
             {
                 return (false, sb.ToString());
             }

@@ -229,7 +229,7 @@ namespace ModernWMS.WMS.Services
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["user_num"], repeat.user_num));
             }
-            if (user_num_repeat_excel.Count > 1)
+            if (user_num_repeat_excel.Count > 0)
             {
                 return (false,sb.ToString());
             }
@@ -239,7 +239,7 @@ namespace ModernWMS.WMS.Services
             {
                 sb.AppendLine(string.Format(_stringLocalizer["exists_entity"], _stringLocalizer["user_num"], repeat));
             }
-            if (user_num_repeat_exists.Count > 1)
+            if (user_num_repeat_exists.Count > 0)
             {
                 return (false, sb.ToString());
             }
