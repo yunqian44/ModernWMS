@@ -115,7 +115,14 @@
     </custom-pager>
     <SearchDeliveredDetail :id="data.showDeliveredDetailID" :show-dialog="data.showDeliveredDetail" @close="method.closeDeliveredDetail" />
     <!-- <ToBePackageConfirm :show-dialog="data.showDialog" :max-qty="data.dialogMaxQty" @close="method.dialogClose" @submit="method.dialogSubmit" /> -->
-    <PackageConfirm :show-dialog="data.showDialog" :is-weight="false" :data-list="data.confirmList" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    <PackageConfirm
+      :dialog-title="$t('wms.deliveryManagement.package')"
+      :show-dialog="data.showDialog"
+      :is-weight="false"
+      :data-list="data.confirmList"
+      @close="method.dialogClose"
+      @submit="method.dialogSubmit"
+    />
   </div>
 </template>
 
