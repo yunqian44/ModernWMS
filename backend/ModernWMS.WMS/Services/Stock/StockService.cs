@@ -141,6 +141,7 @@ namespace ModernWMS.WMS.Services
                         join m in move_locked_group_datas on sku.id equals m.sku_id into m_left
                         from m in m_left.DefaultIfEmpty()
                         join spu in spu_DBSet on sku.spu_id equals spu.id
+                        where spu.tenant_id  == currentUser.tenant_id
                         select new StockManagementViewModel
                         {
                             sku_id = sku.id,
@@ -193,6 +194,7 @@ namespace ModernWMS.WMS.Services
             var move_DBSet = _dBContext.GetDbSet<StockmoveEntity>();
 
             var stock_group_datas = from stock in DbSet.AsNoTracking()
+                                    where stock.tenant_id == currentUser.tenant_id
                                     group stock by new { stock.sku_id, stock.goods_location_id } into sg
                                     select new
                                     {

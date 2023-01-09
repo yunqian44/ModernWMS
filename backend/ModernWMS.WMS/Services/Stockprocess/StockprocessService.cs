@@ -132,6 +132,8 @@ namespace ModernWMS.WMS.Services
             var details = await (from spd in _dBContext.GetDbSet<StockprocessdetailEntity>().AsNoTracking().Where(t => t.stock_process_id == id)
                                  join sku in _dBContext.GetDbSet<SkuEntity>().AsNoTracking() on spd.sku_id equals sku.id
                                  join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
+                                 join gl in _dBContext.GetDbSet<GoodslocationEntity>().AsNoTracking() on spd.goods_location_id equals gl.id into gl_left
+                                 from gl in gl_left.DefaultIfEmpty()
                                  select new StockprocessdetailViewModel
                                  {
                                      id = spd.id,
@@ -147,6 +149,7 @@ namespace ModernWMS.WMS.Services
                                      spu_code = spu.spu_code,
                                      spu_name = spu.spu_name,
                                      unit = sku.unit,
+                                     location_name  = gl.location_name == null?"":gl.location_name
                                  }).ToListAsync();
             if (entity == null)
             {
@@ -222,6 +225,7 @@ namespace ModernWMS.WMS.Services
             await DbSet.AddAsync(entity);
             foreach (var d in entity.detailList)
             {
+                d.tenant_id =currentUser.tenant_id;
                 d.last_update_time = DateTime.Now;
                 d.id = 0;
                 var s = stocks.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
