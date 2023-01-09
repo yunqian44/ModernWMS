@@ -2,7 +2,7 @@
   <v-dialog v-model="isShow" :width="'70%'" transition="dialog-top-transition" :persistent="true">
     <template #default>
       <v-card class="formCard">
-        <v-toolbar color="white" :title="`${$t('wms.deliveryManagement.package')}`"></v-toolbar>
+        <v-toolbar color="white" :title="dialogTitle"></v-toolbar>
         <v-card-text>
           <v-form ref="formRef">
             <v-row v-for="(item, index) of data.list" :key="index">
@@ -19,7 +19,7 @@
                 <v-text-field
                   v-model="item.qty"
                   :rules="data.rules.qty"
-                  :label="$t('wms.deliveryManagement.detailQty')"
+                  :label="isSignIn ? $t('wms.deliveryManagement.damagedQuantity') : $t('wms.deliveryManagement.detailQty')"
                   variant="outlined"
                   clearable
                 ></v-text-field>
@@ -58,6 +58,8 @@ const props = defineProps<{
   showDialog: boolean
   dataList: ConfirmItem[]
   isWeight: boolean
+  isSignIn?: boolean
+  dialogTitle: string
 }>()
 
 const isShow = computed(() => props.showDialog)
@@ -81,20 +83,46 @@ const method = reactive({
     emit('close')
   },
   submit: () => {
-    const verificationFailedList = data.list.filter(
-      (item) => IsInteger(item.qty, 'greaterThanZero') !== ''
-        || Number(item.qty) <= 0
-        || Number(item.qty) > item.maxQty
-        || (item.weight && IsDecimal(item.weight, 'nonNegative', 15, 3) !== '')
-    )
-    if (verificationFailedList.length > 0) {
-      const errMsgStrList = verificationFailedList.map((item) => `${ item.sku_code }: ${ i18n.global.t('wms.deliveryManagement.exceedingQuantity') }${ item.maxQty }`)
-      hookComponent.$message({
-        type: 'error',
-        content: `${ i18n.global.t('wms.deliveryManagement.invalidValue') }; ${ errMsgStrList.join('; ') }`
+    if (props.isSignIn) {
+      const verificationFailedList = data.list.filter(
+        (item) => IsInteger(item.qty, 'nonNegative') !== ''
+          || Number(item.qty) < 0
+          || Number(item.qty) > item.maxQty
+      )
+      if (verificationFailedList.length > 0) {
+        const errMsgStrList = verificationFailedList.map(
+          (item) => `${ item.sku_code }: ${ i18n.global.t('wms.deliveryManagement.exceedingQuantity') }${ item.maxQty }`
+        )
+        hookComponent.$message({
+          type: 'error',
+          content: `${ i18n.global.t('wms.deliveryManagement.invalidValue') }; ${ errMsgStrList.join('; ') }`
+        })
+      } else {
+        hookComponent.$dialog({
+        content: `${ i18n.global.t('wms.deliveryManagement.irreversible') }, ${ i18n.global.t('wms.deliveryManagement.confirmSignIn') }?`,
+        handleConfirm: async () => {
+          emit('submit', data.list)
+        }
       })
+      }
     } else {
-      emit('submit', data.list)
+      const verificationFailedList = data.list.filter(
+        (item) => IsInteger(item.qty, 'greaterThanZero') !== ''
+          || Number(item.qty) <= 0
+          || Number(item.qty) > item.maxQty
+          || (item.weight && IsDecimal(item.weight, 'nonNegative', 15, 3) !== '')
+      )
+      if (verificationFailedList.length > 0) {
+        const errMsgStrList = verificationFailedList.map(
+          (item) => `${ item.sku_code }: ${ i18n.global.t('wms.deliveryManagement.exceedingQuantity') }${ item.maxQty }`
+        )
+        hookComponent.$message({
+          type: 'error',
+          content: `${ i18n.global.t('wms.deliveryManagement.invalidValue') }; ${ errMsgStrList.join('; ') }`
+        })
+      } else {
+        emit('submit', data.list)
+      }
     }
   }
 })

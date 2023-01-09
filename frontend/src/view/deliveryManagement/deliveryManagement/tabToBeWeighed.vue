@@ -127,7 +127,14 @@
       @submit="method.dialogSubmit"
     /> -->
     <SearchDeliveredDetail :id="data.showDeliveredDetailID" :show-dialog="data.showDeliveredDetail" @close="method.closeDeliveredDetail" />
-    <WeightConfirm :show-dialog="data.showDialog" :is-weight="true" :data-list="data.confirmList" @close="method.dialogClose" @submit="method.dialogSubmit" />
+    <WeightConfirm
+      :show-dialog="data.showDialog"
+      :dialog-title="$t('wms.deliveryManagement.weigh')"
+      :is-weight="true"
+      :data-list="data.confirmList"
+      @close="method.dialogClose"
+      @submit="method.dialogSubmit"
+    />
   </div>
 </template>
 
@@ -199,20 +206,20 @@ const method = reactive({
       picked_qty: item.picked_qty
     }))
     // if (data.weighedRow) {
-      const { data: res } = await handleWeigh(packList)
-      if (!res.isSuccess) {
-        hookComponent.$message({
-          type: 'error',
-          content: res.errorMessage
-        })
-        return
-      }
+    const { data: res } = await handleWeigh(packList)
+    if (!res.isSuccess) {
       hookComponent.$message({
-        type: 'success',
-        content: res.data
+        type: 'error',
+        content: res.errorMessage
       })
-      method.dialogClose()
-      method.refresh()
+      return
+    }
+    hookComponent.$message({
+      type: 'success',
+      content: res.data
+    })
+    method.dialogClose()
+    method.refresh()
     // }
   },
   handleWeigh: async () => {
