@@ -60,6 +60,7 @@
                   <v-select
                     v-model="data.form.supplier_name"
                     :items="data.combobox.supplier_name"
+                    :rules="data.rules.supplier_name"
                     item-title="label"
                     item-value="label"
                     :label="$t('base.commodityManagement.supplier_name')"
@@ -186,8 +187,7 @@
                       <vxe-input v-model="row.height" type="text"></vxe-input>
                     </template>
                   </vxe-column>
-                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')">
-                  </vxe-column>
+                  <vxe-column field="volume" :title="$t('base.commodityManagement.volume')"> </vxe-column>
                   <vxe-column field="cost" :title="$t('base.commodityManagement.cost')" :edit-render="{ autofocus: '.vxe-input--inner' }">
                     <template #edit="{ row }">
                       <vxe-input v-model="row.cost" type="text"></vxe-input>
@@ -306,10 +306,14 @@ const data = reactive({
     ],
     weight_unit: [
       (val: number) => [0, 1, 2].includes(val) || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.weight_unit') }!`
+    ],
+    supplier_name: [
+      (val: string) => !!val || `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.supplier_name') }!`
     ]
   },
   validRules: ref<any>({
     sku_code: [
+      { required: true, message: `${ i18n.global.t('system.checkText.mustInput') }${ i18n.global.t('base.commodityManagement.sku_code') }` },
       {
         type: 'string',
         min: 0,
@@ -541,6 +545,13 @@ const method = reactive({
     const errMap = await $table.validate(true)
     const { valid } = await formRef.value.validate()
     if (valid && !errMap) {
+      if ($table.getTableData().fullData.length === 0) {
+        hookComponent.$message({
+          type: 'error',
+          content: i18n.global.t('system.tips.detailLengthIsZero')
+        })
+        return
+      }
       const form = { ...data.form }
       const insertRecords = $table.getInsertRecords()
       form.detailList = []
