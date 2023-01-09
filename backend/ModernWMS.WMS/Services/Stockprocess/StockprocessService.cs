@@ -222,6 +222,7 @@ namespace ModernWMS.WMS.Services
             await DbSet.AddAsync(entity);
             foreach (var d in entity.detailList)
             {
+                d.tenant_id =currentUser.tenant_id;
                 d.last_update_time = DateTime.Now;
                 d.id = 0;
                 var s = stocks.FirstOrDefault(t => t.sku_id == d.sku_id && t.goods_location_id == d.goods_location_id);
