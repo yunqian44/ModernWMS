@@ -349,7 +349,8 @@ namespace ModernWMS.WMS.Services
             foreach (var d in details)
             {
                 var stock = stocks.FirstOrDefault(t => t.goods_location_id == d.goods_location_id && t.sku_id == d.sku_id && t.goods_owner_id == d.goods_owner_id);
-
+                d.is_update_stock= true;
+                d.last_update_time = DateTime.Now;
                 if (d.is_source)
                 {
                     if (stock == null)
