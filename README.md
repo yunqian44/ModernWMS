@@ -18,7 +18,7 @@
 <!--![Contributors](https://img.shields.io/github/contributors/fjykTec/ModernWMS?color=blue) -->
 
 ![GitHub Org's stars](https://img.shields.io/github/stars/fjykTec/ModernWMS?style=social)
-![GitHub Follows](https://img.shields.io/github/followers/fjykTec/ModernWMS?style=social)
+![GitHub Follows](https://img.shields.io/github/followers/ModernWMS?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/fjykTec/ModernWMS?style=social)
 ![GitHub Watch](https://img.shields.io/github/watchers/fjykTec/ModernWMS?style=social)
 ![Gitee Stars](https://gitee.com/modernwms/ModernWMS/badge/star.svg?theme=social)
