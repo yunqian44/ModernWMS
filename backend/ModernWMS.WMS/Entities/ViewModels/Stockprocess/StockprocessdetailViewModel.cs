@@ -104,6 +104,11 @@ namespace ModernWMS.WMS.Entities.ViewModels
         /// is_update_stock
         /// </summary>
         public bool is_update_stock { get; set; } = false;
+
+        /// <summary>
+        /// goods location name
+        /// </summary>
+        public string location_name { get; set; } = string.Empty;
         #endregion
 
     }
