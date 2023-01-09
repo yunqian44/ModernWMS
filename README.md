@@ -132,14 +132,14 @@
   copy-Item ".\backend\ModernWMS\wms.db" -Destination "C:\ModernWMS\backend\"
   cd c:\ModernWMS-master\frontend  
   yarn && yarn build 
-  copy-item -path ".\frontend\dist\" -destination "C:\ModernWMS\frontend\" -recurse
+  copy-item -path ".\frontend\dist\*" -destination "C:\ModernWMS\frontend\" -recurse
   ```
   + 第四步，安装nginx并启动
   ```
   cd C:\
   wget -Uri http://nginx.org/download/nginx-1.16.1.zip -OutFile nginx-1.16.1.zip
   Expand-Archive -Path C:\nginx-1.16.1.zip -DestinationPath C:\
-  copy-item -path "C:\ModernWMS\frontend\" -destination ".\nginx-1.16.1\html\"
+  copy-item -path "C:\ModernWMS\frontend\*" -destination ".\nginx-1.16.1\html\" -recurse
   start .\nginx-1.16.1\nginx.exe
   cd C:\ModernWMS\backend\
   dotnet ModernWMS.dll --urls http://0.0.0.0:20011
