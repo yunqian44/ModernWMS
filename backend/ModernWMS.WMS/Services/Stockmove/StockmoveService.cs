@@ -167,6 +167,7 @@ namespace ModernWMS.WMS.Services
                                 join spu in _dBContext.GetDbSet<SpuEntity>().AsNoTracking() on sku.spu_id equals spu.id
                                 join orig_location in location_DBSet on m.orig_goods_location_id equals orig_location.id
                                 join dest_location in location_DBSet on m.dest_googs_location_id equals dest_location.id
+                                where m.id == id
                                 select new StockmoveViewModel
                                 {
                                     id = m.id,
