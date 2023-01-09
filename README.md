@@ -129,6 +129,7 @@
   cd c:\ModernWMS-master\backend
   dotnet publish 
   copy-item -path ".\backend\ModernWMS\bin\Debug\net7.0\publish\" -destination "C:\ModernWMS\backend\" -recurse
+  copy-Item ".\backend\ModernWMS\wms.db" -Destination "C:\ModernWMS\backend\"
   cd c:\ModernWMS-master\frontend  
   yarn && yarn build 
   copy-item -path ".\frontend\dist\" -destination "C:\ModernWMS\frontend\" -recurse
@@ -138,6 +139,7 @@
   cd C:\
   wget -Uri http://nginx.org/download/nginx-1.16.1.zip -OutFile nginx-1.16.1.zip
   Expand-Archive -Path C:\nginx-1.16.1.zip -DestinationPath C:\
+  copy-item -path "C:\ModernWMS\frontend\" -destination ".\nginx-1.16.1\html\"
   start .\nginx-1.16.1\nginx.exe
   cd C:\ModernWMS\backend\
   dotnet ModernWMS.dll --urls http://0.0.0.0:20011
@@ -159,6 +161,7 @@
   cd /tmp/ && unzip master.zip && cd ./ModernWMS-master
   cd ./frontend/ && yarn && yarn build && cp -rf ./frontend/dist/* ./docker/frontend/
   cd ./backend/ && sudo dotnet publish && cp -rf ./backend/ModernWMS/bin/Debug/net7.0/publish/* ./docker/backend/
+  cp -rf ./backend/ModernWMS/wms.db ./docker/backend/
   ```  
   + 第三步，部署
 
