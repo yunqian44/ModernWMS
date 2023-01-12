@@ -1,4 +1,4 @@
-# ModernWMS - 仓库管理系统
+# ModernWMS - 仓库管理系统 
 
 <div align="center">
   <img src="/logo.png" alt="ModernWMS logo" width="200" height="auto" />
@@ -17,7 +17,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/fjykTec/ModernWMS)
 <!--![Contributors](https://img.shields.io/github/contributors/fjykTec/ModernWMS?color=blue) -->
 
-![GitHub Org's stars](https://img.shields.io/github/stars/fjykTec/ModernWMS?style=social)
+![GitHub Org's stars](https://img.shields.io/github/stars/ModernWMS?style=social)
 ![GitHub Follows](https://img.shields.io/github/followers/ModernWMS?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/fjykTec/ModernWMS?style=social)
 ![GitHub Watch](https://img.shields.io/github/watchers/fjykTec/ModernWMS?style=social)
@@ -33,10 +33,10 @@
 ![NodeJS](https://img.shields.io/badge/NodeJS-16.13.1-green)
 </div>
 
-# Contents - 目录
+## Contents - 目录 
 
 - [ModernWMS - 仓库管理系统](#modernwms---仓库管理系统)
-- [Contents - 目录](#contents---目录)
+  - [Contents - 目录](#contents---目录)
   - [Introduction - 介绍](#introduction---介绍)
   - [Requirements - 必要条件](#requirements---必要条件)
     - [Linux OS](#linux-os)
@@ -48,6 +48,8 @@
   - [Usage - 用法](#usage---用法)
   - [Contact - 联系](#contact---联系)
   - [License - 版权信息](#license---版权信息)
+  - [特别声明](#特别声明)
+
 
 ## Introduction - 介绍
   该库存管理系统是，我们从多年ERP系统研发中总结出来的一套针对小型物流仓储供应链流程。 在工作过程中我们很多的中小企业，由于IT预算有限，所以无法用上适合他们的系统，却又实实在在存在仓储管理方面的需求，以此我们开始了这个项目。 为了帮助一些有需要的用户。
@@ -72,13 +74,13 @@
 ### Linux
 
 + 下载源码后编译
-  + 第一步，下载源码
+  + Step 1，下载源码
 
   ```bash
   cd /tmp/ && wget https://github.com/fjykTec/ModernWMS/archive/refs/heads/master.zip
   ```  
 
-  + 第二步，安装.NET SDK 、运行时 和 NodeJS
+  + Step 2，安装.NET SDK 、运行时 和 NodeJS
 
   ```bash
   wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -89,7 +91,7 @@
   sudo apt install -y nodejs
   ```  
 
-  + 第三步，编译前端和后端
+  + Step 3，编译前端和后端
 
   ```bash
   cd /tmp/ && unzip master.zip && cd ./ModernWMS-master
@@ -98,7 +100,7 @@
   cd ./backend/ && sudo dotnet publish && cp -rf ./backend/ModernWMS/bin/Debug/net7.0/publish/* /ModernWMS/backend/
   ```  
 
-  + 第四步，安装nginx
+  + Step 4，安装nginx
 
   ```bash
   cd /tmp/ && wget http://nginx.org/download/nginx-1.18.0.tar.gz 
@@ -109,20 +111,20 @@
 ### Windows
 
 + 下载源码后编译部署
-  + 第一步，下载源码
+  + Step 1，下载源码
   ```PowerShell
   cd c:\
   wget -Uri https://github.com/fjykTec/ModernWMS/archive/refs/heads/master.zip  -OutFile master.zip
   Expand-Archive -Path C:\master.zip -DestinationPath C:\
   ```
-  + 第二步，安装.NET SDK 、运行时 和 NodeJS
+  + Step 2，安装.NET SDK 、运行时 和 NodeJS
   ```CMD
   wget -Uri https://download.visualstudio.microsoft.com/download/pr/35660869-0942-4c5d-8692-6e0d4040137a/4921a36b578d8358dac4c27598519832/dotnet-sdk-7.0.101-win-x64.exe  -OutFile dotnet-sdk-7.0.101-win-x64.exe
   dotnet-sdk-7.0.100-win-x64.exe /install /quiet /norestart
   wget -Uri https://nodejs.org/dist/v16.13.1/node-v16.13.1-x64.msi  -OutFile node-v16.13.1-x64.msi
   msiexec /i .\node-v16.13.1-x64.msi /passive /norestart
   ```
-  + 第三步，编译前端和后端
+  + Step 3，编译前端和后端
   ```
   md C:\ModernWMS\frontend\
   md C:\ModernWMS\backend\
@@ -134,7 +136,7 @@
   yarn && yarn build 
   copy-item -path ".\frontend\dist\*" -destination "C:\ModernWMS\frontend\" -recurse
   ```
-  + 第四步，安装nginx并启动
+  + Step 4，安装nginx并启动
   ```
   cd C:\
   wget -Uri http://nginx.org/download/nginx-1.16.1.zip -OutFile nginx-1.16.1.zip
@@ -147,15 +149,14 @@
 
 ### Docker
 
-
 + 下载源码后编译
-  + 第一步，下载源码
+  + Step 1，下载源码
 
   ```bash
   cd /tmp/ && wget https://github.com/fjykTec/ModernWMS/archive/refs/heads/master.zip
   ```  
   
-  + 第二步，编译前端和后端
+  + Step 2，编译前端和后端
 
   ```bash
   cd /tmp/ && unzip master.zip && cd ./ModernWMS-master
@@ -163,17 +164,17 @@
   cd ./backend/ && sudo dotnet publish && cp -rf ./backend/ModernWMS/bin/Debug/net7.0/publish/* ./docker/backend/
   cp -rf ./backend/ModernWMS/wms.db ./docker/backend/
   ```  
-  + 第三步，部署
-
-  ```bash
+  + Step 3，部署docker
+  ```shell
   cd /tmp/ModernWMS-master/docker/
   docker build -t modernwms:1.0 .
   docker run -d -p 80:80  modernwms:1.0 /bin/bash ./run.sh
   ```
+
 ## Usage - 用法
-  
-  ```
-  打开浏览器，进入：http://127.0.0.1 或者 http://部署电脑的IP地址
+
+  ```shell
+  打开浏览器，进入：http://127.0.0.1 或者http://部署电脑的IP地址
   ```
   <h4>
     <a href="https://wmsonline.ikeyly.com">体验地址入口</a>
@@ -194,8 +195,14 @@
   <a href="https://github.com/fjykTec/ModernWMS/issues/new?template=feature_request.md&title=[FR]">提交一个建议</a>
 </h4>
 <h4>
-  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群  757128595</a>
+  <a href="https://jq.qq.com/?_wv=1027&k=YgVJGWnI">加入QQ群聊 757128595</a>
 </h4>
 
 ## License - 版权信息
 该项目使用的是 [MIT](https://opensource.org/licenses/MIT/) 协议. 详情查阅[LICENSE.txt](https://github.com/fjykTec/ModernWMS/master/LICENSE).必须遵守此协议。
+
+## 特别声明
+
+本项目已加入 [dotNET China](https://gitee.com/dotnetchina)  组织。<br/>
+
+![dotnetchina](https://gitee.com/dotnetchina/home/raw/master/assets/dotnetchina-raw.png "dotNET China LOGO")
